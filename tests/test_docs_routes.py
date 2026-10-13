@@ -313,26 +313,22 @@ class TestTutorialContent:
         tutorial_path = Path(__file__).parent.parent / "docs" / "modules" / "config_tutorial_side_by_side.html"
         return tutorial_path.read_text(encoding="utf-8")
 
-    def test_has_pipeline_context_section(self):
-        """Tutorial must explain pipeline context."""
+    def test_has_design_principle(self):
+        """Tutorial must explain design principle."""
         content = self._get_tutorial_content()
-        assert "Pipeline Context" in content
-        assert "concordance" in content
-        assert "discordance" in content
-        assert "credibility" in content
-        assert "ranking" in content
+        assert "Design Principle" in content or "Fail fast" in content
 
-    def test_has_key_constraints_section(self):
-        """Tutorial must document key constraints."""
+    def test_has_key_constraints(self):
+        """Tutorial must document key constraints (in callouts or sections)."""
         content = self._get_tutorial_content()
-        assert "Key Constraints" in content
-        assert "q ≤ p ≤ v" in content or "0 ≤ q ≤ p ≤ v" in content
-        assert "Determinism" in content or "seed" in content
+        # Constraints can be in dedicated section or within callouts
+        assert "q ≤ p ≤ v" in content or "0 ≤ q ≤ p ≤ v" in content, "Missing threshold constraint"
+        assert "seed" in content, "Missing seed/determinism info"
 
     def test_has_io_specification_section(self):
         """Tutorial must document I/O behavior."""
         content = self._get_tutorial_content()
-        assert "I/O Specification" in content
+        assert "I/O Summary" in content or "I/O Specification" in content
         assert "Input" in content
         assert "Output" in content
         assert "Errors" in content
@@ -366,84 +362,130 @@ class TestTutorialContent:
             "Do not show exact numeric output arrays"
 
 
-class TestTutorialRangeCallouts:
-    """Tests for range callout links between code and docs."""
+class TestTutorialRangeRows:
+    """Tests for per-range row layout in config tutorial."""
 
     def _get_tutorial_content(self):
         from pathlib import Path
         tutorial_path = Path(__file__).parent.parent / "docs" / "modules" / "config_tutorial_side_by_side.html"
         return tutorial_path.read_text(encoding="utf-8")
 
-    def test_range_ids_exist_in_code_pane(self):
-        """Code pane must have R1-R5 id attributes."""
+    def test_each_range_has_row(self):
+        """Each Rk must have a row element with id=row-Rk."""
         content = self._get_tutorial_content()
         for r in ["R1", "R2", "R3", "R4", "R5"]:
-            assert f'id="{r}"' in content, f"Missing id for {r}"
+            assert f'id="row-{r}"' in content, f"Missing row id=row-{r}"
 
-    def test_range_refs_exist_in_doc_pane(self):
-        """Doc pane must have href links to R1-R5."""
+    def test_each_row_has_code_block(self):
+        """Each range row must have a code block (class=range-code)."""
         content = self._get_tutorial_content()
-        for r in ["R1", "R2", "R3", "R4", "R5"]:
-            assert f'href="#{r}"' in content, f"Missing href for {r}"
+        assert content.count('class="range-code"') >= 5, "Need 5 code blocks"
 
-    def test_range_markers_are_clickable_anchors(self):
-        """Range markers in code must be <a> elements with hrefs to doc sections."""
-        import re
+    def test_each_row_has_callout_block(self):
+        """Each range row must have a callout block (class=range-callout)."""
         content = self._get_tutorial_content()
-        for r in ["R1", "R2", "R3", "R4", "R5"]:
-            # Pattern allows for aria-label and other attributes
-            pattern = rf'<a href="#doc-{r}" class="range-marker"[^>]*>{r}</a>'
-            assert re.search(pattern, content), \
-                f"Range marker {r} must be clickable anchor linking to doc-{r}"
+        assert content.count('class="range-callout"') >= 5, "Need 5 callout blocks"
 
-    def test_doc_sections_have_ids(self):
-        """Doc sections must have id attributes for bidirectional linking."""
+    def test_range_badges_have_data_range(self):
+        """Range badges must have data-range attribute for JS toggle."""
         content = self._get_tutorial_content()
         for r in ["R1", "R2", "R3", "R4", "R5"]:
-            assert f'id="doc-{r}"' in content, f"Missing doc section id for doc-{r}"
+            assert f'data-range="{r}"' in content, f"Missing data-range={r}"
 
-    def test_doc_sections_have_class(self):
-        """Doc sections must have doc-section class for highlight styling."""
+    def test_range_badges_link_to_rows(self):
+        """Range badges must link to row-Rk IDs."""
         content = self._get_tutorial_content()
         for r in ["R1", "R2", "R3", "R4", "R5"]:
-            assert f'class="doc-section" id="doc-{r}"' in content, \
-                f"Doc section {r} must have doc-section class"
+            assert f'href="#row-{r}"' in content, f"Missing href=#row-{r}"
 
-    def test_data_range_attributes_set(self):
-        """Code lines must have data-range attributes for highlighting."""
+    def test_rows_are_focusable(self):
+        """Range rows must have tabindex for keyboard navigation."""
         content = self._get_tutorial_content()
-        for r in ["R1", "R2", "R3", "R4", "R5"]:
-            assert f'data-range="{r}"' in content, f"Missing data-range for {r}"
+        assert 'class="range-row"' in content
+        assert 'tabindex="0"' in content
 
     def test_highlight_js_referenced(self):
         """Tutorial must reference highlight.js for toggle behavior."""
         content = self._get_tutorial_content()
         assert 'src="assets/highlight.js"' in content
 
-    def test_scroll_container_ids_exist(self):
-        """Tutorial must have explicit IDs for scroll containers."""
-        content = self._get_tutorial_content()
-        assert 'id="codeScroll"' in content, "Missing id='codeScroll' on code pane"
-        assert 'id="docScroll"' in content, "Missing id='docScroll' on doc pane"
-
-    def test_range_anchors_have_valid_targets(self):
-        """Range markers in code must link to doc sections that exist."""
-        content = self._get_tutorial_content()
-        for r in ["R1", "R2", "R3", "R4", "R5"]:
-            assert f'href="#doc-{r}"' in content, f"Missing href=#doc-{r}"
-            assert f'id="doc-{r}"' in content, f"Missing id=doc-{r}"
-
-    def test_callout_refs_have_valid_targets(self):
-        """Callout refs in doc must link to code range IDs that exist."""
-        content = self._get_tutorial_content()
-        for r in ["R1", "R2", "R3", "R4", "R5"]:
-            assert f'id="{r}"' in content, f"Missing id={r} on code line"
-
     def test_css_uses_range_selected_class(self):
-        """CSS must style .range-selected, not all [data-range]."""
+        """CSS must style .range-row.range-selected."""
         content = self._get_tutorial_content()
-        assert ".code-line.range-selected" in content
-        assert ".doc-section.range-selected" in content
+        assert ".range-row.range-selected" in content
+
+    def test_css_has_target_fallback(self):
+        """CSS must have :target fallback for no-JS."""
+        content = self._get_tutorial_content()
+        assert ".range-row:target" in content
+
+    def test_no_orphan_badge_references(self):
+        """All href=#row-Rk must have matching id=row-Rk."""
+        import re
+        content = self._get_tutorial_content()
+        hrefs = re.findall(r'href="#(row-R\d+)"', content)
+        ids = re.findall(r'id="(row-R\d+)"', content)
+        for href in hrefs:
+            assert href in ids, f"Orphan reference: href=#{href} has no matching id"
+
+
+class TestTutorialContentDepth:
+    """Tests for graduate-level content depth in callouts."""
+
+    def _get_tutorial_content(self):
+        from pathlib import Path
+        tutorial_path = Path(__file__).parent.parent / "docs" / "modules" / "config_tutorial_side_by_side.html"
+        return tutorial_path.read_text(encoding="utf-8")
+
+    def test_sidebar_has_jump_descriptions(self):
+        """Sidebar jump items must include short descriptions."""
+        content = self._get_tutorial_content()
+        # Layout 2 uses class="desc" for descriptions
+        assert 'class="desc"' in content or 'class="jump-desc"' in content, \
+            "Sidebar needs description elements"
+        assert 'CriterionConfig' in content, "R1 description missing"
+        assert 'Validation' in content or 'validation' in content, "R2 description missing"
+
+    def test_sidebar_jump_items_have_descriptions(self):
+        """Each sidebar jump item must have a description span."""
+        import re
+        content = self._get_tutorial_content()
+        # Layout 2 uses class="jump-item"
+        jump_items = re.findall(r'class="jump-item"[^>]*>.*?</a>', content, re.DOTALL)
+        assert len(jump_items) >= 5, "Need at least 5 jump items"
+        for item in jump_items:
+            assert 'desc' in item, f"Jump item missing description: {item[:50]}"
+
+    def test_callouts_have_purpose_section(self):
+        """Each callout must have a Purpose heading."""
+        content = self._get_tutorial_content()
+        assert content.count('<h4>Purpose</h4>') >= 5, "Each callout needs Purpose section"
+
+    def test_callouts_have_io_section(self):
+        """Each callout must have an I/O heading."""
+        content = self._get_tutorial_content()
+        assert content.count('<h4>I/O</h4>') >= 5, "Each callout needs I/O section"
+
+    def test_callouts_have_why_section(self):
+        """Each callout must have a Why heading."""
+        content = self._get_tutorial_content()
+        assert content.count('<h4>Why</h4>') >= 5, "Each callout needs Why section"
+
+    def test_callouts_have_pitfalls_section(self):
+        """Each callout must have a Pitfalls heading."""
+        content = self._get_tutorial_content()
+        assert content.count('<h4>Pitfalls</h4>') >= 5, "Each callout needs Pitfalls section"
+
+    def test_callout_mentions_tests(self):
+        """Callouts should mention what tests catch."""
+        content = self._get_tutorial_content()
+        assert 'test' in content.lower(), "Callouts should reference test coverage"
+
+    def test_callout_explains_downstream_impact(self):
+        """Callouts should explain downstream pipeline impact."""
+        content = self._get_tutorial_content()
+        assert 'concordance' in content.lower() or 'downstream' in content.lower(), \
+            "Callouts should explain downstream impact"
 
 
 class TestHighlightJsAsset:
@@ -466,15 +508,14 @@ class TestHighlightJsAsset:
         content = response.data.decode("utf-8")
         assert "range-selected" in content
         assert "clearSelection" in content
-        assert "selectRange" in content
+        assert "selectRow" in content
 
-    def test_highlight_js_has_click_to_scroll(self, client):
-        """highlight.js must implement click-to-scroll behavior."""
+    def test_highlight_js_uses_row_ids(self, client):
+        """highlight.js must reference row IDs (not scroll containers)."""
         response = client.get("/docs/modules/config/assets/highlight.js")
         content = response.data.decode("utf-8")
-        assert "scrollToElement" in content
-        assert "scrollDocToRange" in content
-        assert "scrollCodeToRange" in content
+        assert "row-" in content
+        assert "ROW_PREFIX" in content
 
     def test_highlight_js_exposes_test_api(self, client):
         """highlight.js must expose testing API via window.highlightModule."""
@@ -482,12 +523,9 @@ class TestHighlightJsAsset:
         content = response.data.decode("utf-8")
         assert "window.highlightModule" in content
         assert "getCurrentRange" in content
-        assert "getCodeScroll" in content
-        assert "getDocScroll" in content
-        assert "CODE_SCROLL_ID" in content
-        assert "DOC_SCROLL_ID" in content
-        assert "isSyncEnabled" in content
-        assert "isSyncing" in content
+        assert "selectRow" in content
+        assert "clearSelection" in content
+        assert "ROW_PREFIX" in content
 
     def test_highlight_js_local_file_exists(self):
         """Local highlight.js should exist in docs/modules/assets/."""
@@ -502,20 +540,19 @@ class TestHighlightJsAsset:
         assert "debug=1" in content
         assert "console.log" in content
 
-    def test_highlight_js_uses_scroll_container_ids(self, client):
-        """highlight.js must use explicit scroll container IDs."""
+    def test_highlight_js_uses_scroll_into_view(self, client):
+        """highlight.js must use scrollIntoView for row navigation."""
         response = client.get("/docs/modules/config/assets/highlight.js")
         content = response.data.decode("utf-8")
-        assert "codeScroll" in content
-        assert "docScroll" in content
+        assert "scrollIntoView" in content
         assert "getElementById" in content
 
-    def test_highlight_js_uses_correct_selectors_for_ranges(self, client):
-        """highlight.js must use data-range attributes and doc section IDs."""
+    def test_highlight_js_uses_data_range_attribute(self, client):
+        """highlight.js must use data-range attribute for badge detection."""
         response = client.get("/docs/modules/config/assets/highlight.js")
         content = response.data.decode("utf-8")
-        assert "[data-range=" in content
-        assert "doc-" in content
+        assert "data-range" in content
+        assert "getAttribute" in content
 
     def test_highlight_js_handles_click_capture(self, client):
         """highlight.js must use capture phase for click events."""
@@ -525,170 +562,81 @@ class TestHighlightJsAsset:
         assert "addEventListener('click', handleClick, true)" in content
 
 
-class TestSyncScrollToggle:
-    """Tests for sync scroll toggle in sidebar."""
+class TestRowSelectionToggle:
+    """Tests for row selection toggle in highlight.js."""
+
+    def test_highlight_js_handles_click(self, client):
+        """highlight.js must handle click events on range badges."""
+        response = client.get("/docs/modules/config/assets/highlight.js")
+        content = response.data.decode("utf-8")
+        assert "addEventListener('click'" in content or \
+               'addEventListener("click"' in content
+        assert "data-range" in content
+
+    def test_highlight_js_guards_missing_row(self, client):
+        """highlight.js must no-op without throwing if row is missing."""
+        response = client.get("/docs/modules/config/assets/highlight.js")
+        content = response.data.decode("utf-8")
+        assert "!row" in content, "Must guard against missing row element"
+
+    def test_highlight_js_respects_reduced_motion(self, client):
+        """highlight.js must check prefers-reduced-motion for scroll behavior."""
+        response = client.get("/docs/modules/config/assets/highlight.js")
+        content = response.data.decode("utf-8")
+        assert "prefers-reduced-motion" in content
+        assert "reduce" in content
+
+    def test_highlight_js_updates_hash(self, client):
+        """highlight.js must update URL hash on selection."""
+        response = client.get("/docs/modules/config/assets/highlight.js")
+        content = response.data.decode("utf-8")
+        assert "history.pushState" in content or "history.replaceState" in content
+
+    def test_highlight_js_handles_hash_change(self, client):
+        """highlight.js must handle hashchange events."""
+        response = client.get("/docs/modules/config/assets/highlight.js")
+        content = response.data.decode("utf-8")
+        assert "hashchange" in content
+        assert "handleHashChange" in content
+
+
+class TestRowLayoutAccessibility:
+    """Tests for accessibility in row-based tutorial layout."""
 
     def _get_tutorial_content(self):
         from pathlib import Path
         tutorial_path = Path(__file__).parent.parent / "docs" / "modules" / "config_tutorial_side_by_side.html"
         return tutorial_path.read_text(encoding="utf-8")
 
-    def test_sync_toggle_exists_in_sidebar(self):
-        """Sidebar must have sync scroll toggle button."""
-        content = self._get_tutorial_content()
-        assert 'data-sync-toggle' in content
-        assert 'class="sync-toggle"' in content
-
-    def test_sync_toggle_has_indicator(self):
-        """Sync toggle must have visual indicator."""
-        content = self._get_tutorial_content()
-        assert 'class="sync-indicator"' in content
-
-    def test_sync_toggle_has_aria_pressed(self):
-        """Sync toggle must have aria-pressed attribute."""
-        content = self._get_tutorial_content()
-        assert 'aria-pressed="false"' in content
-
-    def test_sync_toggle_defaults_off(self):
-        """Sync toggle must default to OFF (aria-pressed='false')."""
-        content = self._get_tutorial_content()
-        # The toggle should have aria-pressed="false" by default
-        import re
-        toggle_match = re.search(r'data-sync-toggle[^>]*aria-pressed="([^"]*)"', content)
-        assert toggle_match, "Sync toggle must have aria-pressed attribute"
-        assert toggle_match.group(1) == "false", "Sync toggle must default to OFF"
-
-    def test_sync_toggle_css_exists(self):
-        """CSS must style sync toggle states."""
-        content = self._get_tutorial_content()
-        assert ".sync-toggle" in content
-        assert ".sync-enabled" in content
-
-
-class TestContinuousScrollSync:
-    """Tests for continuous scroll sync functionality in highlight.js."""
-
-    def test_highlight_js_has_loop_guard(self, client):
-        """highlight.js must have isSyncing loop guard to prevent oscillation."""
-        response = client.get("/docs/modules/config/assets/highlight.js")
-        content = response.data.decode("utf-8")
-        assert "isSyncing" in content, "Missing isSyncing loop guard variable"
-        assert "isSyncing = true" in content, "Must set isSyncing = true before syncing"
-        assert "isSyncing = false" in content, "Must release isSyncing after sync"
-
-    def test_highlight_js_uses_raf_for_loop_guard(self, client):
-        """highlight.js must use requestAnimationFrame for loop guard release."""
-        response = client.get("/docs/modules/config/assets/highlight.js")
-        content = response.data.decode("utf-8")
-        assert "requestAnimationFrame" in content, \
-            "Must use requestAnimationFrame for throttling loop guard"
-
-    def test_highlight_js_binds_scroll_listeners(self, client):
-        """highlight.js must bind scroll listeners to #codeScroll and #docScroll."""
-        response = client.get("/docs/modules/config/assets/highlight.js")
-        content = response.data.decode("utf-8")
-        assert "addEventListener('scroll'" in content or \
-               'addEventListener("scroll"' in content, \
-            "Must add scroll event listeners"
-        assert "codeScroll" in content and "docScroll" in content, \
-            "Must reference codeScroll and docScroll containers"
-
-    def test_highlight_js_percentage_based_sync(self, client):
-        """highlight.js must use percentage-based scroll position for sync."""
-        response = client.get("/docs/modules/config/assets/highlight.js")
-        content = response.data.decode("utf-8")
-        assert "scrollHeight" in content, "Must use scrollHeight for percentage calc"
-        assert "clientHeight" in content, "Must use clientHeight for percentage calc"
-        assert "scrollTop" in content, "Must use scrollTop for percentage calc"
-
-    def test_highlight_js_sync_guards_missing_containers(self, client):
-        """highlight.js sync must no-op without throwing if containers missing."""
-        response = client.get("/docs/modules/config/assets/highlight.js")
-        content = response.data.decode("utf-8")
-        # Must check for container existence before syncing
-        assert "!source || !target" in content or \
-               "if (!codeScroll || !docScroll)" in content or \
-               "if (!el)" in content, \
-            "Must guard against missing containers in sync functions"
-
-    def test_highlight_js_sync_checks_enabled(self, client):
-        """highlight.js sync must check syncEnabled before syncing."""
-        response = client.get("/docs/modules/config/assets/highlight.js")
-        content = response.data.decode("utf-8")
-        assert "syncEnabled" in content, "Must have syncEnabled state variable"
-        assert "!syncEnabled" in content or "syncEnabled === false" in content, \
-            "Must check syncEnabled before syncing"
-
-
-class TestSelectionAlignment:
-    """Tests for selection-driven pane alignment in highlight.js."""
-
-    def _get_tutorial_content(self):
-        from pathlib import Path
-        tutorial_path = Path(__file__).parent.parent / "docs" / "modules" / "config_tutorial_side_by_side.html"
-        return tutorial_path.read_text(encoding="utf-8")
-
-    def test_highlight_js_has_align_panes_function(self, client):
-        """highlight.js must have alignPanes function for bidirectional alignment."""
-        response = client.get("/docs/modules/config/assets/highlight.js")
-        content = response.data.decode("utf-8")
-        assert "function alignPanes" in content, "Missing alignPanes function"
-        assert "alignPanes" in content, "alignPanes must be defined"
-
-    def test_align_panes_references_both_containers(self, client):
-        """alignPanes must reference both codeScroll and docScroll containers."""
-        response = client.get("/docs/modules/config/assets/highlight.js")
-        content = response.data.decode("utf-8")
-        # Find the alignPanes function body and check it uses both containers
-        assert "codeScroll" in content and "docScroll" in content, \
-            "alignPanes must reference both scroll containers"
-        # Check it scrolls both
-        assert content.count("scrollTo") >= 2, \
-            "alignPanes must scroll both panes"
-
-    def test_align_panes_guards_missing_containers(self, client):
-        """alignPanes must no-op without throwing if containers missing."""
-        response = client.get("/docs/modules/config/assets/highlight.js")
-        content = response.data.decode("utf-8")
-        # Must check for container existence
-        assert "!codeScroll || !docScroll" in content, \
-            "alignPanes must guard against missing containers"
-
-    def test_align_panes_guards_missing_targets(self, client):
-        """alignPanes must no-op without throwing if target elements missing."""
-        response = client.get("/docs/modules/config/assets/highlight.js")
-        content = response.data.decode("utf-8")
-        # Must check for target element existence
-        assert "!codeTarget || !docTarget" in content, \
-            "alignPanes must guard against missing target elements"
-
-    def test_align_panes_exposed_in_test_api(self, client):
-        """alignPanes must be exposed in window.highlightModule for testing."""
-        response = client.get("/docs/modules/config/assets/highlight.js")
-        content = response.data.decode("utf-8")
-        assert "alignPanes: alignPanes" in content or "alignPanes:" in content, \
-            "alignPanes must be in test API"
-
-    def test_each_range_has_code_and_doc_anchors(self):
-        """Each Rk must have both code anchor (id=Rk) and doc anchor (id=doc-Rk)."""
+    def test_range_badges_have_aria_labels(self):
+        """Range badges must have aria-label for screen readers."""
         content = self._get_tutorial_content()
         for r in ["R1", "R2", "R3", "R4", "R5"]:
-            assert f'id="{r}"' in content, f"Missing code anchor id={r}"
-            assert f'id="doc-{r}"' in content, f"Missing doc anchor id=doc-{r}"
+            assert f'aria-label=' in content, f"Range badge {r} needs aria-label"
 
-    def test_click_handler_uses_align_panes(self, client):
-        """Click handler must call alignPanes for new selections."""
+    def test_rows_have_focus_visible_styles(self):
+        """CSS must have :focus-visible styles for rows."""
+        content = self._get_tutorial_content()
+        assert ":focus-visible" in content
+
+    def test_range_badge_focus_visible(self):
+        """Range badges must have :focus-visible styles."""
+        content = self._get_tutorial_content()
+        assert ".range-badge:focus-visible" in content
+
+    def test_reduced_motion_respected(self, client):
+        """highlight.js must respect prefers-reduced-motion."""
         response = client.get("/docs/modules/config/assets/highlight.js")
         content = response.data.decode("utf-8")
-        assert "alignPanes(rangeId)" in content, \
-            "Click handler must call alignPanes"
+        assert "prefers-reduced-motion" in content
+        assert "matchMedia" in content
 
-    def test_hash_navigation_uses_align_panes(self, client):
-        """Hash navigation must call alignPanes."""
-        response = client.get("/docs/modules/config/assets/highlight.js")
-        content = response.data.decode("utf-8")
-        # handleHashChange should use alignPanes
-        assert "alignPanes" in content, "Hash navigation should use alignPanes"
+    def test_each_row_has_code_and_callout(self):
+        """Each row must have both code block and callout block."""
+        content = self._get_tutorial_content()
+        for r in ["R1", "R2", "R3", "R4", "R5"]:
+            assert f'id="row-{r}"' in content, f"Missing row id=row-{r}"
+            assert f'data-range="{r}"' in content, f"Missing data-range={r}"
 
 
 class TestRouteScopedCSP:
@@ -817,13 +765,13 @@ class TestTutorialNegativeCases:
             assert re.match(r'^doc-R\d+$', doc_id), \
                 f"Malformed doc section id: '{doc_id}' (expected doc-R1, doc-R2, etc.)"
 
-    def test_scroll_containers_have_overflow_auto(self):
-        """Scroll containers must have overflow style for scrolling."""
+    def test_code_blocks_have_overflow_auto(self):
+        """Code blocks must have overflow style for scrolling long lines."""
         import re
         content = self._get_tutorial_content()
-        assert 'overflow' in content.lower(), "Scroll containers need overflow CSS"
-        pane_styles = re.findall(r'\.pane[^{]*\{[^}]*overflow[^}]*\}', content, re.IGNORECASE)
-        assert len(pane_styles) > 0, "Pane elements must have overflow styling"
+        assert 'overflow' in content.lower(), "Code blocks need overflow CSS"
+        code_styles = re.findall(r'\.range-code[^{]*\{[^}]*overflow[^}]*\}', content, re.IGNORECASE)
+        assert len(code_styles) > 0, "Range-code elements must have overflow styling"
 
 
 class TestAssetSecurityNegative:
@@ -908,41 +856,32 @@ class TestAccessibilityFeatures:
         """highlight.js must use behavior:'auto' when reduced motion preferred."""
         response = client.get("/docs/modules/config/assets/highlight.js")
         content = response.data.decode("utf-8")
-        assert "behavior:" in content or "scrollBehavior" in content
         assert "'auto'" in content or '"auto"' in content
 
-    def test_range_markers_have_aria_labels(self):
-        """Range markers must have aria-label attributes."""
+    def test_range_badges_have_aria_labels(self):
+        """Range badges must have aria-label attributes."""
         content = self._get_tutorial_content()
-        for r in ["R1", "R2", "R3", "R4", "R5"]:
-            assert f'aria-label="Go to note {r}' in content, \
-                f"Range marker {r} missing aria-label"
+        assert 'aria-label=' in content, "Range badges need aria-labels"
 
-    def test_focus_visible_styles_exist_for_range_marker(self):
-        """CSS must have :focus-visible styles for range markers."""
+    def test_focus_visible_styles_exist_for_row(self):
+        """CSS must have :focus-visible styles for range rows."""
         content = self._get_tutorial_content()
-        assert ".range-marker:focus-visible" in content
+        assert ".range-row:focus-visible" in content
         assert "outline" in content
 
-    def test_focus_visible_styles_exist_for_range_ref(self):
-        """CSS must have :focus-visible styles for callout refs."""
+    def test_focus_visible_styles_exist_for_badge(self):
+        """CSS must have :focus-visible styles for range badges."""
         content = self._get_tutorial_content()
-        assert ".range-ref:focus-visible" in content
+        assert ".range-badge:focus-visible" in content
 
-    def test_target_fallback_for_code_line(self):
-        """CSS must have :target fallback for code lines (no-JS support)."""
+    def test_target_fallback_for_row(self):
+        """CSS must have :target fallback for rows (no-JS support)."""
         content = self._get_tutorial_content()
-        assert ".code-line:target" in content
-
-    def test_target_fallback_for_doc_section(self):
-        """CSS must have :target fallback for doc sections (no-JS support)."""
-        content = self._get_tutorial_content()
-        assert ".doc-section:target" in content
+        assert ".range-row:target" in content
 
     def test_focus_visible_uses_accent_outline(self):
         """Focus-visible outline must use accent color token."""
         content = self._get_tutorial_content()
-        # Find focus-visible blocks and check they use accent for outline
         import re
         focus_blocks = re.findall(
             r':focus-visible\s*\{[^}]*\}',

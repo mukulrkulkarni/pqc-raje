@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Layout 3 — Expanding Rail · Module Tutorial</title>
+<style>
+:root{
+  --bg:#ffffff; --surface:#f8fafc; --surface-2:#f1f5f9; --border:#e2e8f0;
+  --border-strong:#cbd5e1; --text:#0f172a; --text-muted:#475569; --text-dim:#64748b;
+  --accent:#2563eb; --accent-soft:#eff6ff; --accent-border:#bfdbfe;
+  --code-bg:#f8fafc; --code-text:#0f172a; --kw:#7c3aed; --str:#15803d;
+  --com:#64748b; --num:#b45309; --fn:#2563eb;
+  --ok:#15803d; --ok-soft:#f0fdf4; --warn:#b45309; --warn-soft:#fffbeb;
+  --radius:8px; --radius-sm:5px;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --rail-w:64px; --rail-open:248px; --code-frac:56%;
+}
+html[data-theme="dark"]{
+  --bg:#0b1120; --surface:#0f172a; --surface-2:#1e293b; --border:#1e293b;
+  --border-strong:#334155; --text:#e2e8f0; --text-muted:#94a3b8; --text-dim:#64748b;
+  --accent:#60a5fa; --accent-soft:#172554; --accent-border:#1e40af;
+  --code-bg:#0f172a; --code-text:#e2e8f0; --kw:#c4b5fd; --str:#86efac;
+  --com:#64748b; --num:#fcd34d; --fn:#93c5fd;
+  --ok:#86efac; --ok-soft:#052e16; --warn:#fcd34d; --warn-soft:#2a1f05;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{background:var(--bg); color:var(--text); font-family:var(--sans);
+  font-size:14px; line-height:1.55;}
+.shell{display:grid; grid-template-columns:var(--rail-w) 1fr; min-height:100vh;}
+
+/* rail collapses to 64px; expands on hover/focus-within to reveal descriptions */
+.rail{
+  background:var(--surface); border-right:1px solid var(--border);
+  position:sticky; top:0; height:100vh; width:var(--rail-w);
+  display:flex; flex-direction:column; align-items:stretch;
+  padding:var(--s4) 0; z-index:10;
+}
+.rail:hover, .rail:focus-within{
+  width:var(--rail-open); box-shadow:4px 0 16px rgba(15,23,42,.08);
+}
+.rail-inner{display:flex; flex-direction:column; height:100%;
+  padding:0 var(--s3); overflow:hidden;}
+.brand{display:flex; align-items:center; gap:10px; margin-bottom:var(--s5);
+  min-height:30px;}
+.brand-mark{width:30px;height:30px;border-radius:var(--radius-sm);
+  background:var(--accent);color:#fff;display:grid;place-items:center;
+  font-weight:700;font-size:12px;flex:none;}
+.reveal{opacity:0; white-space:nowrap;}
+.rail:hover .reveal, .rail:focus-within .reveal{opacity:1;}
+.brand-text{font-weight:650;font-size:13.5px;}
+.brand-sub{font-size:10.5px;color:var(--text-dim);}
+.nav-label{font-size:10px;text-transform:uppercase;letter-spacing:.07em;
+  color:var(--text-dim);font-weight:650;margin:0 0 var(--s2) 7px;height:14px;}
+.jump{display:flex;flex-direction:column;gap:3px;}
+.jump a{display:flex; align-items:center; gap:10px; padding:6px 6px;
+  border-radius:var(--radius-sm); text-decoration:none; color:var(--text-muted);
+  min-height:34px;}
+.jump a:hover{background:var(--surface-2); color:var(--text);}
+.jump a:focus-visible{outline:2px solid var(--accent); outline-offset:1px;}
+.jump a.active{background:var(--accent-soft); color:var(--accent);}
+.j-badge{font-family:var(--mono); font-size:10.5px; font-weight:700;
+  width:28px; height:22px; flex:none; display:grid; place-items:center;
+  background:var(--surface-2); color:var(--text-dim); border-radius:4px;}
+.jump a.active .j-badge{background:var(--accent); color:#fff;}
+.j-title{font-size:12.5px; font-weight:600; display:block; line-height:1.25;}
+.j-desc{font-size:10.5px; color:var(--text-dim); display:block; line-height:1.3;}
+.jump a.active .j-desc{color:var(--accent); opacity:.85;}
+.theme{margin-top:auto; padding-top:var(--s3); border-top:1px solid var(--border);}
+.seg{display:flex; gap:3px; background:var(--surface-2); padding:3px;
+  border-radius:var(--radius-sm);}
+.seg button{font:inherit; font-size:10.5px; font-weight:600; border:0;
+  cursor:pointer; background:transparent; color:var(--text-muted);
+  border-radius:4px; height:26px; flex:1; min-width:26px; padding:0;}
+.seg button[aria-pressed="true"]{background:var(--bg); color:var(--text);
+  box-shadow:0 1px 2px rgba(0,0,0,.08);}
+.seg button:focus-visible{outline:2px solid var(--accent); outline-offset:1px;}
+.seg .lbl{display:none;}
+.rail:hover .seg .lbl, .rail:focus-within .seg .lbl{display:inline;}
+.rail:hover .seg .ico, .rail:focus-within .seg .ico{display:none;}
+
+.main{padding:var(--s5) var(--s5) var(--s6); min-width:0; max-width:1500px;}
+.crumb{font-size:11.5px; color:var(--text-dim); margin-bottom:var(--s1);}
+h1{font-size:21px; margin:0 0 var(--s3); letter-spacing:-.02em;}
+
+/* I/O summary as a single table-like strip: label column + value column, no gaps */
+.io-strip{
+  display:grid; grid-template-columns:repeat(4, minmax(0,1fr));
+  border:1px solid var(--border); border-radius:var(--radius);
+  overflow:hidden; margin-bottom:var(--s5); background:var(--surface);
+}
+.io-cell{padding:var(--s2) var(--s3); border-right:1px solid var(--border);
+  min-width:0;}
+.io-cell:last-child{border-right:0;}
+.io-k{font-size:10px; text-transform:uppercase; letter-spacing:.06em;
+  color:var(--text-dim); font-weight:650; display:block; margin-bottom:2px;}
+.io-v{font-family:var(--mono); font-size:12px; color:var(--text);
+  display:flex; flex-wrap:wrap; gap:var(--s1) var(--s2);}
+.io-v .t{color:var(--fn);}
+.io-v .r{color:var(--warn);}
+.io-v .o{color:var(--str);}
+
+/* each range is a row with a shared header bar spanning both columns */
+.rows{display:flex; flex-direction:column; gap:var(--s3);}
+.row{border:1px solid var(--border); border-radius:var(--radius);
+  overflow:hidden; scroll-margin-top:var(--s4);}
+.row.sel{border-color:var(--accent); box-shadow:0 0 0 1px var(--accent);}
+.row-head{display:flex; align-items:center; gap:10px; padding:6px var(--s3);
+  background:var(--surface); border-bottom:1px solid var(--border);
+  cursor:pointer;}
+.row.sel .row-head{background:var(--accent-soft);}
+.row-head:focus-visible{outline:2px solid var(--accent); outline-offset:-2px;}
+.rk{font-family:var(--mono); font-size:10.5px; font-weight:700; color:#fff;
+  background:var(--accent); padding:2px 7px; border-radius:4px; flex:none;}
+.row:not(.sel) .rk{background:var(--border-strong); color:var(--text-muted);}
+.row-title{font-weight:650; font-size:13px;}
+.row-sum{font-size:12px; color:var(--text-dim); border-left:1px solid var(--border);
+  padding-left:10px; margin-left:2px;}
+.row-right{margin-left:auto; display:flex; align-items:center; gap:var(--s2);}
+.row-lines{font-family:var(--mono); font-size:10.5px; color:var(--text-dim);}
+.tag{font-size:10px; padding:1px 6px; border-radius:3px;
+  background:var(--surface-2); color:var(--text-dim);}
+.tag.ok{background:var(--ok-soft); color:var(--ok);}
+.tag.warn{background:var(--warn-soft); color:var(--warn);}
+
+.split{display:grid; grid-template-columns:var(--code-frac) 1fr;}
+.code-col{background:var(--code-bg); border-right:1px solid var(--border);
+  min-width:0;}
+pre{margin:0; padding:10px 13px; font-family:var(--mono); font-size:13px;
+  line-height:1.5; color:var(--code-text); overflow-x:auto;}
+pre code{display:block; white-space:pre;}
+.ln{color:var(--text-dim); user-select:none; display:inline-block;
+  width:2.2ch; text-align:right; margin-right:1.4ch; opacity:.6;}
+.hl{background:var(--accent-soft); display:block; margin:0 -13px; padding:0 13px;
+  border-left:2px solid var(--accent);}
+.kw{color:var(--kw);} .str{color:var(--str);} .com{color:var(--com);}
+.num{color:var(--num);} .fn{color:var(--fn);}
+.note-col{padding:10px var(--s4); min-width:0;}
+.note-col p{margin:0 0 var(--s2); font-size:13px; color:var(--text-muted);
+  line-height:1.58;}
+.note-col p:last-of-type{margin-bottom:0;}
+.note-col strong{color:var(--text); font-weight:650;}
+.note-col code{font-family:var(--mono); font-size:11.5px;
+  background:var(--surface-2); padding:1px 4px; border-radius:3px;}
+.facts{display:flex; flex-wrap:wrap; gap:var(--s1) var(--s3); margin-top:var(--s2);
+  padding-top:var(--s2); border-top:1px dashed var(--border);
+  font-size:11px; color:var(--text-dim); font-family:var(--mono);}
+.facts b{color:var(--text-muted); font-weight:600;}
+
+/* usage example: three tight cells on one line - call, output, meta */
+.usage{margin-top:var(--s5);}
+.sec-head{display:flex; align-items:center; gap:10px; margin-bottom:var(--s2);}
+.sec-head h2{font-size:14px; margin:0;}
+.sec-head .rule{flex:1; height:1px; background:var(--border);}
+.usage-grid{display:grid; grid-template-columns:var(--code-frac) 1fr;
+  border:1px solid var(--border); border-radius:var(--radius); overflow:hidden;}
+.usage-grid .code-col{border-right:1px solid var(--border);}
+.usage-out{display:flex; flex-direction:column; background:var(--surface);}
+.usage-out .hd{font-size:10px; text-transform:uppercase; letter-spacing:.06em;
+  color:var(--text-dim); font-weight:650; padding:6px var(--s3) 2px;}
+.usage-out pre{background:transparent; font-size:12px; padding:0 var(--s3) var(--s2);}
+.usage-meta{margin-top:auto; border-top:1px solid var(--border);
+  display:grid; grid-template-columns:repeat(3,1fr); font-size:11px;}
+.usage-meta div{padding:5px var(--s3); border-right:1px solid var(--border);
+  color:var(--text-dim); font-family:var(--mono);}
+.usage-meta div:last-child{border-right:0;}
+footer{margin-top:var(--s6); padding-top:var(--s3); border-top:1px solid var(--border);
+  font-size:11.5px; color:var(--text-dim); display:flex; justify-content:space-between;}
+.badge{font-family:var(--mono); font-size:10.5px; padding:1px 6px;
+  background:var(--ok-soft); color:var(--ok); border-radius:3px;}
+@media (prefers-reduced-motion:no-preference){
+  .rail{transition:width .16s ease, box-shadow .16s ease;}
+  .reveal{transition:opacity .12s ease;}
+  .jump a,.row{transition:background-color .12s ease,border-color .12s ease;}
+}
+@media (prefers-reduced-motion:reduce){
+  .rail{transition:none;} .reveal{transition:none;}
+}
+@media (max-width:1100px){
+  .split,.usage-grid{grid-template-columns:1fr;}
+  .code-col{border-right:0; border-bottom:1px solid var(--border);}
+  .io-strip{grid-template-columns:repeat(2,1fr);}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside class="rail">
+    <div class="rail-inner">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">E3</div>
+        <div class="reveal">
+          <div class="brand-text">electre3.config</div>
+          <div class="brand-sub">Module tutorial</div>
+        </div>
+      </div>
+
+      <nav aria-label="Jump to section">
+        <div class="nav-label reveal">Jump to</div>
+        <div class="jump">
+          <a href="#r1" class="active" aria-label="R1 Imports - stdlib only, no dependencies">
+            <span class="j-badge">R1</span>
+            <span class="reveal">
+              <span class="j-title">Imports</span>
+              <span class="j-desc">Stdlib only, no dependencies</span>
+            </span>
+          </a>
+          <a href="#r2" aria-label="R2 Defaults - frozen threshold constants">
+            <span class="j-badge">R2</span>
+            <span class="reveal">
+              <span class="j-title">Defaults</span>
+              <span class="j-desc">Frozen threshold constants</span>
+            </span>
+          </a>
+          <a href="#r3" aria-label="R3 Loader - public entry point, reads disk">
+            <span class="j-badge">R3</span>
+            <span class="reveal">
+              <span class="j-title">Loader</span>
+              <span class="j-desc">Public entry point, reads disk</span>
+            </span>
+          </a>
+          <a href="#r4" aria-label="R4 Validation - guards the threshold ordering rule">
+            <span class="j-badge">R4</span>
+            <span class="reveal">
+              <span class="j-title">Validation</span>
+              <span class="j-desc">Guards threshold ordering</span>
+            </span>
+          </a>
+          <a href="#usage" aria-label="Usage example - runnable call and output">
+            <span class="j-badge">EX</span>
+            <span class="reveal">
+              <span class="j-title">Usage</span>
+              <span class="j-desc">Runnable call and output</span>
+            </span>
+          </a>
+        </div>
+      </nav>
+
+      <div class="theme">
+        <div class="nav-label reveal">Theme</div>
+        <div class="seg" role="group" aria-label="Theme">
+          <button type="button" aria-pressed="true" aria-label="Light theme">
+            <span class="ico" aria-hidden="true">&#9728;</span><span class="lbl">Light</span>
+          </button>
+          <button type="button" aria-pressed="false" aria-label="Dark theme">
+            <span class="ico" aria-hidden="true">&#9790;</span><span class="lbl">Dark</span>
+          </button>
+          <button type="button" aria-pressed="false" aria-label="System theme">
+            <span class="ico" aria-hidden="true">&#9881;</span><span class="lbl">Sys</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="crumb">Modules / electre3 / config.py</div>
+    <h1>Configuration loader</h1>
+
+    <!-- I/O summary: 4 equal cells, borders instead of padding -->
+    <div class="io-strip">
+      <div class="io-cell">
+        <span class="io-k">Inputs</span>
+        <span class="io-v"><span class="t">path: str</span></span>
+      </div>
+      <div class="io-cell">
+        <span class="io-k">Options</span>
+        <span class="io-v"><span class="t">strict: bool = True</span></span>
+      </div>
+      <div class="io-cell">
+        <span class="io-k">Returns</span>
+        <span class="io-v"><span class="o">Config</span></span>
+      </div>
+      <div class="io-cell">
+        <span class="io-k">Raises</span>
+        <span class="io-v"><span class="r">ConfigError</span></span>
+      </div>
+    </div>
+
+    <div class="rows">
+      <section class="row sel" id="r1">
+        <div class="row-head" role="button" tabindex="0" aria-expanded="true">
+          <span class="rk">R1</span>
+          <span class="row-title">Imports</span>
+          <span class="row-sum">Standard library only &mdash; keeps the module dependency-free</span>
+          <span class="row-right">
+            <span class="tag ok">pure</span>
+            <span class="row-lines">L1&ndash;L8</span>
+          </span>
+        </div>
+        <div class="split">
+          <div class="code-col">
+            <pre><code><span class="ln">1</span><span class="com"># Configuration loading for the ELECTRE III pipeline.</span>
+<span class="ln">2</span><span class="kw">from</span> __future__ <span class="kw">import</span> annotations
+<span class="ln">3</span>
+<span class="ln">4</span><span class="kw">import</span> json
+<span class="ln">5</span><span class="kw">from</span> dataclasses <span class="kw">import</span> dataclass, field
+<span class="ln">6</span><span class="kw">from</span> pathlib <span class="kw">import</span> Path
+<span class="ln">7</span><span class="kw">from</span> typing <span class="kw">import</span> Any, Mapping, Sequence
+<span class="ln">8</span></code></pre>
+          </div>
+          <div class="note-col">
+            <p>Four stdlib imports and nothing else. The module stays importable from
+              the CLI, the web app and the test suite without dragging a dependency
+              graph behind it.</p>
+            <p><code>from __future__ import annotations</code> defers annotation
+              evaluation so the dataclass can forward-reference <strong>Config</strong>
+              at no runtime cost.</p>
+            <div class="facts"><b>imports</b> 4 stdlib <b>effects</b> none</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="row" id="r2">
+        <div class="row-head" role="button" tabindex="0" aria-expanded="true">
+          <span class="rk">R2</span>
+          <span class="row-title">Defaults</span>
+          <span class="row-sum">Frozen threshold constants with reproducible values</span>
+          <span class="row-right">
+            <span class="tag ok">pure</span>
+            <span class="row-lines">L9&ndash;L18</span>
+          </span>
+        </div>
+        <div class="split">
+          <div class="code-col">
+            <pre><code><span class="ln">9</span><span class="num">DEFAULT_Q</span> = <span class="num">0.05</span>   <span class="com"># indifference threshold</span>
+<span class="ln">10</span><span class="num">DEFAULT_P</span> = <span class="num">0.20</span>   <span class="com"># preference threshold</span>
+<span class="ln">11</span><span class="num">DEFAULT_V</span> = <span class="num">0.60</span>   <span class="com"># veto threshold</span>
+<span class="ln">12</span>
+<span class="ln">13</span>@dataclass(frozen=<span class="kw">True</span>, slots=<span class="kw">True</span>)
+<span class="ln">14</span><span class="kw">class</span> <span class="fn">Thresholds</span>:
+<span class="ln">15</span>    q: float = DEFAULT_Q
+<span class="ln">16</span>    p: float = DEFAULT_P
+<span class="ln">17</span>    v: float = DEFAULT_V
+<span class="ln">18</span></code></pre>
+          </div>
+          <div class="note-col">
+            <p>Thresholds are <strong>frozen and slotted</strong>, so once a config is
+              loaded nothing downstream can mutate it. That removes an entire class of
+              ranking-drift defects.</p>
+            <p>The defaults mirror the reference worked example, so an omitted field
+              still yields a reproducible ranking.</p>
+            <div class="facts"><b>frozen</b> yes <b>q/p/v</b> .05 / .20 / .60</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="row" id="r3">
+        <div class="row-head" role="button" tabindex="0" aria-expanded="true">
+          <span class="rk">R3</span>
+          <span class="row-title">Loader</span>
+          <span class="row-sum">Public entry point; fails fast with a typed error</span>
+          <span class="row-right">
+            <span class="tag warn">reads disk</span>
+            <span class="row-lines">L19&ndash;L34</span>
+          </span>
+        </div>
+        <div class="split">
+          <div class="code-col">
+            <pre><code><span class="ln">19</span><span class="kw">def</span> <span class="fn">load_config</span>(path: str, strict: bool = <span class="kw">True</span>) -&gt; Config:
+<span class="ln">20</span>    <span class="str">&quot;&quot;&quot;Load and validate a config file from disk.&quot;&quot;&quot;</span>
+<span class="ln">21</span>    p = <span class="fn">Path</span>(path)
+<span class="ln">22</span>    <span class="kw">if not</span> p.<span class="fn">exists</span>():
+<span class="ln">23</span>        <span class="kw">raise</span> <span class="fn">ConfigError</span>(<span class="str">f"missing config: {path}"</span>)
+<span class="ln">24</span>    raw = json.<span class="fn">loads</span>(p.<span class="fn">read_text</span>(encoding=<span class="str">"utf-8"</span>))
+<span class="ln">25</span>    cfg = <span class="fn">_build</span>(raw, strict=strict)
+<span class="ln">26</span>    <span class="fn">_validate</span>(cfg.thresholds)
+<span class="ln">27</span>    <span class="kw">return</span> cfg</code></pre>
+          </div>
+          <div class="note-col">
+            <p>The one public entry point. A missing file raises a typed
+              <strong>ConfigError</strong> rather than letting
+              <code>FileNotFoundError</code> escape to the caller.</p>
+            <p>Reading, building and validating stay three separate calls so each is
+              unit-testable without touching the filesystem.</p>
+            <div class="facts"><b>reads</b> filesystem <b>raises</b> ConfigError</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="row" id="r4">
+        <div class="row-head" role="button" tabindex="0" aria-expanded="true">
+          <span class="rk">R4</span>
+          <span class="row-title">Validation</span>
+          <span class="row-sum">Guards the ordering invariant on every load</span>
+          <span class="row-right">
+            <span class="tag ok">pure</span>
+            <span class="row-lines">L35&ndash;L48</span>
+          </span>
+        </div>
+        <div class="split">
+          <div class="code-col">
+            <pre><code><span class="ln">35</span><span class="kw">def</span> <span class="fn">_validate</span>(t: Thresholds) -&gt; <span class="kw">None</span>:
+<span class="ln">36</span>    <span class="kw">if not</span> (<span class="num">0</span> &lt;= t.q &lt;= t.p &lt;= t.v):
+<span class="hl"><span class="ln">37</span>        <span class="kw">raise</span> <span class="fn">ConfigError</span>(</span>
+<span class="hl"><span class="ln">38</span>            <span class="str">f"need 0 &lt;= q &lt;= p &lt;= v, got {t!r}"</span></span>
+<span class="hl"><span class="ln">39</span>        )</span>
+<span class="ln">40</span>    <span class="kw">if</span> t.v == <span class="num">0</span>:
+<span class="ln">41</span>        <span class="kw">raise</span> <span class="fn">ConfigError</span>(<span class="str">"veto must be non-zero"</span>)</code></pre>
+          </div>
+          <div class="note-col">
+            <p>Enforces <code>0 &#8804; q &#8804; p &#8804; v</code>. Breaking that order
+              silently produces meaningless credibility values, so this guard runs even
+              when <strong>strict=False</strong>.</p>
+            <p>Lines 37&ndash;39 are highlighted because they are precisely what the
+              negative test asserts against.</p>
+            <div class="facts"><b>invariant</b> 0&#8804;q&#8804;p&#8804;v <b>test</b> test_config.py</div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <section class="usage" id="usage">
+      <div class="sec-head">
+        <h2>Usage example</h2>
+        <span class="rule" aria-hidden="true"></span>
+      </div>
+      <div class="usage-grid">
+        <div class="code-col">
+          <pre><code><span class="kw">from</span> electre3.config <span class="kw">import</span> load_config
+
+cfg = <span class="fn">load_config</span>(<span class="str">"examples/cars.json"</span>)
+<span class="fn">print</span>(cfg.thresholds)
+<span class="fn">print</span>(<span class="str">"criteria:"</span>, cfg.criteria_count)</code></pre>
+        </div>
+        <div class="usage-out">
+          <div class="hd">Output</div>
+          <pre><code>Thresholds(q=0.05, p=0.2, v=0.6)
+criteria: 5</code></pre>
+          <div class="usage-meta">
+            <div>exit 0</div><div>~2 ms</div><div>no network</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <span>Layout 3 &mdash; expanding rail</span>
+      <span class="badge">84 mono chars @ 1366px</span>
+    </footer>
+  </main>
+</div>
+</body>
+</html>

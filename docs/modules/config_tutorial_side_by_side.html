@@ -8,8 +8,8 @@
 <title>config.py - Module Tutorial</title>
 <style>
 /* ==========================================================================
-   CONFIG MODULE TUTORIAL v2.4
-   Theme: Option A with sidebar toggle (no inline JS)
+   CONFIG MODULE TUTORIAL v4.0 - Layout 2 (Code-Dominant Split)
+   Code column: >=60 chars at 1366px, reduced whitespace
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
@@ -30,9 +30,8 @@
   --sel: #0b7a4b;
   --sel-tint: rgba(11,122,75,.10);
   --sel-ring: rgba(11,122,75,.26);
-  --sel-on: #ffffff;
-  --header-h: 48px;
-  --sidebar-w: 200px;
+  --sidebar-w: 180px;
+  --code-w: 520px;
   --font-sans: Arial, ui-sans-serif, system-ui, sans-serif;
   --font-mono: Consolas, Monaco, 'Liberation Mono', monospace;
 }
@@ -48,7 +47,7 @@
     --accent: #3b82f6; --accent-soft: rgba(59,130,246,.14);
     --accent-on: #0f1115;
     --sel: #3ddc97; --sel-tint: rgba(61,220,151,.12);
-    --sel-ring: rgba(61,220,151,.30); --sel-on: #0f1115;
+    --sel-ring: rgba(61,220,151,.30);
   }
 }
 
@@ -60,7 +59,7 @@
   --accent: #3b82f6; --accent-soft: rgba(59,130,246,.14);
   --accent-on: #0f1115;
   --sel: #3ddc97; --sel-tint: rgba(61,220,151,.12);
-  --sel-ring: rgba(61,220,151,.30); --sel-on: #0f1115;
+  --sel-ring: rgba(61,220,151,.30);
 }
 
 /* --------------------------------------------------------------------------
@@ -73,10 +72,9 @@ body {
   background: var(--bg);
   color: var(--text);
   font-family: var(--font-sans);
-  font-size: 15px;
-  line-height: 1.6;
+  font-size: 14px;
+  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
-  transition: background-color .15s ease, color .15s ease;
 }
 
 /* --------------------------------------------------------------------------
@@ -92,46 +90,47 @@ body {
   flex-shrink: 0;
   background: var(--surface);
   border-right: 1px solid var(--border);
-  padding: 16px;
+  padding: 12px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
 }
 
 .sidebar-title {
   font-weight: 600;
-  font-size: 14px;
-  padding-bottom: 12px;
+  font-size: 13px;
+  padding-bottom: 10px;
   border-bottom: 1px solid var(--border-soft);
 }
 
-.sidebar-section {
-  font-size: 12px;
-}
-
+.sidebar-section { font-size: 11px; }
 .sidebar-section h3 {
-  font-size: 11px;
+  font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--muted);
-  margin: 0 0 8px;
+  margin: 0 0 6px;
 }
 
 /* --------------------------------------------------------------------------
-   4. THEME TOGGLE (IN SIDEBAR)
+   4. THEME TOGGLE
    -------------------------------------------------------------------------- */
 .theme-toggle {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 3px;
 }
 
 .theme-toggle button {
-  padding: 8px 12px;
-  font-size: 12px;
+  padding: 6px 10px;
+  font-size: 11px;
   font-family: inherit;
   border: 1px solid var(--border);
-  border-radius: 4px;
+  border-radius: 3px;
   background: var(--surface-2);
   color: var(--muted);
   cursor: pointer;
@@ -151,505 +150,496 @@ body {
   font-weight: 500;
 }
 
-/* Sync scroll toggle */
-.sync-toggle {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 12px;
-  font-size: 12px;
-  font-family: inherit;
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  background: var(--surface-2);
-  color: var(--muted);
-  cursor: pointer;
-  transition: all .15s ease;
-  width: 100%;
-  text-align: left;
-}
-
-.sync-toggle:hover {
-  color: var(--text);
-  border-color: var(--accent);
-}
-
-.sync-toggle.sync-enabled {
-  background: var(--sel-tint);
-  color: var(--sel);
-  border-color: var(--sel);
-}
-
-.sync-toggle .sync-indicator {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--muted);
-  transition: background .15s ease;
-}
-
-.sync-toggle.sync-enabled .sync-indicator {
-  background: var(--sel);
-}
-
 /* --------------------------------------------------------------------------
-   5. MAIN CONTENT AREA
+   5. JUMP-TO NAV
    -------------------------------------------------------------------------- */
-.main {
-  flex: 1;
+.jump-nav {
   display: flex;
   flex-direction: column;
+  gap: 4px;
 }
 
-.header {
-  height: var(--header-h);
+.jump-item {
   display: flex;
-  align-items: center;
-  padding: 0 20px;
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
+  align-items: baseline;
+  gap: 6px;
+  text-decoration: none;
+  color: var(--text);
+  padding: 3px 0;
+  font-size: 11px;
 }
 
-.header-title {
-  font-weight: 600;
-  font-size: 14px;
-}
+.jump-item:hover { color: var(--accent); }
 
-/* --------------------------------------------------------------------------
-   6. SIDE-BY-SIDE PANES
-   -------------------------------------------------------------------------- */
-.container {
-  display: flex;
-  flex: 1;
-}
-
-.pane {
-  flex: 1;
-  overflow: auto;
-  padding: 20px;
-}
-
-.pane-code {
-  background: var(--surface);
-  border-right: 1px solid var(--border);
-  font-family: var(--font-mono);
-  font-size: 13px;
-  line-height: 1.7;
-}
-
-.pane-doc {
-  background: var(--bg);
-  max-width: 640px;
-}
-
-.pane-header {
-  font-weight: 600;
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--muted);
-  padding-bottom: 12px;
-  border-bottom: 1px solid var(--border-soft);
-  margin-bottom: 16px;
-}
-
-/* --------------------------------------------------------------------------
-   7. CODE WITH LINE NUMBERS AND RANGE MARKERS
-   -------------------------------------------------------------------------- */
-.code-block { margin: 0; padding: 0; }
-
-.code-line {
-  display: flex;
-  padding: 0 12px;
-  min-height: 24px;
-  transition: background-color .1s ease;
-}
-
-.code-line:hover { background: var(--accent-soft); }
-
-.line-num {
-  flex-shrink: 0;
-  width: 32px;
-  text-align: right;
-  padding-right: 16px;
-  color: var(--muted);
-  user-select: none;
-}
-
-.line-content { flex: 1; white-space: pre; }
-
-.kw { color: var(--accent); }
-.str { color: var(--sel); }
-.cm { color: var(--muted); font-style: italic; }
-.fn { color: #c084fc; }
-.num { color: #f59e0b; }
-
-/* Range markers - clickable */
-.range-marker {
+.jump-item .badge {
   display: inline-block;
   font-size: 10px;
   font-weight: 600;
   padding: 1px 5px;
-  margin-left: 8px;
   border-radius: 3px;
   background: var(--accent);
   color: var(--accent-on);
-  vertical-align: middle;
-  cursor: pointer;
-  text-decoration: none;
-  transition: filter .15s ease;
 }
 
-.range-marker:hover {
-  filter: brightness(1.15);
-}
-
-.range-marker:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+.jump-item .desc {
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* --------------------------------------------------------------------------
-   8. SELECTION HIGHLIGHT (GREEN) - toggle on click only
+   6. MAIN CONTENT
    -------------------------------------------------------------------------- */
-.code-line.range-selected {
-  background: var(--sel-tint);
-  border-left: 3px solid var(--sel);
-  margin-left: -3px;
+.main {
+  flex: 1;
+  padding: 16px 24px;
+  max-width: 1000px;
 }
 
-.code-line.range-selected .line-num {
-  color: var(--sel);
-  font-weight: 600;
+.main h1 { font-size: 1.3rem; margin: 0 0 12px; }
+.main h2 {
+  font-size: 1rem;
+  margin: 24px 0 10px;
+  color: var(--accent);
+  border-bottom: 1px solid var(--border-soft);
+  padding-bottom: 6px;
 }
-
-/* Doc section highlight when selected */
-.doc-section.range-selected {
-  background: var(--sel-tint);
-  border-left: 3px solid var(--sel);
-  margin-left: -16px;
-  padding-left: 13px;
-  border-radius: 0 6px 6px 0;
-}
-
-/* No-JS fallback: :target highlights for anchor navigation */
-.code-line:target {
-  background: var(--sel-tint);
-  border-left: 3px solid var(--sel);
-  margin-left: -3px;
-}
-
-.doc-section:target {
-  background: var(--sel-tint);
-  border-left: 3px solid var(--sel);
-  margin-left: -16px;
-  padding-left: 13px;
-  border-radius: 0 6px 6px 0;
-}
-
-/* --------------------------------------------------------------------------
-   9. DOCUMENTATION CONTENT
-   -------------------------------------------------------------------------- */
-h1 { font-size: 1.4rem; margin: 0 0 16px; }
-h2 { font-size: 1.1rem; margin: 24px 0 12px; color: var(--accent); }
-h3 { font-size: 1rem; margin: 16px 0 8px; }
-p { margin: 0 0 12px; }
-p.note {
-  background: var(--surface-2);
-  border-left: 3px solid var(--accent);
-  padding: 8px 12px;
-  margin: 12px 0;
-  font-size: 0.9em;
-}
-code {
+.main p { margin: 0 0 8px; }
+.main code {
   font-family: var(--font-mono);
   font-size: 0.9em;
   background: var(--surface-2);
-  padding: 2px 6px;
-  border-radius: 3px;
+  padding: 1px 4px;
+  border-radius: 2px;
 }
-pre {
-  background: var(--surface);
-  padding: 12px;
-  border-radius: 6px;
-  overflow-x: auto;
-  font-size: 13px;
-}
-pre code { background: none; padding: 0; }
-ul, ol { margin: 0 0 12px; padding-left: 20px; }
-li { margin-bottom: 4px; }
 
 .callout {
-  padding: 12px 16px;
-  background: var(--sel-tint);
-  border-left: 3px solid var(--sel);
-  border-radius: 0 6px 6px 0;
+  background: var(--accent-soft);
+  border-left: 3px solid var(--accent);
+  padding: 8px 12px;
+  margin: 12px 0;
+  border-radius: 0 4px 4px 0;
+  font-size: 13px;
+}
+
+/* --------------------------------------------------------------------------
+   7. RANGE ROWS - Code-Dominant Split
+   -------------------------------------------------------------------------- */
+.range-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
   margin: 16px 0;
 }
 
-.callout strong { color: var(--sel); }
-
-/* Range reference badges in docs */
-.range-ref {
-  display: inline-block;
-  font-size: 11px;
-  font-weight: 600;
-  padding: 2px 6px;
-  margin-right: 4px;
-  border-radius: 3px;
-  background: var(--accent);
-  color: var(--accent-on);
-  text-decoration: none;
+.range-row {
+  display: grid;
+  grid-template-columns: var(--code-w) 1fr;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+  overflow: hidden;
+  transition: border-color .15s ease, box-shadow .15s ease;
 }
 
-.range-ref:hover {
-  filter: brightness(1.1);
-}
-
-.range-ref:focus-visible {
+.range-row:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
 
-/* Definition list for I/O specs */
-.io-spec { margin: 8px 0 16px; }
-.io-spec dt {
-  font-weight: 600;
-  color: var(--accent);
-  margin-top: 8px;
+.range-row.range-selected {
+  border-color: var(--sel);
+  box-shadow: 0 0 0 2px var(--sel-ring);
 }
-.io-spec dd {
-  margin: 2px 0 0 16px;
-  color: var(--text);
+
+.range-row:target {
+  border-color: var(--sel);
+  box-shadow: 0 0 0 2px var(--sel-ring);
+}
+
+/* Code column - dominant, no horizontal scroll at 1366px */
+.range-code {
+  background: var(--surface-2);
+  padding: 10px 12px;
+  border-right: 1px solid var(--border);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.4;
+  overflow-x: auto;
+  min-width: 0;
+}
+
+.range-code .line {
+  display: flex;
+  gap: 10px;
+  white-space: pre;
+}
+
+.range-code .ln {
+  color: var(--muted);
+  min-width: 20px;
+  text-align: right;
+  user-select: none;
+}
+
+/* Syntax highlighting */
+.kw { color: #7c3aed; font-weight: 500; }
+.fn { color: #2563eb; }
+.str { color: #059669; }
+.num { color: #d97706; }
+.cm { color: var(--muted); font-style: italic; }
+
+@media (prefers-color-scheme: dark) {
+  :root[data-theme="system"] .kw { color: #a78bfa; }
+  :root[data-theme="system"] .fn { color: #60a5fa; }
+  :root[data-theme="system"] .str { color: #34d399; }
+  :root[data-theme="system"] .num { color: #fbbf24; }
+}
+:root[data-theme="dark"] .kw { color: #a78bfa; }
+:root[data-theme="dark"] .fn { color: #60a5fa; }
+:root[data-theme="dark"] .str { color: #34d399; }
+:root[data-theme="dark"] .num { color: #fbbf24; }
+
+/* Callout column - compact */
+.range-callout {
+  padding: 10px 14px;
+  font-size: 13px;
+}
+
+.range-callout h3 {
+  margin: 0 0 6px;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.range-callout h4 {
+  font-size: 11px;
+  color: var(--accent);
+  margin: 10px 0 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.range-callout h4:first-of-type { margin-top: 6px; }
+.range-callout p { margin: 0 0 6px; font-size: 12px; line-height: 1.45; }
+.range-callout ul { margin: 0 0 6px; padding-left: 16px; }
+.range-callout li { margin-bottom: 2px; font-size: 12px; }
+.range-callout pre { margin: 4px 0; padding: 4px 8px; font-size: 11px; }
+
+.range-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 3px;
+  background: var(--accent);
+  color: var(--accent-on);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.range-badge:hover { filter: brightness(1.1); }
+.range-badge:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   8. I/O SUMMARY - Compact
+   -------------------------------------------------------------------------- */
+.io-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 12px;
+  margin: 12px 0;
+}
+
+.io-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 10px 12px;
+}
+
+.io-card h3 {
+  font-size: 12px;
+  margin: 0 0 6px;
+  color: var(--accent);
+}
+
+.io-card .io-row {
+  display: flex;
+  gap: 8px;
+  font-size: 11px;
+  margin-bottom: 3px;
+}
+
+.io-card .io-label {
+  font-weight: 600;
+  min-width: 45px;
+  color: var(--muted);
+}
+
+/* --------------------------------------------------------------------------
+   9. USAGE EXAMPLE - Compact
+   -------------------------------------------------------------------------- */
+.usage-example {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 10px 12px;
+  margin: 12px 0;
+}
+
+.usage-example .note {
+  font-size: 11px;
+  color: var(--muted);
+  margin: 0 0 6px;
+  font-style: italic;
+}
+
+.usage-example pre {
+  margin: 0;
+  padding: 0;
+  font-size: 12px;
+  line-height: 1.4;
+  background: none;
+  border: none;
 }
 
 /* --------------------------------------------------------------------------
    10. RESPONSIVE
    -------------------------------------------------------------------------- */
-@media (max-width: 1000px) {
+@media (max-width: 1200px) {
+  :root { --code-w: 450px; }
+}
+
+@media (max-width: 900px) {
+  .sidebar { width: 160px; }
+  .jump-item .desc { display: none; }
+  :root { --code-w: 380px; }
+}
+
+@media (max-width: 768px) {
   .sidebar { display: none; }
-  .container { flex-direction: column; }
-  .pane-code {
-    border-right: none;
-    border-bottom: 1px solid var(--border);
-    max-height: 50vh;
-  }
-  .pane-doc { max-width: none; }
+  .main { padding: 12px; }
+  .range-row { grid-template-columns: 1fr; }
+  .range-code { border-right: none; border-bottom: 1px solid var(--border); }
 }
 </style>
 </head>
 <body>
-
 <div class="layout">
-  <!-- SIDEBAR -->
   <aside class="sidebar">
-    <div class="sidebar-title">Module Tutorial</div>
-
-    <nav class="sidebar-section">
-      <h3>Modules</h3>
-      <ul style="list-style:none;padding:0;margin:0;">
-        <li><a href="/docs/modules/config" style="color:var(--accent);text-decoration:none;">config</a></li>
-        <li><a href="/docs/modules/concordance" style="color:var(--muted);text-decoration:none;">concordance</a></li>
-        <li><a href="/docs/modules/discordance" style="color:var(--muted);text-decoration:none;">discordance</a></li>
-      </ul>
-    </nav>
+    <div class="sidebar-title">config.py</div>
 
     <div class="sidebar-section">
       <h3>Theme</h3>
       <div class="theme-toggle">
-        <button data-theme-toggle="light" aria-pressed="false">Light</button>
-        <button data-theme-toggle="dark" aria-pressed="false">Dark</button>
-        <button data-theme-toggle="system" aria-pressed="true">System</button>
+        <button data-theme-value="system" class="active">System</button>
+        <button data-theme-value="light">Light</button>
+        <button data-theme-value="dark">Dark</button>
       </div>
     </div>
 
     <div class="sidebar-section">
-      <h3>Scrolling</h3>
-      <button class="sync-toggle" data-sync-toggle aria-pressed="false">
-        <span class="sync-indicator"></span>
-        <span>Sync panes</span>
-      </button>
+      <h3>Jump to</h3>
+      <nav class="jump-nav">
+        <a href="#row-R1" class="jump-item" aria-label="R1: CriterionConfig">
+          <span class="badge">R1</span><span class="desc">CriterionConfig</span>
+        </a>
+        <a href="#row-R2" class="jump-item" aria-label="R2: Validation">
+          <span class="badge">R2</span><span class="desc">Validation</span>
+        </a>
+        <a href="#row-R3" class="jump-item" aria-label="R3: ComputeConfig">
+          <span class="badge">R3</span><span class="desc">ComputeConfig</span>
+        </a>
+        <a href="#row-R4" class="jump-item" aria-label="R4: Block size">
+          <span class="badge">R4</span><span class="desc">Block size</span>
+        </a>
+        <a href="#row-R5" class="jump-item" aria-label="R5: Normalization">
+          <span class="badge">R5</span><span class="desc">Normalization</span>
+        </a>
+      </nav>
     </div>
   </aside>
 
-  <!-- MAIN CONTENT -->
-  <div class="main">
-    <header class="header">
-      <span class="header-title">config.py</span>
-    </header>
+  <main class="main">
+    <h1>Configuration Module</h1>
+    <p>Input specification for ELECTRE III analysis. Typed dataclasses for criterion parameters and compute settings.</p>
 
-    <div class="container">
-      <div id="codeScroll" class="pane pane-code">
-        <div class="pane-header">Source Code</div>
-        <div class="code-block">
-          <div class="code-line"><span class="line-num">1</span><span class="line-content"><span class="cm">"""Configuration dataclasses for ELECTRE III."""</span></span></div>
-          <div class="code-line"><span class="line-num">2</span><span class="line-content"><span class="kw">from</span> dataclasses <span class="kw">import</span> dataclass</span></div>
-          <div class="code-line"><span class="line-num">3</span><span class="line-content"><span class="kw">from</span> typing <span class="kw">import</span> Optional</span></div>
-          <div class="code-line"><span class="line-num">4</span><span class="line-content"></span></div>
-          <div class="code-line" data-range="R1" id="R1"><span class="line-num">5</span><span class="line-content"><span class="kw">@dataclass</span><a href="#doc-R1" class="range-marker" aria-label="Go to note R1: CriterionConfig dataclass">R1</a></span></div>
-          <div class="code-line" data-range="R1"><span class="line-num">6</span><span class="line-content"><span class="kw">class</span> <span class="fn">CriterionConfig</span>:</span></div>
-          <div class="code-line" data-range="R1"><span class="line-num">7</span><span class="line-content">    name: <span class="str">str</span></span></div>
-          <div class="code-line" data-range="R1"><span class="line-num">8</span><span class="line-content">    weight: <span class="str">float</span></span></div>
-          <div class="code-line" data-range="R1"><span class="line-num">9</span><span class="line-content">    q: <span class="str">float</span></span></div>
-          <div class="code-line" data-range="R1"><span class="line-num">10</span><span class="line-content">    p: <span class="str">float</span></span></div>
-          <div class="code-line" data-range="R1"><span class="line-num">11</span><span class="line-content">    v: <span class="str">float</span></span></div>
-          <div class="code-line" data-range="R1"><span class="line-num">12</span><span class="line-content">    maximize: <span class="str">bool</span> = <span class="kw">True</span></span></div>
-          <div class="code-line"><span class="line-num">13</span><span class="line-content"></span></div>
-          <div class="code-line" data-range="R2" id="R2"><span class="line-num">14</span><span class="line-content">    <span class="kw">def</span> <span class="fn">__post_init__</span>(self) -> <span class="kw">None</span>:<a href="#doc-R2" class="range-marker" aria-label="Go to note R2: Threshold validation">R2</a></span></div>
-          <div class="code-line" data-range="R2"><span class="line-num">15</span><span class="line-content">        <span class="kw">if</span> self.q < <span class="num">0</span>:</span></div>
-          <div class="code-line" data-range="R2"><span class="line-num">16</span><span class="line-content">            <span class="kw">raise</span> ValueError(<span class="str">f"q must be >= 0"</span>)</span></div>
-          <div class="code-line" data-range="R2"><span class="line-num">17</span><span class="line-content">        <span class="kw">if</span> self.p < self.q:</span></div>
-          <div class="code-line" data-range="R2"><span class="line-num">18</span><span class="line-content">            <span class="kw">raise</span> ValueError(<span class="str">f"p must be >= q"</span>)</span></div>
-          <div class="code-line" data-range="R2"><span class="line-num">19</span><span class="line-content">        <span class="kw">if</span> self.v < self.p:</span></div>
-          <div class="code-line" data-range="R2"><span class="line-num">20</span><span class="line-content">            <span class="kw">raise</span> ValueError(<span class="str">f"v must be >= p"</span>)</span></div>
-          <div class="code-line" data-range="R2"><span class="line-num">21</span><span class="line-content">        <span class="kw">if</span> self.weight <= <span class="num">0</span>:</span></div>
-          <div class="code-line" data-range="R2"><span class="line-num">22</span><span class="line-content">            <span class="kw">raise</span> ValueError(<span class="str">f"weight must be > 0"</span>)</span></div>
-          <div class="code-line"><span class="line-num">23</span><span class="line-content"></span></div>
-          <div class="code-line" data-range="R3" id="R3"><span class="line-num">24</span><span class="line-content"><span class="kw">@dataclass</span><a href="#doc-R3" class="range-marker" aria-label="Go to note R3: ComputeConfig dataclass">R3</a></span></div>
-          <div class="code-line" data-range="R3"><span class="line-num">25</span><span class="line-content"><span class="kw">class</span> <span class="fn">ComputeConfig</span>:</span></div>
-          <div class="code-line" data-range="R3"><span class="line-num">26</span><span class="line-content">    block_size: <span class="str">int</span> = <span class="num">1000</span></span></div>
-          <div class="code-line" data-range="R3"><span class="line-num">27</span><span class="line-content">    use_numba: <span class="str">bool</span> = <span class="kw">True</span></span></div>
-          <div class="code-line" data-range="R3"><span class="line-num">28</span><span class="line-content">    seed: Optional[<span class="str">int</span>] = <span class="kw">None</span></span></div>
-          <div class="code-line"><span class="line-num">29</span><span class="line-content"></span></div>
-          <div class="code-line" data-range="R4" id="R4"><span class="line-num">30</span><span class="line-content">    <span class="kw">def</span> <span class="fn">__post_init__</span>(self) -> <span class="kw">None</span>:<a href="#doc-R4" class="range-marker" aria-label="Go to note R4: Block size validation">R4</a></span></div>
-          <div class="code-line" data-range="R4"><span class="line-num">31</span><span class="line-content">        <span class="kw">if</span> self.block_size < <span class="num">1</span>:</span></div>
-          <div class="code-line" data-range="R4"><span class="line-num">32</span><span class="line-content">            <span class="kw">raise</span> ValueError(<span class="str">f"block_size must be >= 1"</span>)</span></div>
-          <div class="code-line"><span class="line-num">33</span><span class="line-content"></span></div>
-          <div class="code-line" data-range="R5" id="R5"><span class="line-num">34</span><span class="line-content"><span class="kw">def</span> <span class="fn">normalize_weights</span>(criteria: list[CriterionConfig]):<a href="#doc-R5" class="range-marker" aria-label="Go to note R5: Weight normalization">R5</a></span></div>
-          <div class="code-line" data-range="R5"><span class="line-num">35</span><span class="line-content">    total = sum(c.weight <span class="kw">for</span> c <span class="kw">in</span> criteria)</span></div>
-          <div class="code-line" data-range="R5"><span class="line-num">36</span><span class="line-content">    <span class="kw">if</span> total <= <span class="num">0</span>:</span></div>
-          <div class="code-line" data-range="R5"><span class="line-num">37</span><span class="line-content">        <span class="kw">raise</span> ValueError(<span class="str">"Total weight must be > 0"</span>)</span></div>
-          <div class="code-line" data-range="R5"><span class="line-num">38</span><span class="line-content">    <span class="kw">return</span> [c.weight / total <span class="kw">for</span> c <span class="kw">in</span> criteria]</span></div>
+    <div class="callout">
+      <strong>Fail fast:</strong> Threshold violations raise <code>ValueError</code> at construction, not at matrix processing.
+    </div>
+
+    <h2>Code Walkthrough</h2>
+
+    <div class="range-rows">
+      <!-- R1: CriterionConfig -->
+      <div class="range-row" id="row-R1" tabindex="0">
+        <div class="range-code">
+          <div class="line"><span class="ln">5</span><span class="kw">@dataclass</span></div>
+          <div class="line"><span class="ln">6</span><span class="kw">class</span> <span class="fn">CriterionConfig</span>:</div>
+          <div class="line"><span class="ln">7</span>    name: <span class="str">str</span></div>
+          <div class="line"><span class="ln">8</span>    weight: <span class="str">float</span></div>
+          <div class="line"><span class="ln">9</span>    q: <span class="str">float</span>  <span class="cm"># indifference</span></div>
+          <div class="line"><span class="ln">10</span>    p: <span class="str">float</span>  <span class="cm"># preference</span></div>
+          <div class="line"><span class="ln">11</span>    v: <span class="str">float</span>  <span class="cm"># veto</span></div>
+          <div class="line"><span class="ln">12</span>    maximize: <span class="str">bool</span> = <span class="kw">True</span></div>
+        </div>
+        <div class="range-callout">
+          <h3><a href="#row-R1" class="range-badge" data-range="R1" aria-label="Toggle R1">R1</a> CriterionConfig</h3>
+          <h4>Purpose</h4>
+          <p>Specifies one criterion with thresholds and direction. Concordance/discordance modules use these parameters.</p>
+          <h4>I/O</h4>
+          <ul>
+            <li><code>name</code> — identifier for logging</li>
+            <li><code>weight</code> — relative importance (normalized downstream)</li>
+            <li><code>q, p, v</code> — indifference, preference, veto thresholds</li>
+            <li><code>maximize</code> — True = higher is better</li>
+          </ul>
+          <p><strong>Invariant:</strong> <code>0 ≤ q ≤ p ≤ v</code>, <code>weight > 0</code></p>
+          <h4>Why</h4>
+          <p>Dataclass gives typed fields with automatic <code>__init__</code>. The <code>maximize</code> flag lets engine handle cost criteria without preprocessing.</p>
+          <h4>Pitfalls</h4>
+          <p>Setting <code>q > p</code> or <code>p > v</code> raises <code>ValueError</code>. Zero weight passes here but fails normalization.</p>
         </div>
       </div>
 
-      <div id="docScroll" class="pane pane-doc">
-        <div class="pane-header">Tutorial</div>
-
-        <h1>Configuration Module</h1>
-        <p>This module defines the input specification for ELECTRE III analysis. It provides typed dataclasses that capture criterion parameters and compute settings. All downstream modules consume these configurations.</p>
-
-        <h2>Pipeline Context</h2>
-        <p>The ELECTRE III engine processes alternatives through this pipeline:</p>
-        <ol>
-          <li><strong>config</strong> (this module) — Define criteria and thresholds</li>
-          <li><strong>concordance</strong> — Compute pairwise agreement indices</li>
-          <li><strong>discordance</strong> — Compute pairwise veto indices</li>
-          <li><strong>credibility</strong> — Combine concordance and discordance</li>
-          <li><strong>block</strong> — Process large matrices in O(N) memory blocks</li>
-          <li><strong>ranking</strong> — Produce final ordering via net flow</li>
-        </ol>
-        <p>Configuration objects flow through the entire pipeline. Basic validation (threshold ordering, positive weights) occurs at construction via <code>__post_init__</code>. Additional validation may be performed by <code>validate.py</code>; callers should validate inputs before computation.</p>
-
-        <div class="callout">
-          <strong>Design Principle:</strong> Fail fast. Threshold violations raise <code>ValueError</code> at object creation, not at matrix processing time.
+      <!-- R2: Threshold Validation -->
+      <div class="range-row" id="row-R2" tabindex="0">
+        <div class="range-code">
+          <div class="line"><span class="ln">14</span>    <span class="kw">def</span> <span class="fn">__post_init__</span>(self) -> <span class="kw">None</span>:</div>
+          <div class="line"><span class="ln">15</span>        <span class="kw">if</span> self.q < <span class="num">0</span>:</div>
+          <div class="line"><span class="ln">16</span>            <span class="kw">raise</span> ValueError(<span class="str">"q >= 0"</span>)</div>
+          <div class="line"><span class="ln">17</span>        <span class="kw">if</span> self.p < self.q:</div>
+          <div class="line"><span class="ln">18</span>            <span class="kw">raise</span> ValueError(<span class="str">"p >= q"</span>)</div>
+          <div class="line"><span class="ln">19</span>        <span class="kw">if</span> self.v < self.p:</div>
+          <div class="line"><span class="ln">20</span>            <span class="kw">raise</span> ValueError(<span class="str">"v >= p"</span>)</div>
+          <div class="line"><span class="ln">21</span>        <span class="kw">if</span> self.weight <= <span class="num">0</span>:</div>
+          <div class="line"><span class="ln">22</span>            <span class="kw">raise</span> ValueError(<span class="str">"weight > 0"</span>)</div>
         </div>
-
-        <h2>Walkthrough</h2>
-
-        <div class="doc-section" id="doc-R1">
-        <h3><a href="#R1" class="range-ref">R1</a> CriterionConfig Fields</h3>
-        <p>Each criterion requires six parameters:</p>
-        <ul>
-          <li><code>name: str</code> — Identifier for logging and output labels</li>
-          <li><code>weight: float</code> — Relative importance (normalized by <code>normalize_weights</code>)</li>
-          <li><code>q: float</code> — Indifference threshold. Differences below q are negligible.</li>
-          <li><code>p: float</code> — Preference threshold. Differences at or above p show clear preference.</li>
-          <li><code>v: float</code> — Veto threshold. Differences at or above v can override concordance.</li>
-          <li><code>maximize: bool</code> — Direction. True means higher values are better.</li>
-        </ul>
+        <div class="range-callout">
+          <h3><a href="#row-R2" class="range-badge" data-range="R2" aria-label="Toggle R2">R2</a> Threshold Validation</h3>
+          <h4>Purpose</h4>
+          <p>Enforces <code>0 ≤ q ≤ p ≤ v</code>. Invalid orderings produce undefined preference relations.</p>
+          <h4>I/O</h4>
+          <p><strong>Input:</strong> fields from init. <strong>Output:</strong> None or <code>ValueError</code>.</p>
+          <h4>Why</h4>
+          <p>Concordance computes <code>(d-q)/(p-q)</code>. If <code>p ≤ q</code>, this causes division by zero. Validating at construction prevents NaN propagation.</p>
+          <h4>Pitfalls</h4>
+          <p>Equal thresholds (<code>q == p</code>) are valid — models binary preference. Tests verify each boundary.</p>
         </div>
+      </div>
 
-        <div class="doc-section" id="doc-R2">
-        <h3><a href="#R2" class="range-ref">R2</a> Threshold Validation</h3>
-        <p>The <code>__post_init__</code> method enforces the mathematical constraint:</p>
-        <pre><code>0 ≤ q ≤ p ≤ v</code></pre>
-        <p>This ordering reflects ELECTRE III semantics: indifference must be narrower than preference, which must be narrower than veto. The constraint prevents mathematically invalid configurations from entering the pipeline.</p>
+      <!-- R3: ComputeConfig -->
+      <div class="range-row" id="row-R3" tabindex="0">
+        <div class="range-code">
+          <div class="line"><span class="ln">24</span><span class="kw">@dataclass</span></div>
+          <div class="line"><span class="ln">25</span><span class="kw">class</span> <span class="fn">ComputeConfig</span>:</div>
+          <div class="line"><span class="ln">26</span>    block_size: <span class="str">int</span> = <span class="num">1000</span></div>
+          <div class="line"><span class="ln">27</span>    use_numba: <span class="str">bool</span> = <span class="kw">True</span></div>
+          <div class="line"><span class="ln">28</span>    seed: Optional[<span class="str">int</span>] = <span class="kw">None</span></div>
         </div>
-
-        <div class="doc-section" id="doc-R3">
-        <h3><a href="#R3" class="range-ref">R3</a> ComputeConfig Fields</h3>
-        <p>Controls engine execution:</p>
-        <ul>
-          <li><code>block_size: int = 1000</code> — Number of alternatives per block. Controls memory vs. overhead tradeoff. Larger blocks reduce function-call overhead but increase peak memory.</li>
-          <li><code>use_numba: bool = True</code> — Enable JIT compilation. Set False if Numba is unavailable or for debugging.</li>
-          <li><code>seed: Optional[int] = None</code> — Random seed for deterministic tie-breaking. Set to an integer for reproducible results.</li>
-        </ul>
+        <div class="range-callout">
+          <h3><a href="#row-R3" class="range-badge" data-range="R3" aria-label="Toggle R3">R3</a> ComputeConfig</h3>
+          <h4>Purpose</h4>
+          <p>Controls execution: block size for memory partitioning, JIT toggle, random seed for tie-breaking.</p>
+          <h4>I/O</h4>
+          <ul>
+            <li><code>block_size</code> — alternatives per block, O(block_size²) memory</li>
+            <li><code>use_numba</code> — JIT compilation (10-100x faster)</li>
+            <li><code>seed</code> — deterministic tie-breaking</li>
+          </ul>
+          <h4>Why</h4>
+          <p>N×N comparisons for N=100k needs 80GB. Block processing keeps memory at O(block_size²).</p>
+          <h4>Pitfalls</h4>
+          <p>Small block_size (e.g., 10) increases overhead. Omitting seed yields non-deterministic rankings.</p>
         </div>
+      </div>
 
-        <div class="doc-section" id="doc-R4">
-        <h3><a href="#R4" class="range-ref">R4</a> Block Size Validation</h3>
-        <p>The engine requires at least one alternative per block. A block_size of zero or negative would cause division errors in the blocking logic.</p>
+      <!-- R4: Block Size Validation -->
+      <div class="range-row" id="row-R4" tabindex="0">
+        <div class="range-code">
+          <div class="line"><span class="ln">30</span>    <span class="kw">def</span> <span class="fn">__post_init__</span>(self) -> <span class="kw">None</span>:</div>
+          <div class="line"><span class="ln">31</span>        <span class="kw">if</span> self.block_size < <span class="num">1</span>:</div>
+          <div class="line"><span class="ln">32</span>            <span class="kw">raise</span> ValueError(<span class="str">"block_size >= 1"</span>)</div>
         </div>
-
-        <div class="doc-section" id="doc-R5">
-        <h3><a href="#R5" class="range-ref">R5</a> Weight Normalization</h3>
-        <p>ELECTRE III requires weights that sum to 1.0. This function transforms arbitrary positive weights into normalized form. The transformation preserves relative importance ratios.</p>
+        <div class="range-callout">
+          <h3><a href="#row-R4" class="range-badge" data-range="R4" aria-label="Toggle R4">R4</a> Block Size Validation</h3>
+          <h4>Purpose</h4>
+          <p>Prevents zero/negative block sizes. <code>ceil(N/0)</code> is undefined; negative causes infinite loops.</p>
+          <h4>I/O</h4>
+          <p><strong>Input:</strong> <code>block_size</code>. <strong>Output:</strong> None or <code>ValueError</code>.</p>
+          <h4>Why</h4>
+          <p>Block module uses <code>range(0, N, block_size)</code>. Zero or negative never terminates.</p>
+          <h4>Pitfalls</h4>
+          <p>Type system rejects floats. Tests verify boundary: 0 raises, 1 passes.</p>
         </div>
+      </div>
 
-        <h2>Key Constraints</h2>
-        <ol>
-          <li><strong>Threshold ordering:</strong> <code>0 ≤ q ≤ p ≤ v</code> for each criterion</li>
-          <li><strong>Positive weights:</strong> Each <code>weight > 0</code>; sum normalized to 1.0</li>
-          <li><strong>Determinism:</strong> Set <code>seed</code> for reproducible rankings across runs</li>
-          <li><strong>Block size:</strong> <code>block_size ≥ 1</code>; typical values 500–2000</li>
-        </ol>
-
-        <h2>I/O Specification</h2>
-
-        <h3>CriterionConfig</h3>
-        <dl class="io-spec">
-          <dt>Input</dt>
-          <dd><code>name: str, weight: float, q: float, p: float, v: float, maximize: bool = True</code></dd>
-          <dt>Output</dt>
-          <dd>Dataclass instance with validated fields.</dd>
-          <dt>Errors</dt>
-          <dd><code>ValueError</code> if <code>q < 0</code>, <code>p < q</code>, <code>v < p</code>, or <code>weight ≤ 0</code></dd>
-        </dl>
-
-        <h3>ComputeConfig</h3>
-        <dl class="io-spec">
-          <dt>Input</dt>
-          <dd><code>block_size: int = 1000, use_numba: bool = True, seed: Optional[int] = None</code></dd>
-          <dt>Output</dt>
-          <dd>Dataclass instance with validated fields.</dd>
-          <dt>Errors</dt>
-          <dd><code>ValueError</code> if <code>block_size < 1</code></dd>
-        </dl>
-
-        <h3>normalize_weights</h3>
-        <dl class="io-spec">
-          <dt>Input</dt>
-          <dd><code>criteria: list[CriterionConfig]</code> — Non-empty list of criterion configs</dd>
-          <dt>Output</dt>
-          <dd><code>list[float]</code> — Weights summing to 1.0, in same order as input</dd>
-          <dt>Errors</dt>
-          <dd><code>ValueError</code> if total weight ≤ 0 (empty list or all-zero weights)</dd>
-        </dl>
-
-        <h2>Usage Example</h2>
-        <p class="note"><strong>Note:</strong> This is illustrative pseudocode. Do not treat numeric values as expected output; actual results depend on your input data.</p>
-        <pre><code># Illustrative example - values are for demonstration only
-from electre3.config import CriterionConfig, ComputeConfig, normalize_weights
-
-criteria = [
-    CriterionConfig("Price", weight=3, q=5, p=10, v=20, maximize=False),
-    CriterionConfig("Quality", weight=2, q=2, p=5, v=10, maximize=True),
-    CriterionConfig("Delivery", weight=1, q=1, p=3, v=7, maximize=False),
-]
-
-weights = normalize_weights(criteria)  # returns normalized array
-
-config = ComputeConfig(block_size=500)</code></pre>
-
+      <!-- R5: Weight Normalization -->
+      <div class="range-row" id="row-R5" tabindex="0">
+        <div class="range-code">
+          <div class="line"><span class="ln">34</span><span class="kw">def</span> <span class="fn">normalize_weights</span>(criteria: list[CriterionConfig]):</div>
+          <div class="line"><span class="ln">35</span>    total = sum(c.weight <span class="kw">for</span> c <span class="kw">in</span> criteria)</div>
+          <div class="line"><span class="ln">36</span>    <span class="kw">if</span> total <= <span class="num">0</span>:</div>
+          <div class="line"><span class="ln">37</span>        <span class="kw">raise</span> ValueError(<span class="str">"total > 0"</span>)</div>
+          <div class="line"><span class="ln">38</span>    <span class="kw">return</span> [c.weight / total <span class="kw">for</span> c <span class="kw">in</span> criteria]</div>
+        </div>
+        <div class="range-callout">
+          <h3><a href="#row-R5" class="range-badge" data-range="R5" aria-label="Toggle R5">R5</a> Weight Normalization</h3>
+          <h4>Purpose</h4>
+          <p>Transforms weights to sum to 1.0. Concordance requires <code>Σwⱼ = 1</code>.</p>
+          <h4>I/O</h4>
+          <p><strong>Input:</strong> <code>list[CriterionConfig]</code>. <strong>Output:</strong> <code>list[float]</code> summing to 1.0.</p>
+          <h4>Why</h4>
+          <p>Users specify ratios (3:2:1) without manual division. Preserves relative importance.</p>
+          <h4>Pitfalls</h4>
+          <p>Empty list yields total=0 and raises. Mixed signs can sum to zero — also caught.</p>
+        </div>
       </div>
     </div>
-  </div>
+
+    <h2>I/O Summary</h2>
+    <div class="io-summary">
+      <div class="io-card">
+        <h3>CriterionConfig</h3>
+        <div class="io-row"><span class="io-label">Input</span><code>name, weight, q, p, v, maximize=True</code></div>
+        <div class="io-row"><span class="io-label">Errors</span><code>ValueError</code> if thresholds or weight invalid</div>
+      </div>
+      <div class="io-card">
+        <h3>ComputeConfig</h3>
+        <div class="io-row"><span class="io-label">Input</span><code>block_size=1000, use_numba=True, seed=None</code></div>
+        <div class="io-row"><span class="io-label">Errors</span><code>ValueError</code> if block_size &lt; 1</div>
+      </div>
+      <div class="io-card">
+        <h3>normalize_weights</h3>
+        <div class="io-row"><span class="io-label">Input</span><code>criteria: list[CriterionConfig]</code></div>
+        <div class="io-row"><span class="io-label">Output</span><code>list[float]</code> summing to 1.0</div>
+        <div class="io-row"><span class="io-label">Errors</span><code>ValueError</code> if total ≤ 0</div>
+      </div>
+    </div>
+
+    <h2>Usage Example</h2>
+    <div class="usage-example">
+      <p class="note">Illustrative only. Do not treat values as expected output.</p>
+      <pre><code><span class="kw">from</span> electre3.config <span class="kw">import</span> CriterionConfig, ComputeConfig, normalize_weights
+
+criteria = [
+    CriterionConfig(<span class="str">"Price"</span>, weight=<span class="num">3</span>, q=<span class="num">5</span>, p=<span class="num">10</span>, v=<span class="num">20</span>, maximize=<span class="kw">False</span>),
+    CriterionConfig(<span class="str">"Quality"</span>, weight=<span class="num">2</span>, q=<span class="num">2</span>, p=<span class="num">5</span>, v=<span class="num">10</span>, maximize=<span class="kw">True</span>),
+]
+weights = normalize_weights(criteria)  <span class="cm"># [0.6, 0.4]</span>
+config = ComputeConfig(block_size=<span class="num">500</span>, seed=<span class="num">42</span>)</code></pre>
+    </div>
+  </main>
 </div>
 
-<!-- Theme toggle - relative path works for file:// and /static/docs/ served mode -->
 <script src="assets/theme.js" defer></script>
-<!-- Range highlight toggle -->
 <script src="assets/highlight.js" defer></script>
 </body>
 </html>

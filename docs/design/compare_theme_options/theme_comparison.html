@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src 'self' data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none';">
+<title>Theme Options Comparison: A vs C</title>
+<style>
+/* ==========================================================================
+   THEME OPTIONS COMPARISON
+   Side-by-side visual comparison of Option A (JS toggle) vs Option C (server cookie)
+   ========================================================================== */
+
+:root {
+  --font-sans: Arial, sans-serif;
+  --font-mono: Consolas, Monaco, monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-sans);
+  background: #1a1a2e;
+  color: #fff;
+  padding: 20px;
+  min-height: 100vh;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 8px;
+  font-size: 1.5rem;
+}
+
+.subtitle {
+  text-align: center;
+  color: #9ca3af;
+  margin-bottom: 24px;
+  font-size: 0.9rem;
+}
+
+.comparison-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.option-column {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.option-header {
+  background: #2563eb;
+  color: white;
+  padding: 12px 16px;
+  border-radius: 8px 8px 0 0;
+  font-weight: 600;
+  text-align: center;
+}
+
+.option-header.option-c {
+  background: #059669;
+}
+
+.option-desc {
+  background: #374151;
+  padding: 12px 16px;
+  border-radius: 0 0 8px 8px;
+  font-size: 0.85rem;
+  color: #d1d5db;
+  margin-bottom: 8px;
+}
+
+.option-desc code {
+  background: #1f2937;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+}
+
+.mock-frame {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+.mock-label {
+  padding: 8px 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.mock-label.light { background: #e5e7eb; color: #374151; }
+.mock-label.dark { background: #1f2937; color: #9ca3af; }
+
+/* ===== LIGHT THEME MOCK ===== */
+.mock-content.light {
+  --bg: #f6f7f9;
+  --surface: #ffffff;
+  --border: #d7dce4;
+  --text: #141922;
+  --muted: #5b6472;
+  --accent: #1d4ed8;
+  --sel: #0b7a4b;
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* ===== DARK THEME MOCK ===== */
+.mock-content.dark {
+  --bg: #0f1115;
+  --surface: #161a21;
+  --border: #2a313d;
+  --text: #e6e9ef;
+  --muted: #9aa4b4;
+  --accent: #5b9dff;
+  --sel: #3ddc97;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.mock-content {
+  padding: 16px;
+  min-height: 280px;
+}
+
+/* Mock header */
+.mock-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  border-radius: 6px 6px 0 0;
+  margin-bottom: 12px;
+}
+
+.mock-title {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.mock-nav {
+  display: flex;
+  gap: 12px;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+/* Theme toggle area */
+.theme-toggle-area {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  margin-bottom: 12px;
+}
+
+.toggle-label {
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.toggle-btn {
+  padding: 4px 10px;
+  font-size: 0.7rem;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.toggle-btn.active {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+
+/* Mock code block */
+.mock-code {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 12px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  overflow-x: auto;
+}
+
+.mock-code .line {
+  display: flex;
+}
+
+.mock-code .ln {
+  color: var(--muted);
+  width: 24px;
+  text-align: right;
+  margin-right: 12px;
+  user-select: none;
+}
+
+.mock-code .kw { color: var(--accent); }
+.mock-code .str { color: var(--sel); }
+.mock-code .cm { color: var(--muted); font-style: italic; }
+
+/* Callout */
+.mock-callout {
+  margin-top: 12px;
+  padding: 10px 12px;
+  background: var(--surface);
+  border-left: 3px solid var(--sel);
+  border-radius: 0 6px 6px 0;
+  font-size: 0.8rem;
+}
+
+.mock-callout strong {
+  color: var(--sel);
+}
+
+/* Implementation notes */
+.impl-note {
+  margin-top: 12px;
+  padding: 10px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 4px;
+  font-size: 0.7rem;
+  color: var(--muted);
+  border: 1px dashed var(--border);
+}
+
+.impl-note strong {
+  color: var(--text);
+}
+
+/* Footer comparison table */
+.comparison-table {
+  max-width: 1400px;
+  margin: 32px auto 0;
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 0.85rem;
+}
+
+.comparison-table th,
+.comparison-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border: 1px solid #374151;
+}
+
+.comparison-table th {
+  background: #1f2937;
+  font-weight: 600;
+}
+
+.comparison-table td {
+  background: #111827;
+}
+
+.comparison-table .check { color: #10b981; }
+.comparison-table .cross { color: #ef4444; }
+.comparison-table .warn { color: #f59e0b; }
+
+@media (max-width: 900px) {
+  .comparison-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head>
+<body>
+
+<h1>Theme Options Comparison</h1>
+<p class="subtitle">Option A (JS Toggle) vs Option C (Server Cookie) - Module Tutorial Mock</p>
+
+<div class="comparison-grid">
+  <!-- OPTION A COLUMN -->
+  <div class="option-column">
+    <div>
+      <div class="option-header">Option A: External JS Theme File</div>
+      <div class="option-desc">
+        CSP: <code>script-src 'self'</code><br>
+        Toggle persists via <code>localStorage</code> in external JS file.<br>
+        Theme applies instantly on page load (no flash).
+      </div>
+    </div>
+
+    <!-- Option A - Light Mode -->
+    <div class="mock-frame">
+      <div class="mock-label light">Light Mode - Option A</div>
+      <div class="mock-content light">
+        <div class="mock-header">
+          <span class="mock-title">config.py - Module Tutorial</span>
+          <span class="mock-nav">Docs | API | GitHub</span>
+        </div>
+
+        <div class="theme-toggle-area">
+          <span class="toggle-label">Theme:</span>
+          <button class="toggle-btn active">Light</button>
+          <button class="toggle-btn">Dark</button>
+          <button class="toggle-btn">System</button>
+        </div>
+
+        <div class="mock-code">
+          <div class="line"><span class="ln">1</span><span class="kw">@dataclass</span></div>
+          <div class="line"><span class="ln">2</span><span class="kw">class</span> CriterionConfig:</div>
+          <div class="line"><span class="ln">3</span>    name: <span class="str">str</span></div>
+          <div class="line"><span class="ln">4</span>    weight: <span class="str">float</span></div>
+        </div>
+
+        <div class="mock-callout">
+          <strong>Callout:</strong> Thresholds must satisfy q ≤ p ≤ v
+        </div>
+
+        <div class="impl-note">
+          <strong>JS Toggle:</strong> Click triggers localStorage.setItem() + DOM update
+        </div>
+      </div>
+    </div>
+
+    <!-- Option A - Dark Mode -->
+    <div class="mock-frame">
+      <div class="mock-label dark">Dark Mode - Option A</div>
+      <div class="mock-content dark">
+        <div class="mock-header">
+          <span class="mock-title">config.py - Module Tutorial</span>
+          <span class="mock-nav">Docs | API | GitHub</span>
+        </div>
+
+        <div class="theme-toggle-area">
+          <span class="toggle-label">Theme:</span>
+          <button class="toggle-btn">Light</button>
+          <button class="toggle-btn active">Dark</button>
+          <button class="toggle-btn">System</button>
+        </div>
+
+        <div class="mock-code">
+          <div class="line"><span class="ln">1</span><span class="kw">@dataclass</span></div>
+          <div class="line"><span class="ln">2</span><span class="kw">class</span> CriterionConfig:</div>
+          <div class="line"><span class="ln">3</span>    name: <span class="str">str</span></div>
+          <div class="line"><span class="ln">4</span>    weight: <span class="str">float</span></div>
+        </div>
+
+        <div class="mock-callout">
+          <strong>Callout:</strong> Thresholds must satisfy q ≤ p ≤ v
+        </div>
+
+        <div class="impl-note">
+          <strong>JS Toggle:</strong> Instant switch, no page reload required
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OPTION C COLUMN -->
+  <div class="option-column">
+    <div>
+      <div class="option-header option-c">Option C: Server Cookie (No JS)</div>
+      <div class="option-desc">
+        CSP: <code>script-src 'none'</code> (strictest)<br>
+        Toggle via form POST, server sets cookie, page reloads.<br>
+        Works with JS disabled; simpler security model.
+      </div>
+    </div>
+
+    <!-- Option C - Light Mode -->
+    <div class="mock-frame">
+      <div class="mock-label light">Light Mode - Option C</div>
+      <div class="mock-content light">
+        <div class="mock-header">
+          <span class="mock-title">config.py - Module Tutorial</span>
+          <span class="mock-nav">Docs | API | GitHub</span>
+        </div>
+
+        <div class="theme-toggle-area">
+          <span class="toggle-label">Theme:</span>
+          <button class="toggle-btn active">☀ Light</button>
+          <button class="toggle-btn">🌙 Dark</button>
+        </div>
+
+        <div class="mock-code">
+          <div class="line"><span class="ln">1</span><span class="kw">@dataclass</span></div>
+          <div class="line"><span class="ln">2</span><span class="kw">class</span> CriterionConfig:</div>
+          <div class="line"><span class="ln">3</span>    name: <span class="str">str</span></div>
+          <div class="line"><span class="ln">4</span>    weight: <span class="str">float</span></div>
+        </div>
+
+        <div class="mock-callout">
+          <strong>Callout:</strong> Thresholds must satisfy q ≤ p ≤ v
+        </div>
+
+        <div class="impl-note">
+          <strong>Form POST:</strong> Button submits form → server sets cookie → redirect
+        </div>
+      </div>
+    </div>
+
+    <!-- Option C - Dark Mode -->
+    <div class="mock-frame">
+      <div class="mock-label dark">Dark Mode - Option C</div>
+      <div class="mock-content dark">
+        <div class="mock-header">
+          <span class="mock-title">config.py - Module Tutorial</span>
+          <span class="mock-nav">Docs | API | GitHub</span>
+        </div>
+
+        <div class="theme-toggle-area">
+          <span class="toggle-label">Theme:</span>
+          <button class="toggle-btn">☀ Light</button>
+          <button class="toggle-btn active">🌙 Dark</button>
+        </div>
+
+        <div class="mock-code">
+          <div class="line"><span class="ln">1</span><span class="kw">@dataclass</span></div>
+          <div class="line"><span class="ln">2</span><span class="kw">class</span> CriterionConfig:</div>
+          <div class="line"><span class="ln">3</span>    name: <span class="str">str</span></div>
+          <div class="line"><span class="ln">4</span>    weight: <span class="str">float</span></div>
+        </div>
+
+        <div class="mock-callout">
+          <strong>Callout:</strong> Thresholds must satisfy q ≤ p ≤ v
+        </div>
+
+        <div class="impl-note">
+          <strong>Form POST:</strong> Page reload required for theme change
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Comparison Table -->
+<table class="comparison-table">
+  <thead>
+    <tr>
+      <th>Aspect</th>
+      <th>Option A (JS Toggle)</th>
+      <th>Option C (Server Cookie)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>CSP Requirement</td>
+      <td><code>script-src 'self'</code></td>
+      <td><code>script-src 'none'</code> <span class="check">✓ strictest</span></td>
+    </tr>
+    <tr>
+      <td>Works without JS</td>
+      <td><span class="cross">✗</span> Degraded (system only)</td>
+      <td><span class="check">✓</span> Full functionality</td>
+    </tr>
+    <tr>
+      <td>Theme switch speed</td>
+      <td><span class="check">✓</span> Instant (no reload)</td>
+      <td><span class="warn">~</span> Page reload required</td>
+    </tr>
+    <tr>
+      <td>Persistence</td>
+      <td>localStorage (client)</td>
+      <td>Cookie (server-aware)</td>
+    </tr>
+    <tr>
+      <td>System theme support</td>
+      <td><span class="check">✓</span> Via JS + media query</td>
+      <td><span class="check">✓</span> Via CSS media query only</td>
+    </tr>
+    <tr>
+      <td>Flash on load</td>
+      <td><span class="check">✓</span> None (JS runs early)</td>
+      <td><span class="check">✓</span> None (server renders correct theme)</td>
+    </tr>
+    <tr>
+      <td>Implementation complexity</td>
+      <td><span class="warn">~</span> Moderate (JS file needed)</td>
+      <td><span class="check">✓</span> Simple (Flask route + cookie)</td>
+    </tr>
+    <tr>
+      <td>Static file hosting</td>
+      <td><span class="check">✓</span> Works (file:// with fallback)</td>
+      <td><span class="cross">✗</span> Requires server</td>
+    </tr>
+  </tbody>
+</table>
+
+<p style="text-align:center; margin-top:24px; color:#6b7280; font-size:0.8rem;">
+  Generated for ELECTRE III project - Theme approach comparison artifact
+</p>
+
+</body>
+</html>

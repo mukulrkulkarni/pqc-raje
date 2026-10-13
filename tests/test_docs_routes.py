@@ -356,9 +356,8 @@ class TestTutorialRangeCallouts:
 
     def _get_tutorial_content(self):
         from pathlib import Path
-        import re
         tutorial_path = Path(__file__).parent.parent / "docs" / "modules" / "config_tutorial_side_by_side.html"
-        return tutorial_path.read_text()
+        return tutorial_path.read_text(encoding="utf-8")
 
     def test_range_ids_exist_in_code_pane(self):
         """Code pane must have R1-R5 id attributes."""
@@ -372,17 +371,148 @@ class TestTutorialRangeCallouts:
         for r in ["R1", "R2", "R3", "R4", "R5"]:
             assert f'href="#{r}"' in content, f"Missing href for {r}"
 
-    def test_range_markers_visible_in_code(self):
-        """Range markers must be visible in code pane."""
+    def test_range_markers_are_clickable_anchors(self):
+        """Range markers in code must be <a> elements with hrefs to doc sections."""
         content = self._get_tutorial_content()
         for r in ["R1", "R2", "R3", "R4", "R5"]:
-            assert f'class="range-marker">{r}<' in content, f"Missing visible marker for {r}"
+            assert f'<a href="#doc-{r}" class="range-marker">{r}</a>' in content, \
+                f"Range marker {r} must be clickable anchor linking to doc-{r}"
+
+    def test_doc_sections_have_ids(self):
+        """Doc sections must have id attributes for bidirectional linking."""
+        content = self._get_tutorial_content()
+        for r in ["R1", "R2", "R3", "R4", "R5"]:
+            assert f'id="doc-{r}"' in content, f"Missing doc section id for doc-{r}"
+
+    def test_doc_sections_have_class(self):
+        """Doc sections must have doc-section class for highlight styling."""
+        content = self._get_tutorial_content()
+        for r in ["R1", "R2", "R3", "R4", "R5"]:
+            assert f'class="doc-section" id="doc-{r}"' in content, \
+                f"Doc section {r} must have doc-section class"
 
     def test_data_range_attributes_set(self):
         """Code lines must have data-range attributes for highlighting."""
         content = self._get_tutorial_content()
         for r in ["R1", "R2", "R3", "R4", "R5"]:
             assert f'data-range="{r}"' in content, f"Missing data-range for {r}"
+
+    def test_highlight_js_referenced(self):
+        """Tutorial must reference highlight.js for toggle behavior."""
+        content = self._get_tutorial_content()
+        assert 'src="assets/highlight.js"' in content
+
+    def test_css_uses_range_selected_class(self):
+        """CSS must style .range-selected, not all [data-range]."""
+        content = self._get_tutorial_content()
+        assert ".code-line.range-selected" in content
+        assert ".doc-section.range-selected" in content
+
+
+class TestHighlightJsAsset:
+    """Tests for highlight.js asset serving and content."""
+
+    def test_highlight_js_served(self, client):
+        """highlight.js should be served at /docs/modules/config/assets/highlight.js."""
+        response = client.get("/docs/modules/config/assets/highlight.js")
+        assert response.status_code == 200
+
+    def test_highlight_js_content_type(self, client):
+        """highlight.js should have correct content type."""
+        response = client.get("/docs/modules/config/assets/highlight.js")
+        content_type = response.headers.get("Content-Type", "")
+        assert "javascript" in content_type.lower()
+
+    def test_highlight_js_has_toggle_logic(self, client):
+        """highlight.js must implement toggle behavior."""
+        response = client.get("/docs/modules/config/assets/highlight.js")
+        content = response.data.decode("utf-8")
+        assert "range-selected" in content
+        assert "clearSelection" in content
+        assert "selectRange" in content
+
+    def test_highlight_js_has_scroll_sync(self, client):
+        """highlight.js must implement scroll sync behavior."""
+        response = client.get("/docs/modules/config/assets/highlight.js")
+        content = response.data.decode("utf-8")
+        assert "alignPanes" in content
+        assert "scrollPaneToElement" in content
+        assert "syncScrolling" in content
+
+    def test_highlight_js_exposes_test_api(self, client):
+        """highlight.js must expose testing API via window.highlightModule."""
+        response = client.get("/docs/modules/config/assets/highlight.js")
+        content = response.data.decode("utf-8")
+        assert "window.highlightModule" in content
+        assert "getCurrentRange" in content
+        assert "isSyncEnabled" in content
+        assert "getCodePane" in content
+        assert "getDocPane" in content
+
+    def test_highlight_js_local_file_exists(self):
+        """Local highlight.js should exist in docs/modules/assets/."""
+        from pathlib import Path
+        js_path = Path(__file__).parent.parent / "docs" / "modules" / "assets" / "highlight.js"
+        assert js_path.exists()
+
+    def test_highlight_js_has_debug_mode(self, client):
+        """highlight.js must support ?debug=1 URL parameter."""
+        response = client.get("/docs/modules/config/assets/highlight.js")
+        content = response.data.decode("utf-8")
+        assert "debug=1" in content
+        assert "console.log" in content
+
+    def test_highlight_js_selects_correct_pane_classes(self, client):
+        """highlight.js must select .pane-code and .pane-doc."""
+        response = client.get("/docs/modules/config/assets/highlight.js")
+        content = response.data.decode("utf-8")
+        assert ".pane-code" in content
+        assert ".pane-doc" in content
+
+    def test_highlight_js_uses_correct_selectors_for_ranges(self, client):
+        """highlight.js must use [data-range][id] and .doc-section[id] selectors."""
+        response = client.get("/docs/modules/config/assets/highlight.js")
+        content = response.data.decode("utf-8")
+        assert "[data-range][id]" in content
+        assert ".doc-section[id]" in content
+
+    def test_highlight_js_handles_click_capture(self, client):
+        """highlight.js must use capture phase for click events."""
+        response = client.get("/docs/modules/config/assets/highlight.js")
+        content = response.data.decode("utf-8")
+        # Verify addEventListener uses capture: true
+        assert "addEventListener('click', handleClick, true)" in content
+
+
+class TestSyncScrollToggle:
+    """Tests for sync scroll toggle in sidebar."""
+
+    def _get_tutorial_content(self):
+        from pathlib import Path
+        tutorial_path = Path(__file__).parent.parent / "docs" / "modules" / "config_tutorial_side_by_side.html"
+        return tutorial_path.read_text(encoding="utf-8")
+
+    def test_sync_toggle_exists_in_sidebar(self):
+        """Sidebar must have sync scroll toggle button."""
+        content = self._get_tutorial_content()
+        assert 'data-sync-toggle' in content
+        assert 'class="sync-toggle"' in content
+
+    def test_sync_toggle_has_indicator(self):
+        """Sync toggle must have visual indicator."""
+        content = self._get_tutorial_content()
+        assert 'class="sync-indicator"' in content
+
+    def test_sync_toggle_has_aria_pressed(self):
+        """Sync toggle must have aria-pressed attribute."""
+        content = self._get_tutorial_content()
+        assert 'aria-pressed="false"' in content
+
+    def test_sync_toggle_css_exists(self):
+        """CSS must style sync toggle states."""
+        content = self._get_tutorial_content()
+        assert ".sync-toggle" in content
+        assert ".sync-enabled" in content
 
 
 class TestRouteScopedCSP:

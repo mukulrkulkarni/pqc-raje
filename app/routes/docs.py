@@ -7,7 +7,7 @@ bp = Blueprint("docs", __name__)
 
 ALLOWED_MODULE_DOCS = {"config", "concordance", "discordance", "credibility",
                        "accumulator", "block", "ranking", "validate", "data"}
-ALLOWED_TUTORIAL_ASSETS = {"theme.js"}
+ALLOWED_TUTORIAL_ASSETS = {"theme.js", "highlight.js"}
 DOCS_DIR = Path(__file__).parent.parent.parent / "docs"
 
 

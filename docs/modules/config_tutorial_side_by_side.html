@@ -151,6 +151,47 @@ body {
   font-weight: 500;
 }
 
+/* Sync scroll toggle */
+.sync-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-family: inherit;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--surface-2);
+  color: var(--muted);
+  cursor: pointer;
+  transition: all .15s ease;
+  width: 100%;
+  text-align: left;
+}
+
+.sync-toggle:hover {
+  color: var(--text);
+  border-color: var(--accent);
+}
+
+.sync-toggle.sync-enabled {
+  background: var(--sel-tint);
+  color: var(--sel);
+  border-color: var(--sel);
+}
+
+.sync-toggle .sync-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--muted);
+  transition: background .15s ease;
+}
+
+.sync-toggle.sync-enabled .sync-indicator {
+  background: var(--sel);
+}
+
 /* --------------------------------------------------------------------------
    5. MAIN CONTENT AREA
    -------------------------------------------------------------------------- */
@@ -243,7 +284,7 @@ body {
 .fn { color: #c084fc; }
 .num { color: #f59e0b; }
 
-/* Range markers */
+/* Range markers - clickable */
 .range-marker {
   display: inline-block;
   font-size: 10px;
@@ -254,20 +295,36 @@ body {
   background: var(--accent);
   color: var(--accent-on);
   vertical-align: middle;
+  cursor: pointer;
+  text-decoration: none;
+  transition: filter .15s ease;
+}
+
+.range-marker:hover {
+  filter: brightness(1.15);
 }
 
 /* --------------------------------------------------------------------------
-   8. SELECTION HIGHLIGHT (GREEN) - for range groups
+   8. SELECTION HIGHLIGHT (GREEN) - toggle on click only
    -------------------------------------------------------------------------- */
-.code-line[data-range] {
+.code-line.range-selected {
   background: var(--sel-tint);
   border-left: 3px solid var(--sel);
   margin-left: -3px;
 }
 
-.code-line[data-range] .line-num {
+.code-line.range-selected .line-num {
   color: var(--sel);
   font-weight: 600;
+}
+
+/* Doc section highlight when selected */
+.doc-section.range-selected {
+  background: var(--sel-tint);
+  border-left: 3px solid var(--sel);
+  margin-left: -16px;
+  padding-left: 13px;
+  border-radius: 0 6px 6px 0;
 }
 
 /* --------------------------------------------------------------------------
@@ -373,6 +430,14 @@ li { margin-bottom: 4px; }
         <button data-theme-toggle="system" aria-pressed="true">System</button>
       </div>
     </div>
+
+    <div class="sidebar-section">
+      <h3>Scrolling</h3>
+      <button class="sync-toggle" data-sync-toggle aria-pressed="false">
+        <span class="sync-indicator"></span>
+        <span>Sync panes</span>
+      </button>
+    </div>
   </aside>
 
   <!-- MAIN CONTENT -->
@@ -382,14 +447,14 @@ li { margin-bottom: 4px; }
     </header>
 
     <div class="container">
-      <div class="pane pane-code">
+      <div id="codeScroll" class="pane pane-code">
         <div class="pane-header">Source Code</div>
         <div class="code-block">
           <div class="code-line"><span class="line-num">1</span><span class="line-content"><span class="cm">"""Configuration dataclasses for ELECTRE III."""</span></span></div>
           <div class="code-line"><span class="line-num">2</span><span class="line-content"><span class="kw">from</span> dataclasses <span class="kw">import</span> dataclass</span></div>
           <div class="code-line"><span class="line-num">3</span><span class="line-content"><span class="kw">from</span> typing <span class="kw">import</span> Optional</span></div>
           <div class="code-line"><span class="line-num">4</span><span class="line-content"></span></div>
-          <div class="code-line" data-range="R1" id="R1"><span class="line-num">5</span><span class="line-content"><span class="kw">@dataclass</span><span class="range-marker">R1</span></span></div>
+          <div class="code-line" data-range="R1" id="R1"><span class="line-num">5</span><span class="line-content"><span class="kw">@dataclass</span><a href="#doc-R1" class="range-marker">R1</a></span></div>
           <div class="code-line" data-range="R1"><span class="line-num">6</span><span class="line-content"><span class="kw">class</span> <span class="fn">CriterionConfig</span>:</span></div>
           <div class="code-line" data-range="R1"><span class="line-num">7</span><span class="line-content">    name: <span class="str">str</span></span></div>
           <div class="code-line" data-range="R1"><span class="line-num">8</span><span class="line-content">    weight: <span class="str">float</span></span></div>
@@ -398,7 +463,7 @@ li { margin-bottom: 4px; }
           <div class="code-line" data-range="R1"><span class="line-num">11</span><span class="line-content">    v: <span class="str">float</span></span></div>
           <div class="code-line" data-range="R1"><span class="line-num">12</span><span class="line-content">    maximize: <span class="str">bool</span> = <span class="kw">True</span></span></div>
           <div class="code-line"><span class="line-num">13</span><span class="line-content"></span></div>
-          <div class="code-line" data-range="R2" id="R2"><span class="line-num">14</span><span class="line-content">    <span class="kw">def</span> <span class="fn">__post_init__</span>(self) -> <span class="kw">None</span>:<span class="range-marker">R2</span></span></div>
+          <div class="code-line" data-range="R2" id="R2"><span class="line-num">14</span><span class="line-content">    <span class="kw">def</span> <span class="fn">__post_init__</span>(self) -> <span class="kw">None</span>:<a href="#doc-R2" class="range-marker">R2</a></span></div>
           <div class="code-line" data-range="R2"><span class="line-num">15</span><span class="line-content">        <span class="kw">if</span> self.q < <span class="num">0</span>:</span></div>
           <div class="code-line" data-range="R2"><span class="line-num">16</span><span class="line-content">            <span class="kw">raise</span> ValueError(<span class="str">f"q must be >= 0"</span>)</span></div>
           <div class="code-line" data-range="R2"><span class="line-num">17</span><span class="line-content">        <span class="kw">if</span> self.p < self.q:</span></div>
@@ -408,17 +473,17 @@ li { margin-bottom: 4px; }
           <div class="code-line" data-range="R2"><span class="line-num">21</span><span class="line-content">        <span class="kw">if</span> self.weight <= <span class="num">0</span>:</span></div>
           <div class="code-line" data-range="R2"><span class="line-num">22</span><span class="line-content">            <span class="kw">raise</span> ValueError(<span class="str">f"weight must be > 0"</span>)</span></div>
           <div class="code-line"><span class="line-num">23</span><span class="line-content"></span></div>
-          <div class="code-line" data-range="R3" id="R3"><span class="line-num">24</span><span class="line-content"><span class="kw">@dataclass</span><span class="range-marker">R3</span></span></div>
+          <div class="code-line" data-range="R3" id="R3"><span class="line-num">24</span><span class="line-content"><span class="kw">@dataclass</span><a href="#doc-R3" class="range-marker">R3</a></span></div>
           <div class="code-line" data-range="R3"><span class="line-num">25</span><span class="line-content"><span class="kw">class</span> <span class="fn">ComputeConfig</span>:</span></div>
           <div class="code-line" data-range="R3"><span class="line-num">26</span><span class="line-content">    block_size: <span class="str">int</span> = <span class="num">1000</span></span></div>
           <div class="code-line" data-range="R3"><span class="line-num">27</span><span class="line-content">    use_numba: <span class="str">bool</span> = <span class="kw">True</span></span></div>
           <div class="code-line" data-range="R3"><span class="line-num">28</span><span class="line-content">    seed: Optional[<span class="str">int</span>] = <span class="kw">None</span></span></div>
           <div class="code-line"><span class="line-num">29</span><span class="line-content"></span></div>
-          <div class="code-line" data-range="R4" id="R4"><span class="line-num">30</span><span class="line-content">    <span class="kw">def</span> <span class="fn">__post_init__</span>(self) -> <span class="kw">None</span>:<span class="range-marker">R4</span></span></div>
+          <div class="code-line" data-range="R4" id="R4"><span class="line-num">30</span><span class="line-content">    <span class="kw">def</span> <span class="fn">__post_init__</span>(self) -> <span class="kw">None</span>:<a href="#doc-R4" class="range-marker">R4</a></span></div>
           <div class="code-line" data-range="R4"><span class="line-num">31</span><span class="line-content">        <span class="kw">if</span> self.block_size < <span class="num">1</span>:</span></div>
           <div class="code-line" data-range="R4"><span class="line-num">32</span><span class="line-content">            <span class="kw">raise</span> ValueError(<span class="str">f"block_size must be >= 1"</span>)</span></div>
           <div class="code-line"><span class="line-num">33</span><span class="line-content"></span></div>
-          <div class="code-line" data-range="R5" id="R5"><span class="line-num">34</span><span class="line-content"><span class="kw">def</span> <span class="fn">normalize_weights</span>(criteria: list[CriterionConfig]):<span class="range-marker">R5</span></span></div>
+          <div class="code-line" data-range="R5" id="R5"><span class="line-num">34</span><span class="line-content"><span class="kw">def</span> <span class="fn">normalize_weights</span>(criteria: list[CriterionConfig]):<a href="#doc-R5" class="range-marker">R5</a></span></div>
           <div class="code-line" data-range="R5"><span class="line-num">35</span><span class="line-content">    total = sum(c.weight <span class="kw">for</span> c <span class="kw">in</span> criteria)</span></div>
           <div class="code-line" data-range="R5"><span class="line-num">36</span><span class="line-content">    <span class="kw">if</span> total <= <span class="num">0</span>:</span></div>
           <div class="code-line" data-range="R5"><span class="line-num">37</span><span class="line-content">        <span class="kw">raise</span> ValueError(<span class="str">"Total weight must be > 0"</span>)</span></div>
@@ -426,7 +491,7 @@ li { margin-bottom: 4px; }
         </div>
       </div>
 
-      <div class="pane pane-doc">
+      <div id="docScroll" class="pane pane-doc">
         <div class="pane-header">Tutorial</div>
 
         <h1>Configuration Module</h1>
@@ -450,6 +515,7 @@ li { margin-bottom: 4px; }
 
         <h2>Walkthrough</h2>
 
+        <div class="doc-section" id="doc-R1">
         <h3><a href="#R1" class="range-ref">R1</a> CriterionConfig Fields</h3>
         <p>Each criterion requires six parameters:</p>
         <ul>
@@ -460,12 +526,16 @@ li { margin-bottom: 4px; }
           <li><code>v: float</code> — Veto threshold. Differences at or above v can override concordance.</li>
           <li><code>maximize: bool</code> — Direction. True means higher values are better.</li>
         </ul>
+        </div>
 
+        <div class="doc-section" id="doc-R2">
         <h3><a href="#R2" class="range-ref">R2</a> Threshold Validation</h3>
         <p>The <code>__post_init__</code> method enforces the mathematical constraint:</p>
         <pre><code>0 ≤ q ≤ p ≤ v</code></pre>
         <p>This ordering reflects ELECTRE III semantics: indifference must be narrower than preference, which must be narrower than veto. The constraint prevents mathematically invalid configurations from entering the pipeline.</p>
+        </div>
 
+        <div class="doc-section" id="doc-R3">
         <h3><a href="#R3" class="range-ref">R3</a> ComputeConfig Fields</h3>
         <p>Controls engine execution:</p>
         <ul>
@@ -473,12 +543,17 @@ li { margin-bottom: 4px; }
           <li><code>use_numba: bool = True</code> — Enable JIT compilation. Set False if Numba is unavailable or for debugging.</li>
           <li><code>seed: Optional[int] = None</code> — Random seed for deterministic tie-breaking. Set to an integer for reproducible results.</li>
         </ul>
+        </div>
 
+        <div class="doc-section" id="doc-R4">
         <h3><a href="#R4" class="range-ref">R4</a> Block Size Validation</h3>
         <p>The engine requires at least one alternative per block. A block_size of zero or negative would cause division errors in the blocking logic.</p>
+        </div>
 
+        <div class="doc-section" id="doc-R5">
         <h3><a href="#R5" class="range-ref">R5</a> Weight Normalization</h3>
         <p>ELECTRE III requires weights that sum to 1.0. This function transforms arbitrary positive weights into normalized form. The transformation preserves relative importance ratios.</p>
+        </div>
 
         <h2>Key Constraints</h2>
         <ol>
@@ -540,5 +615,7 @@ config = ComputeConfig(block_size=500, seed=42)</code></pre>
 
 <!-- Theme toggle - relative path works for file:// and /static/docs/ served mode -->
 <script src="assets/theme.js" defer></script>
+<!-- Range highlight toggle -->
+<script src="assets/highlight.js" defer></script>
 </body>
 </html>

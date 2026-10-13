@@ -1,0 +1,273 @@
+Exit code: 0
+Working directory: C:\Users\Mukul.Kulkarni\InnoviumAI\Projects\IP Address Analysis Plan
+
+--- stdout ---
+A  .gitignore
+A  app/__init__.py
+A  app/routes/__init__.py
+A  app/routes/compute.py
+A  app/routes/preview.py
+A  app/services/__init__.py
+A  app/services/preview.py
+A  app/services/security.py
+A  app/static/style.css
+A  app/templates/config.html
+A  app/templates/preview.html
+A  docs/modules/config.html
+A  docs/modules/config.md
+A  docs/modules/config_side_by_side.html
+A  electre3/__init__.py
+A  electre3/accelerate.py
+A  electre3/accumulator.py
+A  electre3/block.py
+A  electre3/bruteforce.py
+A  electre3/cli.py
+A  electre3/cli_run.py
+A  electre3/concordance.py
+A  electre3/config.py
+A  electre3/credibility.py
+A  electre3/data.py
+A  electre3/discordance.py
+A  electre3/ranking.py
+A  electre3/validate.py
+A  observations/filesystem__read_multiple_2026-10-13T16-48-38-722Z_a0ec9283.txt
+A  observations/filesystem__read_multiple_2026-10-13T16-57-40-519Z_1bc71b68.txt
+A  observations/filesystem__read_raw_2026-10-13T16-48-48-584Z_6bf04e0b.txt
+A  observations/filesystem__read_raw_2026-10-13T16-57-51-482Z_561acaf5.txt
+A  observations/shell__shell_execute_2026-10-13T16-52-05-586Z_75e488eb.txt
+A  observations/shell__shell_execute_2026-10-13T16-52-45-147Z_6eff0b3f.txt
+A  scripts/module_docs_html.py
+A  skills/build-tools/assets/docs/building-tools.json
+A  skills/build-tools/assets/templates/README.md
+A  skills/build-tools/assets/templates/innovium.json
+A  skills/build-tools/assets/templates/pyproject.toml
+A  skills/build-tools/assets/templates/scripts/test_innovium.py
+A  skills/build-tools/assets/templates/scripts/validate_innovium.py
+A  skills/build-tools/assets/templates/src/my_mcp_server/__init__.py
+A  skills/build-tools/assets/templates/src/my_mcp_server/server.py
+A  skills/innovium-docs/assets/api/getting-started.json
+A  skills/innovium-docs/assets/api/reference.json
+A  skills/innovium-docs/assets/config/global-agents.json
+A  skills/innovium-docs/assets/config/global-compression.json
+A  skills/innovium-docs/assets/config/global-general.json
+A  skills/innovium-docs/assets/config/global-knowledge.json
+A  skills/innovium-docs/assets/config/global-skills.json
+A  skills/innovium-docs/assets/config/global-system.json
+A  skills/innovium-docs/assets/config/global-tools.json
+A  skills/innovium-docs/assets/config/project-agents.json
+A  skills/innovium-docs/assets/config/project-general.json
+A  skills/innovium-docs/assets/config/project-knowledge.json
+A  skills/innovium-docs/assets/config/project-model.json
+A  skills/innovium-docs/assets/config/project-tools.json
+A  skills/innovium-docs/assets/docs/agents.json
+A  skills/innovium-docs/assets/docs/api-reference.json
+A  skills/innovium-docs/assets/docs/approval.json
+A  skills/innovium-docs/assets/docs/building-tools.json
+A  skills/innovium-docs/assets/docs/chat.json
+A  skills/innovium-docs/assets/docs/configuration.json
+A  skills/innovium-docs/assets/docs/conversation-editing.json
+A  skills/innovium-docs/assets/docs/data-layer.json
+A  skills/innovium-docs/assets/docs/getting-started.json
+A  skills/innovium-docs/assets/docs/knowledge.json
+A  skills/innovium-docs/assets/docs/mcp.json
+A  skills/innovium-docs/assets/docs/milestones.json
+A  skills/innovium-docs/assets/docs/models.json
+A  skills/innovium-docs/assets/docs/projects.json
+A  skills/innovium-docs/assets/docs/skills.json
+A  skills/innovium-docs/assets/docs/tools.json
+A  skills/innovium-docs/assets/docs/troubleshooting.json
+A  skills/innovium-docs/assets/docs/views.json
+A  skills/innovium-docs/assets/docs/workflows.json
+A  skills/innovium-docs/assets/tools/academic-search.json
+A  skills/innovium-docs/assets/tools/agent-communication.json
+A  skills/innovium-docs/assets/tools/agent-config.json
+A  skills/innovium-docs/assets/tools/agent-management.json
+A  skills/innovium-docs/assets/tools/approval-config.json
+A  skills/innovium-docs/assets/tools/browser-automation.json
+A  skills/innovium-docs/assets/tools/calculator.json
+A  skills/innovium-docs/assets/tools/data-layer.json
+A  skills/innovium-docs/assets/tools/delegation.json
+A  skills/innovium-docs/assets/tools/download.json
+A  skills/innovium-docs/assets/tools/filesystem.json
+A  skills/innovium-docs/assets/tools/image-analysis.json
+A  skills/innovium-docs/assets/tools/knowledge-base.json
+A  skills/innovium-docs/assets/tools/latex.json
+A  skills/innovium-docs/assets/tools/list-workflows.json
+A  skills/innovium-docs/assets/tools/local-mcp.json
+A  skills/innovium-docs/assets/tools/meeting-room.json
+A  skills/innovium-docs/assets/tools/milestone-management.json
+A  skills/innovium-docs/assets/tools/model-config.json
+A  skills/innovium-docs/assets/tools/openalex.json
+A  skills/innovium-docs/assets/tools/overleaf.json
+A  skills/innovium-docs/assets/tools/present-artifact.json
+A  skills/innovium-docs/assets/tools/project-settings.json
+A  skills/innovium-docs/assets/tools/prompt-generation.json
+A  skills/innovium-docs/assets/tools/read-skill.json
+A  skills/innovium-docs/assets/tools/remote-mcp.json
+A  skills/innovium-docs/assets/tools/ros2-upload.json
+A  skills/innovium-docs/assets/tools/scientific-papers.json
+A  skills/innovium-docs/assets/tools/scratchpad.json
+A  skills/innovium-docs/assets/tools/shell.json
+A  skills/innovium-docs/assets/tools/skill-management.json
+A  skills/innovium-docs/assets/tools/status.json
+A  skills/innovium-docs/assets/tools/synthesis.json
+A  skills/innovium-docs/assets/tools/todo.json
+A  skills/innovium-docs/assets/tools/tool-management.json
+A  skills/innovium-docs/assets/tools/user-choice.json
+A  skills/innovium-docs/assets/tools/user-mcp.json
+A  skills/innovium-docs/assets/tools/visualization.json
+A  skills/innovium-docs/assets/tools/wait.json
+A  skills/innovium-docs/assets/tools/web-search.json
+A  tests/__init__.py
+A  tests/test_accelerate.py
+A  tests/test_accumulator.py
+A  tests/test_block.py
+A  tests/test_bruteforce.py
+A  tests/test_cli_run.py
+A  tests/test_concordance.py
+A  tests/test_config.py
+A  tests/test_credibility.py
+A  tests/test_data.py
+A  tests/test_discordance.py
+A  tests/test_integration.py
+A  tests/test_module_docs.py
+A  tests/test_negative.py
+A  tests/test_preview_gate.py
+A  tests/test_ranking.py
+A  tests/test_security.py
+A  tests/test_ui_styles.py
+A  tests/test_validate.py
+
+--- stderr ---
+warning: in the working copy of '.gitignore', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'app/__init__.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'app/routes/__init__.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'app/routes/compute.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'app/routes/preview.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'app/services/__init__.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'app/services/preview.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'app/services/security.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'app/static/style.css', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'app/templates/config.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'app/templates/preview.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/modules/config.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'electre3/__init__.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'electre3/accelerate.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'electre3/accumulator.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'electre3/block.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'electre3/bruteforce.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'electre3/cli.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'electre3/cli_run.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'electre3/concordance.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'electre3/config.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'electre3/credibility.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'electre3/data.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'electre3/discordance.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'electre3/ranking.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'electre3/validate.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'observations/filesystem__read_multiple_2026-10-13T16-48-38-722Z_a0ec9283.txt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'observations/filesystem__read_multiple_2026-10-13T16-57-40-519Z_1bc71b68.txt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'observations/filesystem__read_raw_2026-10-13T16-48-48-584Z_6bf04e0b.txt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'observations/filesystem__read_raw_2026-10-13T16-57-51-482Z_561acaf5.txt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'observations/shell__shell_execute_2026-10-13T16-52-05-586Z_75e488eb.txt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'observations/shell__shell_execute_2026-10-13T16-52-45-147Z_6eff0b3f.txt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'scripts/module_docs_html.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/build-tools/assets/docs/building-tools.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/build-tools/assets/templates/README.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/build-tools/assets/templates/innovium.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/build-tools/assets/templates/pyproject.toml', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/build-tools/assets/templates/scripts/test_innovium.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/build-tools/assets/templates/scripts/validate_innovium.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/build-tools/assets/templates/src/my_mcp_server/server.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/api/getting-started.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/api/reference.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/config/global-agents.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/config/global-compression.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/config/global-general.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/config/global-knowledge.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/config/global-skills.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/config/global-system.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/config/global-tools.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/config/project-agents.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/config/project-general.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/config/project-knowledge.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/config/project-model.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/config/project-tools.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/docs/agents.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/docs/api-reference.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/docs/approval.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/docs/building-tools.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/docs/chat.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/docs/configuration.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/docs/conversation-editing.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/docs/data-layer.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/docs/getting-started.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/docs/knowledge.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/docs/mcp.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/docs/milestones.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/docs/models.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/docs/projects.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/docs/skills.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/docs/tools.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/docs/troubleshooting.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/docs/views.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/docs/workflows.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/tools/academic-search.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/tools/agent-communication.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/tools/agent-config.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/tools/agent-management.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/tools/approval-config.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/tools/browser-automation.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/tools/calculator.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/tools/data-layer.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/tools/delegation.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/tools/download.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/tools/filesystem.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/tools/image-analysis.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/tools/knowledge-base.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/tools/latex.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/tools/list-workflows.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/tools/local-mcp.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/tools/meeting-room.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/tools/milestone-management.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/tools/model-config.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/tools/openalex.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/tools/overleaf.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/tools/present-artifact.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/tools/project-settings.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/tools/prompt-generation.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/tools/read-skill.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/tools/remote-mcp.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/tools/ros2-upload.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/tools/scientific-papers.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/tools/scratchpad.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/tools/shell.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/tools/skill-management.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/tools/status.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/tools/synthesis.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/tools/todo.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/tools/tool-management.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/tools/user-choice.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/tools/user-mcp.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/tools/visualization.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/tools/wait.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/innovium-docs/assets/tools/web-search.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/__init__.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/test_accelerate.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/test_accumulator.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/test_block.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/test_bruteforce.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/test_cli_run.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/test_concordance.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/test_config.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/test_credibility.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/test_data.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/test_discordance.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/test_integration.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/test_module_docs.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/test_negative.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/test_preview_gate.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/test_ranking.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/test_security.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/test_ui_styles.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/test_validate.py', LF will be replaced by CRLF the next time Git touches it

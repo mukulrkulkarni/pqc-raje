@@ -88,7 +88,7 @@
   }
 
   // ========================================================================
-  // Click-to-Scroll
+  // Click-to-Scroll & Alignment
   // ========================================================================
 
   function scrollToElement(container, element) {
@@ -132,6 +132,60 @@
     if (codeTarget) {
       scrollToElement(codeScroll, codeTarget);
     }
+  }
+
+  /**
+   * Align both panes so top edges of code range and doc callout match.
+   * Places both elements at 10% from top of their respective containers.
+   * No-ops gracefully if containers or target elements are missing.
+   */
+  function alignPanes(rangeId) {
+    // Guard: missing containers - no-op without throwing
+    if (!codeScroll || !docScroll) {
+      log('alignPanes: containers missing', { code: !!codeScroll, doc: !!docScroll });
+      return;
+    }
+
+    var codeTarget = document.getElementById(rangeId);
+    var docTarget = document.getElementById('doc-' + rangeId);
+
+    // Guard: missing targets - no-op without throwing
+    if (!codeTarget || !docTarget) {
+      log('alignPanes: targets missing', {
+        rangeId: rangeId,
+        codeTarget: !!codeTarget,
+        docTarget: !!docTarget
+      });
+      return;
+    }
+
+    // Calculate scroll positions to place elements at 10% from top
+    var alignOffset = 0.10;  // 10% from top edge
+
+    var codeRect = codeScroll.getBoundingClientRect();
+    var codeTargetRect = codeTarget.getBoundingClientRect();
+    var codeTargetTop = codeTargetRect.top - codeRect.top + codeScroll.scrollTop;
+    var codeScrollPos = codeTargetTop - (codeRect.height * alignOffset);
+    codeScrollPos = Math.max(0, Math.min(codeScrollPos, codeScroll.scrollHeight - codeScroll.clientHeight));
+
+    var docRect = docScroll.getBoundingClientRect();
+    var docTargetRect = docTarget.getBoundingClientRect();
+    var docTargetTop = docTargetRect.top - docRect.top + docScroll.scrollTop;
+    var docScrollPos = docTargetTop - (docRect.height * alignOffset);
+    docScrollPos = Math.max(0, Math.min(docScrollPos, docScroll.scrollHeight - docScroll.clientHeight));
+
+    log('alignPanes:', {
+      rangeId: rangeId,
+      codeFrom: codeScroll.scrollTop,
+      codeTo: codeScrollPos,
+      docFrom: docScroll.scrollTop,
+      docTo: docScrollPos,
+      reducedMotion: prefersReducedMotion
+    });
+
+    var scrollBehavior = prefersReducedMotion ? 'auto' : 'smooth';
+    codeScroll.scrollTo({ top: codeScrollPos, behavior: scrollBehavior });
+    docScroll.scrollTo({ top: docScrollPos, behavior: scrollBehavior });
   }
 
   function selectRange(rangeId) {
@@ -194,13 +248,14 @@
       e.preventDefault();
       e.stopPropagation();
 
+      // Check if this is a toggle-off (re-click same selection)
+      var wasSelected = currentRange === rangeId;
+
       selectRange(rangeId);
 
-      // Scroll opposite pane to show corresponding element
-      if (scrollTarget === 'doc') {
-        scrollDocToRange(rangeId);
-      } else if (scrollTarget === 'code') {
-        scrollCodeToRange(rangeId);
+      // Only align panes if this is a new selection, not a toggle-off
+      if (!wasSelected) {
+        alignPanes(rangeId);
       }
     }
   }
@@ -327,9 +382,8 @@
       var rangeId = match[2];
       selectRange(rangeId);
 
-      // Scroll both panes
-      scrollCodeToRange(rangeId);
-      scrollDocToRange(rangeId);
+      // Align both panes to show the selected range
+      alignPanes(rangeId);
     }
   }
 
@@ -369,6 +423,7 @@
       clearSelection: clearSelection,
       scrollCodeToRange: scrollCodeToRange,
       scrollDocToRange: scrollDocToRange,
+      alignPanes: alignPanes,
       getCurrentRange: function() { return currentRange; },
       getCodeScroll: function() { return codeScroll; },
       getDocScroll: function() { return docScroll; },

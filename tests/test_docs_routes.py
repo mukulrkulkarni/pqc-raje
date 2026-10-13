@@ -620,6 +620,77 @@ class TestContinuousScrollSync:
             "Must check syncEnabled before syncing"
 
 
+class TestSelectionAlignment:
+    """Tests for selection-driven pane alignment in highlight.js."""
+
+    def _get_tutorial_content(self):
+        from pathlib import Path
+        tutorial_path = Path(__file__).parent.parent / "docs" / "modules" / "config_tutorial_side_by_side.html"
+        return tutorial_path.read_text(encoding="utf-8")
+
+    def test_highlight_js_has_align_panes_function(self, client):
+        """highlight.js must have alignPanes function for bidirectional alignment."""
+        response = client.get("/docs/modules/config/assets/highlight.js")
+        content = response.data.decode("utf-8")
+        assert "function alignPanes" in content, "Missing alignPanes function"
+        assert "alignPanes" in content, "alignPanes must be defined"
+
+    def test_align_panes_references_both_containers(self, client):
+        """alignPanes must reference both codeScroll and docScroll containers."""
+        response = client.get("/docs/modules/config/assets/highlight.js")
+        content = response.data.decode("utf-8")
+        # Find the alignPanes function body and check it uses both containers
+        assert "codeScroll" in content and "docScroll" in content, \
+            "alignPanes must reference both scroll containers"
+        # Check it scrolls both
+        assert content.count("scrollTo") >= 2, \
+            "alignPanes must scroll both panes"
+
+    def test_align_panes_guards_missing_containers(self, client):
+        """alignPanes must no-op without throwing if containers missing."""
+        response = client.get("/docs/modules/config/assets/highlight.js")
+        content = response.data.decode("utf-8")
+        # Must check for container existence
+        assert "!codeScroll || !docScroll" in content, \
+            "alignPanes must guard against missing containers"
+
+    def test_align_panes_guards_missing_targets(self, client):
+        """alignPanes must no-op without throwing if target elements missing."""
+        response = client.get("/docs/modules/config/assets/highlight.js")
+        content = response.data.decode("utf-8")
+        # Must check for target element existence
+        assert "!codeTarget || !docTarget" in content, \
+            "alignPanes must guard against missing target elements"
+
+    def test_align_panes_exposed_in_test_api(self, client):
+        """alignPanes must be exposed in window.highlightModule for testing."""
+        response = client.get("/docs/modules/config/assets/highlight.js")
+        content = response.data.decode("utf-8")
+        assert "alignPanes: alignPanes" in content or "alignPanes:" in content, \
+            "alignPanes must be in test API"
+
+    def test_each_range_has_code_and_doc_anchors(self):
+        """Each Rk must have both code anchor (id=Rk) and doc anchor (id=doc-Rk)."""
+        content = self._get_tutorial_content()
+        for r in ["R1", "R2", "R3", "R4", "R5"]:
+            assert f'id="{r}"' in content, f"Missing code anchor id={r}"
+            assert f'id="doc-{r}"' in content, f"Missing doc anchor id=doc-{r}"
+
+    def test_click_handler_uses_align_panes(self, client):
+        """Click handler must call alignPanes for new selections."""
+        response = client.get("/docs/modules/config/assets/highlight.js")
+        content = response.data.decode("utf-8")
+        assert "alignPanes(rangeId)" in content, \
+            "Click handler must call alignPanes"
+
+    def test_hash_navigation_uses_align_panes(self, client):
+        """Hash navigation must call alignPanes."""
+        response = client.get("/docs/modules/config/assets/highlight.js")
+        content = response.data.decode("utf-8")
+        # handleHashChange should use alignPanes
+        assert "alignPanes" in content, "Hash navigation should use alignPanes"
+
+
 class TestRouteScopedCSP:
     """Tests for route-scoped CSP headers."""
 

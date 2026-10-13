@@ -111,7 +111,10 @@ class TestHTMLValidity:
         """All HTML files should declare UTF-8 charset."""
         for html_file in all_html_files:
             content = html_file.read_text(encoding="utf-8")
-            assert 'charset="UTF-8"' in content or "charset=UTF-8" in content, f"{html_file.name} missing charset"
+            # Case-insensitive check for charset
+            content_lower = content.lower()
+            assert 'charset="utf-8"' in content_lower or "charset=utf-8" in content_lower, \
+                f"{html_file.name} missing charset"
 
     def test_all_html_have_viewport(self, all_html_files):
         """All HTML files should have viewport meta tag."""

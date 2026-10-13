@@ -1,7 +1,15 @@
 /**
- * Theme toggle for ELECTRE III module tutorials.
+ * @file theme.js
+ * @source In-house (ELECTRE III project)
+ * @license Project license (see repository root)
+ *
+ * Theme toggle for ELECTRE III module tutorials (Layout 2 parity).
  * Stores preference in localStorage, applies to <html data-theme>.
  * Supports: light, dark, system (auto-detect).
+ *
+ * Works in both served mode (/docs/modules/config/assets/theme.js) and
+ * file:// mode (relative assets/theme.js path). localStorage may be
+ * unavailable in file:// mode on some browsers - falls back to system theme.
  */
 (function() {
   'use strict';
@@ -11,16 +19,18 @@
 
   function getStoredTheme() {
     try {
-      return localStorage.getItem(STORAGE_KEY) || 'system';
+      return localStorage.getItem(STORAGE_KEY) || 'light';
     } catch (e) {
-      return 'system';
+      return 'light';
     }
   }
 
   function setStoredTheme(theme) {
     try {
       localStorage.setItem(STORAGE_KEY, theme);
-    } catch (e) {}
+    } catch (e) {
+      // localStorage unavailable (file:// mode in some browsers)
+    }
   }
 
   function applyTheme(theme) {
@@ -29,18 +39,22 @@
   }
 
   function updateToggleButtons(active) {
-    var buttons = document.querySelectorAll('[data-theme-toggle]');
+    // Support both data-theme-toggle (legacy) and data-theme-value (Layout 2)
+    var buttons = document.querySelectorAll('[data-theme-toggle], [data-theme-value]');
     buttons.forEach(function(btn) {
-      var value = btn.getAttribute('data-theme-toggle');
-      btn.classList.toggle('active', value === active);
-      btn.setAttribute('aria-pressed', value === active);
+      var value = btn.getAttribute('data-theme-toggle') || btn.getAttribute('data-theme-value');
+      var isActive = value === active;
+      btn.classList.toggle('active', isActive);
+      btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
     });
   }
 
   function handleToggleClick(e) {
-    var btn = e.target.closest('[data-theme-toggle]');
+    // Support both data-theme-toggle (legacy) and data-theme-value (Layout 2)
+    var btn = e.target.closest('[data-theme-toggle], [data-theme-value]');
     if (!btn) return;
-    var theme = btn.getAttribute('data-theme-toggle');
+    var theme = btn.getAttribute('data-theme-toggle') || btn.getAttribute('data-theme-value');
+    if (!theme) return;
     setStoredTheme(theme);
     applyTheme(theme);
   }

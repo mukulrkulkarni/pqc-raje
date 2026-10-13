@@ -15,10 +15,19 @@ def validate_thresholds(criteria: list["CriterionConfig"]) -> None:
 
 def normalize_weights(criteria: list["CriterionConfig"]) -> np.ndarray:
     weights = np.array([c.weight for c in criteria], dtype=np.float64)
+    if np.isnan(weights).any():
+        raise ValueError("Weights contain NaN values")
+    if np.isinf(weights).any():
+        raise ValueError("Weights contain infinite values")
     total = weights.sum()
     if total <= 0:
         raise ValueError(f"Total weight must be > 0, got {total}")
     return weights / total
+
+def validate_arrays_match(q: np.ndarray, p: np.ndarray, v: np.ndarray, w: np.ndarray) -> None:
+    lens = [len(q), len(p), len(v), len(w)]
+    if len(set(lens)) != 1:
+        raise ValueError(f"Array length mismatch: q={lens[0]}, p={lens[1]}, v={lens[2]}, w={lens[3]}")
 
 def validate_matrix(G: np.ndarray, n_criteria: int) -> None:
     if G.ndim != 2:

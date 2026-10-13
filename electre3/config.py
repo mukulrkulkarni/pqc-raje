@@ -1,6 +1,11 @@
 """Configuration dataclasses for ELECTRE III."""
 from dataclasses import dataclass
 from typing import Optional
+import math
+
+def _check_finite(val: float, name: str) -> None:
+    if math.isnan(val) or math.isinf(val):
+        raise ValueError(f"{name} must be finite, got {val}")
 
 @dataclass
 class CriterionConfig:
@@ -12,6 +17,10 @@ class CriterionConfig:
     maximize: bool = True
 
     def __post_init__(self) -> None:
+        _check_finite(self.q, "q")
+        _check_finite(self.p, "p")
+        _check_finite(self.v, "v")
+        _check_finite(self.weight, "weight")
         if self.q < 0:
             raise ValueError(f"q must be >= 0, got {self.q}")
         if self.p < self.q:

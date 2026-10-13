@@ -2,13 +2,15 @@
 import numpy as np
 from typing import Optional
 from .config import CriterionConfig, ComputeConfig
-from .validate import validate_thresholds, normalize_weights, validate_matrix
+from .validate import validate_thresholds, normalize_weights, validate_matrix, validate_arrays_match
 from .accumulator import NetFlowAccumulator
 from .block import compute_block
 
 def compute_ranking(
     G: np.ndarray, criteria: list[CriterionConfig], config: Optional[ComputeConfig] = None
 ) -> tuple[np.ndarray, NetFlowAccumulator]:
+    if not criteria:
+        raise ValueError("criteria list cannot be empty")
     if config is None:
         config = ComputeConfig()
     validate_thresholds(criteria)
@@ -17,6 +19,7 @@ def compute_ranking(
     q = np.array([c.q for c in criteria], dtype=np.float64)
     p = np.array([c.p for c in criteria], dtype=np.float64)
     v = np.array([c.v for c in criteria], dtype=np.float64)
+    validate_arrays_match(q, p, v, weights)
     G_adj = G.copy()
     for j, c in enumerate(criteria):
         if not c.maximize:

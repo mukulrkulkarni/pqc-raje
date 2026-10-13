@@ -3,11 +3,12 @@
  * @source In-house (ELECTRE III project)
  * @license Project license (see repository root)
  *
- * Range highlight and click-to-scroll for ELECTRE III module tutorials.
+ * Range highlight and scroll sync for ELECTRE III module tutorials.
  * Features:
  * - Click code range marker (R1-R5) → scrolls doc pane to callout
  * - Click callout badge in doc → scrolls code pane to range
  * - Highlight toggle on click (click same range to deselect)
+ * - Continuous scroll sync (percentage-based, off by default)
  * - Debug mode: ?debug=1 for console logging
  */
 (function() {
@@ -15,12 +16,15 @@
 
   // Constants
   var SELECTED_CLASS = 'range-selected';
+  var SYNC_ENABLED_CLASS = 'sync-enabled';
   var CODE_SCROLL_ID = 'codeScroll';
   var DOC_SCROLL_ID = 'docScroll';
 
   // State
   var DEBUG = window.location.search.indexOf('debug=1') !== -1;
   var currentRange = null;
+  var syncEnabled = false;
+  var isSyncing = false;  // Loop guard to prevent scroll oscillation
   var prefersReducedMotion = window.matchMedia &&
     window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -202,6 +206,115 @@
   }
 
   // ========================================================================
+  // Continuous Scroll Sync
+  // ========================================================================
+
+  function getScrollPercent(el) {
+    if (!el) return 0;
+    var maxScroll = el.scrollHeight - el.clientHeight;
+    return maxScroll > 0 ? el.scrollTop / maxScroll : 0;
+  }
+
+  function setScrollPercent(el, percent) {
+    if (!el) return;
+    var maxScroll = el.scrollHeight - el.clientHeight;
+    el.scrollTop = percent * maxScroll;
+  }
+
+  function syncScroll(source, target, sourceName) {
+    // Guard: sync disabled or already syncing (prevents oscillation)
+    if (!syncEnabled || isSyncing) {
+      return;
+    }
+
+    // Guard: missing containers - no-op without throwing
+    if (!source || !target) {
+      log('syncScroll: missing container', { source: !!source, target: !!target });
+      return;
+    }
+
+    isSyncing = true;
+    var percent = getScrollPercent(source);
+
+    log('syncScroll:', {
+      from: sourceName,
+      percent: (percent * 100).toFixed(1) + '%',
+      reducedMotion: prefersReducedMotion
+    });
+
+    setScrollPercent(target, percent);
+
+    // Release loop guard after animation frames to prevent oscillation
+    // Double rAF ensures the scroll event from setScrollPercent has fired
+    requestAnimationFrame(function() {
+      requestAnimationFrame(function() {
+        isSyncing = false;
+      });
+    });
+  }
+
+  function handleCodeScroll() {
+    syncScroll(codeScroll, docScroll, 'code');
+  }
+
+  function handleDocScroll() {
+    syncScroll(docScroll, codeScroll, 'doc');
+  }
+
+  function setupSyncListeners() {
+    // Guard: missing containers - no-op without throwing
+    if (!codeScroll || !docScroll) {
+      log('setupSyncListeners: containers missing, skipping');
+      return;
+    }
+
+    codeScroll.addEventListener('scroll', handleCodeScroll, { passive: true });
+    docScroll.addEventListener('scroll', handleDocScroll, { passive: true });
+
+    log('Sync scroll listeners attached to #' + CODE_SCROLL_ID + ' and #' + DOC_SCROLL_ID);
+  }
+
+  // ========================================================================
+  // Sync Toggle
+  // ========================================================================
+
+  function handleSyncToggle(e) {
+    var toggle = e.target.closest('[data-sync-toggle]');
+    if (!toggle) return;
+
+    e.preventDefault();
+    syncEnabled = !syncEnabled;
+    toggle.classList.toggle(SYNC_ENABLED_CLASS, syncEnabled);
+    toggle.setAttribute('aria-pressed', String(syncEnabled));
+
+    log('Sync toggle:', syncEnabled ? 'ON' : 'OFF');
+
+    // Persist preference
+    try {
+      localStorage.setItem('electre3-sync', syncEnabled ? '1' : '0');
+    } catch (err) {
+      // localStorage unavailable - silently ignore
+    }
+  }
+
+  function loadSyncPreference() {
+    try {
+      var pref = localStorage.getItem('electre3-sync');
+      if (pref === '1') {
+        syncEnabled = true;
+        var toggle = document.querySelector('[data-sync-toggle]');
+        if (toggle) {
+          toggle.classList.add(SYNC_ENABLED_CLASS);
+          toggle.setAttribute('aria-pressed', 'true');
+        }
+        log('Sync preference loaded: enabled');
+      }
+    } catch (err) {
+      // localStorage unavailable - silently ignore
+    }
+  }
+
+  // ========================================================================
   // Hash Navigation
   // ========================================================================
 
@@ -225,7 +338,7 @@
   // ========================================================================
 
   function init() {
-    log('Initializing, DEBUG:', DEBUG);
+    log('Initializing, DEBUG:', DEBUG, 'reducedMotion:', prefersReducedMotion);
 
     if (!initScrollContainers()) {
       log('Initialization failed: scroll containers not found');
@@ -234,7 +347,12 @@
 
     // Event listeners
     document.addEventListener('click', handleClick, true);
+    document.addEventListener('click', handleSyncToggle, true);
     window.addEventListener('hashchange', handleHashChange);
+
+    // Setup continuous scroll sync
+    setupSyncListeners();
+    loadSyncPreference();
 
     // Handle initial hash
     if (location.hash) {
@@ -254,6 +372,8 @@
       getCurrentRange: function() { return currentRange; },
       getCodeScroll: function() { return codeScroll; },
       getDocScroll: function() { return docScroll; },
+      isSyncEnabled: function() { return syncEnabled; },
+      isSyncing: function() { return isSyncing; },
       CODE_SCROLL_ID: CODE_SCROLL_ID,
       DOC_SCROLL_ID: DOC_SCROLL_ID,
       debug: DEBUG

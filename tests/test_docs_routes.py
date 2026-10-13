@@ -486,6 +486,8 @@ class TestHighlightJsAsset:
         assert "getDocScroll" in content
         assert "CODE_SCROLL_ID" in content
         assert "DOC_SCROLL_ID" in content
+        assert "isSyncEnabled" in content
+        assert "isSyncing" in content
 
     def test_highlight_js_local_file_exists(self):
         """Local highlight.js should exist in docs/modules/assets/."""
@@ -547,11 +549,75 @@ class TestSyncScrollToggle:
         content = self._get_tutorial_content()
         assert 'aria-pressed="false"' in content
 
+    def test_sync_toggle_defaults_off(self):
+        """Sync toggle must default to OFF (aria-pressed='false')."""
+        content = self._get_tutorial_content()
+        # The toggle should have aria-pressed="false" by default
+        import re
+        toggle_match = re.search(r'data-sync-toggle[^>]*aria-pressed="([^"]*)"', content)
+        assert toggle_match, "Sync toggle must have aria-pressed attribute"
+        assert toggle_match.group(1) == "false", "Sync toggle must default to OFF"
+
     def test_sync_toggle_css_exists(self):
         """CSS must style sync toggle states."""
         content = self._get_tutorial_content()
         assert ".sync-toggle" in content
         assert ".sync-enabled" in content
+
+
+class TestContinuousScrollSync:
+    """Tests for continuous scroll sync functionality in highlight.js."""
+
+    def test_highlight_js_has_loop_guard(self, client):
+        """highlight.js must have isSyncing loop guard to prevent oscillation."""
+        response = client.get("/docs/modules/config/assets/highlight.js")
+        content = response.data.decode("utf-8")
+        assert "isSyncing" in content, "Missing isSyncing loop guard variable"
+        assert "isSyncing = true" in content, "Must set isSyncing = true before syncing"
+        assert "isSyncing = false" in content, "Must release isSyncing after sync"
+
+    def test_highlight_js_uses_raf_for_loop_guard(self, client):
+        """highlight.js must use requestAnimationFrame for loop guard release."""
+        response = client.get("/docs/modules/config/assets/highlight.js")
+        content = response.data.decode("utf-8")
+        assert "requestAnimationFrame" in content, \
+            "Must use requestAnimationFrame for throttling loop guard"
+
+    def test_highlight_js_binds_scroll_listeners(self, client):
+        """highlight.js must bind scroll listeners to #codeScroll and #docScroll."""
+        response = client.get("/docs/modules/config/assets/highlight.js")
+        content = response.data.decode("utf-8")
+        assert "addEventListener('scroll'" in content or \
+               'addEventListener("scroll"' in content, \
+            "Must add scroll event listeners"
+        assert "codeScroll" in content and "docScroll" in content, \
+            "Must reference codeScroll and docScroll containers"
+
+    def test_highlight_js_percentage_based_sync(self, client):
+        """highlight.js must use percentage-based scroll position for sync."""
+        response = client.get("/docs/modules/config/assets/highlight.js")
+        content = response.data.decode("utf-8")
+        assert "scrollHeight" in content, "Must use scrollHeight for percentage calc"
+        assert "clientHeight" in content, "Must use clientHeight for percentage calc"
+        assert "scrollTop" in content, "Must use scrollTop for percentage calc"
+
+    def test_highlight_js_sync_guards_missing_containers(self, client):
+        """highlight.js sync must no-op without throwing if containers missing."""
+        response = client.get("/docs/modules/config/assets/highlight.js")
+        content = response.data.decode("utf-8")
+        # Must check for container existence before syncing
+        assert "!source || !target" in content or \
+               "if (!codeScroll || !docScroll)" in content or \
+               "if (!el)" in content, \
+            "Must guard against missing containers in sync functions"
+
+    def test_highlight_js_sync_checks_enabled(self, client):
+        """highlight.js sync must check syncEnabled before syncing."""
+        response = client.get("/docs/modules/config/assets/highlight.js")
+        content = response.data.decode("utf-8")
+        assert "syncEnabled" in content, "Must have syncEnabled state variable"
+        assert "!syncEnabled" in content or "syncEnabled === false" in content, \
+            "Must check syncEnabled before syncing"
 
 
 class TestRouteScopedCSP:

@@ -32,6 +32,9 @@ instance/
 *.parquet
 *.csv
 
+# Tool logs
+observations/
+
 # Editor
 .vscode/
 .idea/

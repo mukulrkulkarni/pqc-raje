@@ -1,0 +1,26 @@
+{
+  "id": "synthesis",
+  "label": "Synthesis",
+  "category": "Analysis",
+  "title": "Synthesis",
+  "subtitle": "Synthesises information from multiple sources to identify patterns, conflicts, consensus, and gaps. Produces a structured analysis output that combines findings from different agents or data sources.",
+  "whenToUse": "Use after a research or data-gathering phase when you need an agent to integrate findings across several sources — useful at the end of a literature review, after multi-agent data collection, or when comparing results.",
+  "methods": [
+    {
+      "name": "Synthesise Sources",
+      "description": "Comprehensive synthesis with consensus, conflict, and gap analysis across the provided sources."
+    },
+    {
+      "name": "Analyse Patterns",
+      "description": "Identifies recurring patterns and correlations across sources without producing a full synthesis."
+    },
+    {
+      "name": "Integrate Findings",
+      "description": "Combines findings from multiple agents into a unified output with recommended next steps."
+    }
+  ],
+  "mediaCaption": "A synthesis result card in the chat showing sections for consensus findings, identified conflicts, and gaps in the evidence",
+  "tips": [
+    "Synthesis works best when sources have been gathered in a structured format — use the Scratch Pad or Data Layer to collect them first."
+  ]
+}

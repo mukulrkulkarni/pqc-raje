@@ -1,0 +1,29 @@
+{
+  "id": "milestones",
+  "label": "Milestones",
+  "title": "Milestones",
+  "subtitle": "A milestone is one defined phase of a longer project — for example, \"Literature Review\", \"Data Analysis\", or \"Writing the Report\". When you assign a task to a PI Agent, it proposes a milestone plan before doing any work, and you can edit that plan before approving it. This keeps long projects structured and gives you a clear checkpoint before the AI commits to a course of action.",
+  "tags": ["Workflows"],
+  "subsections": [
+    {
+      "title": "Why Milestones?",
+      "description": "When a task is complex — say, running a research project from initial scoping through to a final report — doing everything in one unbroken run makes it hard to catch mistakes early or change direction mid-way. Milestones break the job into named phases so that both you and the AI have a shared understanding of what is being tackled right now and what comes next. Each milestone has a clear objective, and the PI Agent focuses only on that objective before moving on. If a phase goes wrong, you can stop, adjust the plan, and resume from a sensible point rather than starting over.",
+      "mediaCaption": "A milestone plan card in the chat showing phase names, task items, and the progress indicator strip at the top"
+    },
+    {
+      "title": "How Milestone Planning Works",
+      "description": "When you send a message to a PI Agent, it does not start working immediately. Instead it reads your request and proposes a plan as an interactive card in the chat — a breakdown of the work into ordered phases, each with a title and a list of specific tasks the agent intends to carry out. Available milestone types include Problem and Scope, Design and Planning, Experimentation, Analysis, Validation, Writing, and Dissemination. The agent selects the subset that fits your task. Nothing is executed until you approve or modify the plan.",
+      "mediaCaption": "The milestone proposal card as it first appears in chat, with proposed phases listed before any approval action is taken"
+    },
+    {
+      "title": "Reviewing and Approving a Plan",
+      "description": "The milestone editor card lets you reshape the plan before anything starts. You can rename any milestone by clicking its title. You can remove a milestone using the delete button on its row. Individual task items within a milestone can be edited, deleted, or reordered by dragging. You can also drag a whole milestone to a different position in the sequence. Once you are satisfied, click Approve and the agent will begin working through the phases. Click Reject if the plan does not match what you need — the agent will stop without taking any action, and you can send a revised instruction. The editor is skipped in two cases: when human review is off for the project, and when tool settings bypass the milestone editor for all agents or for the calling agent. In both cases the proposed plan is created straight away and the chat shows the finished plan instead of an editable card.",
+      "mediaCaption": "The milestone editor with drag handles, inline name editing, task item controls, and the Approve and Reject buttons"
+    },
+    {
+      "title": "Tracking Progress",
+      "description": "Once a plan is approved, a milestone progress strip appears at the top of the chat and updates live as the work advances. Each phase is shown as a labelled box: a pulsing blue dot marks the phase in progress, a green checkmark marks completed phases, and grey circles mark phases not yet started. As the project moves into each phase, a chapter card appears in the chat with the phase name, its place in the plan (such as Milestone 2 of 4), a progress bar that fills the phases before it and greys out the phase itself (such as 25% → 50%), and an expandable list of the tasks carried out. Selecting a phase in the strip takes you straight to its chapter card and highlights it briefly, so you can revisit the context and outputs of an earlier phase without scrolling back through the conversation to find them. A phase the project has not reached yet has no card to go to, so it is not selectable. If the work goes back to an earlier phase, another card for that phase appears at that point, marked Resumed. The phase still has a single entry in the table of contents, and both that entry and the strip take you to the card where the phase first began. The Project Overview tab also shows a milestone summary with a completion count.",
+      "mediaCaption": "The live milestone progress strip showing completed, in-progress, and pending phases, with a milestone chapter card in the chat thread below it"
+    }
+  ]
+}

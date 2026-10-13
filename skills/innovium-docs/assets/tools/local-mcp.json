@@ -1,0 +1,15 @@
+{
+  "id": "local-mcp",
+  "label": "Local MCP Server",
+  "category": "Integrations",
+  "title": "Local MCP Server",
+  "subtitle": "Wraps a locally-running stdio-based MCP server and exposes its tools to agents. The server runs as a subprocess managed by InnoviumAI.",
+  "whenToUse": "Used automatically when you have installed a local MCP integration. The tools from the MCP server appear as agent capabilities without any additional configuration.",
+  "methods": [
+    {
+      "name": "(dynamic)",
+      "description": "Methods are determined by the MCP server's tool manifest and vary per server. Each tool the server exposes becomes a callable method."
+    }
+  ],
+  "mediaCaption": "A local MCP server tool call showing the server name, the method called, and the result returned"
+}

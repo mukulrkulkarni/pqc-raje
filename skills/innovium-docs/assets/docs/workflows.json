@@ -1,0 +1,29 @@
+{
+  "id": "workflows",
+  "label": "Workflows",
+  "title": "Workflows",
+  "subtitle": "A workflow is a fixed, repeatable sequence of steps that runs automatically from start to finish. Use a workflow when you know exactly what you want to happen every time — for example, searching three sources, summarising the results, and posting a report. When your task is open-ended or exploratory, just chat with an agent instead.",
+  "tags": ["Workflows"],
+  "subsections": [
+    {
+      "title": "What Is a Workflow?",
+      "description": "A workflow is a pre-defined process made up of individual steps called nodes. Each node does one job — an agent answers a question, a tool fetches data, a splitter fires off several tasks in parallel, a condition routes to one path or another — and the nodes run in a fixed order every time. This is different from chatting with an agent, where the agent decides on the fly what to do next. Use a workflow when you have a repeatable job: a weekly digest, a code review checklist, a multi-step research pipeline. Once the workflow is set up, you just press Run and fill in any inputs it needs; the rest is automatic.",
+      "mediaCaption": "A workflow shown as a left-to-right graph: Start → Research Agent → Summarise Agent → Output. Each node has a coloured border showing its current status"
+    },
+    {
+      "title": "Running a Workflow",
+      "description": "Open the sidebar and find the Workflows section. Enabled workflows are listed with a Play button on the right. Click the Play button (or click the workflow name) to open the input form. The form shows only the fields this workflow needs — some workflows need no input at all and will say so. Fill in any required fields (marked with an asterisk), then click Execute Workflow. The workflow starts immediately and its progress appears in the chat area.",
+      "mediaCaption": "The workflow input dialog: workflow name at the top, a short description, labelled input fields, and Cancel / Execute Workflow buttons at the bottom"
+    },
+    {
+      "title": "Reading the Execution Graph",
+      "description": "While a workflow runs, an interactive graph appears in the chat showing every node and the connections between them. Node borders are colour-coded: grey means the step has not started yet, blue with a pulsing glow means it is running right now, green means it finished successfully, and red means it encountered an error. If the workflow splits into parallel branches you will see multiple nodes running at the same time. Click any node to filter the conversation below to that node's output — useful when you want to see exactly what one agent said or what a tool returned.",
+      "mediaCaption": "Execution graph mid-run: a green Start node, a completed Research node, a currently-running (blue, pulsing) Summarise node, and a grey Output node still waiting"
+    },
+    {
+      "title": "Stopping and Managing Workflows",
+      "description": "To stop a workflow in progress, click the Stop button (a square icon that replaces the Play button while the workflow is running). The button shows a stopping state while InnoviumAI finishes any step that is already mid-flight. Workflows can also be enabled or disabled — disabled workflows are hidden from the run list and will not appear until re-enabled. To manage which workflows are available, go to Settings where you can enable, disable, or remove them.",
+      "mediaCaption": "The workflow list with one workflow running: the Play icon has changed to a red Stop icon"
+    }
+  ]
+}

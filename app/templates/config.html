@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; font-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline';">
+<title>Criteria Configuration - ELECTRE III</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<main class="container">
+<h1>Criteria Configuration</h1>
+
+<p class="description">Configure the criteria for ELECTRE III multi-criteria decision analysis.</p>
+
+<form method="post" action="{{ url_for('compute.start_computation') }}" class="criteria-form">
+<input type="hidden" name="upload_id" value="{{ upload_id }}">
+
+<section aria-label="Criteria list">
+<h2 class="visually-hidden">Criteria</h2>
+
+<div class="table-wrapper">
+<table class="criteria-table" aria-label="Criteria configuration">
+<thead>
+<tr>
+<th scope="col">Name</th>
+<th scope="col">Weight</th>
+<th scope="col" aria-label="Indifference threshold">q</th>
+<th scope="col" aria-label="Preference threshold">p</th>
+<th scope="col" aria-label="Veto threshold">v</th>
+<th scope="col">Direction</th>
+</tr>
+</thead>
+<tbody>
+{% for i in range(n_criteria) %}
+<tr>
+<td data-label="Name">
+<input type="text" name="name_{{ i }}" value="Criterion {{ i + 1 }}"
+       aria-label="Criterion {{ i + 1 }} name" required>
+</td>
+<td data-label="Weight">
+<input type="number" name="weight_{{ i }}" value="1" step="0.1" min="0.1"
+       aria-label="Criterion {{ i + 1 }} weight" required>
+</td>
+<td data-label="q (indifference)">
+<input type="number" name="q_{{ i }}" value="0" step="0.1" min="0"
+       aria-label="Criterion {{ i + 1 }} indifference threshold" required>
+</td>
+<td data-label="p (preference)">
+<input type="number" name="p_{{ i }}" value="1" step="0.1" min="0"
+       aria-label="Criterion {{ i + 1 }} preference threshold" required>
+</td>
+<td data-label="v (veto)">
+<input type="number" name="v_{{ i }}" value="2" step="0.1" min="0"
+       aria-label="Criterion {{ i + 1 }} veto threshold" required>
+</td>
+<td data-label="Direction">
+<select name="maximize_{{ i }}" aria-label="Criterion {{ i + 1 }} optimization direction">
+<option value="true">Maximize</option>
+<option value="false">Minimize</option>
+</select>
+</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+</section>
+
+<section class="actions" aria-label="Form actions">
+<button type="submit" class="btn btn-primary">Start Computation</button>
+<a href="{{ url_for('preview.show_preview', upload_id=upload_id) }}" class="btn btn-secondary">Back to Preview</a>
+</section>
+</form>
+</main>
+</body>
+</html>

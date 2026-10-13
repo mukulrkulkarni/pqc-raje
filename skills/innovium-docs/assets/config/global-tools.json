@@ -1,0 +1,36 @@
+{
+  "id": "global-tools",
+  "label": "Tools",
+  "category": "Global Settings",
+  "title": "Tools Settings",
+  "subtitle": "Install, configure, and connect tools available to all agents.",
+  "description": "The Tools tab manages which tools are installed and active across the platform. Tools become available to agents once installed; individual agents choose which installed tools they can use.",
+  "settings": [
+    {
+      "name": "Installed Tools",
+      "description": "Lists every active tool with its version and a remove button. Click a tool to configure its global defaults."
+    },
+    {
+      "name": "Tool Settings",
+      "description": "Tools that expose configurable settings (for example the web search result limit, the download size cap, or a default LaTeX engine) show a form when you click Configure. The values you set here become the defaults for every agent. Each field is validated against the tool's declared limits, so an out-of-range value is rejected before it is saved."
+    },
+    {
+      "name": "Per-Agent Overrides",
+      "description": "Below the shared settings, pick an agent to give it its own values for the same tool — useful when one agent should, say, return more search results or use a longer timeout than the rest. An agent's override wins over the shared default; clearing it falls back to the default."
+    },
+    {
+      "name": "Available Tools",
+      "description": "Built-in tool catalog. Click Install to add a tool to your instance."
+    },
+    {
+      "name": "Remote MCP Servers",
+      "description": "Add connections to external MCP servers by entering their endpoint URL and any required credentials."
+    }
+  ],
+  "mediaCaption": "The Tools tab on the Installed sub-tab, showing active tools with version numbers and remove buttons",
+  "tips": [
+    "Removing a tool from this panel disables it for every agent immediately — agents that relied on it will lose that capability until you reinstall it.",
+    "Tool settings cascade: a project can override the global defaults from its own Settings → Tools tab, and a per-agent override is the most specific of all. The effective value for any tool call is resolved from the most specific layer that sets it.",
+    "Use Remote MCP Servers to connect proprietary internal tools without publishing them anywhere."
+  ]
+}

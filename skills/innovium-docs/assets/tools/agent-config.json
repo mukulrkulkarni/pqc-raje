@@ -1,0 +1,39 @@
+{
+  "id": "agent-config",
+  "label": "Agent Config",
+  "category": "Configuration",
+  "title": "Agent Config",
+  "subtitle": "Allows agents to inspect and modify agent settings — including enabling/disabling agents, changing their model, updating their system prompt, and adjusting temperature.",
+  "whenToUse": "Used by orchestrator agents or automation workflows that need to dynamically reconfigure agents as part of a larger task. Most users will configure agents through the Settings UI instead.",
+  "methods": [
+    {
+      "name": "List Agents",
+      "description": "Returns all available agents with their current configurations."
+    },
+    {
+      "name": "Get Agent",
+      "description": "Returns the configuration of a specific agent."
+    },
+    {
+      "name": "Enable Agent",
+      "description": "Enables an agent so it appears in the sidebar."
+    },
+    {
+      "name": "Disable Agent",
+      "description": "Disables an agent, hiding it from the sidebar."
+    },
+    {
+      "name": "Update Model",
+      "description": "Changes the LLM model for an agent."
+    },
+    {
+      "name": "Update Prompt",
+      "description": "Updates the system prompt for an agent."
+    },
+    {
+      "name": "Update Temperature",
+      "description": "Adjusts the temperature parameter for an agent."
+    }
+  ],
+  "mediaCaption": "An agent config update action card showing which agent was updated, the field changed, and the new value"
+}

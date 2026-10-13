@@ -1,0 +1,27 @@
+{
+  "id": "skill-management",
+  "label": "Skill Management",
+  "category": "Skills",
+  "title": "Skill Management",
+  "subtitle": "The authoring surface for skills: list what already exists, inspect how one is written, create a new skill from markdown instructions, and delete a skill that is no longer wanted.",
+  "whenToUse": "Used when a way of working should outlive one conversation. An agent that has just worked out a procedure can write it down as a skill, so any agent the skill is assigned to picks up the same procedure in a later project. Inspecting an existing skill first is the fastest way to learn the house style before writing a new one.",
+  "methods": [
+    {
+      "name": "Create Skill",
+      "description": "Creates a skill from a name, a human-facing description, an agent-facing description, and the markdown instructions. Files already in the project — text like references and scripts, or binary like a PowerPoint deck or an image — can be bundled into the skill by naming their paths; they are copied in alongside the instructions. Every skill is global — there is no way to scope one to a single project — and it becomes usable once it is assigned to an agent in Settings."
+    },
+    {
+      "name": "Inspect Skill",
+      "description": "Copies a skill's folder — the instructions, the manifest, and every bundled file — into the project folder, where the Filesystem tool can read them. Use it to see how an existing skill is written. The copy is a scratch snapshot: inspecting the same skill again replaces it."
+    },
+    {
+      "name": "Delete Skill",
+      "description": "Deletes a skill created by a user. Skills that came from the marketplace are read-only and stay untouched."
+    },
+    {
+      "name": "List Skills",
+      "description": "Lists every skill on the platform — its id, whether it is switched on, and whether it can be deleted. A listed skill still has to be assigned to an agent in Settings before that agent can use it."
+    }
+  ],
+  "mediaCaption": "A Skill Management action card showing a new skill being written, then assigned to an agent"
+}

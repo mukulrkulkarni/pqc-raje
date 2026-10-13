@@ -1,0 +1,35 @@
+{
+  "id": "tool-management",
+  "label": "Tool Management",
+  "category": "Configuration",
+  "title": "Tool Management",
+  "subtitle": "The single surface for tools: create and delete custom tools from a plain definition, move them between global and project scope, browse them, inspect one to clone it, and register an already-running external MCP server to discover its tools.",
+  "whenToUse": "Used when an agent needs to build a new capability on the fly (create a custom tool), confine a tool to a single project (or promote it to every project), or change which tools an agent can use — for example, temporarily giving an agent the Shell tool for one phase, then removing it.",
+  "methods": [
+    {
+      "name": "Create Tool",
+      "description": "Creates a custom tool from a plain definition of methods and handler code."
+    },
+    {
+      "name": "List Tools",
+      "description": "Browses the registered tools — id, description, methods, origin."
+    },
+    {
+      "name": "Inspect Tool",
+      "description": "Copies a tool's package into the project folder so its source can be read and cloned."
+    },
+    {
+      "name": "Change Tool Scope",
+      "description": "Moves a custom tool between global and project scope."
+    },
+    {
+      "name": "Delete Tool",
+      "description": "Deletes a custom tool."
+    },
+    {
+      "name": "Discover MCP Server",
+      "description": "Registers an already-running external MCP server by URL and discovers its tools."
+    }
+  ],
+  "mediaCaption": "A Tool Management action card showing a custom tool being created from a plain definition"
+}

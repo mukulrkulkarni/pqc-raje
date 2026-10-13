@@ -1,0 +1,29 @@
+{
+  "id": "data-layer",
+  "label": "Data Layer",
+  "title": "Data Layer",
+  "subtitle": "The data layer is a shared, structured storage space that all agents in a project can read from and write to in real time. Think of it as a shared whiteboard: one agent can post its findings there, and every other agent in the project can read them straight away without having to ask.",
+  "tags": ["Core"],
+  "subsections": [
+    {
+      "title": "What Is the Data Layer?",
+      "description": "When multiple agents are working together, they often need to share information — but having them relay everything through the chat is slow and context-heavy. The data layer solves this by giving every agent access to a common set of named properties that any agent can set or read at any time. For example: a Research Agent fetches data from an external API and writes the results to a property called \"market_data\"; a Summariser Agent reads \"market_data\" directly and produces a summary without needing the Research Agent to repeat itself; an Analyst Agent subscribes to \"market_data\" so each new value is injected into its context automatically. Properties persist across the session, and a subscribed agent picks up a new value on its next reasoning step.",
+      "mediaCaption": "An agent writing a shared property to the data layer mid-run, with the call and its result shown in the chat"
+    },
+    {
+      "title": "Properties: Storing & Reading Values",
+      "description": "A data layer property has a name (like \"tasks\" or \"status\") and a value, which can be any JSON-compatible type: a number, a string, a true/false flag, a list, or a structured object. Agents set properties using the Set Data Layer Property tool and read them using Get Data Layer Property. You can optionally give a type hint — such as \"table\", \"markdown\", \"percentage\", or \"image\" — to record what kind of value it holds. To see the current state of all properties in your project, ask an agent to list them and it reports them back in the chat.",
+      "mediaCaption": "The result of asking an agent to list the data layer, showing each property name with its value, its recorded type, and where the value came from"
+    },
+    {
+      "title": "Watching for Changes",
+      "description": "Rather than polling manually, agents can register watchers that keep a data layer property automatically up to date. A file watcher monitors a local file and updates the property whenever the file changes on disk — for example, watching a log file and extracting a status value from each new line. A URL watcher polls an HTTP endpoint at a configurable interval and updates the property with the response — useful for pulling live data from an external API into a property other agents can read. Agents can also subscribe to a property, which means its current value is automatically injected into the agent's context on every reasoning step so the agent can react to new information without being explicitly prompted.",
+      "mediaCaption": "The Watch Data Source tool accepts a file path or URL, a target property name, and an optional JSON path expression to extract a specific field from the response"
+    },
+    {
+      "title": "The Scratchpad",
+      "description": "The scratchpad is a simpler companion to the data layer for sharing free-form text between agents. Where data layer properties are structured (named key-value pairs, typed, queryable), the scratchpad is a single free-text document that all agents can append to, replace, or clear. Its contents are automatically included in every agent's context window, so agents always see the latest scratchpad without needing to explicitly read it. It is best suited for passing narrative notes or interim findings between agents — for example, a Research Agent appends its findings and an Analyst Agent reads that summary in its next turn. Use the data layer when you need structured, typed values; use the scratchpad when you just need agents to share working notes in plain language.",
+      "mediaCaption": "The Scratchpad section of the Project Overview, showing the shared notes the agents have written so far"
+    }
+  ]
+}

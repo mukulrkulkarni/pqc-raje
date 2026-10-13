@@ -1,0 +1,34 @@
+{
+  "id": "knowledge",
+  "label": "Knowledge Base",
+  "title": "Knowledge Base",
+  "subtitle": "A knowledge base is a private library that agents can search when answering your questions. Instead of pasting documents into every message, you upload them once, and an agent holding the Knowledge Base tool searches them for the passages that bear on the question in front of it.",
+  "tags": ["RAG"],
+  "subsections": [
+    {
+      "title": "What Is a Knowledge Base?",
+      "description": "Think of a knowledge base as a searchable archive that lives alongside your project. You might add a product specification PDF, a CSV of customer data, a company style guide, or any other reference material you want an agent to draw on. The key difference from pasting text into a prompt is scale and precision: a single prompt can only hold so much text before the agent loses track of it, whereas a knowledge base can hold hundreds of documents and the agent retrieves only the three to five passages most relevant to the current question. This keeps the agent's working memory focused and reduces hallucination caused by irrelevant context crowding out the important parts.",
+      "mediaCaption": "The Knowledge Base panel open inside a project, showing an uploaded collection of documents"
+    },
+    {
+      "title": "Creating a Collection and Adding Documents",
+      "description": "Open a project and expand Knowledge Databases in the left sidebar, then click the database you want to add to. Every project has its own, and any shared databases appear alongside it. The dialog opens on the Documents tab. Drag files onto the upload area or click it to browse — supported formats are PDF, DOCX, TXT, MD, CSV, XLSX, JSON, PPTX, and EPUB — and you can select several at once. Uploading adds them to the database you opened, and each document then appears in the list with a badge showing how many chunks it was split into. To keep material in a separate collection, create the database first from the Knowledge tab in project settings or the RAG tab in global settings — a database created either way is shared across all projects — then open it from the sidebar and upload into it.",
+      "mediaCaption": "Uploading a PDF to a project knowledge base by dragging it onto the upload area"
+    },
+    {
+      "title": "How Agents Use It",
+      "description": "An agent searches the knowledge base when it judges that it needs to, rather than on every message. Give an agent the Knowledge Base tool and it can look for passages whose meaning is closest to the question it is working on, then read the best matches back before it answers. The search matches on meaning, so a question phrased differently from the document still finds it. A search that includes an identifier (an error code such as E1234, a part number, a ticket key such as PROJ-123, a standard number such as ISO 27001 or NIST 800-53, a name from code such as getUserId or src/app.ts, or a URL) also finds the passages containing that identifier word for word, or every identifier when it names several, whatever other words surround it in the query. A search for a phrase of three or more words also finds the passages containing the whole phrase. These are marked as an exact match, which searching by meaning alone would miss, and listed first when they fit in the number of results asked for. When more passages contain it than that, results are ordered by meaning as usual, so an identifier mentioned all over your documents does not push out the passage that actually answers the question. A search for one or two ordinary words, a short number such as a year, a range of years, a date or a hyphenated word is matched on meaning only. Databases you connect from outside the app are searched by meaning only. An agent without that tool never reaches your documents, however many you have uploaded — so if answers ignore material you know is there, check the agent's tools first, then which databases it has been given. You can also see what a search returns without involving an agent at all: the Search tab inside the dialog takes a natural-language query and lists the passages that match, each with a relevance score. That direct search uses project access and is not a preview of any particular agent's assignments.",
+      "mediaCaption": "The Search tab showing query results with relevance scores from an uploaded document collection"
+    },
+    {
+      "title": "Project vs Global Collections",
+      "description": "Scope belongs to the database rather than to each upload: a database is fixed as project-scoped or platform-scoped when it is created. You do not pick that scope yourself — every project is provisioned with its own project-scoped database, and any database you add from settings is platform-scoped. A project-scoped database is visible only inside the project that owns it, which is the right choice for source code context, client-specific data, or anything confidential to one engagement. A platform-scoped database is visible in every project on your InnoviumAI instance, which suits company-wide reference material like a coding standards guide, a product glossary, or a legal boilerplate library. A project can hold both at once, and an agent working in it searches whichever of them it has been given, ranking the results together by relevance.",
+      "mediaCaption": "The Knowledge Databases section of the sidebar, showing a project's own database alongside the shared ones"
+    },
+    {
+      "title": "Assigning Databases to an Agent",
+      "description": "Beyond uploading documents, you can scope which knowledge databases a specific agent is allowed to use. Open an agent's settings — either the global defaults under Settings > Agents, or the per-project overrides from a project's agent settings — and use the Knowledge Databases selector to assign one or more databases to that agent. Every agent always has its project's own database as a baseline; assigning databases adds the shared Global database or custom collections on top. The assignment is both surfaced and enforced: the agent is told which databases it has, and its Knowledge Base reads and writes are limited to that set on the server, so it cannot touch databases it was not given. Use this when you have several collections and want a particular specialist — say a legal-review agent — to consult only the contracts database rather than everything. Leaving the selector empty means the agent uses just its project database; note the Global database is not included automatically — assign it when you want the agent to consult it.",
+      "mediaCaption": "The Knowledge Databases selector in an agent's settings, showing assigned and available databases"
+    }
+  ]
+}

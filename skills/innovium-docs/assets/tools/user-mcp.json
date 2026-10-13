@@ -1,0 +1,15 @@
+{
+  "id": "user-mcp",
+  "label": "User MCP Server",
+  "category": "Integrations",
+  "title": "User-Installed MCP Server",
+  "subtitle": "Wraps MCP servers that have been installed by the user from the catalog. Provides dynamic tool discovery and execution for user-configured integrations.",
+  "whenToUse": "Used automatically for integrations you have installed from the catalog — GitHub, Slack, Jira, etc. You do not interact with this tool directly.",
+  "methods": [
+    {
+      "name": "(dynamic)",
+      "description": "Methods come from the installed MCP server's tool manifest. Each integration exposes different tools."
+    }
+  ],
+  "mediaCaption": "A user MCP tool call showing the integration name (e.g. GitHub), the action taken (e.g. create_pull_request), and the result"
+}

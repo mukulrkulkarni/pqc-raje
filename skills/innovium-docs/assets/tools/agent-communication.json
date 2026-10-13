@@ -1,0 +1,22 @@
+{
+  "id": "agent-communication",
+  "label": "Agent Communication",
+  "category": "Collaboration",
+  "title": "Agent Communication",
+  "subtitle": "Lets agents send messages to each other — either fire-and-forget (Talk) or as a question that waits for an answer (Ask). This is how agents consult each other without going through the main conversation.",
+  "whenToUse": "Use Talk to pass information to another agent asynchronously. Use Ask when an agent needs an answer before it can continue — for example, checking with a domain expert before proceeding.",
+  "methods": [
+    {
+      "name": "Talk to Agent",
+      "description": "Sends a message to another agent without waiting for a reply. Non-blocking."
+    },
+    {
+      "name": "Ask Agent",
+      "description": "Sends a question to another agent and waits for the reply before continuing. Blocking."
+    }
+  ],
+  "mediaCaption": "An Ask Agent action card showing the target agent name, the question sent, and the reply received",
+  "tips": [
+    "Talk is much cheaper than Delegate — use it when you just need to inform another agent, not hand off a full task."
+  ]
+}

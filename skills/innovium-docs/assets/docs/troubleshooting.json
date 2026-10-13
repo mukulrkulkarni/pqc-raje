@@ -1,0 +1,22 @@
+{
+  "id": "troubleshooting",
+  "label": "Troubleshooting",
+  "title": "Troubleshooting",
+  "subtitle": "Tools to help you understand what is happening under the hood and report problems when something goes wrong.",
+  "subsections": [
+    {
+      "title": "Debug mode",
+      "description": "Debug mode reveals extra detail about each agent step directly in the chat. When enabled, a Debug card labelled \"LLM Call Debug Info\" appears after every model call. It shows the exact model used, token counts for the prompt and response, estimated cost, response time, and — if you expand it — the full raw prompt that was sent. This is useful for understanding what the agent is actually sending to the model, checking context window usage, or verifying which model handled a step. Debug mode also brings back every card a tool chose not to show, which is where the tool calls go when an agent is doing its own housekeeping. Beneath each tool card it also shows the raw result the agent read, which the card replaces in normal use. Debug mode also raises the app's log level, so the log files capture more detail to attach to a bug report. Toggle debug mode from the Settings panel.",
+      "mediaCaption": "An expanded debug card showing model name, token usage, cost, and a collapsible view of the raw prompt sent to the model"
+    },
+    {
+      "title": "Reporting a bug",
+      "description": "If you encounter unexpected behaviour, use the Report Bug button found in the Help menu. This opens a form where you can describe what happened, what you expected, and optionally attach a screenshot. Submitting the form sends a report directly to the development team. For the most useful report, include the steps that led to the problem and any error messages visible in the chat or the application.",
+      "mediaCaption": "The Report Bug dialog showing fields for a description, reproduction steps, and an optional screenshot attachment"
+    },
+    {
+      "title": "Windows antivirus blocks or removes the app",
+      "description": "On a managed Windows machine, Windows Defender or Check Point Harmony Endpoint can quarantine the desktop app, delete it after install, or slow it down. Ask your IT team to add the exclusions below. Copy every path exactly as written, because a wrong wildcard or a missing dot makes an exclusion silently not match.\n\n**Windows Defender.** Add the three groups below.\n\n**Antivirus path exclusions.** A path exclusion unscans everything inside that folder or matching that file name (the app's own files, its profile and cache, its data, and the installers it downloads).\n\n| Path | What it is |\n| --- | --- |\n| `C:\\Users\\*\\AppData\\Local\\InnoviumAI` | The install directory. |\n| `C:\\Users\\*\\AppData\\Local\\ai.innovium.app` | The WebView2 profile and cache. Heavy write traffic on every launch. |\n| `C:\\Users\\*\\.innovium-ai` | The data directory: SQLite, RAG storage, logs, tools and skills. All runtime I/O lives here. |\n| `InnoviumAI-*-installer.exe` | The updater download, written to Temp. |\n| `innovium_ai-windows-x64-setup.exe` | The website download. |\n\n**Antivirus process exclusions.** A process exclusion unscans everything that process reads or writes anywhere (your project folders, temp files, agent outputs). That makes it the catch-all for a smooth experience, since the path exclusions above only cover the app's own folders.\n\n- `C:\\Users\\*\\AppData\\Local\\InnoviumAI\\innovium-ai.exe`\n- `C:\\Users\\*\\AppData\\Local\\InnoviumAI\\backend.exe`\n\n**Attack surface reduction (ASR) exclusions.** ASR takes files and folders only. No process type exists, so the two executables cannot be excluded here and the list is the path list again.\n\n- `C:\\Users\\*\\AppData\\Local\\InnoviumAI`\n- `C:\\Users\\*\\AppData\\Local\\ai.innovium.app`\n- `C:\\Users\\*\\.innovium-ai`\n- `InnoviumAI-*-installer.exe`\n- `innovium_ai-windows-x64-setup.exe`\n\n**Harmony Endpoint.** Mirror the entire Defender list above in Harmony's own policy. Defender exclusions do not reach Harmony, so a machine that runs both scanners needs both lists, and an entry present in Defender alone still leaves Harmony free to quarantine the app."
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "id": "ros2-upload",
+  "label": "ROS2 Upload",
+  "category": "Utility",
+  "title": "ROS2 Package Upload",
+  "subtitle": "Uploads ROS2 packages from the project folder to a remote px4-sim simulation container. Specialist tool for robotics simulation workflows.",
+  "whenToUse": "Use in ROS2 development workflows where an agent needs to deploy a package to a running simulation container for testing.",
+  "methods": [
+    {
+      "name": "Upload ROS2 Package",
+      "description": "Uploads a ROS2 package directory from the project folder to the configured simulation container via HTTP POST."
+    }
+  ],
+  "mediaCaption": "A ROS2 package upload action card showing the package name, target container URL, and upload confirmation"
+}

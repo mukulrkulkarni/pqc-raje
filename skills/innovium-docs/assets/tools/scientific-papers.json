@@ -1,0 +1,15 @@
+{
+  "id": "scientific-papers",
+  "label": "Scientific Papers",
+  "category": "Analysis",
+  "title": "Scientific Papers",
+  "subtitle": "Searches six academic sources in one query — arXiv, OpenAlex, PMC, Europe PMC, bioRxiv and medRxiv, and CORE.",
+  "whenToUse": "Used when you want one sweep across preprints and published literature instead of visiting each source in turn. Preprint servers carry work months before it reaches a journal, so this is the tool for a fast-moving field.",
+  "methods": [
+    {
+      "name": "Search Papers",
+      "description": "Runs one query across the six sources and returns the matching papers merged into a single list."
+    }
+  ],
+  "mediaCaption": "A Scientific Papers action card showing results merged from several academic sources"
+}

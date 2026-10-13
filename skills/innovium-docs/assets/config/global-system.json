@@ -1,0 +1,23 @@
+{
+  "id": "global-system",
+  "label": "System",
+  "category": "Global Settings",
+  "title": "System Settings",
+  "subtitle": "Application-level controls for updates and system behaviour.",
+  "description": "The System tab contains controls that affect the entire InnoviumAI installation. These settings are typically configured once during initial setup and are normally managed by an administrator.",
+  "settings": [
+    {
+      "name": "Update Server",
+      "description": "Switch between production (stable releases) and development (pre-release builds). Changing this affects which updates are offered."
+    },
+    {
+      "name": "Check for Updates",
+      "description": "Manually trigger an update check. If a new version is available, you can download and apply it from this panel."
+    }
+  ],
+  "mediaCaption": "The System tab showing the update server toggle and a check-for-updates button",
+  "tips": [
+    "Stay on the production update server unless you are testing pre-release features — development builds may be unstable.",
+    "Administrators can lock the update server setting at the profile level to prevent users from switching to development builds."
+  ]
+}

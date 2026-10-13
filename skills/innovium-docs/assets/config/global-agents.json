@@ -1,0 +1,47 @@
+{
+  "id": "global-agents",
+  "label": "Agents",
+  "category": "Global Settings",
+  "title": "Agents Settings",
+  "subtitle": "Create and manage the agents available across all projects.",
+  "description": "The Agents tab is the global registry for every agent in your InnoviumAI instance. Agents defined here are the defaults; any project can override individual fields without modifying the global definition.",
+  "settings": [
+    {
+      "name": "Name & Description",
+      "description": "Identifies the agent in the UI and is used by auto-discovery to match it to relevant tasks."
+    },
+    {
+      "name": "Agent Type",
+      "description": "Simple (single-task end-to-end), PI (multi-phase project manager), or MCP (external service bridge)."
+    },
+    {
+      "name": "System Prompt",
+      "description": "Instructions that always prefix the agent's context, shaping its persona and reasoning style."
+    },
+    {
+      "name": "Tools",
+      "description": "Which tools this agent can invoke. Only enabled tools appear in the agent's reasoning loop."
+    },
+    {
+      "name": "Skills",
+      "description": "Reusable instruction sets added to the agent's context manually or through auto-discovery."
+    },
+    {
+      "name": "Workflows",
+      "description": "Pre-defined multi-step procedures the agent can execute when needed."
+    },
+    {
+      "name": "Knowledge Databases",
+      "description": "Additional shared or custom vector databases the agent can query. Its current project's primary database is always available without an assignment."
+    },
+    {
+      "name": "Enable / Disable",
+      "description": "Suppress or expose an agent globally without deleting its configuration."
+    }
+  ],
+  "mediaCaption": "The global Agents tab with the agent list on the left and the configuration panel open on the right",
+  "tips": [
+    "Disabling an agent hides it from all projects without losing any of its settings — useful for temporarily removing an agent during testing.",
+    "Keep system prompts focused: a short, precise prompt outperforms a long one that covers every edge case."
+  ]
+}

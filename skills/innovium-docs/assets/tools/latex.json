@@ -1,0 +1,27 @@
+{
+  "id": "latex",
+  "label": "LaTeX",
+  "category": "Documents",
+  "title": "LaTeX",
+  "subtitle": "Compiles LaTeX source files into PDF documents. Agents can write LaTeX, compile it to check for errors, and produce a final PDF output.",
+  "whenToUse": "Use when producing academic papers, technical reports, or any document that requires precise typesetting, mathematical notation, or structured references. Requires Docker and a TeX Live image.",
+  "methods": [
+    {
+      "name": "Check LaTeX Status",
+      "description": "Checks whether Docker and a TeX Live image are available and ready."
+    },
+    {
+      "name": "Pull TeX Live Image",
+      "description": "Pulls the TeX Live Docker image if it is not already present."
+    },
+    {
+      "name": "Compile LaTeX Document",
+      "description": "Compiles a .tex file into a PDF and returns the compilation log."
+    }
+  ],
+  "mediaCaption": "A LaTeX compilation action card showing the source file path, compilation log, and the path of the generated PDF",
+  "tips": [
+    "LaTeX compilation requires Docker to be running.",
+    "Compilation errors are returned in the log — the agent can read the log and fix the source automatically."
+  ]
+}

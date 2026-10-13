@@ -1,0 +1,15 @@
+{
+  "id": "project-settings",
+  "label": "Project Settings",
+  "category": "Configuration",
+  "title": "Project Settings",
+  "subtitle": "Updates project-level configuration settings including HITL mode, maximum reasoning steps, token limits, and other preferences.",
+  "whenToUse": "Used by orchestrator agents or setup workflows that need to configure project settings programmatically at the start of a session.",
+  "methods": [
+    {
+      "name": "Update Project Settings",
+      "description": "Updates any project-level configuration field. Supports partial updates — only the fields you provide are changed."
+    }
+  ],
+  "mediaCaption": "A Project Settings update action card showing the field updated and its new value"
+}

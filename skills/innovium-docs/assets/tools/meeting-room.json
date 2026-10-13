@@ -1,0 +1,18 @@
+{
+  "id": "meeting-room",
+  "label": "Meeting Room",
+  "category": "Collaboration",
+  "title": "Meeting Room",
+  "subtitle": "Brings multiple agents into a structured discussion. Agents take turns responding to a shared topic and the tool produces a summary with consensus when rounds are complete.",
+  "whenToUse": "Use when a decision or analysis benefits from multiple perspectives — for example, asking three specialist agents to review a plan and produce a consensus recommendation.",
+  "methods": [
+    {
+      "name": "Start Meeting",
+      "description": "Convenes a set of named agents around a topic. Runs for a specified number of rounds or until consensus is detected. Returns a structured summary."
+    }
+  ],
+  "mediaCaption": "A Meeting Room container in the chat showing each agent's contributions labelled by name and a consensus summary card at the end",
+  "tips": [
+    "Keep the number of rounds low (2–3) to control cost — each round calls every participating agent once."
+  ]
+}

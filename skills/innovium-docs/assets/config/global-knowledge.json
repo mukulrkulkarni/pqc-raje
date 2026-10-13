@@ -1,0 +1,35 @@
+{
+  "id": "global-knowledge",
+  "label": "Knowledge (RAG)",
+  "category": "Global Settings",
+  "title": "Knowledge Settings",
+  "subtitle": "Configure the embedding model, how documents are split, how many passages a search returns, and the databases available across projects.",
+  "description": "The RAG tab controls how InnoviumAI indexes documents and retrieves relevant passages. Settings here apply platform-wide; project-specific databases are added from within each project.",
+  "settings": [
+    {
+      "name": "Embedding Model",
+      "description": "The model used to convert text into vectors. Both indexing and retrieval must use the same model."
+    },
+    {
+      "name": "Top-K Results",
+      "description": "How many passages a search returns when the caller asks for no particular number."
+    },
+    {
+      "name": "Max Chunk Size",
+      "description": "Largest number of characters in a piece when a long document is split for indexing."
+    },
+    {
+      "name": "Local Databases",
+      "description": "Named vector databases stored on your machine. Create databases and upload documents from this panel."
+    },
+    {
+      "name": "External Databases",
+      "description": "Connect to remote vector databases with an endpoint URL and optional API credentials."
+    }
+  ],
+  "mediaCaption": "The RAG settings tab showing the embedding model selector, the Top-K and Max Chunk Size fields, and the local database list with upload controls",
+  "tips": [
+    "Changing the embedding model after indexing documents leaves the existing ones behind: at best they score poorly against a query the new model produced, and where the two models size their vectors differently, searching the database and adding to it both fail until you re-index. Open a knowledge base and choose Reindex to re-embed its documents with the new model; nothing needs uploading again.",
+    "Top-K of 5 is a good starting point; increase to 8–10 if agents frequently miss relevant context, decrease if responses contain too much irrelevant detail."
+  ]
+}

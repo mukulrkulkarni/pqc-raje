@@ -1,0 +1,20 @@
+{
+  "id": "shell",
+  "label": "Shell",
+  "category": "Files",
+  "title": "Shell",
+  "subtitle": "Executes terminal commands on your machine. This is the most powerful — and most sensitive — tool available to agents. It can run scripts, install packages, call command-line tools, perform git operations, and do anything your terminal can do.",
+  "whenToUse": "Use when a task requires running a script, building software, executing tests, or calling a CLI tool. Keep this tool under Ask-level approval while you are learning how an agent behaves.",
+  "methods": [
+    {
+      "name": "Execute Command",
+      "description": "Runs a shell command and returns stdout, stderr, and the exit code. Supports configurable working directory, environment variables, and a timeout."
+    }
+  ],
+  "mediaCaption": "An Execute Command approval card showing the full command string, working directory, and timeout before the user approves",
+  "tips": [
+    "Set this tool to Ask-level approval. Shell commands can delete files, modify system settings, or make network calls.",
+    "Long-running commands will time out. For background processes, use & or nohup inside the command.",
+    "When an approval is required, the request shows the exact command (and working directory) in a formatted block so you can review precisely what will run before allowing it."
+  ]
+}

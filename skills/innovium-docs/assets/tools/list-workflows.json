@@ -1,0 +1,15 @@
+{
+  "id": "list-workflows",
+  "label": "List Workflows",
+  "category": "Workflows",
+  "title": "List Workflows",
+  "subtitle": "Returns the list of enabled workflows in the current project, with IDs, names, and descriptions. Used for workflow discovery.",
+  "whenToUse": "Agents call this to discover what automated workflows are available before triggering one. Useful when the user asks about available automations.",
+  "methods": [
+    {
+      "name": "List Workflows",
+      "description": "Returns all enabled workflows with their metadata (ID, name, description). Disabled workflows are excluded."
+    }
+  ],
+  "mediaCaption": "A list of available workflows returned by the tool, showing workflow names and descriptions"
+}

@@ -1,0 +1,19 @@
+{
+  "id": "milestone-management",
+  "label": "Milestone Management",
+  "category": "Planning",
+  "title": "Milestone Management",
+  "subtitle": "The internal tool PI Agents use to create and advance a project's milestone plan. Creates a structured plan with ordered phases and tasks, and transitions the project from one milestone to the next as work completes.",
+  "whenToUse": "This tool is used automatically by PI Agents — you do not call it directly. It is listed here so you understand what happens when the agent creates or transitions a milestone.",
+  "methods": [
+    {
+      "name": "Create Milestones",
+      "description": "Creates a structured project plan as an interactive card in the chat, awaiting user approval before execution begins. The card is skipped when human review is off for the project, or when tool settings bypass the milestone editor — then the proposed plan is created straight away and the chat marks it as applied without review. Set this preference for all agents or one agent in Tool Settings."
+    },
+    {
+      "name": "Transition Milestone",
+      "description": "Marks the current milestone as complete and moves the project to the next phase, adding that phase's chapter card to the chat."
+    }
+  ],
+  "mediaCaption": "A milestone plan card appearing in the chat after the PI Agent calls Create Milestones, showing phase names and sub-tasks"
+}

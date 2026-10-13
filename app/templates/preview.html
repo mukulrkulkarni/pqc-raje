@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; font-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline';">
+<title>Upload Preview - ELECTRE III</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<main class="container">
+<h1>Upload Preview</h1>
+
+<section class="info-grid" aria-label="Matrix information">
+<div class="info-item">
+<span class="info-label">Shape</span>
+<span class="info-value">{{ preview.shape[0] }} × {{ preview.shape[1] }}</span>
+</div>
+<div class="info-item">
+<span class="info-label">Data Type</span>
+<span class="info-value">{{ preview.dtype }}</span>
+</div>
+<div class="info-item">
+<span class="info-label">Total Rows</span>
+<span class="info-value">{{ preview.total_rows }}</span>
+</div>
+</section>
+
+<section class="stats-section" aria-label="Statistics">
+<h2>Statistics</h2>
+<dl class="stats-grid">
+<div class="stat-item">
+<dt>Min</dt>
+<dd>{{ "%.4f"|format(preview.stats.min) }}</dd>
+</div>
+<div class="stat-item">
+<dt>Max</dt>
+<dd>{{ "%.4f"|format(preview.stats.max) }}</dd>
+</div>
+<div class="stat-item">
+<dt>Mean</dt>
+<dd>{{ "%.4f"|format(preview.stats.mean) }}</dd>
+</div>
+<div class="stat-item">
+<dt>Std</dt>
+<dd>{{ "%.4f"|format(preview.stats.std) }}</dd>
+</div>
+</dl>
+</section>
+
+{% if preview.has_nan or preview.has_inf %}
+<section class="warning-box" role="alert" aria-label="Data warnings">
+<h2 class="visually-hidden">Warnings</h2>
+{% if preview.has_nan %}
+<p>⚠ Matrix contains NaN values</p>
+{% endif %}
+{% if preview.has_inf %}
+<p>⚠ Matrix contains infinite values</p>
+{% endif %}
+</section>
+{% endif %}
+
+<section class="data-preview" aria-label="Data preview">
+<h2>Data Preview (first {{ preview.preview_rows }} rows)</h2>
+<div class="table-wrapper">
+<table aria-label="Matrix data preview">
+<thead>
+<tr>
+<th scope="col">Row</th>
+{% for j in range(preview.shape[1]) %}
+<th scope="col">C{{ j + 1 }}</th>
+{% endfor %}
+</tr>
+</thead>
+<tbody>
+{% for row in preview.data %}
+<tr>
+<th scope="row" data-label="Row">{{ loop.index }}</th>
+{% for val in row %}
+<td data-label="C{{ loop.index }}">{{ "%.4f"|format(val) }}</td>
+{% endfor %}
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+</section>
+
+<section class="actions" aria-label="Actions">
+<form method="post" action="{{ url_for('preview.confirm_upload', upload_id=upload_id) }}">
+<button type="submit" class="btn btn-primary">Confirm and Proceed</button>
+</form>
+<form method="post" action="{{ url_for('preview.cancel_upload', upload_id=upload_id) }}">
+<button type="submit" class="btn btn-secondary">Cancel</button>
+</form>
+</section>
+</main>
+</body>
+</html>

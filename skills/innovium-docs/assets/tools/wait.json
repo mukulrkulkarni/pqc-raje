@@ -1,0 +1,15 @@
+{
+  "id": "wait",
+  "label": "Wait",
+  "category": "Utility",
+  "title": "Wait",
+  "subtitle": "Pauses agent execution for a specified number of milliseconds. Useful for rate limiting between API calls, waiting for an external process to complete, or introducing a delay between steps.",
+  "whenToUse": "Use when an agent is polling an external system that has rate limits, or when a previous action (like triggering a build) needs time to complete before the agent checks the result.",
+  "methods": [
+    {
+      "name": "Wait",
+      "description": "Pauses execution for the specified duration in milliseconds. Default: 1000ms. Maximum: 300,000ms (5 minutes)."
+    }
+  ],
+  "mediaCaption": "A Wait action card showing the duration in milliseconds and a note explaining what the agent is waiting for"
+}

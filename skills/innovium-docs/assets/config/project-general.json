@@ -1,0 +1,23 @@
+{
+  "id": "project-general",
+  "label": "General",
+  "category": "Per-Project",
+  "title": "Project — General",
+  "subtitle": "Basic project metadata such as the title and timestamps.",
+  "description": "The General tab inside project settings shows information about the project itself. The title is the only editable field; timestamps are read-only.",
+  "settings": [
+    {
+      "name": "Project Title",
+      "description": "The name shown in the sidebar and project header. InnoviumAI can also auto-generate a title from the conversation content via the context menu."
+    },
+    {
+      "name": "Created At",
+      "description": "Read-only timestamp of when the project was first created."
+    },
+    {
+      "name": "Last Updated",
+      "description": "Read-only timestamp of the most recent change to the project."
+    }
+  ],
+  "mediaCaption": "Project settings General tab showing the title field and read-only timestamp fields"
+}

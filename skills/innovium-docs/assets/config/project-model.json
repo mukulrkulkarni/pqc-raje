@@ -1,0 +1,35 @@
+{
+  "id": "project-model",
+  "label": "Model Settings",
+  "category": "Per-Project",
+  "title": "Project — Model Settings",
+  "subtitle": "Override the global model, temperature, and inference strategy for this project.",
+  "description": "The Model Settings tab lets you choose a different model, temperature, or context strategy for this specific project. Any field left blank inherits the global default.",
+  "settings": [
+    {
+      "name": "Model Override",
+      "description": "The model used for all agents in this project, replacing the global default. Leave blank to inherit. The picker is searchable: type part of a model name, its id, or its provider to narrow the list."
+    },
+    {
+      "name": "Temperature Override",
+      "description": "Project-specific creativity level. Leave blank to inherit the global value."
+    },
+    {
+      "name": "Max Tokens Override",
+      "description": "Project-specific response length limit. Leave blank to inherit. Choosing a model that cannot produce the limit you have set brings it down to what that model can; a model that can already produce it leaves it alone. While the field is blank it shows the chosen model’s own output limit, and stays blank until you set a value."
+    },
+    {
+      "name": "Custom Parameters",
+      "description": "Additional model parameters (top-p, top-k, reasoning effort) applied to all agents in the project."
+    },
+    {
+      "name": "Inference Strategy",
+      "description": "How the model is called — Best of N (multiple candidates, highest score wins), Self-Consistency (majority vote), Chain-of-Thought with Reflection (reason then self-review), or Plan Search (evaluate plans before executing)."
+    }
+  ],
+  "mediaCaption": "Project model settings showing an overridden model with a 'Reset to global default' link beneath the selector",
+  "tips": [
+    "Model overrides only affect this project — your global default is unchanged and other projects are not affected.",
+    "If you are experimenting with a new model, set it here first before changing the global default."
+  ]
+}

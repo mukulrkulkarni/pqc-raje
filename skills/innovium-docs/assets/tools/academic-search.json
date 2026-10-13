@@ -1,0 +1,30 @@
+{
+  "id": "academic-search",
+  "label": "Academic Search",
+  "category": "Analysis",
+  "title": "Academic Search",
+  "subtitle": "Searches Semantic Scholar's database of over 200 million academic papers. Agents can find papers by topic, look up author publication lists, and retrieve citation counts and abstracts.",
+  "whenToUse": "Use when conducting a literature review, fact-checking a scientific claim, building a bibliography, or exploring what research exists in a given field.",
+  "methods": [
+    {
+      "name": "Search Papers",
+      "description": "Searches for papers matching a keyword query. Returns titles, authors, year, citation count, and abstract."
+    },
+    {
+      "name": "Get Paper Details",
+      "description": "Returns full metadata for a specific paper by Semantic Scholar ID or DOI — including references and citations."
+    },
+    {
+      "name": "Search Authors",
+      "description": "Finds author profiles matching a name query. Returns author ID, name, affiliation, and citation metrics."
+    },
+    {
+      "name": "Get Author Publications",
+      "description": "Returns the full publication list for a given author ID, sorted by citation count."
+    }
+  ],
+  "mediaCaption": "An academic search result card listing paper titles, authors, year, citation counts, and truncated abstracts",
+  "tips": [
+    "Use Get Paper Details after finding a paper to retrieve its full reference list, then chain into further searches."
+  ]
+}

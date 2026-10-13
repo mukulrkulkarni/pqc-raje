@@ -1,0 +1,51 @@
+{
+  "id": "browser-automation",
+  "label": "Browser Automation",
+  "category": "Web",
+  "title": "Browser Automation",
+  "subtitle": "Opens a real browser that the agent can control interactively — navigating pages, clicking buttons, filling forms, scrolling, and taking screenshots. Use this when Web Search is not enough and the agent needs to interact with a web interface.",
+  "whenToUse": "Use when the target page requires login, loads content after interaction, has forms the agent needs to fill, or when you need the agent to take actions on a website rather than just read from it. Needs a Chromium-based browser: it uses Google Chrome or Microsoft Edge if either is already installed, and otherwise asks permission to download one. It only reaches the public web: an address on your own machine or network, such as a development server on localhost, is refused, and so is anything the page it opened tries to load from one.",
+  "methods": [
+    {
+      "name": "Start Browser Session",
+      "description": "Opens a new headless browser instance and navigates to a starting URL. Must be called before any other browser methods."
+    },
+    {
+      "name": "Navigate to URL",
+      "description": "Navigates the current session to a new URL."
+    },
+    {
+      "name": "Take Screenshot",
+      "description": "Captures the current page and annotates every interactive element with a numbered index for use in subsequent click/type actions."
+    },
+    {
+      "name": "Click Element",
+      "description": "Clicks the element with the given index number from the last screenshot."
+    },
+    {
+      "name": "Type Text",
+      "description": "Types text into the currently focused input field."
+    },
+    {
+      "name": "Scroll Page",
+      "description": "Scrolls the page up or down by a given amount."
+    },
+    {
+      "name": "Select Dropdown Option",
+      "description": "Chooses a value from a select/dropdown element."
+    },
+    {
+      "name": "Extract Page Content",
+      "description": "Returns the text content and structure of the current page."
+    },
+    {
+      "name": "Close Browser Session",
+      "description": "Closes the browser session and frees resources. Always call this when done."
+    }
+  ],
+  "mediaCaption": "A browser screenshot inline in chat showing a rendered page with numbered red boxes on each clickable element",
+  "tips": [
+    "The agent must take a screenshot before it can click anything — element indices come from the screenshot annotations.",
+    "Set this tool to Ask-level approval if the agent will be interacting with live systems."
+  ]
+}

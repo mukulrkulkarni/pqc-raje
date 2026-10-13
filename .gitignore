@@ -1,0 +1,37 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyd
+*.pyo
+*.pdb
+*.so
+*.egg-info/
+.dist/
+build/
+
+# Virtual env
+.venv/
+venv/
+
+# Test caches
+.pytest_cache/
+.coverage
+htmlcov/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# App runtime data
+instance/
+*.log
+
+# Large generated artifacts
+*.npy
+*.npz
+*.parquet
+*.csv
+
+# Editor
+.vscode/
+.idea/

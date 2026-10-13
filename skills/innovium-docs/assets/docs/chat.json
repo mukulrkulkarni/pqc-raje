@@ -1,0 +1,39 @@
+{
+  "id": "chat",
+  "label": "Chat",
+  "title": "Chat & Conversation",
+  "subtitle": "The Chat view is where you interact with your AI agents. You type a message, the agent works through the task step by step, and you watch it happen in real time — its thinking, the tools it uses, and the results they come back with.",
+  "tags": ["Core"],
+  "subsections": [
+    {
+      "title": "Knowing which agent you are talking to",
+      "description": "At the very top of the chat, a small indicator shows the avatar and name of the agent your next message will be sent to — for example \"PI Agent\", the default. It updates the moment you pick a different agent from the Agents section in the left sidebar, so you can always confirm who will respond without having to expand that section. If no agent is selected the indicator is hidden.",
+      "mediaCaption": "The selected-agent indicator at the top of the chat showing an agent avatar next to its name, e.g. \"PI Agent\""
+    },
+    {
+      "title": "Types of content in the chat",
+      "description": "As an agent works, the chat fills up with different kinds of cards, not just plain messages. Thought cards (shown with a warm-coloured header) are the agent's internal reasoning — what it is planning before it acts. Action cards (blue header) show each tool the agent is calling, such as running a terminal command, reading a file, or searching the web. Observation cards (green or red) show the result that came back from that tool — green means success, red means an error occurred. At the end, the agent sends a final message card with its written response. Thoughts and actions are collapsed by default; click the header of any card to expand and read the full content. Not every call leaves a card: when an agent is doing its own bookkeeping — noting a status, ticking off a todo, listing the tools it already has — it works quietly, so the transcript stays about your task. The progress indicator names those calls as they run, and debug mode brings their cards back.",
+      "mediaCaption": "A sequence of thought, action, and observation cards appearing as an agent works through a task, with a final agent message at the bottom"
+    },
+    {
+      "title": "Watching responses stream in",
+      "description": "Responses appear word by word as they are generated, so you do not need to wait for the agent to finish before you can start reading. A typing indicator at the bottom of the chat shows which agents are currently active. The chat automatically scrolls to keep up with new content. If you scroll up to read something earlier, auto-scroll pauses — a down-arrow button appears at the bottom right. Click it to jump back to the latest content and resume auto-scrolling.",
+      "mediaCaption": "An agent thought card building up word by word while a typing indicator is visible at the bottom of the chat"
+    },
+    {
+      "title": "Managing elements: hover to reveal controls",
+      "description": "Hovering over any card or message in the chat reveals a set of controls. A drag handle on the left lets you grab the element and move it to a different position — useful for reorganising notes or results. A delete button on the right permanently removes the element after a confirmation prompt. A small + button at the top edge inserts a blank markdown cell immediately above the element, which you can use to add your own notes or headings anywhere in the conversation. On your own messages an edit button (pencil icon) and a retry button (circular arrow) also appear, which let you rewrite a past prompt or re-run it as-is, with the conversation rewound to that point so the agent starts fresh.",
+      "mediaCaption": "A chat card with the drag handle, delete button, insert-cell button, and edit + retry buttons (on user messages) visible on hover"
+    },
+    {
+      "title": "Writing your message: live markdown preview",
+      "description": "The message box at the bottom of the chat accepts Markdown — bullet and numbered lists, headings, blockquotes, tables, links, bold and italic text, inline code with single backticks, and fenced code blocks with triple backticks. While you type, the box itself keeps showing your raw text exactly as you entered it, so editing stays simple. As soon as your draft contains any Markdown formatting, a small \"Preview\" panel appears just below the box and renders it the same way your sent message will look — so you can confirm your bullets, code blocks, and other formatting are correct before sending. The preview is read-only (you still edit in the box above it), stays hidden for plain one-line text, and scrolls internally if your draft is long. Press Enter to send, or Shift+Enter to add a new line.",
+      "mediaCaption": "The chat message box with a Markdown draft typed in, and a \"Preview\" panel below it rendering the bullet list and code block as they will appear when sent"
+    },
+    {
+      "title": "Voting on agent steps",
+      "description": "Every thought, action, and observation card has thumbs-up and thumbs-down buttons visible on the right side of the card header. Click thumbs-up if a step was helpful or well-reasoned; thumbs-down if it was wrong or unnecessary. You can cancel an existing vote by clicking the same button again. Votes are saved to the project and can be used to track agent quality over time. This is entirely optional.",
+      "mediaCaption": "The thumbs-up and thumbs-down vote buttons on an agent thought card header, with the thumbs-up highlighted after being clicked"
+    }
+  ]
+}

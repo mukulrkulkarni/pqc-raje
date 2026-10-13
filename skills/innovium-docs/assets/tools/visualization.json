@@ -1,0 +1,23 @@
+{
+  "id": "visualization",
+  "label": "Visualization",
+  "category": "Output",
+  "title": "Visualization",
+  "subtitle": "Lets agents create and display charts, diagrams, interactive data visualisations, and other HTML/JavaScript output directly inside the chat. Results are rendered live in an embedded canvas.",
+  "whenToUse": "Use when an agent needs to present data visually — a chart of results, a diagram of a system, a comparison table, or any output that is clearer as a visual than as text.",
+  "methods": [
+    {
+      "name": "Display Visualization",
+      "description": "Renders an HTML page, image (PNG/SVG), or URL inside an inline canvas in the chat."
+    },
+    {
+      "name": "Create Visualization",
+      "description": "Generates a visualisation by writing and executing HTML/JavaScript code inline. Supports Chart.js, D3, and other CDN libraries."
+    }
+  ],
+  "mediaCaption": "An inline visualisation canvas in the chat showing an interactive bar chart generated from analysis results",
+  "tips": [
+    "Agents can use any charting library available via CDN.",
+    "Visualisations persist in the conversation and are re-rendered when you reload the project."
+  ]
+}

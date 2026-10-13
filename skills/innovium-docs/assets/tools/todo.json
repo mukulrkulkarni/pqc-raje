@@ -1,0 +1,31 @@
+{
+  "id": "todo",
+  "label": "Todo Management",
+  "category": "Planning",
+  "title": "Todo Management",
+  "subtitle": "Gives agents a structured task list for managing their own work within a session. Agents plan tasks upfront, mark each one in progress, and complete it with a reference to the chat cell that shows the work.",
+  "whenToUse": "Use when an agent is tackling a complex multi-step task and you want visibility into what it is doing. The todo list is visible in the Project Overview.",
+  "methods": [
+    {
+      "name": "Plan Tasks",
+      "description": "Creates a structured list of tasks the agent plans to complete."
+    },
+    {
+      "name": "Start Task",
+      "description": "Marks a task as in progress."
+    },
+    {
+      "name": "Complete Task",
+      "description": "Marks a task as done, optionally pointing at the observation cell that evidences the work, so a reader can check the task against what actually happened."
+    },
+    {
+      "name": "Solve Directly",
+      "description": "Resolves a task quickly without a formal completion note."
+    },
+    {
+      "name": "List Tasks",
+      "description": "Returns the current state of the task list."
+    }
+  ],
+  "mediaCaption": "A Todo list card in the chat showing tasks, their status icons, and the proof links on completed items"
+}

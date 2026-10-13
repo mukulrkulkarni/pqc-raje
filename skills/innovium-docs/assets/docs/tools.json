@@ -1,0 +1,38 @@
+{
+  "id": "tools",
+  "label": "Tools",
+  "title": "Tools",
+  "subtitle": "Tools are the capabilities you give an agent — without them, an agent can only read and write text in the conversation. When you add a tool to an agent, it gains the ability to take real actions: search the web, read and write files, run terminal commands, or consult other agents. InnoviumAI includes a library of built-in tools, each configurable per agent with fine-grained approval controls.",
+  "tags": ["Core"],
+  "subsections": [
+    {
+      "title": "What Are Tools?",
+      "description": "Think of tools as the hands of an agent. A language model on its own can reason and write — but it cannot open a browser, save a file, or call an API. Tools bridge that gap. When an agent decides it needs information from the web, it calls the Web Search tool. When it needs to save a result, it calls the Filesystem tool. Each tool exposes one or more methods (specific actions), and the agent chooses which to use based on the task. You decide which tools each agent has access to, and — using the approval system — whether each action needs your sign-off before it runs. When an agent requests several read-only lookups in a single step — for example, multiple web searches at once — the platform runs them in parallel so results come back faster. Any action that changes something (writing a file, running a command, adding to a knowledge base) always runs one at a time, in order.",
+      "mediaCaption": "The agent tool list in the agent settings panel, showing enabled tools with their icons, names, and a configure button beside each one"
+    },
+    {
+      "title": "Web & Browser Tools",
+      "description": "The Web Search tool gives agents the ability to query the internet and read web pages. It supports a quick metadata search that returns titles and URLs without visiting pages; a deep search that fetches and reads the top results; static content extraction for a specific URL; and a full JavaScript-rendering mode using a headless browser for dynamic pages. The Browser Automation tool opens a persistent browser session that the agent can interact with: navigate to URLs, click elements, type text, and take screenshots. Use web search for research and reading; use browser automation when the agent needs to fill a form or interact with a dynamic interface.",
+      "mediaCaption": "A browser screenshot captured by the Browser Automation tool and displayed inline in the chat, showing a rendered web page annotated with numbered clickable elements"
+    },
+    {
+      "title": "File & Shell Tools",
+      "description": "The Filesystem tool lets agents read files, list directories, and write or edit content within the project folder. It also supports reading structured formats like PDF, DOCX, and CSV. The Shell tool executes terminal commands — running scripts, installing packages, invoking build tools, or performing git operations. Both tools operate with full filesystem access, which is why the Shell tool in particular is worth placing under Ask-level approval while you are getting started. Commands default to running inside the project folder. The Download tool is a safer companion: it fetches files from URLs and saves them to the project folder without shell access.",
+      "mediaCaption": "A shell command approval card in the notifications sidebar showing the full command string the agent wants to execute, ready for review"
+    },
+    {
+      "title": "Research & Knowledge Tools",
+      "description": "The Academic Search tool connects to Semantic Scholar, letting agents search for papers by keyword, look up authors, and retrieve publication lists — useful for literature reviews or citation tasks. The Knowledge Base tool provides semantic (meaning-based) search over vector databases you have set up for the project; it finds passages that are conceptually relevant even if they use different words. The Download tool rounds out the research workflow: once an agent finds a document URL, it can save the file to the project for later use.",
+      "mediaCaption": "An academic search result card in the chat showing a list of papers returned by Semantic Scholar, with author names, citation counts, and links"
+    },
+    {
+      "title": "Agent Collaboration Tools",
+      "description": "Agents can communicate and divide work between themselves. Talk sends a message to another agent without waiting for a reply. Ask sends a question and waits synchronously for the answer, useful for quick consultations with a specialist. Delegate assigns a full task to another agent — the delegating agent hands off the job, the target executes it autonomously, and the result comes back. Meeting Room gathers multiple agents into a structured discussion, runs them through deliberation rounds, detects consensus, and produces a summary. These tools matter because different agents can have different models, tool access, and areas of expertise — a research agent might delegate analysis to a code specialist, or a planning agent might convene a meeting with domain experts before recommending an approach.",
+      "mediaCaption": "A Meeting Room conversation container in the chat showing multiple agents contributing turns in a structured discussion, with a final consensus summary at the end"
+    },
+    {
+      "title": "How tool activity appears in chat",
+      "description": "Each tool call shows as one card that says what the agent is doing, such as \"Creating folder reports\", the moment the call starts. When the call finishes, the same card updates in place: it says what happened, how long it took, and what the call came back with where that helps — a file change as a diff, a search as its top results, an update as the fields it set. A card reads Done, Running, No result or Declined. A call that didn't work says what didn't happen and why in plain words, with the exact error behind Technical details, and is drawn muted because the agent usually carries on another way. A call you decline is marked Declined. The card is display-only: the agent still reasons over the tool's full result, which Debug Mode shows beneath the card."
+    }
+  ]
+}

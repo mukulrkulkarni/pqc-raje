@@ -1,0 +1,39 @@
+{
+  "id": "prompt-generation",
+  "label": "Prompt Generation",
+  "category": "Configuration",
+  "title": "Prompt Generation",
+  "subtitle": "AI-powered prompt engineering tools. Agents can generate, improve, and analyse system prompts for other agents — useful for building self-improving pipelines or onboarding new custom agents.",
+  "whenToUse": "Use when you want an agent to help design a system prompt for a new agent, refine an existing prompt based on observed performance, or generate test cases to validate a prompt.",
+  "methods": [
+    {
+      "name": "Generate Agent Prompt",
+      "description": "Creates a professional system prompt for a new agent based on its name, role, and description."
+    },
+    {
+      "name": "Improve Prompt",
+      "description": "Optimises an existing prompt based on feedback and goals."
+    },
+    {
+      "name": "Generate Test Cases",
+      "description": "Creates diverse test inputs for validating a prompt."
+    },
+    {
+      "name": "Analyse Improvements",
+      "description": "Compares two prompt versions and analyses the differences."
+    },
+    {
+      "name": "Create Initial Draft",
+      "description": "Converts a simple prompt into a structured template."
+    },
+    {
+      "name": "Refine Chain of Thought",
+      "description": "Adds systematic reasoning steps to an existing prompt."
+    },
+    {
+      "name": "Enhance Examples",
+      "description": "Improves example quality in a prompt with detailed reasoning."
+    }
+  ],
+  "mediaCaption": "A Generate Agent Prompt action card returning a structured system prompt with role definition, capabilities, and behavioural constraints"
+}

@@ -1,0 +1,37 @@
+{
+  "id": "getting-started",
+  "label": "Getting Started",
+  "category": "Internal API",
+  "title": "Getting Started",
+  "subtitle": "How any MCP server can call Innovium’s internal API. You do not need a special tool format — when Innovium launches your server it hands it a token, a port, and the active project, and your server makes ordinary authenticated HTTP requests.",
+  "overview": "When Innovium starts an MCP server — whether you built it or installed it from the catalog — it injects three environment variables into that server’s process: a bearer token, the internal API port, and the active project id. Your server reads those and makes normal HTTP calls to the internal API to read or change things inside Innovium. No Innovium-specific SDK is required; any language that can read an environment variable and make an HTTP request works.",
+  "sections": [
+    {
+      "heading": "Connect Your MCP Server",
+      "body": "There is nothing Innovium-specific in the server itself. Build a standard MCP server with the MCP SDK in any language, then add it the way you add any MCP server — from the catalog or a custom command. Innovium launches it as a subprocess; the integration with the internal API happens entirely through the environment and HTTP, not through any special API in your server code."
+    },
+    {
+      "heading": "Read the Injected Credentials",
+      "body": "At launch, Innovium sets three environment variables in your server’s process. The token is a bearer credential scoped to the active project and to your server, minted for this connection and revoked when the connection stops. The port is where the internal API listens (default 28103). The project id is the active project (empty for a global, project-less server). Read them once at startup.",
+      "code": {
+        "language": "javascript",
+        "code": "// Innovium sets these in your MCP server’s environment when it launches it.\nconst token = process.env.DIWAN_SDK_TOKEN; // bearer token for this connection\nconst port = process.env.DIWAN_SDK_PORT ?? '28103'; // internal API port\nconst projectId = process.env.DIWAN_PROJECT_ID; // active project (\"\" if none)\n\nconst BASE_URL = `http://127.0.0.1:${port}/sdk-api`;",
+        "caption": "Any language works — these are plain environment variables. Read the token at startup; never hardcode or log it."
+      }
+    },
+    {
+      "heading": "Call the Internal API",
+      "body": "Make an authenticated HTTP request to the internal API: set the Authorization header to your bearer token and append the endpoint path (listed on the API Reference page) to the base URL. Project scoping rides on the token, so you never pass a project id to an endpoint. A response of status 400 or higher means the call failed — read the body for the reason.",
+      "code": {
+        "language": "javascript",
+        "code": "// Example: read a file from the active project via the Filesystem area.\nasync function readProjectFile(filePath) {\n  const res = await fetch(`${BASE_URL}/filesystem/read?path=${encodeURIComponent(filePath)}`, {\n    headers: { Authorization: `Bearer ${token}` },\n  });\n  if (!res.ok) {\n    throw new Error(`Internal API ${res.status}: ${await res.text()}`);\n  }\n  return res.json();\n}\n\n// Writes and other actions are POST/PUT/PATCH/DELETE with a JSON body:\nawait fetch(`${BASE_URL}/data-layer/properties/myKey`, {\n  method: 'PUT',\n  headers: { Authorization: `Bearer ${token}`, \"Content-Type\": \"application/json\" },\n  body: JSON.stringify({ value: 'hello' }),\n});",
+        "caption": "Plain fetch — no Innovium client library. The same two-line auth pattern works from any HTTP client (curl, Python requests, Go net/http, …)."
+      }
+    }
+  ],
+  "tips": [
+    "The token is per-connection and is revoked when your server stops — read it from the environment at startup, and never hardcode, cache externally, or log it.",
+    "The internal API listens only on 127.0.0.1, so calls must come from the same machine. A remote (HTTP) MCP server cannot reach it — only locally launched servers get the credentials.",
+    "You never pass a project id to an endpoint; the token already scopes every call to the active project."
+  ]
+}

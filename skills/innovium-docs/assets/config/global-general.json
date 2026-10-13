@@ -1,0 +1,44 @@
+{
+  "id": "global-general",
+  "label": "General",
+  "category": "Global Settings",
+  "title": "General Settings",
+  "subtitle": "Application-wide defaults that apply to every project unless overridden.",
+  "description": "The General tab controls the baseline behaviour of the entire application. Changes here take effect immediately across all projects unless a project or agent provides a more specific override.",
+  "settings": [
+    {
+      "name": "Theme",
+      "description": "Light, dark, or system-auto. Controls the visual appearance of the whole application."
+    },
+    {
+      "name": "Default Model",
+      "description": "The model used when creating a new agent if no specific model is configured. The picker is searchable: type part of a model name, its id, or its provider to narrow the list."
+    },
+    {
+      "name": "Default Temperature",
+      "description": "Creativity level for responses (0 = focused, 2 = varied). Agents inherit this value unless they override it."
+    },
+    {
+      "name": "Default Max Tokens",
+      "description": "Maximum response length per AI call, shared across all agents unless overridden at a lower level. Choosing a model that cannot produce the limit you have set brings it down to what that model can; a model that can already produce it leaves it alone. While you have set no limit of your own, the field shows the chosen model’s own output limit."
+    },
+    {
+      "name": "Projects Folder",
+      "description": "The directory on your machine where InnoviumAI stores project workspace files."
+    },
+    {
+      "name": "Notifications",
+      "description": "Toggle desktop and sound alerts for task completion, approval requests, and errors."
+    },
+    {
+      "name": "Limit searches to these domains",
+      "description": "Under Web Search. A comma-separated list of hosts an agent's web access is confined to — both the model's own search and the Web Search, Browser Automation and Download tools. Subdomains are included, so example.com covers docs.example.com. This is the list an agent falls back to when neither it nor its project names one. A workflow step belongs to no agent, so it falls straight to the project's list, then to this one. Leave it empty to search the whole web."
+    }
+  ],
+  "mediaCaption": "The General tab showing theme, model, temperature, and notification controls",
+  "tips": [
+    "Changes to the default model only affect newly created agents — existing agents keep their own model setting until you reset it.",
+    "If you are on a battery-constrained device, lowering max tokens reduces the average response size and speeds up replies.",
+    "Experimented your way into a configuration you no longer trust? Reset All Settings, at the bottom of the settings window, puts every setting you have changed back to its default. It leaves your tools, agents, skills, workflows, templates and MCP servers alone, along with the keys stored for them, your projects folder, your accessibility settings, and your usage-data sharing choice."
+  ]
+}

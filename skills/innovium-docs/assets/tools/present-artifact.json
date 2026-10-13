@@ -1,0 +1,15 @@
+{
+  "id": "present-artifact",
+  "label": "Present Artifact",
+  "category": "Output",
+  "title": "Present Artifact",
+  "subtitle": "Lets an agent surface produced files to the user as a chat card with Open and Preview buttons. One call can publish a single deliverable or several related artifacts together.",
+  "whenToUse": "Use after producing output the user should access — a generated report, a chart, a downloaded asset, a compiled document. Bundle related artifacts (e.g. a report and its source data) in the same call so they appear together.",
+  "methods": [
+    {
+      "name": "Present Artifact",
+      "description": "Emits an artifact card with a human caption and one or more files. Each file gets an Open button (reveals in the OS file explorer on desktop, downloads in the browser) and a Preview button (in-app preview when the file type is supported — images, PDFs, and common text formats)."
+    }
+  ],
+  "mediaCaption": "An artifact card showing a caption above one or more file rows, each with Open and Preview buttons"
+}

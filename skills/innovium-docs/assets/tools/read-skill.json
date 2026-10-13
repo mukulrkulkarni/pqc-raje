@@ -1,0 +1,23 @@
+{
+  "id": "read-skill",
+  "label": "Skills",
+  "category": "Skills",
+  "title": "Skills",
+  "subtitle": "One tool for working with the skills an agent has been given — list what is available, read how a skill is written, and activate the one that fits the task.",
+  "whenToUse": "Used whenever an agent needs a procedure it does not already carry. With auto-discovery on, the agent lists its skills, reads the most promising one, and activates it before starting the work. You can also point an agent at a specific skill at the start of a task.",
+  "methods": [
+    {
+      "name": "List Skills",
+      "description": "Returns every skill assigned to the agent with its name, description, keywords, and whether it is enabled. This is the discovery step — the agent reads the list before deciding which skill is worth opening."
+    },
+    {
+      "name": "Read Skill",
+      "description": "Returns the full Markdown instructions of one skill, without activating it. Useful for inspecting a skill before committing the conversation to it."
+    },
+    {
+      "name": "Activate Skill",
+      "description": "Adds a skill's instructions to the agent's active context, so they shape every message that follows in the session."
+    }
+  ],
+  "mediaCaption": "A Skills action card showing the skill that was activated and the first lines of its instructions"
+}

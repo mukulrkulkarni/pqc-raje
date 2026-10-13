@@ -1,0 +1,23 @@
+{
+  "id": "model-config",
+  "label": "Model Config",
+  "category": "Configuration",
+  "title": "Model Config",
+  "subtitle": "Allows agents to inspect available AI models and set the project's default model at runtime.",
+  "whenToUse": "Used by orchestrator agents that need to switch models based on task requirements — for example, switching to a cheaper model for a high-volume step and back to a more capable one for final synthesis.",
+  "methods": [
+    {
+      "name": "List Models",
+      "description": "Returns all available AI models with metadata (context window, pricing, capabilities)."
+    },
+    {
+      "name": "Get Model Info",
+      "description": "Returns details about a specific model."
+    },
+    {
+      "name": "Set Default Model",
+      "description": "Sets the project's default model."
+    }
+  ],
+  "mediaCaption": "A List Models action returning a table of available models with context window and pricing information"
+}

@@ -1,0 +1,25 @@
+{
+  "id": "api-reference",
+  "label": "Internal API",
+  "title": "Internal API",
+  "subtitle": "You can extend Innovium with your own MCP servers. When one of them needs to do something inside Innovium — read a file, search a knowledge base, talk to an agent — it calls our internal API. This is how that works.",
+  "tags": ["Developer"],
+  "hideMedia": true,
+  "subsections": [
+    {
+      "title": "Add Any MCP Server",
+      "description": "Innovium's tools are MCP servers, and you can add your own the same way — from the catalog or a custom command. There is nothing Innovium-specific in the server itself; a standard MCP server built in any language works. If your server only works on its own inputs, that is all you need — see the Integrations docs for connecting one.",
+      "mediaCaption": ""
+    },
+    {
+      "title": "Use the Internal API to Act Inside Innovium",
+      "description": "The moment your server needs to reach into Innovium itself — read or write a project file, query a knowledge base, message another agent, render output — it calls our internal API. When Innovium launches your server it injects a bearer token, the API port, and the active project into its environment; your server makes ordinary authenticated HTTP requests with them. It is a small API the platform exposes locally, and every capability is one endpoint.",
+      "mediaCaption": ""
+    },
+    {
+      "title": "Where to Start",
+      "description": "Read Getting Started first — it covers the environment variables Innovium injects into your server (token, port, project) and how to make an authenticated call. Then the API Reference page lists every endpoint you can call, grouped by area, with its method, path, and what it does.",
+      "mediaCaption": ""
+    }
+  ]
+}

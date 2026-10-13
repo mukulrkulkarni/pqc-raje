@@ -1,0 +1,31 @@
+{
+  "id": "global-skills",
+  "label": "Skills",
+  "category": "Global Settings",
+  "title": "Skills Settings",
+  "subtitle": "Define reusable instruction sets that agents can apply to any task.",
+  "description": "The Skills tab is the global library of skills. Each skill is a named instruction template or code block that changes how an agent approaches a task when it is active.",
+  "settings": [
+    {
+      "name": "Skill Name",
+      "description": "Shown in the UI and used to identify the skill when assigning it to an agent."
+    },
+    {
+      "name": "Trigger Description",
+      "description": "A short phrase used by auto-discovery to match this skill to relevant incoming messages."
+    },
+    {
+      "name": "Prompt / Code",
+      "description": "The instruction template or code the agent receives when the skill is active."
+    },
+    {
+      "name": "Enable / Disable",
+      "description": "Toggle a skill globally without deleting it."
+    }
+  ],
+  "mediaCaption": "The Skills tab showing the skill list and the skill editor with a prompt template and enable toggle",
+  "tips": [
+    "Write trigger descriptions as if you were describing the type of question that should activate the skill — auto-discovery compares this against the user's message.",
+    "Skills apply on top of the agent's system prompt, so you do not need to repeat instructions that are already in the prompt."
+  ]
+}

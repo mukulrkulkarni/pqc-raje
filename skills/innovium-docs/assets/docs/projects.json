@@ -1,0 +1,34 @@
+{
+  "id": "projects",
+  "label": "Projects",
+  "title": "Projects",
+  "subtitle": "Projects are the main organisational unit in InnoviumAI. Each project holds a full conversation history, its own agent and tool configuration, any files the agents have created, and detailed usage statistics. You can have as many projects as you need and switch between them instantly.",
+  "tags": ["Core"],
+  "subsections": [
+    {
+      "title": "Creating a project: describe it, start blank, or import a source",
+      "description": "To create a project, click the New project button at the top of the Projects section in the left sidebar. It opens a new chat straight away, with the cursor in the message box: nothing is saved until you send your first message, and the project appears in the sidebar once you do. That screen also lists every other way to begin. Blank project creates an empty project immediately, for one you want to configure before you use it. The remaining five routes import a source: From template (pick a pre-configured starting point), From GitHub (paste a repository URL), From GitLab (paste a repository URL), From local folder (a path on your machine that the backend can read), or From file (upload a project zip previously created via Export Project — the file picker opens the OS native dialog and works in the desktop app and the browser alike). Templates, repository imports, and file imports copy the source content into a new project workspace — the original is not modified.",
+      "mediaCaption": "The empty state: a message box, with the blank and import routes listed under it"
+    },
+    {
+      "title": "Managing projects: rename, settings, workspace, and archive",
+      "description": "Hover over any project in the sidebar list and click the three-dot (⋮) icon that appears to open its context menu. From here you can open Project Settings (per-project model and agent overrides), Pin to Top (see below), Rename the project, or let InnoviumAI Regenerate the Title automatically based on the conversation content. If the project has a workspace folder created by agents writing files, Open Workspace will reveal that folder in your operating system's file manager so you can browse or edit files directly. The menu also offers Archive Project (see below), Clear Context, and Delete Project.",
+      "mediaCaption": "Project context menu open beside a project in the sidebar"
+    },
+    {
+      "title": "Pinning and archiving projects",
+      "description": "Two context-menu actions keep a long project list manageable. Pin to Top lifts a project above the rest of the list, where it stays no matter how much newer activity arrives elsewhere; a small pin appears beside the project's date so you can tell a pinned row at a glance. Pin as many as you like — they keep the order you pinned them in, so pinning a third does not move the first two. Unpin returns a project to its usual place. Archive Project files a finished project away into a collapsed Archived section at the bottom of the list, which shows how many projects it holds, and puts a small archive box beside the project's date. Both markers show together on a project that is pinned and archived. Archiving deletes nothing and moves nothing on disk: an archived project keeps its full conversation, files, and settings, still opens normally, and Restore Project puts it back in the main list. Both choices survive a restart. Searching the project list looks through archived projects too, so filing one away never makes it harder to find.",
+      "mediaCaption": "Sidebar project list with a pinned project at the top carrying a pin beside its date, and a collapsed Archived section below the list"
+    },
+    {
+      "title": "Per-project status indicators",
+      "description": "Each project row in the sidebar shows a small status glyph next to the three-dot menu so you can see at a glance which projects need your attention without clicking into them. A red error icon means the last agent or workflow run ended with an error. A pulsing amber dot means the project is waiting for an approval decision. Three bouncing grey dots mean one or more agents are actively working. A green checkmark means every milestone in the project's plan has been completed. Idle projects show no indicator, keeping the sidebar quiet. Separately from these, a pinned project shows a small pin beside its date and an archived one a small archive box — in a search, where the Archived section is not drawn, that box is how you tell an archived result apart. Hover any indicator for a tooltip with the exact state. The indicator updates live as agents start and stop, and is preserved across the full project list — useful when you have several projects running in parallel.",
+      "mediaCaption": "Sidebar project list with three bouncing grey dots on one row, a pulsing amber dot on another, a red error icon on a third, and a green checkmark on a fourth — each rendered alongside (not replacing) the three-dot menu"
+    },
+    {
+      "title": "Exporting and importing projects",
+      "description": "To back up or share a project, open its context menu and choose Export Project. InnoviumAI downloads a ZIP file containing the full conversation history, agent configuration, and any workspace files, Git history included. The export leaves out dependency folders that can be reinstalled (`node_modules`, `.venv`, `venv`, and `__pycache__`, wherever they sit in the project), and a notice names the ones it left out, so reinstall the project's dependencies after importing it. To restore or import a project, drag the ZIP file onto the Projects section in the sidebar — a highlighted drop zone appears with the prompt \"Drop project ZIP file here to import\". After import, the project appears in your list and is ready to continue where it left off. The import leaves out symbolic links, such as those in `node_modules/.bin` or a Python virtual environment, so you may need to reinstall the project's dependencies. When names differ only by letter case, such as `src/Components` and `src/components`, the import keeps the first spelling and leaves the others out. After an import, a notice names anything it left out. A project with more than 100,000 files and folders or 2 GiB unpacked can't be imported, and neither can a damaged or unsafe ZIP file.",
+      "mediaCaption": "Sidebar with a ZIP file being dragged over the Projects section, showing the dashed-border drop zone"
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "id": "agent-management",
+  "label": "Agent Management",
+  "category": "Configuration",
+  "title": "Agent Management",
+  "subtitle": "Full lifecycle management for agents — creating new ones, updating their configuration, enabling or disabling them, and deleting them. Goes beyond Agent Config to include creation and deletion.",
+  "whenToUse": "Used when an agent or workflow needs to dynamically create specialist agents tailored to a task. For example, a planning agent might create a custom analyst agent with a specific prompt, use it, and delete it when done.",
+  "methods": [
+    {
+      "name": "Create Agent",
+      "description": "Creates a new custom agent, reusable in every project unless you ask to keep it in the current one, with its name, system prompt, model, temperature, and assigned tools, skills, and workflows. Ask for the Claude Agent SDK or the OpenAI Codex App Server to have it run there instead of on the native engine; those runtimes bring their own file and shell tools."
+    },
+    {
+      "name": "Update Agent",
+      "description": "Updates an existing agent's runtime, model, system prompt, temperature, or assigned tools. Moving an agent to a runtime its model cannot run switches it to that runtime's default model and says so."
+    },
+    {
+      "name": "Change Agent Scope",
+      "description": "Moves a custom agent between global and project scope in place, keeping its assigned tools and skills — the alternative, deleting and recreating it, loses those. Project scope is not fully supported yet: a project-scoped tool or skill assigned to the agent is not promoted with it, so it won't resolve in other projects."
+    },
+    {
+      "name": "Assign Tool",
+      "description": "Grants an existing tool to an agent so the agent can call it. Applies in every project by default; ask to keep it to the current project for a project-scoped assignment."
+    },
+    {
+      "name": "Unassign Tool",
+      "description": "Removes a previously granted tool from an agent, revoking its access to that tool."
+    },
+    {
+      "name": "Assign Skill",
+      "description": "Attaches an existing skill to an agent so the agent can follow it. Applies in every project by default; ask to keep it to the current project for a project-scoped assignment."
+    },
+    {
+      "name": "Unassign Skill",
+      "description": "Detaches a previously attached skill from an agent."
+    },
+    {
+      "name": "Delete Agent",
+      "description": "Permanently deletes a custom agent from the current project, or the reusable global agent when you ask for global scope."
+    },
+    {
+      "name": "List Agents",
+      "description": "Lists every agent in the project, enabled and disabled, with the runtime it runs on and the exact id each other method needs. Ask for this first when you only know an agent by name."
+    },
+    {
+      "name": "Get Agent",
+      "description": "Returns one agent's full details, including the system prompt the list leaves out."
+    },
+    {
+      "name": "Inspect Agent",
+      "description": "Copies an agent's folder into the project folder so you can read the definition as files — the starting point for building a new agent modelled on an existing one."
+    },
+    {
+      "name": "Enable Agent",
+      "description": "Enables a disabled agent."
+    },
+    {
+      "name": "Disable Agent",
+      "description": "Disables an agent without deleting it."
+    }
+  ],
+  "mediaCaption": "A Create Agent action card showing the new agent's name, prompt, and tool assignments"
+}

@@ -1,0 +1,1 @@
+"""ELECTRE III test suite."""

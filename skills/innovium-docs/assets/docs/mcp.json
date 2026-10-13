@@ -1,0 +1,39 @@
+{
+  "id": "mcp",
+  "label": "Integrations",
+  "title": "Integrations",
+  "subtitle": "Integrations connect your AI agents to the real tools you already use — GitHub, Slack, Jira, Gmail, Google Calendar, and more. Think of them like app integrations or plugins: once connected, agents can read and write to those services on your behalf. You choose which integrations to enable, and each one only uses the credentials you provide.",
+  "tags": ["Integrations"],
+  "subsections": [
+    {
+      "title": "What Are Integrations?",
+      "description": "By default, agents can browse the web, read and write files in your project, and run code. Integrations extend that to your real accounts and services. With a GitHub integration connected, an agent can open a pull request or search your repositories. With Slack connected, it can post a message to a channel. With Jira connected, it can create or update tickets. You are always in control: integrations only become active after you install them and supply your own credentials, and you can remove them at any time.",
+      "mediaCaption": "The Tools settings page showing a grid of available services — GitHub, GitLab, Slack, Jira, Confluence, Notion, Gmail, Google Calendar, and more — each with an Install button"
+    },
+    {
+      "title": "How integrations work — MCP under the hood",
+      "description": "InnoviumAI integrations are built on the Model Context Protocol (MCP), an open standard that defines how AI agents communicate with external tools and services. Think of MCP as a universal plug: any service that speaks MCP can hand a set of tools to any agent that understands MCP, without either side needing to know the other's internals. Each integration runs as a small server process — either locally on your machine or at a remote URL. When an agent decides it needs to interact with GitHub, for example, it sends a structured request to the GitHub MCP server, which translates that into the appropriate GitHub API call and returns the result. You never see any of this directly; from your perspective you just see the agent taking an action. The benefit of the standard is that the catalog of integrations is open-ended — any service that speaks MCP can be connected.",
+      "mediaCaption": "Diagram showing an agent sending a tool call to an MCP server, which translates it into an API request to an external service and returns the result back through the same channel"
+    },
+    {
+      "title": "The Integration Catalog",
+      "description": "Go to Settings and open the Tools tab. You will see three sub-tabs: Installed (what you have set up), Available (a curated list of supported integrations), and Remote Servers (servers you connect by URL). Available is the best place to start — every entry shows a name, a short description, and the credentials it needs before you install. Integrations are grouped by category: version control (GitHub, GitLab), communication (Slack, Teams, Gmail), project management (Jira, Confluence), productivity (Notion, Google Calendar, Microsoft 365), and social (LinkedIn, X/Twitter).",
+      "mediaCaption": "The Available tab with a search box, a category filter dropdown, and a grid of integration cards each showing an icon, the service name, a one-line description, and an Install button"
+    },
+    {
+      "title": "Connecting an Integration",
+      "description": "Click Install on any entry in the Available tab to open the configuration dialog. The dialog shows what the integration does and lists every credential it needs. For GitHub, for example, you paste a Personal Access Token that you create at github.com/settings/tokens. Sensitive fields like tokens and passwords are masked by default, with a show/hide toggle. Once you have filled in all required fields, click Test Connection — InnoviumAI will verify that the credentials work and tell you how many tools the integration provides. If the test passes, click Install to save it. The integration moves to the Installed tab and agents can start using it immediately.",
+      "mediaCaption": "The GitHub installation dialog: a description at the top, a masked token input field, and Cancel, Test Connection, and Install buttons at the bottom"
+    },
+    {
+      "title": "Adding a Custom Server",
+      "description": "If you have a self-hosted service or an integration that is not in the catalog, you can connect it manually. InnoviumAI supports two approaches. For a remote server, open the Remote Servers sub-tab and click Add Server to enter a URL, choose a transport (SSE or HTTP), and optionally supply an API key. For your security, a saved API key is never shown again — when you edit the server later, leave the key field blank to keep the saved key, or type a new value to replace it. For users who already use Claude Desktop, you can click Import Tool at the top of the Tools tab and paste your Claude Desktop config and InnoviumAI will parse and import those servers for you. Custom servers work the same way as catalog ones — agents can use their tools once the server is connected and showing as Connected in the Installed tab.",
+      "mediaCaption": "The Installed tab showing a list of active integrations, each with a green \"Connected\" badge, an enable toggle, and a menu for start, stop, test, and remove actions"
+    },
+    {
+      "title": "When a Tool Needs Extra Software",
+      "description": "Some tools depend on software that lives outside the platform — a Python runtime, a plotting library, or a vendor's simulation suite. When you run such a tool, the platform first checks whether everything it needs is already on your machine. If something is missing and a known install command exists for your operating system, it installs the dependency for you and streams the installer's progress into a collapsible details section of the chat, so you can follow along without the output flooding the conversation. Installs that need administrator rights trigger your operating system's own authorization dialog — the same prompt you would see when installing software yourself — and nothing runs until you approve it. Commercial or licensed software (for example a simulation suite with its own installer) cannot be set up automatically; in that case the platform shows the vendor's installation instructions instead, and once you have installed the software, simply retry the tool — availability is rechecked automatically. And if a tool's server ever crashes mid-task, the error message in the chat carries the crash log behind the same details fold, so you can see exactly what went wrong. Some tools only run on a specific operating system — a Windows-only EDA suite, for example. Such tools are greyed out in the tool settings with an \"Unsupported OS\" badge, their enable switch is locked (hover it to see why), and agents will not attempt to use them on your machine.",
+      "mediaCaption": "A system message reading \"Installing gnuplot...\" with an expanded Technical Details section streaming the package manager's live output"
+    }
+  ]
+}

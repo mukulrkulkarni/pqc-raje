@@ -1,0 +1,23 @@
+{
+  "id": "global-compression",
+  "label": "Compression",
+  "category": "Global Settings",
+  "title": "Compression Settings",
+  "subtitle": "Keep long conversations within context limits by automatically summarising older turns.",
+  "description": "As conversations grow, they may exceed the model's context window. Compression automatically summarises older parts of the conversation so agents can keep working without losing important context. These settings apply globally but can be overridden per project.",
+  "settings": [
+    {
+      "name": "Compression Model",
+      "description": "The model that performs summarisation, chosen from the models available to you. Type part of a model name, its id, or its provider to narrow the list. A fast, cheap model is the right choice — it only needs to summarise, not reason deeply. When the chosen model is no longer available, or a conversation is too long for it to read in one request, the summary is written by the model the agent is running on instead, which costs more for that call."
+    },
+    {
+      "name": "Token Threshold",
+      "description": "How large the active context must grow before compression is triggered. Lower values compress more aggressively; higher values preserve more history."
+    }
+  ],
+  "mediaCaption": "The Compression tab showing the model selector and token threshold field",
+  "tips": [
+    "Use the cheapest capable model for compression — the summarisation task does not require the same quality as the main agent model. A model with a small context window still works, it just hands the longest summaries back to the agent's own model.",
+    "If important details are being lost in long sessions, raise the threshold or switch to a model with a larger native context window instead of relying on compression."
+  ]
+}

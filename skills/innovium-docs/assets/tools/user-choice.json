@@ -1,0 +1,15 @@
+{
+  "id": "user-choice",
+  "label": "User Choice",
+  "category": "Collaboration",
+  "title": "User Choice",
+  "subtitle": "Lets an agent pause and present the user with a set of labeled buttons in the chat. The user can click one of the options or type a free-form response to guide the agent.",
+  "whenToUse": "Use when an agent reaches a decision point and needs explicit user input before continuing — for example, choosing between implementation approaches, confirming a plan, or selecting from discovered options.",
+  "methods": [
+    {
+      "name": "Present Choices",
+      "description": "Shows the user a prompt with 2–6 labeled buttons. The user clicks a button or types a custom response. The agent receives the selection and continues."
+    }
+  ],
+  "mediaCaption": "A User Choice card showing a question prompt with labeled choice buttons and a text field for custom responses"
+}

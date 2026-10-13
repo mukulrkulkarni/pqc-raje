@@ -1,0 +1,15 @@
+{
+  "id": "remote-mcp",
+  "label": "Remote MCP Server",
+  "category": "Integrations",
+  "title": "Remote MCP Server",
+  "subtitle": "Wraps a remote MCP server (HTTP or Server-Sent Events) and exposes its tools to agents. Used for cloud-hosted MCP integrations.",
+  "whenToUse": "Used automatically when you have connected a remote MCP integration. The tools from the remote server appear as agent capabilities.",
+  "methods": [
+    {
+      "name": "(dynamic)",
+      "description": "Methods are determined by the remote MCP server's tool manifest and vary per server."
+    }
+  ],
+  "mediaCaption": "A remote MCP server tool call showing the server URL, the method invoked, and the response"
+}

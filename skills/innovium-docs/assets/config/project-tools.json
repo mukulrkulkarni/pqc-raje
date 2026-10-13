@@ -1,0 +1,27 @@
+{
+  "id": "project-tools",
+  "label": "Tool Overrides",
+  "category": "Per-Project",
+  "title": "Project — Tool Overrides",
+  "subtitle": "Set tool parameters for this project without changing the global defaults.",
+  "description": "The Tools tab in project settings lets you override the configurable settings of any tool for this project alone. Values you set here take precedence over the global defaults; agents working in this project see the project values, and a per-agent override (set in Global Settings) is more specific still.",
+  "settings": [
+    {
+      "name": "Per-Tool Parameters",
+      "description": "Each tool that exposes settings appears as a section with the same fields you see in Global Settings — for example the web search result limit or the download size cap. Leaving a field untouched keeps the global default for this project."
+    },
+    {
+      "name": "Validation",
+      "description": "Values are checked against each tool's declared limits when you save, so an out-of-range or wrong-type value is rejected before it can affect a tool call."
+    },
+    {
+      "name": "Precedence",
+      "description": "The effective value for a tool call is resolved from the most specific layer that sets it: per-agent override, then this project override, then the global default."
+    }
+  ],
+  "mediaCaption": "The Tools tab in project settings, showing per-tool parameter sections with project values overriding the global defaults",
+  "tips": [
+    "Use a project override when a whole engagement needs different tool behaviour — for example a higher search result limit for a research-heavy project — without touching other projects.",
+    "For a single agent that needs different values from the rest, set a per-agent override in Global Settings → Tools instead; it wins over the project value."
+  ]
+}

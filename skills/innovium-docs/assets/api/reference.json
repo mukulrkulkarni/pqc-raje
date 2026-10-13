@@ -1,0 +1,2199 @@
+{
+  "id": "reference",
+  "label": "API Reference",
+  "category": "Internal API",
+  "title": "API Reference",
+  "subtitle": "Every internal-API endpoint your MCP server can call, grouped by area. Send an authenticated request — header `Authorization: Bearer $DIWAN_SDK_TOKEN` — to `http://127.0.0.1:$DIWAN_SDK_PORT/sdk-api` followed by the path shown.",
+  "groups": [
+    {
+      "title": "Filesystem",
+      "basePath": "/sdk-api/filesystem",
+      "endpoints": [
+        {
+          "method": "GET",
+          "path": "/filesystem/read",
+          "summary": "Read the full text content of a file.",
+          "params": [
+            {
+              "name": "path",
+              "in": "query",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "maxBytes",
+              "in": "query",
+              "type": "string",
+              "required": false
+            }
+          ],
+          "response": "{ path, content, size }"
+        },
+        {
+          "method": "POST",
+          "path": "/filesystem/write",
+          "summary": "Create or overwrite a file with the given content.",
+          "params": [
+            {
+              "name": "path",
+              "in": "body",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "content",
+              "in": "body",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "mode",
+              "in": "body",
+              "type": "'create' | 'update' | 'overwrite'",
+              "required": false
+            }
+          ],
+          "response": "{ path, mode }"
+        },
+        {
+          "method": "GET",
+          "path": "/filesystem/list",
+          "summary": "List the files and subdirectories at a path.",
+          "params": [
+            {
+              "name": "path",
+              "in": "query",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "response": "{ path, entries }"
+        },
+        {
+          "method": "DELETE",
+          "path": "/filesystem/delete",
+          "summary": "Permanently delete a file.",
+          "params": [
+            {
+              "name": "path",
+              "in": "query",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "response": "{ deleted }"
+        },
+        {
+          "method": "POST",
+          "path": "/filesystem/mkdir",
+          "summary": "Create a directory, including any missing parents.",
+          "params": [
+            {
+              "name": "path",
+              "in": "body",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "response": "{ path }"
+        },
+        {
+          "method": "GET",
+          "path": "/filesystem/exists",
+          "summary": "Check whether a path exists.",
+          "params": [
+            {
+              "name": "path",
+              "in": "query",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "response": "{ exists }"
+        },
+        {
+          "method": "POST",
+          "path": "/filesystem/read-chunk",
+          "summary": "Read a bounded UTF-8 window and continue efficiently with an opaque cursor.",
+          "params": [
+            {
+              "name": "body",
+              "in": "body",
+              "type": "ReadChunkDto",
+              "required": true
+            }
+          ],
+          "response": "{ path, content, total_bytes, has_more, next_cursor, ...line/char navigation fields }"
+        },
+        {
+          "method": "POST",
+          "path": "/filesystem/edit",
+          "summary": "Apply a targeted find-and-replace patch to a file.",
+          "params": [
+            {
+              "name": "path",
+              "in": "body",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "old_text",
+              "in": "body",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "new_text",
+              "in": "body",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "response": "{ path, chars_replaced, chars_inserted }"
+        },
+        {
+          "method": "POST",
+          "path": "/filesystem/move",
+          "summary": "Move or rename a file.",
+          "params": [
+            {
+              "name": "source",
+              "in": "body",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "destination",
+              "in": "body",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "response": "{ source, destination }"
+        },
+        {
+          "method": "GET",
+          "path": "/filesystem/info",
+          "summary": "Return metadata about a file without reading its content.",
+          "params": [
+            {
+              "name": "path",
+              "in": "query",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "response": "{ name, path, size, isDirectory, created, modified }"
+        },
+        {
+          "method": "GET",
+          "path": "/filesystem/search",
+          "summary": "Search file contents by regex and return matching lines.",
+          "params": [
+            {
+              "name": "pattern",
+              "in": "query",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "path",
+              "in": "query",
+              "type": "string",
+              "required": false
+            }
+          ],
+          "response": "{ pattern, path, matches }"
+        },
+        {
+          "method": "POST",
+          "path": "/filesystem/read-document",
+          "summary": "Parse a structured document (PDF, DOCX, CSV, XLSX) into text and metadata.",
+          "params": [
+            {
+              "name": "path",
+              "in": "body",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "preview_rows",
+              "in": "body",
+              "type": "number",
+              "required": false
+            },
+            {
+              "name": "csv_delimiter",
+              "in": "body",
+              "type": "string",
+              "required": false
+            }
+          ],
+          "response": "{ file_path, file_type, content, metadata } (shape varies by file type / size / RAG redirect)"
+        },
+        {
+          "method": "POST",
+          "path": "/filesystem/read-directory",
+          "summary": "Read every file in a directory in one call.",
+          "params": [
+            {
+              "name": "path",
+              "in": "body",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "file_extensions",
+              "in": "body",
+              "type": "string[]",
+              "required": false
+            },
+            {
+              "name": "recursive",
+              "in": "body",
+              "type": "boolean",
+              "required": false
+            }
+          ],
+          "response": "{ directory_path, files, total_files, successful, failed, recursive }"
+        },
+        {
+          "method": "POST",
+          "path": "/filesystem/read-multiple",
+          "summary": "Read several specific files in one call.",
+          "params": [
+            {
+              "name": "paths",
+              "in": "body",
+              "type": "string[]",
+              "required": true
+            },
+            {
+              "name": "continue_on_error",
+              "in": "body",
+              "type": "boolean",
+              "required": false
+            }
+          ],
+          "response": "{ total, successful, failed, results }"
+        }
+      ]
+    },
+    {
+      "title": "Data Layer",
+      "basePath": "/sdk-api/data-layer",
+      "endpoints": [
+        {
+          "method": "GET",
+          "path": "/data-layer/properties",
+          "summary": "List all properties and their current values.",
+          "params": [],
+          "response": "{ properties, propertyCount }"
+        },
+        {
+          "method": "GET",
+          "path": "/data-layer/properties/:key",
+          "summary": "Get the value of a single property.",
+          "params": [
+            {
+              "name": "key",
+              "in": "path",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "response": "{ key, value, type, source, updatedAt }"
+        },
+        {
+          "method": "PUT",
+          "path": "/data-layer/properties/:key",
+          "summary": "Set or update a property value.",
+          "params": [
+            {
+              "name": "key",
+              "in": "path",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "value",
+              "in": "body",
+              "type": "unknown",
+              "required": true
+            },
+            {
+              "name": "type",
+              "in": "body",
+              "type": "DataLayerValueType",
+              "required": false
+            }
+          ],
+          "response": "{ success, key }"
+        },
+        {
+          "method": "POST",
+          "path": "/data-layer/subscribe",
+          "summary": "Subscribe to changes on a property.",
+          "params": [
+            {
+              "name": "property",
+              "in": "body",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "action",
+              "in": "body",
+              "type": "string",
+              "required": false
+            }
+          ],
+          "response": "{ subscriptionId, property }"
+        },
+        {
+          "method": "DELETE",
+          "path": "/data-layer/subscribe/:subscriptionId",
+          "summary": "Cancel a property subscription.",
+          "params": [
+            {
+              "name": "subscriptionId",
+              "in": "path",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "response": "{ success, removed, message }"
+        },
+        {
+          "method": "POST",
+          "path": "/data-layer/watch",
+          "summary": "Watch a file or URL and mirror its content into a property.",
+          "params": [
+            {
+              "name": "type",
+              "in": "body",
+              "type": "'file' | 'url'",
+              "required": true
+            },
+            {
+              "name": "property",
+              "in": "body",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "filePath",
+              "in": "body",
+              "type": "string",
+              "required": false
+            },
+            {
+              "name": "url",
+              "in": "body",
+              "type": "string",
+              "required": false
+            },
+            {
+              "name": "jsonPath",
+              "in": "body",
+              "type": "string",
+              "required": false
+            },
+            {
+              "name": "intervalMs",
+              "in": "body",
+              "type": "number",
+              "required": false
+            },
+            {
+              "name": "timeoutMs",
+              "in": "body",
+              "type": "number",
+              "required": false
+            },
+            {
+              "name": "debounceMs",
+              "in": "body",
+              "type": "number",
+              "required": false
+            },
+            {
+              "name": "headers",
+              "in": "body",
+              "type": "Record<string, string>",
+              "required": false
+            },
+            {
+              "name": "code",
+              "in": "body",
+              "type": "string",
+              "required": false
+            },
+            {
+              "name": "outputs",
+              "in": "body",
+              "type": "string[]",
+              "required": false
+            }
+          ],
+          "response": "{ type, ...(body.type === 'file'\n        ? { filePath: body.filePath, jsonPath: body.jsonPath ?? null }\n        : { url: body.url, intervalMs: body.intervalMs ?? 30000 }), ...baseResult, ...processorResult }"
+        },
+        {
+          "method": "DELETE",
+          "path": "/data-layer/watch/:property",
+          "summary": "Stop watching a property's source.",
+          "params": [
+            {
+              "name": "property",
+              "in": "path",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "response": "{ property, type, removed }"
+        }
+      ]
+    },
+    {
+      "title": "Scratchpad",
+      "basePath": "/sdk-api/scratchpad",
+      "endpoints": [
+        {
+          "method": "GET",
+          "path": "/scratchpad",
+          "summary": "Read the current scratchpad content.",
+          "params": [],
+          "response": "{ content }"
+        },
+        {
+          "method": "POST",
+          "path": "/scratchpad/append",
+          "summary": "Append a note to the scratchpad.",
+          "params": [
+            {
+              "name": "content",
+              "in": "body",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "response": "{ success }"
+        },
+        {
+          "method": "PUT",
+          "path": "/scratchpad",
+          "summary": "Replace the entire scratchpad content.",
+          "params": [
+            {
+              "name": "content",
+              "in": "body",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "response": "{ success }"
+        },
+        {
+          "method": "DELETE",
+          "path": "/scratchpad",
+          "summary": "Clear the scratchpad.",
+          "params": [],
+          "response": "{ success }"
+        }
+      ]
+    },
+    {
+      "title": "Knowledge Base",
+      "basePath": "/sdk-api/knowledge-base",
+      "endpoints": [
+        {
+          "method": "GET",
+          "path": "/knowledge-base/databases",
+          "summary": "List the project's vector databases.",
+          "params": [],
+          "response": "{ databases }"
+        },
+        {
+          "method": "POST",
+          "path": "/knowledge-base/query",
+          "summary": "Run a semantic search and return matching passages.",
+          "params": [
+            {
+              "name": "body",
+              "in": "body",
+              "type": "SdkQueryKnowledgeBaseDto",
+              "required": true
+            }
+          ],
+          "response": "{ results }"
+        },
+        {
+          "method": "POST",
+          "path": "/knowledge-base/add",
+          "summary": "Add a text passage to a knowledge base.",
+          "params": [
+            {
+              "name": "body",
+              "in": "body",
+              "type": "SdkAddDocumentDto",
+              "required": true
+            }
+          ],
+          "response": "{ id, name }"
+        },
+        {
+          "method": "POST",
+          "path": "/knowledge-base/add-file",
+          "summary": "Ingest a file into a knowledge base.",
+          "params": [
+            {
+              "name": "body",
+              "in": "body",
+              "type": "SdkAddFileDto",
+              "required": true
+            }
+          ],
+          "response": "{ id, name }"
+        }
+      ]
+    },
+    {
+      "title": "Academic Search",
+      "basePath": "/sdk-api/academic",
+      "endpoints": [
+        {
+          "method": "POST",
+          "path": "/academic/search-papers",
+          "summary": "Search for papers by keyword.",
+          "params": [
+            {
+              "name": "query",
+              "in": "body",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "year",
+              "in": "body",
+              "type": "number",
+              "required": false
+            },
+            {
+              "name": "limit",
+              "in": "body",
+              "type": "number",
+              "required": false
+            }
+          ],
+          "response": "{ papers: Array<{ paperId, title, year?, authors, venue?, citationCount?, abstract?, url? }>, total }"
+        },
+        {
+          "method": "POST",
+          "path": "/academic/search-authors",
+          "summary": "Search for authors by name.",
+          "params": [
+            {
+              "name": "authorName",
+              "in": "body",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "limit",
+              "in": "body",
+              "type": "number",
+              "required": false
+            }
+          ],
+          "response": "{ authors: Array<{ authorId, name, paperCount?, citationCount?, hIndex? }>, total }"
+        },
+        {
+          "method": "POST",
+          "path": "/academic/author-publications",
+          "summary": "Retrieve an author's publication list.",
+          "params": [
+            {
+              "name": "authorId",
+              "in": "body",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "sort",
+              "in": "body",
+              "type": "'year' | 'citations'",
+              "required": false
+            },
+            {
+              "name": "limit",
+              "in": "body",
+              "type": "number",
+              "required": false
+            }
+          ],
+          "response": "{ papers: Array<{ paperId, title, year?, authors, citationCount?, url? }>, total }"
+        }
+      ]
+    },
+    {
+      "title": "Web",
+      "basePath": "/sdk-api/web",
+      "endpoints": [
+        {
+          "method": "POST",
+          "path": "/web/search",
+          "summary": "Quick search returning result titles and URLs.",
+          "params": [
+            {
+              "name": "query",
+              "in": "body",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "numResults",
+              "in": "body",
+              "type": "number",
+              "required": false
+            },
+            {
+              "name": "maxLength",
+              "in": "body",
+              "type": "number",
+              "required": false
+            },
+            {
+              "name": "freshness",
+              "in": "body",
+              "type": "string",
+              "required": false
+            }
+          ],
+          "response": "Array<{ title, url, snippet, source, pageAge? }>"
+        },
+        {
+          "method": "GET",
+          "path": "/web/page",
+          "summary": "Fetch and extract the static text content of a page.",
+          "params": [
+            {
+              "name": "url",
+              "in": "query",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "maxLength",
+              "in": "query",
+              "type": "string",
+              "required": false
+            },
+            {
+              "name": "filterText",
+              "in": "query",
+              "type": "string",
+              "required": false
+            }
+          ],
+          "response": "{ content, title, url, dates, truncated, totalLength }"
+        },
+        {
+          "method": "POST",
+          "path": "/web/search-topn",
+          "summary": "Deep search that fetches and reads the top N results.",
+          "params": [
+            {
+              "name": "query",
+              "in": "body",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "numSites",
+              "in": "body",
+              "type": "number",
+              "required": false
+            }
+          ],
+          "response": "{ query, summary, sources }"
+        },
+        {
+          "method": "GET",
+          "path": "/web/page-links",
+          "summary": "Extract the links found on a page.",
+          "params": [
+            {
+              "name": "url",
+              "in": "query",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "filterText",
+              "in": "query",
+              "type": "string",
+              "required": false
+            }
+          ],
+          "response": "{ url, title, linkCount, links }"
+        },
+        {
+          "method": "POST",
+          "path": "/web/page-render",
+          "summary": "Fully render a page with a headless browser and return its content.",
+          "params": [
+            {
+              "name": "url",
+              "in": "body",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "wait_for",
+              "in": "body",
+              "type": "string",
+              "required": false
+            },
+            {
+              "name": "timeout",
+              "in": "body",
+              "type": "number",
+              "required": false
+            },
+            {
+              "name": "maxLength",
+              "in": "body",
+              "type": "number",
+              "required": false
+            }
+          ],
+          "response": "{ url, title, content, dates, renderedWith, wordCount, truncated, totalLength }"
+        },
+        {
+          "method": "POST",
+          "path": "/web/download",
+          "summary": "Download a file from a URL into the project folder.",
+          "params": [
+            {
+              "name": "url",
+              "in": "body",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "filename",
+              "in": "body",
+              "type": "string",
+              "required": false
+            }
+          ],
+          "response": "{ filePath, fileName, fileType, size, url }"
+        }
+      ]
+    },
+    {
+      "title": "Browser",
+      "basePath": "/sdk-api/browser",
+      "endpoints": [
+        {
+          "method": "POST",
+          "path": "/browser/session",
+          "summary": "Start a persistent browser session.",
+          "params": [
+            {
+              "name": "url",
+              "in": "body",
+              "type": "string",
+              "required": false
+            }
+          ],
+          "response": "{ sessionId, url, title }"
+        },
+        {
+          "method": "POST",
+          "path": "/browser/navigate",
+          "summary": "Navigate the session to a URL.",
+          "params": [
+            {
+              "name": "sessionId",
+              "in": "body",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "url",
+              "in": "body",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "response": "{ title, url }"
+        },
+        {
+          "method": "POST",
+          "path": "/browser/screenshot",
+          "summary": "Capture a screenshot of the current page.",
+          "params": [
+            {
+              "name": "sessionId",
+              "in": "body",
+              "type": "string",
+              "required": false
+            },
+            {
+              "name": "url",
+              "in": "body",
+              "type": "string",
+              "required": false
+            }
+          ],
+          "response": "{ screenshotPath, sessionId, elements, url, title }"
+        },
+        {
+          "method": "POST",
+          "path": "/browser/click",
+          "summary": "Click an element on the page.",
+          "params": [
+            {
+              "name": "sessionId",
+              "in": "body",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "elementIndex",
+              "in": "body",
+              "type": "number",
+              "required": true
+            }
+          ],
+          "response": "{ success, url, title, sessionId }"
+        },
+        {
+          "method": "POST",
+          "path": "/browser/type",
+          "summary": "Type text into an element.",
+          "params": [
+            {
+              "name": "sessionId",
+              "in": "body",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "elementIndex",
+              "in": "body",
+              "type": "number",
+              "required": true
+            },
+            {
+              "name": "text",
+              "in": "body",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "pressEnter",
+              "in": "body",
+              "type": "boolean",
+              "required": false
+            }
+          ],
+          "response": "{ success }"
+        },
+        {
+          "method": "POST",
+          "path": "/browser/scroll",
+          "summary": "Scroll the page.",
+          "params": [
+            {
+              "name": "sessionId",
+              "in": "body",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "direction",
+              "in": "body",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "response": "{ success, scrollPosition }"
+        },
+        {
+          "method": "DELETE",
+          "path": "/browser/session/:sessionId",
+          "summary": "Close a browser session.",
+          "params": [
+            {
+              "name": "sessionId",
+              "in": "path",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "response": "{ success, sessionId }"
+        }
+      ]
+    },
+    {
+      "title": "Agents",
+      "basePath": "/sdk-api/agents",
+      "endpoints": [
+        {
+          "method": "GET",
+          "path": "/agents",
+          "summary": "List the project's agents.",
+          "params": [],
+          "response": "{ agents }"
+        },
+        {
+          "method": "GET",
+          "path": "/agents/:agentId",
+          "summary": "Get one agent's details.",
+          "params": [
+            {
+              "name": "agentId",
+              "in": "path",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "response": "{ agent }"
+        },
+        {
+          "method": "GET",
+          "path": "/agents/:agentId/inspect",
+          "summary": "Copy an agent's folder into the project folder so it can be read as files",
+          "params": [
+            {
+              "name": "agentId",
+              "in": "path",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "response": "{ id, name, origin, path, files: string[] }"
+        },
+        {
+          "method": "POST",
+          "path": "/agents/:agentId/enable",
+          "summary": "Enable an agent.",
+          "params": [
+            {
+              "name": "agentId",
+              "in": "path",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "response": "{ success, agentId }"
+        },
+        {
+          "method": "POST",
+          "path": "/agents/:agentId/disable",
+          "summary": "Disable an agent.",
+          "params": [
+            {
+              "name": "agentId",
+              "in": "path",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "response": "{ success, agentId }"
+        },
+        {
+          "method": "PATCH",
+          "path": "/agents/:agentId/config",
+          "summary": "Update an agent's configuration.",
+          "params": [
+            {
+              "name": "agentId",
+              "in": "path",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "body",
+              "in": "body",
+              "type": "UpdateAgentConfigDto",
+              "required": true
+            }
+          ],
+          "response": "{ success, agentId, updated, model }"
+        },
+        {
+          "method": "POST",
+          "path": "/agents/change-scope",
+          "summary": "Move a user-defined agent between scopes in place, keeping its assignments.",
+          "params": [
+            {
+              "name": "body",
+              "in": "body",
+              "type": "ChangeAgentScopeDto",
+              "required": true
+            }
+          ],
+          "response": "{ success: true, agentId, scope: 'global' | 'project' }"
+        },
+        {
+          "method": "POST",
+          "path": "/agents/create",
+          "summary": "Create an agent as user-defined base object with global or project scope.",
+          "params": [
+            {
+              "name": "body",
+              "in": "body",
+              "type": "CreateAgentDto",
+              "required": true
+            }
+          ],
+          "response": "{ success, agentId, agent, message }"
+        },
+        {
+          "method": "POST",
+          "path": "/agents/delete",
+          "summary": "Delete a user-defined agent base object with global or project scope.",
+          "params": [
+            {
+              "name": "body",
+              "in": "body",
+              "type": "DeleteAgentDto",
+              "required": true
+            }
+          ],
+          "response": "{ success, message }"
+        },
+        {
+          "method": "POST",
+          "path": "/agents/assign-tool",
+          "summary": "Assign a tool to an agent (global or project scope).",
+          "params": [
+            {
+              "name": "body",
+              "in": "body",
+              "type": "AssignToolDto",
+              "required": true
+            }
+          ],
+          "response": "{ agentId, kind, itemId, enabled, mode, reconciled, notReflectedIn }"
+        },
+        {
+          "method": "POST",
+          "path": "/agents/unassign-tool",
+          "summary": "Remove a tool from an agent (global or project scope).",
+          "params": [
+            {
+              "name": "body",
+              "in": "body",
+              "type": "AssignToolDto",
+              "required": true
+            }
+          ],
+          "response": "{ agentId, kind, itemId, enabled, mode, reconciled, notReflectedIn }"
+        },
+        {
+          "method": "POST",
+          "path": "/agents/assign-skill",
+          "summary": "Assign a skill to an agent (global or project scope).",
+          "params": [
+            {
+              "name": "body",
+              "in": "body",
+              "type": "AssignSkillDto",
+              "required": true
+            }
+          ],
+          "response": "{ agentId, kind, itemId, enabled, mode, reconciled, notReflectedIn }"
+        },
+        {
+          "method": "POST",
+          "path": "/agents/unassign-skill",
+          "summary": "Remove a skill from an agent (global or project scope).",
+          "params": [
+            {
+              "name": "body",
+              "in": "body",
+              "type": "AssignSkillDto",
+              "required": true
+            }
+          ],
+          "response": "{ agentId, kind, itemId, enabled, mode, reconciled, notReflectedIn }"
+        }
+      ]
+    },
+    {
+      "title": "Agent Messaging",
+      "basePath": "/sdk-api/agent",
+      "endpoints": [
+        {
+          "method": "POST",
+          "path": "/agent/message",
+          "summary": "Send a message to another agent (fire-and-forget).",
+          "params": [
+            {
+              "name": "content",
+              "in": "body",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "agentId",
+              "in": "body",
+              "type": "string",
+              "required": false
+            }
+          ],
+          "response": "{ queued, projectId, agentId }"
+        },
+        {
+          "method": "POST",
+          "path": "/agent/delegate",
+          "summary": "Delegate a full task to another agent and get its result.",
+          "params": [
+            {
+              "name": "agentId",
+              "in": "body",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "task",
+              "in": "body",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "context",
+              "in": "body",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "outputLength",
+              "in": "body",
+              "type": "string",
+              "required": false
+            },
+            {
+              "name": "title",
+              "in": "body",
+              "type": "string",
+              "required": false
+            }
+          ],
+          "response": "{ success, agentId, result }"
+        }
+      ]
+    },
+    {
+      "title": "Agent Communication",
+      "basePath": "/sdk-api/agent-comms",
+      "endpoints": [
+        {
+          "method": "POST",
+          "path": "/agent-comms/ask",
+          "summary": "Ask another agent a question and wait for the answer.",
+          "params": [
+            {
+              "name": "body",
+              "in": "body",
+              "type": "AskAgentDto",
+              "required": true
+            }
+          ],
+          "response": "{ success, targetAgentId, result }"
+        },
+        {
+          "method": "POST",
+          "path": "/agent-comms/talk",
+          "summary": "Send a message to another agent without waiting.",
+          "params": [
+            {
+              "name": "targetAgentId",
+              "in": "body",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "message",
+              "in": "body",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "fromAgentId",
+              "in": "body",
+              "type": "string",
+              "required": false
+            },
+            {
+              "name": "fromAgentName",
+              "in": "body",
+              "type": "string",
+              "required": false
+            }
+          ],
+          "response": "{ success, targetAgentId, pendingMessages }"
+        },
+        {
+          "method": "GET",
+          "path": "/agent-comms/agents",
+          "summary": "List agents available to communicate with.",
+          "params": [],
+          "response": "{ agents }"
+        }
+      ]
+    },
+    {
+      "title": "Meeting Room",
+      "basePath": "/sdk-api/meeting",
+      "endpoints": [
+        {
+          "method": "POST",
+          "path": "/meeting/run",
+          "summary": "Run a structured multi-agent meeting and return the consensus summary.",
+          "params": [
+            {
+              "name": "problemStatement",
+              "in": "body",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "participantAgentIds",
+              "in": "body",
+              "type": "string[]",
+              "required": true
+            },
+            {
+              "name": "maxRounds",
+              "in": "body",
+              "type": "number",
+              "required": false
+            }
+          ],
+          "response": "{ sessionId, status, rounds, summary, consensusReached, keyPoints }"
+        }
+      ]
+    },
+    {
+      "title": "Approvals",
+      "basePath": "/sdk-api/approvals",
+      "endpoints": [
+        {
+          "method": "GET",
+          "path": "/approvals",
+          "summary": "List pending approval requests.",
+          "params": [],
+          "response": "{ approvals }"
+        },
+        {
+          "method": "POST",
+          "path": "/approvals/tool",
+          "summary": "Request approval to use a tool.",
+          "params": [
+            {
+              "name": "toolId",
+              "in": "body",
+              "type": "string",
+              "required": false
+            },
+            {
+              "name": "approvalLevel",
+              "in": "body",
+              "type": "string",
+              "required": false
+            }
+          ],
+          "response": "{ toolId, approvalLevel }"
+        },
+        {
+          "method": "POST",
+          "path": "/approvals/method",
+          "summary": "Request approval to run a specific tool method.",
+          "params": [
+            {
+              "name": "toolId",
+              "in": "body",
+              "type": "string",
+              "required": false
+            },
+            {
+              "name": "methodId",
+              "in": "body",
+              "type": "string",
+              "required": false
+            },
+            {
+              "name": "approvalLevel",
+              "in": "body",
+              "type": "string",
+              "required": false
+            }
+          ],
+          "response": "{ toolId, methodId, approvalLevel }"
+        }
+      ]
+    },
+    {
+      "title": "Todos",
+      "basePath": "/sdk-api/todos",
+      "endpoints": [
+        {
+          "method": "GET",
+          "path": "/todos",
+          "summary": "List the current todo items.",
+          "params": [
+            {
+              "name": "query",
+              "in": "query",
+              "type": "GetTodosQueryDto",
+              "required": true
+            }
+          ],
+          "response": "{ items, message }"
+        },
+        {
+          "method": "POST",
+          "path": "/todos",
+          "summary": "Create or replace the todo list.",
+          "params": [
+            {
+              "name": "body",
+              "in": "body",
+              "type": "CreateTodosDto",
+              "required": true
+            }
+          ],
+          "response": "{ success }"
+        },
+        {
+          "method": "PATCH",
+          "path": "/todos/:index/status",
+          "summary": "Update the status of one todo item.",
+          "params": [
+            {
+              "name": "params",
+              "in": "path",
+              "type": "TodoIndexParamDto",
+              "required": true
+            },
+            {
+              "name": "body",
+              "in": "body",
+              "type": "UpdateTodoStatusDto",
+              "required": true
+            }
+          ],
+          "response": "{ success, item }"
+        }
+      ]
+    },
+    {
+      "title": "Milestones",
+      "basePath": "/sdk-api/milestones",
+      "endpoints": [
+        {
+          "method": "GET",
+          "path": "/milestones",
+          "summary": "List the project's milestones.",
+          "params": [],
+          "response": "{ completedMilestones, currentMilestone, milestones }"
+        },
+        {
+          "method": "POST",
+          "path": "/milestones/create",
+          "summary": "Propose a milestone plan. Creating one replaces any plan the project already has. Normally opens the interactive editor and answers { status: 'waiting_for_user_interaction', requestId, milestones } while the user reviews it. When human review is off for the project, or effective tool settings bypass the milestone editor, the proposal is applied as-is and the answer is { status: 'auto-applied', message, milestones } — no requestId, because nothing is waiting on you. Only the milestone tool's own SDK token may call this route; a token minted for any other tool is refused with 403. Reading milestones stays open to every authenticated tool.",
+          "params": [
+            {
+              "name": "body",
+              "in": "body",
+              "type": "CreateMilestonesDto",
+              "required": true
+            }
+          ],
+          "response": "{ status, requestId, milestones }"
+        },
+        {
+          "method": "POST",
+          "path": "/milestones/transition",
+          "summary": "Move the project to a different milestone. Only the milestone tool's own SDK token may call this route; a token minted for any other tool is refused with 403.",
+          "params": [
+            {
+              "name": "body",
+              "in": "body",
+              "type": "TransitionMilestoneDto",
+              "required": true
+            }
+          ],
+          "response": "{ success, currentMilestone, displayName, items }"
+        }
+      ]
+    },
+    {
+      "title": "Models",
+      "basePath": "/sdk-api/models",
+      "endpoints": [
+        {
+          "method": "GET",
+          "path": "/models",
+          "summary": "List the available LLM models.",
+          "params": [],
+          "response": "{ models }"
+        },
+        {
+          "method": "POST",
+          "path": "/models/default",
+          "summary": "Set the project's default model.",
+          "params": [
+            {
+              "name": "model",
+              "in": "body",
+              "type": "string",
+              "required": false
+            }
+          ],
+          "response": "{ model }"
+        }
+      ]
+    },
+    {
+      "title": "LLM Completion",
+      "basePath": "/sdk-api/llm",
+      "endpoints": [
+        {
+          "method": "POST",
+          "path": "/llm/complete",
+          "summary": "Run a single LLM completion and return the generated text.",
+          "params": [
+            {
+              "name": "body",
+              "in": "body",
+              "type": "LlmCompleteBody",
+              "required": true
+            }
+          ],
+          "response": "{ content, model }"
+        }
+      ]
+    },
+    {
+      "title": "Image Analysis",
+      "basePath": "/sdk-api/images",
+      "endpoints": [
+        {
+          "method": "POST",
+          "path": "/images/analyze",
+          "summary": "Analyse an image and return a description or answer.",
+          "params": [
+            {
+              "name": "imagePath",
+              "in": "body",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "prompt",
+              "in": "body",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "model",
+              "in": "body",
+              "type": "string",
+              "required": false
+            }
+          ],
+          "response": "{ analysis }"
+        }
+      ]
+    },
+    {
+      "title": "LaTeX",
+      "basePath": "/sdk-api/latex",
+      "endpoints": [
+        {
+          "method": "GET",
+          "path": "/latex/docker-status",
+          "summary": "Check whether the LaTeX Docker image is available.",
+          "params": [],
+          "response": "{ available, version, images_installed }"
+        },
+        {
+          "method": "POST",
+          "path": "/latex/pull-image",
+          "summary": "Pull the LaTeX Docker image. Requires a project-scoped token.",
+          "params": [
+            {
+              "name": "image",
+              "in": "body",
+              "type": "string",
+              "required": false
+            }
+          ],
+          "response": "{ success, output }"
+        },
+        {
+          "method": "POST",
+          "path": "/latex/compile",
+          "summary": "Compile LaTeX source into a PDF.",
+          "params": [
+            {
+              "name": "projectPath",
+              "in": "body",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "mainFile",
+              "in": "body",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "engine",
+              "in": "body",
+              "type": "string",
+              "required": false
+            },
+            {
+              "name": "withBibtex",
+              "in": "body",
+              "type": "boolean",
+              "required": false
+            },
+            {
+              "name": "imageSize",
+              "in": "body",
+              "type": "string",
+              "required": false
+            }
+          ],
+          "response": "{ success, pdfPath, stdout, stderr, engine, withBibtex, imageUsed }"
+        }
+      ]
+    },
+    {
+      "title": "Overleaf",
+      "basePath": "/sdk-api/overleaf",
+      "endpoints": [
+        {
+          "method": "POST",
+          "path": "/overleaf/clone",
+          "summary": "Clone an Overleaf project into the workspace.",
+          "params": [
+            {
+              "name": "overleafProjectId",
+              "in": "body",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "gitToken",
+              "in": "body",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "localName",
+              "in": "body",
+              "type": "string",
+              "required": false
+            }
+          ],
+          "response": "{ success, localName, localPath, fileCount, files, truncated }"
+        },
+        {
+          "method": "POST",
+          "path": "/overleaf/pull",
+          "summary": "Pull the latest changes from Overleaf.",
+          "params": [
+            {
+              "name": "localPath",
+              "in": "body",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "response": "{ success, localPath, filesUpdated, insertions, deletions, summary }"
+        },
+        {
+          "method": "POST",
+          "path": "/overleaf/push",
+          "summary": "Push local changes back to Overleaf.",
+          "params": [
+            {
+              "name": "localPath",
+              "in": "body",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "commitMessage",
+              "in": "body",
+              "type": "string",
+              "required": false
+            }
+          ],
+          "response": "{ success, localPath, commit, commitMessage, filesCommitted, pushResult }"
+        },
+        {
+          "method": "GET",
+          "path": "/overleaf/status",
+          "summary": "Show the sync status of the Overleaf project.",
+          "params": [
+            {
+              "name": "localPath",
+              "in": "query",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "response": "{ success, localPath, branch, isClean, modified, created, deleted, notAdded, staged }"
+        },
+        {
+          "method": "GET",
+          "path": "/overleaf/diff",
+          "summary": "Show the diff between local and remote.",
+          "params": [
+            {
+              "name": "localPath",
+              "in": "query",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "response": "{ success, localPath, hasChanges, diff }"
+        },
+        {
+          "method": "POST",
+          "path": "/overleaf/edit",
+          "summary": "Apply an edit to an Overleaf document.",
+          "params": [
+            {
+              "name": "localPath",
+              "in": "body",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "filePath",
+              "in": "body",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "oldText",
+              "in": "body",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "newText",
+              "in": "body",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "response": "{ success, localPath, filePath, replaced }"
+        }
+      ]
+    },
+    {
+      "title": "Canvas",
+      "basePath": "/sdk-api/canvas",
+      "endpoints": [
+        {
+          "method": "POST",
+          "path": "/canvas/display",
+          "summary": "Render content (charts, HTML, data) onto the chat canvas.",
+          "params": [
+            {
+              "name": "type",
+              "in": "body",
+              "type": "'file' | 'url' | 'images'",
+              "required": true
+            },
+            {
+              "name": "path",
+              "in": "body",
+              "type": "string",
+              "required": false
+            },
+            {
+              "name": "url",
+              "in": "body",
+              "type": "string",
+              "required": false
+            },
+            {
+              "name": "images",
+              "in": "body",
+              "type": "Array<{ source: string; alt?: string; caption?: string }>",
+              "required": false
+            },
+            {
+              "name": "title",
+              "in": "body",
+              "type": "string",
+              "required": false
+            }
+          ],
+          "response": "{ success }"
+        },
+        {
+          "method": "POST",
+          "path": "/canvas/present-artifact",
+          "summary": "Publish one or more produced files to the user as an artifact card with Open and Preview buttons.",
+          "params": [
+            {
+              "name": "caption",
+              "in": "body",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "artifacts",
+              "in": "body",
+              "type": "Array<{ path: string; displayName?: string; mimeType?: string }>",
+              "required": true
+            }
+          ],
+          "response": "{ success, elementId }"
+        },
+        {
+          "method": "POST",
+          "path": "/canvas/execute-python",
+          "summary": "Execute Python and display its output on the canvas.",
+          "params": [
+            {
+              "name": "code",
+              "in": "body",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "outputPath",
+              "in": "body",
+              "type": "string",
+              "required": false
+            },
+            {
+              "name": "title",
+              "in": "body",
+              "type": "string",
+              "required": false
+            }
+          ],
+          "response": "{ exitCode, stdout, stderr, outputNotDisplayedReason }"
+        }
+      ]
+    },
+    {
+      "title": "ROS 2 Upload",
+      "basePath": "/sdk-api/ros2",
+      "endpoints": [
+        {
+          "method": "POST",
+          "path": "/ros2/upload-package",
+          "summary": "Upload a ROS 2 package to the connected target.",
+          "params": [
+            {
+              "name": "packagePath",
+              "in": "body",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "targetName",
+              "in": "body",
+              "type": "string",
+              "required": false
+            },
+            {
+              "name": "overwrite",
+              "in": "body",
+              "type": "boolean",
+              "required": false
+            }
+          ],
+          "response": "Record<string, unknown> (proxied from ros2 service)"
+        }
+      ]
+    },
+    {
+      "title": "Shell",
+      "basePath": "/sdk-api/shell",
+      "endpoints": [
+        {
+          "method": "POST",
+          "path": "/shell/execute",
+          "summary": "Execute a shell command in the project workspace.",
+          "params": [
+            {
+              "name": "body",
+              "in": "body",
+              "type": "ExecuteBody",
+              "required": true
+            }
+          ],
+          "response": "{ exitCode, stdout, stderr, timedOut, workingDirectory }"
+        }
+      ]
+    },
+    {
+      "title": "Project",
+      "basePath": "/sdk-api/projects",
+      "endpoints": [
+        {
+          "method": "GET",
+          "path": "/projects/current",
+          "summary": "Get the current project's details.",
+          "params": [],
+          "response": "{ id, title, path, settings }"
+        },
+        {
+          "method": "PATCH",
+          "path": "/projects/current/settings",
+          "summary": "Update the current project's settings.",
+          "params": [
+            {
+              "name": "body",
+              "in": "body",
+              "type": "UpdateSdkProjectSettingsDto",
+              "required": true
+            }
+          ],
+          "response": "{ settings }"
+        }
+      ]
+    },
+    {
+      "title": "Status",
+      "basePath": "/sdk-api/status",
+      "endpoints": [
+        {
+          "method": "POST",
+          "path": "/status",
+          "summary": "Report the agent's current working status.",
+          "params": [
+            {
+              "name": "status",
+              "in": "body",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "response": "{ success }"
+        }
+      ]
+    },
+    {
+      "title": "Skills",
+      "basePath": "/sdk-api/skills",
+      "endpoints": [
+        {
+          "method": "GET",
+          "path": "/skills",
+          "summary": "List the available skills.",
+          "params": [],
+          "response": "{ skills }"
+        },
+        {
+          "method": "GET",
+          "path": "/skills/:skillId",
+          "summary": "Get one skill's details.",
+          "params": [
+            {
+              "name": "skillId",
+              "in": "path",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "response": "{ id, frontmatter, content, resources: Array<{ type, path, name }>, path, enabled }"
+        },
+        {
+          "method": "POST",
+          "path": "/skills/create",
+          "summary": "Create a global skill base object, bundling files named by `assetPaths`.",
+          "params": [
+            {
+              "name": "body",
+              "in": "body",
+              "type": "SdkCreateSkillDto",
+              "required": true
+            }
+          ],
+          "response": "{ id, frontmatter, content, resources, path, enabled }"
+        },
+        {
+          "method": "POST",
+          "path": "/skills/delete",
+          "summary": "Delete a global user-defined skill base object.",
+          "params": [
+            {
+              "name": "body",
+              "in": "body",
+              "type": "SdkDeleteSkillDto",
+              "required": true
+            }
+          ],
+          "response": "{ success, skillId }"
+        },
+        {
+          "method": "POST",
+          "path": "/skills/:skillId/inspect",
+          "summary": "Copy a skill's folder into the project folder so its files can be read.",
+          "params": [
+            {
+              "name": "skillId",
+              "in": "path",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "response": "{ skillId, path, files: string[] }"
+        },
+        {
+          "method": "POST",
+          "path": "/skills/:skillId/materialize",
+          "summary": "Copy a skill's bundled files into the project workspace and report their project-relative paths.",
+          "params": [
+            {
+              "name": "skillId",
+              "in": "path",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "response": "{ path, files: string[] } | null"
+        },
+        {
+          "method": "POST",
+          "path": "/skills/:skillId/activate",
+          "summary": "Activate a skill for the current agent.",
+          "params": [
+            {
+              "name": "skillId",
+              "in": "path",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "response": "{ id, frontmatter, content, resources, path, enabled }"
+        }
+      ]
+    },
+    {
+      "title": "Workflows",
+      "basePath": "/sdk-api/workflows",
+      "endpoints": [
+        {
+          "method": "GET",
+          "path": "/workflows/list",
+          "summary": "List the available workflows. Reading stays open to every authenticated tool.",
+          "params": [],
+          "response": "Array<{ id, name, description }>"
+        },
+        {
+          "method": "POST",
+          "path": "/workflows/create",
+          "summary": "Create a new workflow. Only the workflow tool's own SDK token may call this route; a token minted for any other tool is refused with 403.",
+          "params": [
+            {
+              "name": "body",
+              "in": "body",
+              "type": "CreateWorkflowBody",
+              "required": true
+            }
+          ],
+          "response": "{ id, name }"
+        },
+        {
+          "method": "POST",
+          "path": "/workflows/assign",
+          "summary": "Assign a workflow to one or more agents. Only the workflow tool's own SDK token may call this route; a token minted for any other tool is refused with 403.",
+          "params": [
+            {
+              "name": "body",
+              "in": "body",
+              "type": "AssignWorkflowBody",
+              "required": true
+            }
+          ],
+          "response": "{ assigned, failed }"
+        }
+      ]
+    },
+    {
+      "title": "Tool Management",
+      "basePath": "/sdk-api/tools",
+      "endpoints": [
+        {
+          "method": "POST",
+          "path": "/tools/create",
+          "summary": "Create a user-defined tool. Default scope is global (every project); scope:'project' confines it to the calling token's project. Requires a project-scoped token held by the tool-management tool.",
+          "params": [
+            {
+              "name": "body",
+              "in": "body",
+              "type": "CreateToolDto",
+              "required": true
+            }
+          ],
+          "response": "{ id: string, scope: 'global' | 'project' }"
+        },
+        {
+          "method": "POST",
+          "path": "/tools/discover-mcp",
+          "summary": "Register an already-running external MCP server by URL and auto-discover its tools (approval-gated: the backend connects out to the given URL). Requires a project-scoped token held by the tool-management tool.",
+          "params": [
+            {
+              "name": "body",
+              "in": "body",
+              "type": "DiscoverMcpDto",
+              "required": true
+            }
+          ],
+          "response": "{ serverId, name, connected, tools }"
+        },
+        {
+          "method": "POST",
+          "path": "/tools/add-mcp-server",
+          "summary": "Register a local or remote MCP server and auto-discover its tools. Requires a project-scoped token held by the tool-management tool.",
+          "params": [
+            {
+              "name": "body",
+              "in": "body",
+              "type": "AddMcpServerDto",
+              "required": true
+            }
+          ],
+          "response": "{ serverId, name, mode, connected, tools }"
+        },
+        {
+          "method": "POST",
+          "path": "/tools/delete",
+          "summary": "Delete a user-defined tool. scope:'project' removes the copy scoped to the calling token's project; default removes the global tool. Requires a project-scoped token held by the tool-management tool.",
+          "params": [
+            {
+              "name": "body",
+              "in": "body",
+              "type": "DeleteToolDto",
+              "required": true
+            }
+          ],
+          "response": "{ id: string }"
+        },
+        {
+          "method": "POST",
+          "path": "/tools/change-scope",
+          "summary": "Move a user-defined tool between global and project scope (promote or demote). Requires a project-scoped token held by the tool-management tool.",
+          "params": [
+            {
+              "name": "body",
+              "in": "body",
+              "type": "ChangeToolScopeDto",
+              "required": true
+            }
+          ],
+          "response": "{ id: string, scope: 'global' | 'project' }"
+        },
+        {
+          "method": "POST",
+          "path": "/tools/refresh",
+          "summary": "Rescan user-defined tools and notify clients so a newly-created tool surfaces without a restart. Requires a project-scoped token held by the tool-management tool.",
+          "params": [],
+          "response": "{ toolCount: number }"
+        },
+        {
+          "method": "GET",
+          "path": "/tools/registered",
+          "summary": "List all registered tools.",
+          "params": [],
+          "response": "{ tools }"
+        },
+        {
+          "method": "GET",
+          "path": "/tools",
+          "summary": "Browse the tool catalog — id, name, description, method ids, origin per tool.",
+          "params": [],
+          "response": "{ tools: { id, name, description, methods: string[], origin }[] }"
+        },
+        {
+          "method": "GET",
+          "path": "/tools/:toolId/inspect",
+          "summary": "Copy a tool's whole package into the calling project's folder so an agent can read it with the filesystem tool. Requires a project-scoped token held by the tool-management tool.",
+          "params": [
+            {
+              "name": "toolId",
+              "in": "path",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "response": "{ id, name, origin, path, files: string[], methods: unknown[] }"
+        },
+        {
+          "method": "GET",
+          "path": "/tools/agent/:agentId",
+          "summary": "List the tools assigned to an agent.",
+          "params": [
+            {
+              "name": "agentId",
+              "in": "path",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "response": "{ agentId, tools }"
+        },
+        {
+          "method": "POST",
+          "path": "/tools/agent/:agentId/add",
+          "summary": "Add a tool to an agent. Requires a project-scoped token held by the tool-management tool.",
+          "params": [
+            {
+              "name": "agentId",
+              "in": "path",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "toolId",
+              "in": "body",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "response": "{ success, agentId, toolId, tools, alreadyAssigned }"
+        },
+        {
+          "method": "POST",
+          "path": "/tools/agent/:agentId/remove",
+          "summary": "Remove a tool from an agent. Requires a project-scoped token held by the tool-management tool.",
+          "params": [
+            {
+              "name": "agentId",
+              "in": "path",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "toolId",
+              "in": "body",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "response": "{ success, agentId, toolId, tools }"
+        }
+      ]
+    }
+  ]
+}

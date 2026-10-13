@@ -1,0 +1,33 @@
+{
+  "id": "conversation-editing",
+  "label": "Editing Conversations",
+  "title": "Editing Conversations",
+  "subtitle": "Conversations in InnoviumAI are not fixed transcripts — you can reorder, delete, and annotate any element to shape the context the agent works with. This gives you direct control over what the agent sees and remembers.",
+  "subsections": [
+    {
+      "title": "Dragging and reordering elements",
+      "description": "Every chat element — messages, thoughts, tool results, and observation cards — has a drag handle that appears on the left side when you hover over it. Click and hold the handle, then drag the element to a new position in the conversation. Reordering changes the sequence in which elements appear in the agent's context, which can be useful if you want to bring a result closer to a follow-up question or restructure a long session for clarity. The new order is saved immediately.",
+      "mediaCaption": "A chat element being dragged to a new position, with a blue insertion line showing where it will land when dropped"
+    },
+    {
+      "title": "Deleting elements",
+      "description": "To remove an element from the conversation, hover over it and click the delete (trash) icon that appears in its toolbar. Deleting an element removes it from the agent's context permanently — the agent will no longer see that message, tool result, or thought in future turns. This is useful for trimming irrelevant output that is consuming context window space, or for removing a mistaken instruction before continuing. Deleted elements cannot be recovered, so use this intentionally.",
+      "mediaCaption": "The delete icon appearing in a card's hover toolbar, with a confirmation prompt before the element is removed"
+    },
+    {
+      "title": "Adding comments and markdown cells",
+      "description": "You can insert a free-text cell anywhere in the conversation by hovering between two elements and clicking the insert (+) button that appears. This opens an editor where you can type a note or annotation using full Markdown — headings, bold, bullet lists, code blocks, and links are all supported. The rendered cell is saved into the conversation and included in the agent's context, so you can use it to give the agent additional instructions mid-session, label a section of the conversation, or leave a note for yourself. To edit a cell later, click it to re-open the editor.",
+      "mediaCaption": "A markdown cell inserted between two agent responses, rendered with a heading and a bulleted list, with an edit pencil icon visible on hover"
+    },
+    {
+      "title": "Editing or retrying a previous prompt",
+      "description": "Hover over any of your own messages and two controls appear alongside the other hover actions: an edit button (pencil icon) that opens an inline editor on the bubble, and a retry button (circular arrow) that immediately rewinds and resends the prompt unchanged. The inline editor itself has three actions: Cancel closes it without changes; Save persists your edited text in place without re-running the agent, which is handy for fixing a typo or mislabeling an earlier prompt for reference; Resend rewinds history to just before that message — removing all the agent turns that followed — and then resends with whatever is currently in the editor, so you can fix an earlier prompt and continue the conversation from that point. The Resend path (and the retry button) uses the same version-checkpoint mechanism as the main undo button, which means files written by agents into the project directory during the removed turns are rolled back alongside the conversation. Attachments on the edited message are kept as-is in this first version (add/remove/swap support is coming later). Slash commands cannot be edited or retried because they are handled entirely client-side and have no server response to regenerate. Before reaching the point where you need to click retry, InnoviumAI already tries to recover from transient failures on its own: if the LLM stream is cut off by a network blip, a socket reset, or a rate-limit / gateway error from the model provider, the platform transparently re-runs the request a couple of times (with exponential backoff that respects any Retry-After hint from the server) before surfacing the error. When those automatic retries are exhausted, the error message includes a short note like \"Retried 2 times before giving up\" so you can tell the difference between a one-off hiccup and a persistent problem worth escalating.",
+      "mediaCaption": "The edit and retry icons appearing on a user message's hover toolbar, with the inline editor open on the bubble after clicking edit"
+    },
+    {
+      "title": "Why editing the conversation matters",
+      "description": "Each of these actions — reordering, deleting, and annotating — directly changes what the agent sees when it next responds. The agent's context is built from the conversation as it currently stands, top to bottom. Removing a misleading tool result prevents the agent from repeating a wrong assumption. Adding a markdown instruction mid-conversation is a precise way to redirect the agent without starting over. Reordering elements can bring the most relevant information closer to the active task. Together these tools let you treat the conversation as a working document that you actively curate, not just a log you passively read.",
+      "mediaCaption": "Side-by-side view of the same conversation before and after editing: a deleted error card and an inserted correction note change what the agent will read next"
+    }
+  ]
+}

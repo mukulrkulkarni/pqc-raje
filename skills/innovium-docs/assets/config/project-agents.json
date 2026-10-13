@@ -1,0 +1,43 @@
+{
+  "id": "project-agents",
+  "label": "Agent Overrides",
+  "category": "Per-Project",
+  "title": "Project — Agent Overrides",
+  "subtitle": "Customise individual agent behaviour for this project without affecting global settings.",
+  "description": "The Agents tab in project settings lets you override any agent field for this project alone. Fields you change here take precedence over the global definition; a Reset button restores them to the global value.",
+  "settings": [
+    {
+      "name": "Agent Instructions",
+      "description": "Replaces the global system prompt for this agent in this project only. Useful for giving an agent a more specific role or tone within a particular engagement."
+    },
+    {
+      "name": "Model Override",
+      "description": "Use a different model for this agent in this project, independently of the project-level model override."
+    },
+    {
+      "name": "Temperature Override",
+      "description": "Agent-level temperature for this project."
+    },
+    {
+      "name": "Tool Assignments",
+      "description": "Which tools this agent can invoke in this project (may be a subset or superset of the global list)."
+    },
+    {
+      "name": "Workflow Assignments",
+      "description": "Which workflows this agent has access to in this project."
+    },
+    {
+      "name": "Knowledge Database Assignments",
+      "description": "Additional shared or custom databases this agent can use in the project. The project's primary database is always available."
+    },
+    {
+      "name": "Reset to Defaults",
+      "description": "Restores all overridden fields to their global values for this agent in one click."
+    }
+  ],
+  "mediaCaption": "Per-project agent settings showing overridden fields highlighted alongside unchanged fields that still show the global value",
+  "tips": [
+    "You can have the same agent behave as a strict editor in one project and a creative brainstorming partner in another by setting different system prompts per project.",
+    "If an override is causing unexpected behaviour, the Reset button is the quickest way to rule out the override as the cause."
+  ]
+}

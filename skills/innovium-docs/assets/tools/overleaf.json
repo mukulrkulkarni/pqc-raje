@@ -1,0 +1,35 @@
+{
+  "id": "overleaf",
+  "label": "Overleaf",
+  "category": "Documents",
+  "title": "Overleaf",
+  "subtitle": "Connects to an Overleaf project and lets agents clone it locally, pull the latest changes, push edits back, and review diffs. Useful for collaborative writing workflows between InnoviumAI and Overleaf.",
+  "whenToUse": "Use when you have a paper or report in Overleaf and want an agent to read, edit, or contribute to it.",
+  "methods": [
+    {
+      "name": "Clone Overleaf Project",
+      "description": "Clones an Overleaf project to the local project folder using git credentials."
+    },
+    {
+      "name": "Pull from Overleaf",
+      "description": "Fetches and merges the latest changes from Overleaf."
+    },
+    {
+      "name": "Push to Overleaf",
+      "description": "Commits local changes and pushes them to Overleaf."
+    },
+    {
+      "name": "Check Status",
+      "description": "Shows which files have been modified locally since the last sync."
+    },
+    {
+      "name": "Show Diff",
+      "description": "Returns a diff of local changes against the last pulled version."
+    }
+  ],
+  "mediaCaption": "An Overleaf Push action card confirming the files committed and pushed, with the Overleaf project URL",
+  "tips": [
+    "Always Pull before making changes to avoid merge conflicts.",
+    "Use Show Diff before Push to review what the agent has changed."
+  ]
+}

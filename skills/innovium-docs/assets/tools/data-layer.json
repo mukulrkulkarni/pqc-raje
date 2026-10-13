@@ -1,0 +1,39 @@
+{
+  "id": "data-layer",
+  "label": "Data Layer",
+  "category": "Data",
+  "title": "Data Layer",
+  "subtitle": "Manages a shared reactive key-value store that all agents can read and write. Properties can be watched for changes and subscribed to, enabling real-time coordination between the agents in a project.",
+  "whenToUse": "Use when multiple agents need to share structured state, or when you want one agent to react automatically as another produces results.",
+  "methods": [
+    {
+      "name": "Set Property",
+      "description": "Sets a named property to a value, which subscribed agents pick up on their next reasoning step."
+    },
+    {
+      "name": "Get Property",
+      "description": "Retrieves a named property from the data layer."
+    },
+    {
+      "name": "Subscribe",
+      "description": "Subscribes the agent to a property so its value is automatically injected into context on every turn."
+    },
+    {
+      "name": "Unsubscribe",
+      "description": "Removes a subscription by ID."
+    },
+    {
+      "name": "Watch Source",
+      "description": "Watches a file or URL and automatically updates a property whenever the source changes."
+    },
+    {
+      "name": "Unwatch Source",
+      "description": "Stops watching a source."
+    },
+    {
+      "name": "List Properties",
+      "description": "Returns all current properties and active watchers."
+    }
+  ],
+  "mediaCaption": "A walkthrough of the data layer in a project: the Project Overview and its Scratchpad, the typed properties agents share, and watchers that keep a property in sync with a file or a URL"
+}

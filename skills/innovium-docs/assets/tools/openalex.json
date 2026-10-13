@@ -1,0 +1,39 @@
+{
+  "id": "openalex",
+  "label": "OpenAlex",
+  "category": "Analysis",
+  "title": "OpenAlex Research",
+  "subtitle": "Searches OpenAlex, an open catalogue of more than 240 million scholarly works, together with their authors, institutions, and citation links.",
+  "whenToUse": "Used for literature work that needs breadth — finding what has been published on a topic, tracing who cites whom, or judging how active a research area is. The catalogue is open data, so it reaches fields and venues a commercial index can miss.",
+  "methods": [
+    {
+      "name": "Search Works",
+      "description": "Searches the catalogue and returns the matching works with their titles, authors, venues, publication years, and citation counts."
+    },
+    {
+      "name": "Get Work",
+      "description": "Returns the full record of one paper, found by its DOI or OpenAlex ID: every author and their institution, the abstract, topics, funding, and the works it cites."
+    },
+    {
+      "name": "Get Citing Works",
+      "description": "Lists the later works that cite a given paper, to follow a line of research forward in time."
+    },
+    {
+      "name": "Get Referenced Works",
+      "description": "Lists the works a given paper cites, to follow its sources back in time."
+    },
+    {
+      "name": "Get Related Works",
+      "description": "Finds papers close to a given one through shared topics and citations, to widen a search from a single known paper."
+    },
+    {
+      "name": "Resolve References",
+      "description": "Turns a list of DOIs or OpenAlex IDs into full paper records in one step, for building or checking a reference list."
+    },
+    {
+      "name": "Find Open Access Versions",
+      "description": "Finds papers on a topic that anyone can read for free, with a link to each free copy."
+    }
+  ],
+  "mediaCaption": "An OpenAlex action card listing matching papers with their authors and citation counts"
+}

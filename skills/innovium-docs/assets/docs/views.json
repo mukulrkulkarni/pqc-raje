@@ -1,0 +1,29 @@
+{
+  "id": "views",
+  "label": "Views",
+  "title": "Views",
+  "subtitle": "A single project can generate a lot of content: your main conversation, sub-conversations that agents open when they delegate work to each other, task lists, and project statistics. Views let you switch between these different lenses on the same project without losing your place.",
+  "tags": ["Core"],
+  "subsections": [
+    {
+      "title": "The Views Panel",
+      "description": "In the left sidebar, below the project list, there is a collapsible section labelled Views. It shows every view available for the current project: the Overview dashboard, the Project Overview details page, your main Chat conversation, and any sub-conversations created by agent delegation. Click the section header to collapse or expand it. Click any item in the list to switch to that view instantly. If sub-conversations exist, they appear as a nested tree under Chat, indented to show which agent spawned which, each with a status icon.",
+      "mediaCaption": "The Views panel in the left sidebar showing the Overview, Project Overview, Chat, and a nested sub-conversation tree with status icons"
+    },
+    {
+      "title": "Chat View: Your Main Conversation",
+      "description": "The Chat view is the default view when you open a project. It shows the full conversation between you and your primary agent, including all messages, tool calls, and results. When an agent delegates a task to another agent, that sub-conversation is shown as a Conversation Container card in the main chat — you can see its status (running, completed, error) and click nodes in the workflow graph to inspect what that agent did. If you want to read the full sub-conversation from start to finish, switch to it using the Views panel.",
+      "mediaCaption": "The main Chat view with a Conversation Container card showing a completed sub-task and its workflow graph"
+    },
+    {
+      "title": "Conversation View: Following Delegation",
+      "description": "When one agent hands off work to another — for example, an orchestrator delegating a coding task to a specialist — a new sub-conversation is created. Navigate to it in the Views panel to see that agent's thoughts, actions, and observations in sequence. The status icon next to the conversation name in the sidebar tells you whether it is still running (spinning arrow), completed (green check), stopped (orange), or ended in an error (red). This lets you follow what each individual agent actually did without it being buried in the main conversation.",
+      "mediaCaption": "A sub-conversation view showing a specialist agent's reasoning steps, with a \"Completed\" status icon next to its name in the sidebar"
+    },
+    {
+      "title": "Project Overview",
+      "description": "The Project Overview is a live dashboard for a single project. It shows your milestone plan and which steps are complete, usage statistics (token counts, tool calls, cost estimates, and duration broken down by model), an agent communication graph showing which agents talked to each other, and the agent scratchpad — a working memory space the agents use internally during a session. Switch to it from the Views panel or by clicking the chart icon in the right panel when inside a project.",
+      "mediaCaption": "The Project Overview showing the milestone progress panel, statistics cards with token and cost data, and the agent communication graph"
+    }
+  ]
+}

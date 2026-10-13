@@ -1,0 +1,31 @@
+{
+  "id": "knowledge-base",
+  "label": "Knowledge Base",
+  "category": "Research",
+  "title": "Knowledge Base",
+  "subtitle": "Enables agents to query and add to the project's vector knowledge databases using semantic similarity search. This is the tool that gives agents access to the documents you have uploaded.",
+  "whenToUse": "This tool is used automatically when agents need to retrieve relevant information from uploaded documents. You can also configure it directly to add text or files to a knowledge base during a session.",
+  "methods": [
+    {
+      "name": "List Databases",
+      "description": "Lists the knowledge databases the agent can use, so it knows where to search or store information. This is always the project's own database plus any databases explicitly assigned to the agent (the shared Global database or custom collections). Databases it was not given are listed too, marked as out of reach and saying how to grant access, so the agent can tell a database that holds nothing from one it may not read."
+    },
+    {
+      "name": "Query Knowledge Base",
+      "description": "Performs a semantic search across the databases the agent can use and returns the most relevant passages for a given question. An agent can always search its project's own database; assigning specific databases in its settings — the shared Global database or any custom collection — adds those to its reach, and it cannot read databases it was not given. A search aimed only at databases outside that set is refused and names them, instead of quietly searching the project database and reporting nothing found. A search that finds nothing names any database that holds documents the agent was never assigned, so it can tell you what to grant it."
+    },
+    {
+      "name": "Add to Knowledge Base",
+      "description": "Stores a text document in a named database for future retrieval. With no target specified it writes to the project's own database; writing to an assigned database is allowed, but an agent cannot write to a database it was not given."
+    },
+    {
+      "name": "Add File to Knowledge Base",
+      "description": "Ingests a file (PDF, DOCX, CSV, etc.) from the project folder into a knowledge base, following the same access rules as adding text."
+    }
+  ],
+  "mediaCaption": "A knowledge base query action showing the question sent, the top matching passages returned, and their relevance scores",
+  "tips": [
+    "Agents can add newly downloaded or generated documents to the knowledge base during a session — useful for self-updating research pipelines.",
+    "Assign specific databases to an agent in its settings to focus a specialist on the right collection. The agent's own project database is always available; assigning databases adds the shared Global database or custom collections on top, and the assignment is enforced — the agent cannot read or write any database outside that set. Leaving the selector empty means the agent uses just its project database."
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "id": "approval-config",
+  "label": "Approval Config",
+  "category": "Configuration",
+  "title": "Approval Config",
+  "subtitle": "Manages approval levels for tools and their methods. Agents can programmatically adjust which operations require user review, notify-only, or run automatically.",
+  "whenToUse": "Used in workflows that need to dynamically change approval requirements — for example, raising all tool approvals to Ask at the start of a sensitive phase, then lowering them when done.",
+  "methods": [
+    {
+      "name": "Get Config",
+      "description": "Returns the current approval configuration for all tools and methods."
+    },
+    {
+      "name": "Set Tool Approval",
+      "description": "Sets the approval level (auto/notify/ask/disabled) for an entire tool."
+    },
+    {
+      "name": "Set Method Approval",
+      "description": "Sets the approval level for a specific method within a tool."
+    }
+  ],
+  "mediaCaption": "An Approval Config action card showing the tool name, method, and the new approval level being set"
+}

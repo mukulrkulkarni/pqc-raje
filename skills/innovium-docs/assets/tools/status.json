@@ -1,0 +1,15 @@
+{
+  "id": "status",
+  "label": "Status",
+  "category": "Utility",
+  "title": "Status",
+  "subtitle": "Allows an agent to update the status indicator shown to users in the sidebar. Use it to communicate what the agent is currently working on without adding noise to the main conversation.",
+  "whenToUse": "Use at the start of each significant step in a long-running task so users can see progress without needing to watch every thought and action card.",
+  "methods": [
+    {
+      "name": "Update Status",
+      "description": "Sets the agent's status message — visible in the agent list in the sidebar as a short descriptive string."
+    }
+  ],
+  "mediaCaption": "The agent list in the sidebar showing a status message below an agent name: \"Analysing dataset — step 3 of 7\""
+}

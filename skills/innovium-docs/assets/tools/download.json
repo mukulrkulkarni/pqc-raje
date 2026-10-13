@@ -1,0 +1,18 @@
+{
+  "id": "download",
+  "label": "Download",
+  "category": "Files",
+  "title": "Download",
+  "subtitle": "Fetches files from URLs and saves them to the project folder. A safer alternative to the Shell tool for acquiring external files — no command execution involved.",
+  "whenToUse": "Use when an agent needs to retrieve a PDF, image, dataset, or other file from the internet and make it available locally for subsequent Filesystem or Knowledge Base operations.",
+  "methods": [
+    {
+      "name": "Download File",
+      "description": "Downloads a file from a URL into the project's downloads folder. Supports PDF, images, HTML, plain text, and binary files. Returns the local file path."
+    }
+  ],
+  "mediaCaption": "A Download File action card showing the source URL and the local path where the file was saved",
+  "tips": [
+    "After downloading, use the Filesystem Read Document tool to extract structured text from PDFs."
+  ]
+}

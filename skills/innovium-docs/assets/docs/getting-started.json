@@ -1,0 +1,36 @@
+{
+  "id": "getting-started",
+  "label": "Getting Started",
+  "title": "Getting Started with InnoviumAI",
+  "subtitle": "InnoviumAI is a multi-agent AI orchestration platform. You describe tasks in natural language, agents use tools and collaborate to complete them, and you watch every step in real time — thoughts, actions, and results, all streaming live.",
+  "tags": ["Tutorial"],
+  "prerequisites": [
+    "InnoviumAI desktop app installed on your machine",
+    "An InnoviumAI account — either provided by your administrator, or use your Microsoft account via SSO"
+  ],
+  "nextSteps": ["projects", "chat", "agents", "tools"],
+  "steps": [
+    {
+      "title": "Open the app and sign in",
+      "description": "Launch the InnoviumAI desktop app. After a brief loading screen, you will see the sign-in page. If your organisation uses Microsoft accounts, click Sign in with Microsoft — this is the recommended path for most users. If you were issued an InnoviumAI account directly by your administrator, enter your username and password instead. Once authenticated you land on the main workspace.",
+      "mediaCaption": "Sign-in page showing the Microsoft SSO button and the username/password form"
+    },
+    {
+      "title": "Create your first project",
+      "description": "Click the + button at the top of the Projects section in the left sidebar. InnoviumAI creates a blank project instantly and opens the chat interface. A project is the container for your full conversation history, agent configuration, and any files agents write to disk. You can rename, export, or clone projects at any time from the context menu (the ⋮ icon that appears on hover).",
+      "mediaCaption": "Sidebar with the + button highlighted and a new blank project appearing at the top of the list"
+    },
+    {
+      "title": "Send a message and watch the agents work",
+      "description": "Type your first task or question in the text box at the bottom of the chat panel and press Enter (or click the arrow button). As the agent works you'll see Thought cards (internal reasoning), Action cards (each tool call), and Observation cards (the result of each action) stream in real time, followed by the final response. Click any card header to expand the full content.",
+      "mediaCaption": "Chat panel with thought, action, and observation cards streaming in below a user message",
+      "tip": "A Stop button (square icon) appears in the chat bar while an agent is running — click it to cancel immediately. The partial response stays in the chat so nothing is lost."
+    },
+    {
+      "title": "Upgrading to a new version",
+      "description": "When you update InnoviumAI, the first launch checks whether your saved configuration and data need any one-time changes, and applies them. If a longer migration is needed, a progress bar appears on the loading screen, and the app may briefly show “Restarting…” and relaunch once or more to finish — this is expected.",
+      "mediaCaption": "Loading screen showing an “Upgrading your workspace” progress bar during a one-time migration",
+      "tip": "If the loading screen reports that InnoviumAI cannot determine your configuration version, its configuration folder is unreadable. Move or rename that folder and relaunch: InnoviumAI creates a fresh one and leaves the old folder untouched, so you can recover anything you need from it."
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "id": "scratchpad",
+  "label": "Scratch Pad",
+  "category": "Planning",
+  "title": "Scratch Pad",
+  "subtitle": "A shared free-text notepad that all agents in a project can read and write. Agents use it to leave notes, record intermediate findings, and pass context to each other in plain language.",
+  "whenToUse": "Use when agents need to share working notes across turns. Simpler than the Data Layer for text-based information that does not need to be structured or queried.",
+  "methods": [
+    {
+      "name": "Append to Scratch Pad",
+      "description": "Adds text to the end of the current scratchpad content."
+    },
+    {
+      "name": "Update Scratch Pad",
+      "description": "Replaces the entire scratchpad content with new text."
+    },
+    {
+      "name": "Clear Scratch Pad",
+      "description": "Wipes the scratchpad completely."
+    }
+  ],
+  "mediaCaption": "The Scratchpad section of the Project Overview showing the shared notes the agents have written during the session",
+  "tips": [
+    "Scratchpad content is automatically included in every agent's context window — they see it without needing to call a Read method."
+  ]
+}

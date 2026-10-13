@@ -1,0 +1,19 @@
+{
+  "id": "delegation",
+  "label": "Delegation",
+  "category": "Collaboration",
+  "title": "Delegation",
+  "subtitle": "Hands off a complete sub-task to another agent and waits for the result. The delegated agent runs autonomously with its own tools and reasoning chain, and returns its output when done.",
+  "whenToUse": "Use when a task is large enough to deserve a dedicated agent running independently. Each delegated task gets its own conversation thread visible in the Views panel.",
+  "methods": [
+    {
+      "name": "Delegate to Agent",
+      "description": "Assigns a task to a target agent and blocks until it completes. Returns the agent's final response. Creates a new sub-conversation thread in the sidebar."
+    }
+  ],
+  "mediaCaption": "A delegation action in the main chat showing the task, the target agent, a status indicator, and the result once complete",
+  "tips": [
+    "Each delegation creates a sub-conversation thread in the Views panel.",
+    "Make sure the target agent has the right tools assigned for the delegated task."
+  ]
+}

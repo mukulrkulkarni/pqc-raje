@@ -1,0 +1,32 @@
+{
+  "id": "project-knowledge",
+  "label": "Knowledge",
+  "category": "Per-Project",
+  "title": "Project — Knowledge",
+  "subtitle": "Manage the shared knowledge databases and external connections agents can search from this project.",
+  "description": "The Knowledge tab inside project settings hosts the same panel as the RAG tab in global settings: it lists the platform-wide databases and external connections that agents in any project can be given, and a database created here becomes one of those. This project's own database is provisioned with the project and is opened from the Knowledge Databases section of the sidebar rather than from here.",
+  "settings": [
+    {
+      "name": "Project-Scoped Documents",
+      "description": "A database scoped to this project is visible only here — the right choice for client-specific or confidential material. Every project is provisioned with one; it is opened from the sidebar rather than listed on this tab."
+    },
+    {
+      "name": "Platform-Scoped Documents",
+      "description": "A database scoped to the platform is visible in every project. These are the databases this tab lists, and the same set appears on the RAG tab in global settings."
+    },
+    {
+      "name": "Creating a Database",
+      "description": "A database added here is shared across every project on the instance: the dialog asks for a type, a name and a description — plus a URL and credentials for an external connection — and offers no scope choice. Documents are uploaded into a database you open from the sidebar, not named at upload time."
+    },
+    {
+      "name": "Supported Formats",
+      "description": "PDF, DOCX, TXT, MD, CSV, XLSX, JSON, PPTX, EPUB."
+    }
+  ],
+  "mediaCaption": "The Knowledge tab in project settings, listing the shared and external databases available to every project",
+  "tips": [
+    "Anything confidential belongs in the project's own database — every database you add from this tab is visible to every project on your InnoviumAI instance.",
+    "Large documents are automatically chunked during upload — you do not need to split them manually.",
+    "An agent reaches a knowledge database only if it holds the Knowledge Base tool; assigning databases in the agent settings then decides which ones it may use."
+  ]
+}

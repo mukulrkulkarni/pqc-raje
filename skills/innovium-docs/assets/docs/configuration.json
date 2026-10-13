@@ -1,0 +1,28 @@
+{
+  "id": "configuration",
+  "label": "Configuration",
+  "title": "Configuration",
+  "subtitle": "InnoviumAI uses a three-tier settings system: an administrator sets a baseline profile, you customise global defaults, and each project can override those defaults independently. Understanding this hierarchy lets you set things up once and only adjust what actually needs to differ.",
+  "subsections": [
+    {
+      "title": "How configuration works",
+      "description": "Configuration flows from the top down. Your administrator configures a user profile that establishes the baseline — which API keys are available, which models are permitted, and which tools are enabled. On top of that baseline you can set your own global defaults: the model you prefer, your UI theme, notification preferences, and so on. Finally, each project can override any global setting for that project alone, and each agent within a project can override its own model, temperature, and tools independently. Settings at a lower level always win over settings at a higher level — a project-level model choice overrides your global default, which in turn overrides the administrator baseline.",
+      "mediaCaption": "Diagram showing the three-tier hierarchy: administrator profile at the top, global settings in the middle, and per-project overrides at the bottom, with arrows showing how lower levels override higher ones"
+    },
+    {
+      "title": "Global versus per-project settings",
+      "description": "Global settings are your application-wide defaults — they apply to every project unless overridden. Per-project settings let you tailor the model, agent behaviour, and knowledge collections for one specific project without changing anything else. Use global settings to establish sensible defaults once; use per-project settings when a project needs to behave differently from the norm.",
+      "mediaCaption": "The project settings panel open beside the global settings panel, illustrating how project-level values replace global defaults for that project only"
+    },
+    {
+      "title": "Seeing what you have changed",
+      "description": "When you edit an agent, the editor highlights every field you have customised so a change is never invisible. In Global Settings a field you have changed from the default is marked \"Modified\"; in a project's settings a field that diverges from the global value is marked \"Project override\". Each flagged field also gets a tinted background and a coloured side bar, and the agent's row in Global Settings carries a \"Modified\" badge. Fields with no marking are inherited unchanged from the layer above.",
+      "mediaCaption": "An agent editor with one section flagged as an override — a badge, a tinted background and a coloured left border — while the surrounding sections are unmarked"
+    },
+    {
+      "title": "Usage data and privacy",
+      "description": "Under System settings, \"Share Anonymous Usage Data\" controls whether InnoviumAI sends anonymous product analytics — feature usage, interactions, and feedback, never personal information or your content. It is on by default and you can opt out at any time. Your administrator can set a telemetry policy on your profile that decides this for you: \"User can choose\" leaves the toggle in your hands, \"Always on\" keeps usage-data sharing on, and \"Always off\" keeps it off. When the policy forces a value, the toggle is shown disabled with a note explaining that your organization manages this setting, and the forced value always wins over any earlier choice you made.",
+      "mediaCaption": "The Analytics & Privacy section of System settings showing the usage-data toggle disabled with a note that the organization has set the telemetry policy for this profile"
+    }
+  ]
+}

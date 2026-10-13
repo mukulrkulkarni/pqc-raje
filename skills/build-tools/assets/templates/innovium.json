@@ -1,0 +1,9 @@
+{
+  "id": "my-mcp-server",
+  "name": "My MCP Server",
+  "description": "One line describing what this server does.",
+  "category": "productivity",
+  "command": "uv",
+  "args": ["run", "my-mcp-server"],
+  "transport": "stdio"
+}

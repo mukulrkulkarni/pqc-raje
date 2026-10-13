@@ -1,0 +1,19 @@
+{
+  "id": "image-analysis",
+  "label": "Image Analysis",
+  "category": "Analysis",
+  "title": "Image Analysis",
+  "subtitle": "Sends an image to a vision-capable AI model and returns a natural-language description or answer. Useful for extracting information from screenshots, diagrams, charts, photos, or scanned documents.",
+  "whenToUse": "Use when an agent needs to understand the content of an image — reading text from a screenshot, describing a graph, analysing a photo, or extracting structured data from a scanned form.",
+  "methods": [
+    {
+      "name": "Analyse Image",
+      "description": "Sends an image (file path or URL) along with an optional question to a vision model and returns the response."
+    }
+  ],
+  "mediaCaption": "An Image Analysis action card showing the image thumbnail, the prompt sent, and the text description returned",
+  "tips": [
+    "Ask specific questions for better results: \"What is the value in the top-right cell of this table?\" is more useful than \"describe this image\".",
+    "Works well with screenshots taken by the Browser Automation tool."
+  ]
+}

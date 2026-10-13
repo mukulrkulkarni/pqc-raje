@@ -1,0 +1,68 @@
+{
+  "id": "filesystem",
+  "label": "Filesystem",
+  "category": "Files",
+  "title": "Filesystem",
+  "subtitle": "Lets agents read, write, edit, and organise files and directories within the project workspace. This is the primary way agents create and manage output files — reports, code, data exports, and any other artefacts produced during a session.",
+  "whenToUse": "Use when an agent needs to save its work to disk, read source files you have placed in the project folder, process documents, or build up a file-based output over multiple steps.",
+  "methods": [
+    {
+      "name": "Read File",
+      "description": "Reads the full text content of a file."
+    },
+    {
+      "name": "Read Document",
+      "description": "Reads structured documents (PDF, DOCX, CSV, XLSX) and extracts text with metadata like headings and page numbers. An image is read too: a vision model describes it and transcribes the text in it."
+    },
+    {
+      "name": "Read File Chunk",
+      "description": "Reads a specific byte range of a large file."
+    },
+    {
+      "name": "Read Multiple Files",
+      "description": "Reads several files in one call and returns their contents together."
+    },
+    {
+      "name": "Write File",
+      "description": "Creates or overwrites a file with the given content."
+    },
+    {
+      "name": "Edit File",
+      "description": "Applies a targeted patch to an existing file — replaces a specific string with another."
+    },
+    {
+      "name": "Append to File",
+      "description": "Adds content to the end of an existing file without overwriting it."
+    },
+    {
+      "name": "List Directory",
+      "description": "Returns the files and subdirectories at a given path with metadata."
+    },
+    {
+      "name": "Create Directory",
+      "description": "Creates a directory and any missing parent directories."
+    },
+    {
+      "name": "Delete File",
+      "description": "Permanently deletes a file."
+    },
+    {
+      "name": "Move File",
+      "description": "Moves or renames a file."
+    },
+    {
+      "name": "Get File Info",
+      "description": "Returns metadata about a file without reading its content."
+    },
+    {
+      "name": "Search Files",
+      "description": "Searches file contents using a regex pattern and returns matching lines with file paths and line numbers."
+    }
+  ],
+  "mediaCaption": "A filesystem Write File action card showing the file path and a preview of the content the agent is saving",
+  "tips": [
+    "Use Edit File rather than Write File when modifying an existing file — it is faster and avoids accidentally overwriting unrelated content.",
+    "Search Files is very useful for agents doing code analysis across a multi-file codebase.",
+    "Writing or editing a file shows the change as a diff in the chat — a new file as an added file, an edit as the replaced lines — so you can see exactly what changed at a glance."
+  ]
+}

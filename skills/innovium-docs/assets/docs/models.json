@@ -1,0 +1,38 @@
+{
+  "id": "models",
+  "label": "Models",
+  "title": "Models",
+  "subtitle": "Every agent in InnoviumAI runs on a language model — the AI engine that reads instructions and generates responses. InnoviumAI supports over 90 models from OpenAI, Anthropic, and Google, plus models your own deployment runs through vLLM or Ollama, so you can pick the right balance of quality, speed, and cost for each task.",
+  "tags": ["Models"],
+  "subsections": [
+    {
+      "title": "Choosing a Model",
+      "description": "The three practical things to weigh are capability (how well the model handles complex instructions and reasoning), speed (how quickly it responds), and cost (how much each run costs in API credits). As a starting point: GPT-4.1 Mini or Gemini 2.5 Flash are fast and affordable for everyday tasks; GPT-4.1 or Claude Sonnet are stronger choices when the task involves nuanced reasoning, long documents, or writing quality matters; GPT-4.1 Nano or Gemini 2.0 Flash Lite are the cheapest options and work well for simple, high-volume operations like classification or formatting. You can set the model per agent in the Agent Builder, and override it per project in the project settings.",
+      "mediaCaption": "The model picker in Agent Builder shows each model's context window size, cost per million tokens, and capability tags (Text, Code, Vision, Tools, Reasoning)"
+    },
+    {
+      "title": "Model Availability",
+      "description": "The models you see in the model picker depend on two things. First, the provider must be configured — cloud providers like OpenAI need an API key, while self-hosted providers (vLLM, Ollama) just need their endpoint set in the admin dashboard's system settings. Second, your administrator controls which models are available to your profile: each model can be made visible or hidden for your profile, similar to how agents and tools are managed. For self-hosted endpoints, administrators can scan the server to automatically register every model it serves; models that later disappear from the server are flagged and leave the picker automatically. If a model you expect is missing from the picker, ask your administrator to check the provider configuration and your profile's model access in the admin dashboard's Marketplace section.",
+      "mediaCaption": "The Models tab in the admin dashboard Marketplace, where administrators manage per-profile access for each model"
+    },
+    {
+      "title": "Understanding Model Differences",
+      "description": "The context window is the amount of text a model can read and hold in mind in a single session — including the conversation history, your instructions, tool results, and everything the agent has done so far. A context window of 128K tokens means roughly 100 pages of text; 1M tokens means around 750 pages. If a task involves a large codebase or a long document chain, you need a model with a larger context window or the agent will start losing track of earlier information. OpenAI models tend to be strongest at coding and instruction-following; Anthropic's Claude models are well-regarded for writing quality and nuanced reasoning; Google's Gemini models offer very large context windows at low cost, which makes them practical for document-heavy tasks.",
+      "mediaCaption": "The model specs panel showing context window size, maximum output length, and per-token pricing for input and output separately"
+    },
+    {
+      "title": "Temperature & Creativity",
+      "description": "Temperature controls how predictable or varied the model's outputs are. At low temperature (0.0–0.3), the model picks the most likely next word at each step, producing focused, consistent, and repeatable answers — good for code generation, data extraction, or following a strict format. At high temperature (0.8–1.5), the model takes less obvious paths, which can produce more creative or varied results — useful for brainstorming or generating diverse options. Most agents run well at the default of 0.7. If you find an agent giving slightly different answers each time when you want consistency, lower the temperature; if you want it to explore more possibilities, raise it.",
+      "mediaCaption": "Temperature slider in the Agent Builder settings panel, set to the default 0.7 with the range spanning 0 to 2"
+    },
+    {
+      "title": "Advanced Inference Strategies",
+      "description": "Inference strategies change how InnoviumAI uses the model — instead of asking it once and returning that answer, the strategy may ask multiple times and combine the results. Best of N Sampling generates several candidate responses in parallel, scores each one using a judge model, and returns the highest-rated answer — useful when you need higher-quality output and can afford extra API credits. Self-Consistency generates multiple independent reasoning paths and picks the answer that the majority agree on — good for factual questions where the model might get it wrong on the first try. Chain-of-Thought with Reflection instructs the model to think step-by-step and then review its own reasoning for errors before giving a final answer — a good starting point when you want more reliable responses without multiplying costs significantly. Plan Search generates several high-level approaches, evaluates each one, and executes the best-scoring plan — most useful for complex, multi-step tasks where the initial approach matters a lot.",
+      "mediaCaption": "Inference strategies are configured per-project in the project settings, with each strategy showing tunable parameters such as the number of candidates for Best of N"
+    },
+    {
+      "title": "Running Only On Your Own Models",
+      "description": "Some deployments must keep every request on their own hardware. If your administrator has configured a vLLM or Ollama endpoint, they can restrict a profile to models this deployment runs itself, from the profile's settings tab, in one action. Everyone on that profile then works only on those models: an agent that runs inside the app falls back to a self-hosted model instead of a cloud one, and a newly installed agent is held to the same rule without anyone having to change its settings. Before the switch is turned on, it checks the endpoints and lists what would change, so nothing stops working by surprise. Knowledge search, speech, transcription and reading an image aloud have no self-hosted option yet, so they become unavailable rather than quietly calling a cloud provider, and the switch refuses to go on while an endpoint cannot be reached, or while nothing self-hosted is available to this profile. You can also hold a single project to your own models, without asking for the whole profile to move: the switch sits in the right-hand panel's header, next to the human-in-the-loop one, and on the project's model settings. It is only offered while this deployment has a self-hosted model available, since a project held with nothing to run on could not answer at all. A project can only narrow what the profile allows, never widen it, and while one is held a marker sits beside the agent about to reply. System settings list every job that uses a model and where each one sends its work. An agent on the Codex CLI falls back to a self-hosted model like the rest, and when none is available its turn is refused with the reason. Agents that run on the Claude CLI or on a remote MCP server are not covered yet and still reach their provider, so turn those off for a profile or a project that must keep everything in house. While one of them is enabled on a held project, the switch carries a warning, and the marker beside the agent says so when one is selected."
+    }
+  ]
+}

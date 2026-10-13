@@ -8,7 +8,7 @@
 <title>config.py - Module Tutorial</title>
 <style>
 /* ==========================================================================
-   CONFIG MODULE TUTORIAL v2.3
+   CONFIG MODULE TUTORIAL v2.4
    Theme: Option A with sidebar toggle (no inline JS)
    ========================================================================== */
 
@@ -198,7 +198,7 @@ body {
 
 .pane-doc {
   background: var(--bg);
-  max-width: 600px;
+  max-width: 640px;
 }
 
 .pane-header {
@@ -213,7 +213,7 @@ body {
 }
 
 /* --------------------------------------------------------------------------
-   7. CODE WITH LINE NUMBERS
+   7. CODE WITH LINE NUMBERS AND RANGE MARKERS
    -------------------------------------------------------------------------- */
 .code-block { margin: 0; padding: 0; }
 
@@ -243,16 +243,29 @@ body {
 .fn { color: #c084fc; }
 .num { color: #f59e0b; }
 
+/* Range markers */
+.range-marker {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 1px 5px;
+  margin-left: 8px;
+  border-radius: 3px;
+  background: var(--accent);
+  color: var(--accent-on);
+  vertical-align: middle;
+}
+
 /* --------------------------------------------------------------------------
-   8. SELECTION HIGHLIGHT (GREEN)
+   8. SELECTION HIGHLIGHT (GREEN) - for range groups
    -------------------------------------------------------------------------- */
-.code-line.selected {
+.code-line[data-range] {
   background: var(--sel-tint);
   border-left: 3px solid var(--sel);
   margin-left: -3px;
 }
 
-.code-line.selected .line-num {
+.code-line[data-range] .line-num {
   color: var(--sel);
   font-weight: 600;
 }
@@ -260,8 +273,9 @@ body {
 /* --------------------------------------------------------------------------
    9. DOCUMENTATION CONTENT
    -------------------------------------------------------------------------- */
-h1 { font-size: 1.5rem; margin: 0 0 16px; }
+h1 { font-size: 1.4rem; margin: 0 0 16px; }
 h2 { font-size: 1.1rem; margin: 24px 0 12px; color: var(--accent); }
+h3 { font-size: 1rem; margin: 16px 0 8px; }
 p { margin: 0 0 12px; }
 code {
   font-family: var(--font-mono);
@@ -290,6 +304,35 @@ li { margin-bottom: 4px; }
 }
 
 .callout strong { color: var(--sel); }
+
+/* Range reference badges in docs */
+.range-ref {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 6px;
+  margin-right: 4px;
+  border-radius: 3px;
+  background: var(--accent);
+  color: var(--accent-on);
+  text-decoration: none;
+}
+
+.range-ref:hover {
+  filter: brightness(1.1);
+}
+
+/* Definition list for I/O specs */
+.io-spec { margin: 8px 0 16px; }
+.io-spec dt {
+  font-weight: 600;
+  color: var(--accent);
+  margin-top: 8px;
+}
+.io-spec dd {
+  margin: 2px 0 0 16px;
+  color: var(--text);
+}
 
 /* --------------------------------------------------------------------------
    10. RESPONSIVE
@@ -346,91 +389,150 @@ li { margin-bottom: 4px; }
           <div class="code-line"><span class="line-num">2</span><span class="line-content"><span class="kw">from</span> dataclasses <span class="kw">import</span> dataclass</span></div>
           <div class="code-line"><span class="line-num">3</span><span class="line-content"><span class="kw">from</span> typing <span class="kw">import</span> Optional</span></div>
           <div class="code-line"><span class="line-num">4</span><span class="line-content"></span></div>
-          <div class="code-line selected"><span class="line-num">5</span><span class="line-content"><span class="kw">@dataclass</span></span></div>
-          <div class="code-line selected"><span class="line-num">6</span><span class="line-content"><span class="kw">class</span> <span class="fn">CriterionConfig</span>:</span></div>
-          <div class="code-line selected"><span class="line-num">7</span><span class="line-content">    name: <span class="str">str</span></span></div>
-          <div class="code-line selected"><span class="line-num">8</span><span class="line-content">    weight: <span class="str">float</span></span></div>
-          <div class="code-line selected"><span class="line-num">9</span><span class="line-content">    q: <span class="str">float</span></span></div>
-          <div class="code-line selected"><span class="line-num">10</span><span class="line-content">    p: <span class="str">float</span></span></div>
-          <div class="code-line selected"><span class="line-num">11</span><span class="line-content">    v: <span class="str">float</span></span></div>
-          <div class="code-line selected"><span class="line-num">12</span><span class="line-content">    maximize: <span class="str">bool</span> = <span class="kw">True</span></span></div>
+          <div class="code-line" data-range="R1" id="R1"><span class="line-num">5</span><span class="line-content"><span class="kw">@dataclass</span><span class="range-marker">R1</span></span></div>
+          <div class="code-line" data-range="R1"><span class="line-num">6</span><span class="line-content"><span class="kw">class</span> <span class="fn">CriterionConfig</span>:</span></div>
+          <div class="code-line" data-range="R1"><span class="line-num">7</span><span class="line-content">    name: <span class="str">str</span></span></div>
+          <div class="code-line" data-range="R1"><span class="line-num">8</span><span class="line-content">    weight: <span class="str">float</span></span></div>
+          <div class="code-line" data-range="R1"><span class="line-num">9</span><span class="line-content">    q: <span class="str">float</span></span></div>
+          <div class="code-line" data-range="R1"><span class="line-num">10</span><span class="line-content">    p: <span class="str">float</span></span></div>
+          <div class="code-line" data-range="R1"><span class="line-num">11</span><span class="line-content">    v: <span class="str">float</span></span></div>
+          <div class="code-line" data-range="R1"><span class="line-num">12</span><span class="line-content">    maximize: <span class="str">bool</span> = <span class="kw">True</span></span></div>
           <div class="code-line"><span class="line-num">13</span><span class="line-content"></span></div>
-          <div class="code-line"><span class="line-num">14</span><span class="line-content">    <span class="kw">def</span> <span class="fn">__post_init__</span>(self) -> <span class="kw">None</span>:</span></div>
-          <div class="code-line"><span class="line-num">15</span><span class="line-content">        <span class="kw">if</span> self.q < <span class="num">0</span>:</span></div>
-          <div class="code-line"><span class="line-num">16</span><span class="line-content">            <span class="kw">raise</span> ValueError(<span class="str">f"q must be >= 0"</span>)</span></div>
-          <div class="code-line"><span class="line-num">17</span><span class="line-content">        <span class="kw">if</span> self.p < self.q:</span></div>
-          <div class="code-line"><span class="line-num">18</span><span class="line-content">            <span class="kw">raise</span> ValueError(<span class="str">f"p must be >= q"</span>)</span></div>
-          <div class="code-line"><span class="line-num">19</span><span class="line-content">        <span class="kw">if</span> self.v < self.p:</span></div>
-          <div class="code-line"><span class="line-num">20</span><span class="line-content">            <span class="kw">raise</span> ValueError(<span class="str">f"v must be >= p"</span>)</span></div>
-          <div class="code-line"><span class="line-num">21</span><span class="line-content">        <span class="kw">if</span> self.weight <= <span class="num">0</span>:</span></div>
-          <div class="code-line"><span class="line-num">22</span><span class="line-content">            <span class="kw">raise</span> ValueError(<span class="str">f"weight must be > 0"</span>)</span></div>
+          <div class="code-line" data-range="R2" id="R2"><span class="line-num">14</span><span class="line-content">    <span class="kw">def</span> <span class="fn">__post_init__</span>(self) -> <span class="kw">None</span>:<span class="range-marker">R2</span></span></div>
+          <div class="code-line" data-range="R2"><span class="line-num">15</span><span class="line-content">        <span class="kw">if</span> self.q < <span class="num">0</span>:</span></div>
+          <div class="code-line" data-range="R2"><span class="line-num">16</span><span class="line-content">            <span class="kw">raise</span> ValueError(<span class="str">f"q must be >= 0"</span>)</span></div>
+          <div class="code-line" data-range="R2"><span class="line-num">17</span><span class="line-content">        <span class="kw">if</span> self.p < self.q:</span></div>
+          <div class="code-line" data-range="R2"><span class="line-num">18</span><span class="line-content">            <span class="kw">raise</span> ValueError(<span class="str">f"p must be >= q"</span>)</span></div>
+          <div class="code-line" data-range="R2"><span class="line-num">19</span><span class="line-content">        <span class="kw">if</span> self.v < self.p:</span></div>
+          <div class="code-line" data-range="R2"><span class="line-num">20</span><span class="line-content">            <span class="kw">raise</span> ValueError(<span class="str">f"v must be >= p"</span>)</span></div>
+          <div class="code-line" data-range="R2"><span class="line-num">21</span><span class="line-content">        <span class="kw">if</span> self.weight <= <span class="num">0</span>:</span></div>
+          <div class="code-line" data-range="R2"><span class="line-num">22</span><span class="line-content">            <span class="kw">raise</span> ValueError(<span class="str">f"weight must be > 0"</span>)</span></div>
           <div class="code-line"><span class="line-num">23</span><span class="line-content"></span></div>
-          <div class="code-line"><span class="line-num">24</span><span class="line-content"><span class="kw">@dataclass</span></span></div>
-          <div class="code-line"><span class="line-num">25</span><span class="line-content"><span class="kw">class</span> <span class="fn">ComputeConfig</span>:</span></div>
-          <div class="code-line"><span class="line-num">26</span><span class="line-content">    block_size: <span class="str">int</span> = <span class="num">1000</span></span></div>
-          <div class="code-line"><span class="line-num">27</span><span class="line-content">    use_numba: <span class="str">bool</span> = <span class="kw">True</span></span></div>
-          <div class="code-line"><span class="line-num">28</span><span class="line-content">    seed: Optional[<span class="str">int</span>] = <span class="kw">None</span></span></div>
+          <div class="code-line" data-range="R3" id="R3"><span class="line-num">24</span><span class="line-content"><span class="kw">@dataclass</span><span class="range-marker">R3</span></span></div>
+          <div class="code-line" data-range="R3"><span class="line-num">25</span><span class="line-content"><span class="kw">class</span> <span class="fn">ComputeConfig</span>:</span></div>
+          <div class="code-line" data-range="R3"><span class="line-num">26</span><span class="line-content">    block_size: <span class="str">int</span> = <span class="num">1000</span></span></div>
+          <div class="code-line" data-range="R3"><span class="line-num">27</span><span class="line-content">    use_numba: <span class="str">bool</span> = <span class="kw">True</span></span></div>
+          <div class="code-line" data-range="R3"><span class="line-num">28</span><span class="line-content">    seed: Optional[<span class="str">int</span>] = <span class="kw">None</span></span></div>
           <div class="code-line"><span class="line-num">29</span><span class="line-content"></span></div>
-          <div class="code-line"><span class="line-num">30</span><span class="line-content">    <span class="kw">def</span> <span class="fn">__post_init__</span>(self) -> <span class="kw">None</span>:</span></div>
-          <div class="code-line"><span class="line-num">31</span><span class="line-content">        <span class="kw">if</span> self.block_size < <span class="num">1</span>:</span></div>
-          <div class="code-line"><span class="line-num">32</span><span class="line-content">            <span class="kw">raise</span> ValueError(<span class="str">f"block_size must be >= 1"</span>)</span></div>
+          <div class="code-line" data-range="R4" id="R4"><span class="line-num">30</span><span class="line-content">    <span class="kw">def</span> <span class="fn">__post_init__</span>(self) -> <span class="kw">None</span>:<span class="range-marker">R4</span></span></div>
+          <div class="code-line" data-range="R4"><span class="line-num">31</span><span class="line-content">        <span class="kw">if</span> self.block_size < <span class="num">1</span>:</span></div>
+          <div class="code-line" data-range="R4"><span class="line-num">32</span><span class="line-content">            <span class="kw">raise</span> ValueError(<span class="str">f"block_size must be >= 1"</span>)</span></div>
           <div class="code-line"><span class="line-num">33</span><span class="line-content"></span></div>
-          <div class="code-line"><span class="line-num">34</span><span class="line-content"><span class="kw">def</span> <span class="fn">normalize_weights</span>(criteria: list[CriterionConfig]):</span></div>
-          <div class="code-line"><span class="line-num">35</span><span class="line-content">    total = sum(c.weight <span class="kw">for</span> c <span class="kw">in</span> criteria)</span></div>
-          <div class="code-line"><span class="line-num">36</span><span class="line-content">    <span class="kw">if</span> total <= <span class="num">0</span>:</span></div>
-          <div class="code-line"><span class="line-num">37</span><span class="line-content">        <span class="kw">raise</span> ValueError(<span class="str">"Total weight must be > 0"</span>)</span></div>
-          <div class="code-line"><span class="line-num">38</span><span class="line-content">    <span class="kw">return</span> [c.weight / total <span class="kw">for</span> c <span class="kw">in</span> criteria]</span></div>
+          <div class="code-line" data-range="R5" id="R5"><span class="line-num">34</span><span class="line-content"><span class="kw">def</span> <span class="fn">normalize_weights</span>(criteria: list[CriterionConfig]):<span class="range-marker">R5</span></span></div>
+          <div class="code-line" data-range="R5"><span class="line-num">35</span><span class="line-content">    total = sum(c.weight <span class="kw">for</span> c <span class="kw">in</span> criteria)</span></div>
+          <div class="code-line" data-range="R5"><span class="line-num">36</span><span class="line-content">    <span class="kw">if</span> total <= <span class="num">0</span>:</span></div>
+          <div class="code-line" data-range="R5"><span class="line-num">37</span><span class="line-content">        <span class="kw">raise</span> ValueError(<span class="str">"Total weight must be > 0"</span>)</span></div>
+          <div class="code-line" data-range="R5"><span class="line-num">38</span><span class="line-content">    <span class="kw">return</span> [c.weight / total <span class="kw">for</span> c <span class="kw">in</span> criteria]</span></div>
         </div>
       </div>
 
       <div class="pane pane-doc">
-        <div class="pane-header">Documentation</div>
+        <div class="pane-header">Tutorial</div>
 
-        <h1>CriterionConfig</h1>
-        <p>Configuration for a single decision criterion in ELECTRE III analysis.</p>
+        <h1>Configuration Module</h1>
+        <p>This module defines the input specification for ELECTRE III analysis. It provides typed dataclasses that capture criterion parameters and compute settings. All downstream modules consume these configurations.</p>
+
+        <h2>Pipeline Context</h2>
+        <p>The ELECTRE III engine processes alternatives through this pipeline:</p>
+        <ol>
+          <li><strong>config</strong> (this module) — Define criteria and thresholds</li>
+          <li><strong>concordance</strong> — Compute pairwise agreement indices</li>
+          <li><strong>discordance</strong> — Compute pairwise veto indices</li>
+          <li><strong>credibility</strong> — Combine concordance and discordance</li>
+          <li><strong>block</strong> — Process large matrices in O(N) memory blocks</li>
+          <li><strong>ranking</strong> — Produce final ordering via net flow</li>
+        </ol>
+        <p>Configuration objects flow through the entire pipeline. Basic validation (threshold ordering, positive weights) occurs at construction via <code>__post_init__</code>. Additional validation may be performed by <code>validate.py</code>; callers should validate inputs before computation.</p>
 
         <div class="callout">
-          <strong>Key Constraint:</strong> Thresholds must satisfy <code>0 ≤ q ≤ p ≤ v</code>
+          <strong>Design Principle:</strong> Fail fast. Threshold violations raise <code>ValueError</code> at object creation, not at matrix processing time.
         </div>
 
-        <h2>Fields</h2>
+        <h2>Walkthrough</h2>
+
+        <h3><a href="#R1" class="range-ref">R1</a> CriterionConfig Fields</h3>
+        <p>Each criterion requires six parameters:</p>
         <ul>
-          <li><code>name</code> — Human-readable criterion identifier</li>
-          <li><code>weight</code> — Relative importance (normalized later)</li>
-          <li><code>q</code> — Indifference threshold</li>
-          <li><code>p</code> — Preference threshold</li>
-          <li><code>v</code> — Veto threshold</li>
-          <li><code>maximize</code> — If True, higher values are better (default)</li>
+          <li><code>name: str</code> — Identifier for logging and output labels</li>
+          <li><code>weight: float</code> — Relative importance (normalized by <code>normalize_weights</code>)</li>
+          <li><code>q: float</code> — Indifference threshold. Differences below q are negligible.</li>
+          <li><code>p: float</code> — Preference threshold. Differences at or above p show clear preference.</li>
+          <li><code>v: float</code> — Veto threshold. Differences at or above v can override concordance.</li>
+          <li><code>maximize: bool</code> — Direction. True means higher values are better.</li>
         </ul>
 
-        <h2>Threshold Semantics</h2>
-        <p>The thresholds define preference zones:</p>
+        <h3><a href="#R2" class="range-ref">R2</a> Threshold Validation</h3>
+        <p>The <code>__post_init__</code> method enforces the mathematical constraint:</p>
+        <pre><code>0 ≤ q ≤ p ≤ v</code></pre>
+        <p>This ordering reflects ELECTRE III semantics: indifference must be narrower than preference, which must be narrower than veto. The constraint prevents mathematically invalid configurations from entering the pipeline.</p>
+
+        <h3><a href="#R3" class="range-ref">R3</a> ComputeConfig Fields</h3>
+        <p>Controls engine execution:</p>
         <ul>
-          <li><strong>q (indifference)</strong>: Differences ≤ q are negligible</li>
-          <li><strong>p (preference)</strong>: Differences ≥ p show clear preference</li>
-          <li><strong>v (veto)</strong>: Differences ≥ v override concordance</li>
+          <li><code>block_size: int = 1000</code> — Number of alternatives per block. Controls memory vs. overhead tradeoff. Larger blocks reduce function-call overhead but increase peak memory.</li>
+          <li><code>use_numba: bool = True</code> — Enable JIT compilation. Set False if Numba is unavailable or for debugging.</li>
+          <li><code>seed: Optional[int] = None</code> — Random seed for deterministic tie-breaking. Set to an integer for reproducible results.</li>
         </ul>
 
-        <h2>Example Usage</h2>
-        <pre><code>from electre3.config import CriterionConfig
+        <h3><a href="#R4" class="range-ref">R4</a> Block Size Validation</h3>
+        <p>The engine requires at least one alternative per block. A block_size of zero or negative would cause division errors in the blocking logic.</p>
 
-price = CriterionConfig(
-    name="Price",
-    weight=0.4,
-    q=5,    # $5 difference is negligible
-    p=10,   # $10 shows clear preference
-    v=20,   # $20 triggers veto
-    maximize=False  # Lower price is better
-)</code></pre>
+        <h3><a href="#R5" class="range-ref">R5</a> Weight Normalization</h3>
+        <p>ELECTRE III requires weights that sum to 1.0. This function transforms arbitrary positive weights into normalized form. The transformation preserves relative importance ratios.</p>
 
-        <h2>Validation</h2>
-        <p>The <code>__post_init__</code> method validates:</p>
-        <ul>
-          <li><code>q ≥ 0</code> — No negative indifference</li>
-          <li><code>p ≥ q</code> — Preference includes indifference zone</li>
-          <li><code>v ≥ p</code> — Veto includes preference zone</li>
-          <li><code>weight > 0</code> — Positive importance</li>
-        </ul>
+        <h2>Key Constraints</h2>
+        <ol>
+          <li><strong>Threshold ordering:</strong> <code>0 ≤ q ≤ p ≤ v</code> for each criterion</li>
+          <li><strong>Positive weights:</strong> Each <code>weight > 0</code>; sum normalized to 1.0</li>
+          <li><strong>Determinism:</strong> Set <code>seed</code> for reproducible rankings across runs</li>
+          <li><strong>Block size:</strong> <code>block_size ≥ 1</code>; typical values 500–2000</li>
+        </ol>
+
+        <h2>I/O Specification</h2>
+
+        <h3>CriterionConfig</h3>
+        <dl class="io-spec">
+          <dt>Input</dt>
+          <dd><code>name: str, weight: float, q: float, p: float, v: float, maximize: bool = True</code></dd>
+          <dt>Output</dt>
+          <dd>Dataclass instance with validated fields.</dd>
+          <dt>Errors</dt>
+          <dd><code>ValueError</code> if <code>q < 0</code>, <code>p < q</code>, <code>v < p</code>, or <code>weight ≤ 0</code></dd>
+        </dl>
+
+        <h3>ComputeConfig</h3>
+        <dl class="io-spec">
+          <dt>Input</dt>
+          <dd><code>block_size: int = 1000, use_numba: bool = True, seed: Optional[int] = None</code></dd>
+          <dt>Output</dt>
+          <dd>Dataclass instance with validated fields.</dd>
+          <dt>Errors</dt>
+          <dd><code>ValueError</code> if <code>block_size < 1</code></dd>
+        </dl>
+
+        <h3>normalize_weights</h3>
+        <dl class="io-spec">
+          <dt>Input</dt>
+          <dd><code>criteria: list[CriterionConfig]</code> — Non-empty list of criterion configs</dd>
+          <dt>Output</dt>
+          <dd><code>list[float]</code> — Weights summing to 1.0, in same order as input</dd>
+          <dt>Errors</dt>
+          <dd><code>ValueError</code> if total weight ≤ 0 (empty list or all-zero weights)</dd>
+        </dl>
+
+        <h2>Usage Example</h2>
+        <pre><code>from electre3.config import CriterionConfig, ComputeConfig, normalize_weights
+
+criteria = [
+    CriterionConfig("Price", weight=3, q=5, p=10, v=20, maximize=False),
+    CriterionConfig("Quality", weight=2, q=2, p=5, v=10, maximize=True),
+    CriterionConfig("Delivery", weight=1, q=1, p=3, v=7, maximize=False),
+]
+
+weights = normalize_weights(criteria)  # [0.5, 0.333, 0.167]
+
+config = ComputeConfig(block_size=500, seed=42)</code></pre>
+
       </div>
     </div>
   </div>

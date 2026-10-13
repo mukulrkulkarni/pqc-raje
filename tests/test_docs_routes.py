@@ -305,6 +305,86 @@ class TestTutorialButtonContrast:
         assert dark_accent_on[2] == "0f1115", "Explicit dark --accent-on should be #0f1115"
 
 
+class TestTutorialContent:
+    """Tests for required tutorial sections and content quality."""
+
+    def _get_tutorial_content(self):
+        from pathlib import Path
+        tutorial_path = Path(__file__).parent.parent / "docs" / "modules" / "config_tutorial_side_by_side.html"
+        return tutorial_path.read_text(encoding="utf-8")
+
+    def test_has_pipeline_context_section(self):
+        """Tutorial must explain pipeline context."""
+        content = self._get_tutorial_content()
+        assert "Pipeline Context" in content
+        assert "concordance" in content
+        assert "discordance" in content
+        assert "credibility" in content
+        assert "ranking" in content
+
+    def test_has_key_constraints_section(self):
+        """Tutorial must document key constraints."""
+        content = self._get_tutorial_content()
+        assert "Key Constraints" in content
+        assert "q ≤ p ≤ v" in content or "0 ≤ q ≤ p ≤ v" in content
+        assert "Determinism" in content or "seed" in content
+
+    def test_has_io_specification_section(self):
+        """Tutorial must document I/O behavior."""
+        content = self._get_tutorial_content()
+        assert "I/O Specification" in content
+        assert "Input" in content
+        assert "Output" in content
+        assert "Errors" in content
+        assert "ValueError" in content
+
+    def test_has_walkthrough_section(self):
+        """Tutorial must have step-by-step walkthrough."""
+        content = self._get_tutorial_content()
+        assert "Walkthrough" in content
+
+    def test_documents_all_public_exports(self):
+        """Tutorial must document CriterionConfig, ComputeConfig, normalize_weights."""
+        content = self._get_tutorial_content()
+        assert "CriterionConfig" in content
+        assert "ComputeConfig" in content
+        assert "normalize_weights" in content
+
+
+class TestTutorialRangeCallouts:
+    """Tests for range callout links between code and docs."""
+
+    def _get_tutorial_content(self):
+        from pathlib import Path
+        import re
+        tutorial_path = Path(__file__).parent.parent / "docs" / "modules" / "config_tutorial_side_by_side.html"
+        return tutorial_path.read_text()
+
+    def test_range_ids_exist_in_code_pane(self):
+        """Code pane must have R1-R5 id attributes."""
+        content = self._get_tutorial_content()
+        for r in ["R1", "R2", "R3", "R4", "R5"]:
+            assert f'id="{r}"' in content, f"Missing id for {r}"
+
+    def test_range_refs_exist_in_doc_pane(self):
+        """Doc pane must have href links to R1-R5."""
+        content = self._get_tutorial_content()
+        for r in ["R1", "R2", "R3", "R4", "R5"]:
+            assert f'href="#{r}"' in content, f"Missing href for {r}"
+
+    def test_range_markers_visible_in_code(self):
+        """Range markers must be visible in code pane."""
+        content = self._get_tutorial_content()
+        for r in ["R1", "R2", "R3", "R4", "R5"]:
+            assert f'class="range-marker">{r}<' in content, f"Missing visible marker for {r}"
+
+    def test_data_range_attributes_set(self):
+        """Code lines must have data-range attributes for highlighting."""
+        content = self._get_tutorial_content()
+        for r in ["R1", "R2", "R3", "R4", "R5"]:
+            assert f'data-range="{r}"' in content, f"Missing data-range for {r}"
+
+
 class TestRouteScopedCSP:
     """Tests for route-scoped CSP headers."""
 

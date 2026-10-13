@@ -1,15 +1,32 @@
 """Flask application factory for ELECTRE III web interface."""
-from flask import Flask
+from flask import Flask, request
 
-SECURITY_HEADERS = {
-    "Content-Security-Policy": "default-src 'none'; base-uri 'none'; form-action 'self'; "
-        "frame-ancestors 'none'; img-src 'self' data:; font-src 'self'; "
-        "script-src 'unsafe-inline'; style-src 'unsafe-inline';",
+# Base security headers applied to all responses
+BASE_HEADERS = {
     "X-Content-Type-Options": "nosniff",
     "Referrer-Policy": "no-referrer",
     "Cross-Origin-Opener-Policy": "same-origin",
     "Cross-Origin-Resource-Policy": "same-origin",
 }
+
+# Route-scoped CSP policies
+CSP_DOCS = (
+    "default-src 'none'; base-uri 'none'; form-action 'self'; "
+    "frame-ancestors 'none'; img-src 'self' data:; font-src 'self'; "
+    "script-src 'self'; style-src 'unsafe-inline';"
+)
+
+CSP_APP = (
+    "default-src 'none'; base-uri 'none'; form-action 'self'; "
+    "frame-ancestors 'none'; img-src 'self' data:; font-src 'self'; "
+    "style-src 'unsafe-inline';"
+)
+
+
+def _is_docs_route(path: str) -> bool:
+    """Check if path is a documentation route (allows external JS)."""
+    return path == "/" or path.startswith("/docs/")
+
 
 def create_app(config: dict | None = None) -> Flask:
     app = Flask(__name__)
@@ -21,8 +38,10 @@ def create_app(config: dict | None = None) -> Flask:
 
     @app.after_request
     def add_security_headers(response):
-        for header, value in SECURITY_HEADERS.items():
+        for header, value in BASE_HEADERS.items():
             response.headers[header] = value
+        csp = CSP_DOCS if _is_docs_route(request.path) else CSP_APP
+        response.headers["Content-Security-Policy"] = csp
         return response
 
     from .routes import compute, preview, docs

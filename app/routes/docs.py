@@ -1,5 +1,5 @@
 """Documentation serving routes with path traversal protection."""
-from flask import Blueprint, send_file, abort, render_template_string, make_response
+from flask import Blueprint, send_file, abort, render_template_string
 from pathlib import Path
 import re
 
@@ -7,25 +7,18 @@ bp = Blueprint("docs", __name__)
 
 ALLOWED_MODULE_DOCS = {"config", "concordance", "discordance", "credibility",
                        "accumulator", "block", "ranking", "validate", "data"}
+ALLOWED_TUTORIAL_ASSETS = {"theme.js"}
 DOCS_DIR = Path(__file__).parent.parent.parent / "docs"
 
-# Route-scoped CSP for tutorial pages (allows external JS file)
-TUTORIAL_CSP = (
-    "default-src 'none'; base-uri 'none'; form-action 'self'; "
-    "frame-ancestors 'none'; img-src 'self' data:; font-src 'self'; "
-    "script-src 'self'; style-src 'unsafe-inline';"
-)
 
 def _validate_doc_name(name: str) -> bool:
     return bool(re.match(r"^[a-z_]+$", name)) and name in ALLOWED_MODULE_DOCS
 
-def _serve_with_tutorial_csp(file_path: Path):
-    """Serve file with tutorial-specific CSP (script-src 'self')."""
-    if not file_path.exists():
-        abort(404)
-    response = make_response(send_file(file_path, mimetype="text/html"))
-    response.headers["Content-Security-Policy"] = TUTORIAL_CSP
-    return response
+
+def _validate_asset_name(asset: str) -> bool:
+    """Validate asset name against strict allow-list."""
+    return asset in ALLOWED_TUTORIAL_ASSETS
+
 
 @bp.route("/")
 def landing():
@@ -33,6 +26,7 @@ def landing():
     if not gs_path.exists():
         abort(404)
     return send_file(gs_path, mimetype="text/html")
+
 
 @bp.route("/app")
 def app_ui():
@@ -44,6 +38,7 @@ def app_ui():
 </head><body><h1>ELECTRE III Ranking</h1><p>Upload a matrix to begin.</p>
 <p><a href="/">Back to docs</a></p></body></html>''')
 
+
 @bp.route("/docs/modules/<name>")
 def module_doc(name: str):
     if not _validate_doc_name(name):
@@ -53,10 +48,31 @@ def module_doc(name: str):
         abort(404)
     return send_file(doc_path, mimetype="text/html")
 
+
 @bp.route("/docs/modules/<name>/tutorial")
 def module_tutorial(name: str):
-    """Serve module tutorial with theme toggle (script-src 'self' CSP)."""
+    """Serve module tutorial with theme toggle."""
     if not _validate_doc_name(name):
         abort(404)
     tutorial_path = DOCS_DIR / "modules" / f"{name}_tutorial_side_by_side.html"
-    return _serve_with_tutorial_csp(tutorial_path)
+    if not tutorial_path.exists():
+        abort(404)
+    return send_file(tutorial_path, mimetype="text/html")
+
+
+@bp.route("/docs/modules/<name>/assets/<asset>")
+def tutorial_asset(name: str, asset: str):
+    """Serve tutorial assets (theme.js only) with strict allow-list."""
+    if not _validate_doc_name(name):
+        abort(404)
+    if not _validate_asset_name(asset):
+        abort(404)
+    asset_path = DOCS_DIR / "modules" / "assets" / asset
+    if not asset_path.exists():
+        abort(404)
+    resolved = asset_path.resolve()
+    assets_dir = (DOCS_DIR / "modules" / "assets").resolve()
+    if not str(resolved).startswith(str(assets_dir)):
+        abort(404)
+    mimetype = "application/javascript" if asset.endswith(".js") else "application/octet-stream"
+    return send_file(asset_path, mimetype=mimetype)

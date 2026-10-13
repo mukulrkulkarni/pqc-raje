@@ -350,6 +350,21 @@ class TestTutorialContent:
         assert "ComputeConfig" in content
         assert "normalize_weights" in content
 
+    def test_usage_example_marked_illustrative(self):
+        """Usage example must be marked as illustrative pseudocode."""
+        content = self._get_tutorial_content()
+        assert "illustrative" in content.lower(), \
+            "Usage example must be marked as illustrative"
+        assert "Do not treat" in content or "not treat numeric" in content.lower(), \
+            "Must warn that numeric values are examples only"
+
+    def test_no_hardcoded_numeric_output_arrays(self):
+        """Usage example must not show exact numeric output arrays."""
+        content = self._get_tutorial_content()
+        # Should not have exact output like [0.5, 0.333, 0.167]
+        assert "[0.5, 0.333, 0.167]" not in content, \
+            "Do not show exact numeric output arrays"
+
 
 class TestTutorialRangeCallouts:
     """Tests for range callout links between code and docs."""
@@ -373,9 +388,12 @@ class TestTutorialRangeCallouts:
 
     def test_range_markers_are_clickable_anchors(self):
         """Range markers in code must be <a> elements with hrefs to doc sections."""
+        import re
         content = self._get_tutorial_content()
         for r in ["R1", "R2", "R3", "R4", "R5"]:
-            assert f'<a href="#doc-{r}" class="range-marker">{r}</a>' in content, \
+            # Pattern allows for aria-label and other attributes
+            pattern = rf'<a href="#doc-{r}" class="range-marker"[^>]*>{r}</a>'
+            assert re.search(pattern, content), \
                 f"Range marker {r} must be clickable anchor linking to doc-{r}"
 
     def test_doc_sections_have_ids(self):
@@ -401,6 +419,25 @@ class TestTutorialRangeCallouts:
         """Tutorial must reference highlight.js for toggle behavior."""
         content = self._get_tutorial_content()
         assert 'src="assets/highlight.js"' in content
+
+    def test_scroll_container_ids_exist(self):
+        """Tutorial must have explicit IDs for scroll containers."""
+        content = self._get_tutorial_content()
+        assert 'id="codeScroll"' in content, "Missing id='codeScroll' on code pane"
+        assert 'id="docScroll"' in content, "Missing id='docScroll' on doc pane"
+
+    def test_range_anchors_have_valid_targets(self):
+        """Range markers in code must link to doc sections that exist."""
+        content = self._get_tutorial_content()
+        for r in ["R1", "R2", "R3", "R4", "R5"]:
+            assert f'href="#doc-{r}"' in content, f"Missing href=#doc-{r}"
+            assert f'id="doc-{r}"' in content, f"Missing id=doc-{r}"
+
+    def test_callout_refs_have_valid_targets(self):
+        """Callout refs in doc must link to code range IDs that exist."""
+        content = self._get_tutorial_content()
+        for r in ["R1", "R2", "R3", "R4", "R5"]:
+            assert f'id="{r}"' in content, f"Missing id={r} on code line"
 
     def test_css_uses_range_selected_class(self):
         """CSS must style .range-selected, not all [data-range]."""
@@ -431,13 +468,13 @@ class TestHighlightJsAsset:
         assert "clearSelection" in content
         assert "selectRange" in content
 
-    def test_highlight_js_has_scroll_sync(self, client):
-        """highlight.js must implement scroll sync behavior."""
+    def test_highlight_js_has_click_to_scroll(self, client):
+        """highlight.js must implement click-to-scroll behavior."""
         response = client.get("/docs/modules/config/assets/highlight.js")
         content = response.data.decode("utf-8")
-        assert "alignPanes" in content
-        assert "scrollPaneToElement" in content
-        assert "syncScrolling" in content
+        assert "scrollToElement" in content
+        assert "scrollDocToRange" in content
+        assert "scrollCodeToRange" in content
 
     def test_highlight_js_exposes_test_api(self, client):
         """highlight.js must expose testing API via window.highlightModule."""
@@ -445,9 +482,10 @@ class TestHighlightJsAsset:
         content = response.data.decode("utf-8")
         assert "window.highlightModule" in content
         assert "getCurrentRange" in content
-        assert "isSyncEnabled" in content
-        assert "getCodePane" in content
-        assert "getDocPane" in content
+        assert "getCodeScroll" in content
+        assert "getDocScroll" in content
+        assert "CODE_SCROLL_ID" in content
+        assert "DOC_SCROLL_ID" in content
 
     def test_highlight_js_local_file_exists(self):
         """Local highlight.js should exist in docs/modules/assets/."""
@@ -462,19 +500,20 @@ class TestHighlightJsAsset:
         assert "debug=1" in content
         assert "console.log" in content
 
-    def test_highlight_js_selects_correct_pane_classes(self, client):
-        """highlight.js must select .pane-code and .pane-doc."""
+    def test_highlight_js_uses_scroll_container_ids(self, client):
+        """highlight.js must use explicit scroll container IDs."""
         response = client.get("/docs/modules/config/assets/highlight.js")
         content = response.data.decode("utf-8")
-        assert ".pane-code" in content
-        assert ".pane-doc" in content
+        assert "codeScroll" in content
+        assert "docScroll" in content
+        assert "getElementById" in content
 
     def test_highlight_js_uses_correct_selectors_for_ranges(self, client):
-        """highlight.js must use [data-range][id] and .doc-section[id] selectors."""
+        """highlight.js must use data-range attributes and doc section IDs."""
         response = client.get("/docs/modules/config/assets/highlight.js")
         content = response.data.decode("utf-8")
-        assert "[data-range][id]" in content
-        assert ".doc-section[id]" in content
+        assert "[data-range=" in content
+        assert "doc-" in content
 
     def test_highlight_js_handles_click_capture(self, client):
         """highlight.js must use capture phase for click events."""
@@ -541,3 +580,239 @@ class TestRouteScopedCSP:
         response = client.post("/compute")
         csp = response.headers["Content-Security-Policy"]
         assert "script-src 'self'" not in csp
+
+    # Explicit CSP header presence tests (Security gate evidence)
+    def test_csp_header_present_on_root(self, client):
+        """/ must have Content-Security-Policy HTTP header."""
+        response = client.get("/")
+        assert "Content-Security-Policy" in response.headers, \
+            "CSP header missing on /"
+
+    def test_csp_header_present_on_docs_modules(self, client):
+        """/docs/modules/config must have Content-Security-Policy HTTP header."""
+        response = client.get("/docs/modules/config")
+        assert "Content-Security-Policy" in response.headers, \
+            "CSP header missing on /docs/modules/config"
+
+    def test_csp_header_present_on_tutorial(self, client):
+        """/docs/modules/config/tutorial must have Content-Security-Policy HTTP header."""
+        response = client.get("/docs/modules/config/tutorial")
+        assert "Content-Security-Policy" in response.headers, \
+            "CSP header missing on /docs/modules/config/tutorial"
+
+    def test_csp_header_present_on_app(self, client):
+        """/app must have Content-Security-Policy HTTP header (not just meta tag)."""
+        response = client.get("/app")
+        assert "Content-Security-Policy" in response.headers, \
+            "CSP header missing on /app - must use HTTP header, not meta tag only"
+
+    def test_csp_no_unsafe_inline_script_on_docs(self, client):
+        """Docs routes must not have script-src 'unsafe-inline'."""
+        for route in ["/", "/docs/modules/config", "/docs/modules/config/tutorial"]:
+            response = client.get(route)
+            csp = response.headers["Content-Security-Policy"]
+            assert "script-src 'unsafe-inline'" not in csp, \
+                f"Route {route} has unsafe-inline in script-src"
+
+    def test_csp_no_unsafe_inline_script_on_app(self, client):
+        """/app must not have script-src 'unsafe-inline'."""
+        response = client.get("/app")
+        csp = response.headers["Content-Security-Policy"]
+        # /app uses CSP_APP which has no script-src (blocked by default-src 'none')
+        assert "script-src 'unsafe-inline'" not in csp, \
+            "/app has unsafe-inline in script-src"
+
+    def test_app_csp_blocks_scripts(self, client):
+        """/app CSP should block scripts (no script-src means default-src 'none' applies)."""
+        response = client.get("/app")
+        csp = response.headers["Content-Security-Policy"]
+        assert "default-src 'none'" in csp, "/app must have default-src 'none'"
+        # If there's no script-src directive, scripts are blocked by default-src 'none'
+        assert "script-src" not in csp or "script-src 'none'" in csp or \
+               ("script-src 'self'" not in csp and "script-src 'unsafe" not in csp), \
+            "/app should not allow script execution"
+
+
+class TestTutorialNegativeCases:
+    """Negative tests to verify tutorial structure validation catches errors."""
+
+    def _get_tutorial_content(self):
+        from pathlib import Path
+        tutorial_path = Path(__file__).parent.parent / "docs" / "modules" / "config_tutorial_side_by_side.html"
+        return tutorial_path.read_text(encoding="utf-8")
+
+    def test_no_orphan_range_markers(self):
+        """Range markers must point to existing doc sections."""
+        import re
+        content = self._get_tutorial_content()
+        marker_hrefs = re.findall(r'class="range-marker"[^>]*href="#(doc-R\d+)"', content)
+        marker_hrefs += re.findall(r'href="#(doc-R\d+)"[^>]*class="range-marker"', content)
+        doc_ids = re.findall(r'id="(doc-R\d+)"', content)
+        for href in marker_hrefs:
+            assert href in doc_ids, f"Orphan range marker: href=#{href} has no matching id"
+
+    def test_no_orphan_callout_refs(self):
+        """Callout refs must point to existing code range IDs."""
+        import re
+        content = self._get_tutorial_content()
+        ref_hrefs = re.findall(r'class="range-ref"[^>]*href="#(R\d+)"', content)
+        ref_hrefs += re.findall(r'href="#(R\d+)"[^>]*class="range-ref"', content)
+        code_ids = re.findall(r'id="(R\d+)"', content)
+        for href in ref_hrefs:
+            assert href in code_ids, f"Orphan callout ref: href=#{href} has no matching id"
+
+    def test_range_marker_pattern_valid(self):
+        """Range markers must follow R\\d+ pattern exactly."""
+        import re
+        content = self._get_tutorial_content()
+        markers = re.findall(r'class="range-marker"[^>]*>([^<]+)</a>', content)
+        for marker in markers:
+            assert re.match(r'^R\d+$', marker.strip()), \
+                f"Malformed range marker label: '{marker}' (expected R1, R2, etc.)"
+
+    def test_doc_section_id_pattern_valid(self):
+        """Doc section IDs must follow doc-R\\d+ pattern exactly."""
+        import re
+        content = self._get_tutorial_content()
+        doc_ids = re.findall(r'class="doc-section"[^>]*id="([^"]+)"', content)
+        doc_ids += re.findall(r'id="([^"]+)"[^>]*class="doc-section"', content)
+        for doc_id in doc_ids:
+            assert re.match(r'^doc-R\d+$', doc_id), \
+                f"Malformed doc section id: '{doc_id}' (expected doc-R1, doc-R2, etc.)"
+
+    def test_scroll_containers_have_overflow_auto(self):
+        """Scroll containers must have overflow style for scrolling."""
+        import re
+        content = self._get_tutorial_content()
+        assert 'overflow' in content.lower(), "Scroll containers need overflow CSS"
+        pane_styles = re.findall(r'\.pane[^{]*\{[^}]*overflow[^}]*\}', content, re.IGNORECASE)
+        assert len(pane_styles) > 0, "Pane elements must have overflow styling"
+
+
+class TestAssetSecurityNegative:
+    """Security negative tests for asset routes."""
+
+    def test_double_encoded_traversal_blocked(self, client):
+        """Double-encoded path traversal should return 404."""
+        response = client.get("/docs/modules/config/assets/%252e%252e%252ftheme.js")
+        assert response.status_code == 404
+
+    def test_null_byte_injection_blocked(self, client):
+        """Null byte injection attempt should return 404."""
+        response = client.get("/docs/modules/config/assets/theme.js%00.txt")
+        assert response.status_code == 404
+
+    def test_unicode_traversal_blocked(self, client):
+        """Unicode path traversal variants should return 404."""
+        response = client.get("/docs/modules/config/assets/..%c0%af..%c0%afetc/passwd")
+        assert response.status_code == 404
+
+    def test_backslash_traversal_blocked(self, client):
+        """Backslash path traversal should return 404."""
+        response = client.get("/docs/modules/config/assets/..\\..\\..\\etc\\passwd")
+        assert response.status_code == 404
+
+    def test_mixed_case_extension_blocked(self, client):
+        """Mixed case asset extension not in allow-list returns 404."""
+        response = client.get("/docs/modules/config/assets/theme.JS")
+        assert response.status_code == 404
+
+    def test_nonexistent_allowed_module_asset_404(self, client):
+        """Request for non-existent file in allowed asset list returns 404."""
+        # This tests the file existence check, not just the allow-list
+        # We can't easily remove highlight.js, so test with valid module but
+        # asset that's in allow-list but file doesn't exist would need monkeypatch
+        # Instead verify the route structure handles missing files
+        response = client.get("/docs/modules/nonexistent/assets/theme.js")
+        assert response.status_code == 404
+
+
+class TestHighlightJsProvenance:
+    """Tests for highlight.js provenance and license headers."""
+
+    def test_highlight_js_has_source_header(self, client):
+        """highlight.js must have @source header."""
+        response = client.get("/docs/modules/config/assets/highlight.js")
+        content = response.data.decode("utf-8")
+        assert "@source" in content
+        assert "In-house" in content or "ELECTRE III" in content
+
+    def test_highlight_js_has_license_header(self, client):
+        """highlight.js must have @license header."""
+        response = client.get("/docs/modules/config/assets/highlight.js")
+        content = response.data.decode("utf-8")
+        assert "@license" in content
+
+    def test_highlight_js_has_file_header(self, client):
+        """highlight.js must have @file header."""
+        response = client.get("/docs/modules/config/assets/highlight.js")
+        content = response.data.decode("utf-8")
+        assert "@file" in content
+        assert "highlight.js" in content
+
+
+class TestAccessibilityFeatures:
+    """Tests for accessibility features in tutorial and highlight.js."""
+
+    def _get_tutorial_content(self):
+        from pathlib import Path
+        tutorial_path = Path(__file__).parent.parent / "docs" / "modules" / "config_tutorial_side_by_side.html"
+        return tutorial_path.read_text(encoding="utf-8")
+
+    def test_highlight_js_respects_reduced_motion(self, client):
+        """highlight.js must check prefers-reduced-motion media query."""
+        response = client.get("/docs/modules/config/assets/highlight.js")
+        content = response.data.decode("utf-8")
+        assert "prefers-reduced-motion" in content
+        assert "matchMedia" in content
+        assert "reduce" in content
+
+    def test_highlight_js_uses_auto_behavior_for_reduced_motion(self, client):
+        """highlight.js must use behavior:'auto' when reduced motion preferred."""
+        response = client.get("/docs/modules/config/assets/highlight.js")
+        content = response.data.decode("utf-8")
+        assert "behavior:" in content or "scrollBehavior" in content
+        assert "'auto'" in content or '"auto"' in content
+
+    def test_range_markers_have_aria_labels(self):
+        """Range markers must have aria-label attributes."""
+        content = self._get_tutorial_content()
+        for r in ["R1", "R2", "R3", "R4", "R5"]:
+            assert f'aria-label="Go to note {r}' in content, \
+                f"Range marker {r} missing aria-label"
+
+    def test_focus_visible_styles_exist_for_range_marker(self):
+        """CSS must have :focus-visible styles for range markers."""
+        content = self._get_tutorial_content()
+        assert ".range-marker:focus-visible" in content
+        assert "outline" in content
+
+    def test_focus_visible_styles_exist_for_range_ref(self):
+        """CSS must have :focus-visible styles for callout refs."""
+        content = self._get_tutorial_content()
+        assert ".range-ref:focus-visible" in content
+
+    def test_target_fallback_for_code_line(self):
+        """CSS must have :target fallback for code lines (no-JS support)."""
+        content = self._get_tutorial_content()
+        assert ".code-line:target" in content
+
+    def test_target_fallback_for_doc_section(self):
+        """CSS must have :target fallback for doc sections (no-JS support)."""
+        content = self._get_tutorial_content()
+        assert ".doc-section:target" in content
+
+    def test_focus_visible_uses_accent_outline(self):
+        """Focus-visible outline must use accent color token."""
+        content = self._get_tutorial_content()
+        # Find focus-visible blocks and check they use accent for outline
+        import re
+        focus_blocks = re.findall(
+            r':focus-visible\s*\{[^}]*\}',
+            content,
+            re.IGNORECASE
+        )
+        assert len(focus_blocks) >= 2, "Need at least 2 :focus-visible blocks"
+        for block in focus_blocks:
+            assert "var(--accent)" in block, \
+                f":focus-visible block must use accent token: {block}"

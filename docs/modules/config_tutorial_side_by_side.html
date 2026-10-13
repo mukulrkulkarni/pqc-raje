@@ -304,6 +304,11 @@ body {
   filter: brightness(1.15);
 }
 
+.range-marker:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
 /* --------------------------------------------------------------------------
    8. SELECTION HIGHLIGHT (GREEN) - toggle on click only
    -------------------------------------------------------------------------- */
@@ -327,6 +332,21 @@ body {
   border-radius: 0 6px 6px 0;
 }
 
+/* No-JS fallback: :target highlights for anchor navigation */
+.code-line:target {
+  background: var(--sel-tint);
+  border-left: 3px solid var(--sel);
+  margin-left: -3px;
+}
+
+.doc-section:target {
+  background: var(--sel-tint);
+  border-left: 3px solid var(--sel);
+  margin-left: -16px;
+  padding-left: 13px;
+  border-radius: 0 6px 6px 0;
+}
+
 /* --------------------------------------------------------------------------
    9. DOCUMENTATION CONTENT
    -------------------------------------------------------------------------- */
@@ -334,6 +354,13 @@ h1 { font-size: 1.4rem; margin: 0 0 16px; }
 h2 { font-size: 1.1rem; margin: 24px 0 12px; color: var(--accent); }
 h3 { font-size: 1rem; margin: 16px 0 8px; }
 p { margin: 0 0 12px; }
+p.note {
+  background: var(--surface-2);
+  border-left: 3px solid var(--accent);
+  padding: 8px 12px;
+  margin: 12px 0;
+  font-size: 0.9em;
+}
 code {
   font-family: var(--font-mono);
   font-size: 0.9em;
@@ -377,6 +404,11 @@ li { margin-bottom: 4px; }
 
 .range-ref:hover {
   filter: brightness(1.1);
+}
+
+.range-ref:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 /* Definition list for I/O specs */
@@ -454,7 +486,7 @@ li { margin-bottom: 4px; }
           <div class="code-line"><span class="line-num">2</span><span class="line-content"><span class="kw">from</span> dataclasses <span class="kw">import</span> dataclass</span></div>
           <div class="code-line"><span class="line-num">3</span><span class="line-content"><span class="kw">from</span> typing <span class="kw">import</span> Optional</span></div>
           <div class="code-line"><span class="line-num">4</span><span class="line-content"></span></div>
-          <div class="code-line" data-range="R1" id="R1"><span class="line-num">5</span><span class="line-content"><span class="kw">@dataclass</span><a href="#doc-R1" class="range-marker">R1</a></span></div>
+          <div class="code-line" data-range="R1" id="R1"><span class="line-num">5</span><span class="line-content"><span class="kw">@dataclass</span><a href="#doc-R1" class="range-marker" aria-label="Go to note R1: CriterionConfig dataclass">R1</a></span></div>
           <div class="code-line" data-range="R1"><span class="line-num">6</span><span class="line-content"><span class="kw">class</span> <span class="fn">CriterionConfig</span>:</span></div>
           <div class="code-line" data-range="R1"><span class="line-num">7</span><span class="line-content">    name: <span class="str">str</span></span></div>
           <div class="code-line" data-range="R1"><span class="line-num">8</span><span class="line-content">    weight: <span class="str">float</span></span></div>
@@ -463,7 +495,7 @@ li { margin-bottom: 4px; }
           <div class="code-line" data-range="R1"><span class="line-num">11</span><span class="line-content">    v: <span class="str">float</span></span></div>
           <div class="code-line" data-range="R1"><span class="line-num">12</span><span class="line-content">    maximize: <span class="str">bool</span> = <span class="kw">True</span></span></div>
           <div class="code-line"><span class="line-num">13</span><span class="line-content"></span></div>
-          <div class="code-line" data-range="R2" id="R2"><span class="line-num">14</span><span class="line-content">    <span class="kw">def</span> <span class="fn">__post_init__</span>(self) -> <span class="kw">None</span>:<a href="#doc-R2" class="range-marker">R2</a></span></div>
+          <div class="code-line" data-range="R2" id="R2"><span class="line-num">14</span><span class="line-content">    <span class="kw">def</span> <span class="fn">__post_init__</span>(self) -> <span class="kw">None</span>:<a href="#doc-R2" class="range-marker" aria-label="Go to note R2: Threshold validation">R2</a></span></div>
           <div class="code-line" data-range="R2"><span class="line-num">15</span><span class="line-content">        <span class="kw">if</span> self.q < <span class="num">0</span>:</span></div>
           <div class="code-line" data-range="R2"><span class="line-num">16</span><span class="line-content">            <span class="kw">raise</span> ValueError(<span class="str">f"q must be >= 0"</span>)</span></div>
           <div class="code-line" data-range="R2"><span class="line-num">17</span><span class="line-content">        <span class="kw">if</span> self.p < self.q:</span></div>
@@ -473,17 +505,17 @@ li { margin-bottom: 4px; }
           <div class="code-line" data-range="R2"><span class="line-num">21</span><span class="line-content">        <span class="kw">if</span> self.weight <= <span class="num">0</span>:</span></div>
           <div class="code-line" data-range="R2"><span class="line-num">22</span><span class="line-content">            <span class="kw">raise</span> ValueError(<span class="str">f"weight must be > 0"</span>)</span></div>
           <div class="code-line"><span class="line-num">23</span><span class="line-content"></span></div>
-          <div class="code-line" data-range="R3" id="R3"><span class="line-num">24</span><span class="line-content"><span class="kw">@dataclass</span><a href="#doc-R3" class="range-marker">R3</a></span></div>
+          <div class="code-line" data-range="R3" id="R3"><span class="line-num">24</span><span class="line-content"><span class="kw">@dataclass</span><a href="#doc-R3" class="range-marker" aria-label="Go to note R3: ComputeConfig dataclass">R3</a></span></div>
           <div class="code-line" data-range="R3"><span class="line-num">25</span><span class="line-content"><span class="kw">class</span> <span class="fn">ComputeConfig</span>:</span></div>
           <div class="code-line" data-range="R3"><span class="line-num">26</span><span class="line-content">    block_size: <span class="str">int</span> = <span class="num">1000</span></span></div>
           <div class="code-line" data-range="R3"><span class="line-num">27</span><span class="line-content">    use_numba: <span class="str">bool</span> = <span class="kw">True</span></span></div>
           <div class="code-line" data-range="R3"><span class="line-num">28</span><span class="line-content">    seed: Optional[<span class="str">int</span>] = <span class="kw">None</span></span></div>
           <div class="code-line"><span class="line-num">29</span><span class="line-content"></span></div>
-          <div class="code-line" data-range="R4" id="R4"><span class="line-num">30</span><span class="line-content">    <span class="kw">def</span> <span class="fn">__post_init__</span>(self) -> <span class="kw">None</span>:<a href="#doc-R4" class="range-marker">R4</a></span></div>
+          <div class="code-line" data-range="R4" id="R4"><span class="line-num">30</span><span class="line-content">    <span class="kw">def</span> <span class="fn">__post_init__</span>(self) -> <span class="kw">None</span>:<a href="#doc-R4" class="range-marker" aria-label="Go to note R4: Block size validation">R4</a></span></div>
           <div class="code-line" data-range="R4"><span class="line-num">31</span><span class="line-content">        <span class="kw">if</span> self.block_size < <span class="num">1</span>:</span></div>
           <div class="code-line" data-range="R4"><span class="line-num">32</span><span class="line-content">            <span class="kw">raise</span> ValueError(<span class="str">f"block_size must be >= 1"</span>)</span></div>
           <div class="code-line"><span class="line-num">33</span><span class="line-content"></span></div>
-          <div class="code-line" data-range="R5" id="R5"><span class="line-num">34</span><span class="line-content"><span class="kw">def</span> <span class="fn">normalize_weights</span>(criteria: list[CriterionConfig]):<a href="#doc-R5" class="range-marker">R5</a></span></div>
+          <div class="code-line" data-range="R5" id="R5"><span class="line-num">34</span><span class="line-content"><span class="kw">def</span> <span class="fn">normalize_weights</span>(criteria: list[CriterionConfig]):<a href="#doc-R5" class="range-marker" aria-label="Go to note R5: Weight normalization">R5</a></span></div>
           <div class="code-line" data-range="R5"><span class="line-num">35</span><span class="line-content">    total = sum(c.weight <span class="kw">for</span> c <span class="kw">in</span> criteria)</span></div>
           <div class="code-line" data-range="R5"><span class="line-num">36</span><span class="line-content">    <span class="kw">if</span> total <= <span class="num">0</span>:</span></div>
           <div class="code-line" data-range="R5"><span class="line-num">37</span><span class="line-content">        <span class="kw">raise</span> ValueError(<span class="str">"Total weight must be > 0"</span>)</span></div>
@@ -596,7 +628,9 @@ li { margin-bottom: 4px; }
         </dl>
 
         <h2>Usage Example</h2>
-        <pre><code>from electre3.config import CriterionConfig, ComputeConfig, normalize_weights
+        <p class="note"><strong>Note:</strong> This is illustrative pseudocode. Do not treat numeric values as expected output; actual results depend on your input data.</p>
+        <pre><code># Illustrative example - values are for demonstration only
+from electre3.config import CriterionConfig, ComputeConfig, normalize_weights
 
 criteria = [
     CriterionConfig("Price", weight=3, q=5, p=10, v=20, maximize=False),
@@ -604,9 +638,9 @@ criteria = [
     CriterionConfig("Delivery", weight=1, q=1, p=3, v=7, maximize=False),
 ]
 
-weights = normalize_weights(criteria)  # [0.5, 0.333, 0.167]
+weights = normalize_weights(criteria)  # returns normalized array
 
-config = ComputeConfig(block_size=500, seed=42)</code></pre>
+config = ComputeConfig(block_size=500)</code></pre>
 
       </div>
     </div>

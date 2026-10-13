@@ -1,9 +1,13 @@
 /**
- * Range highlight and scroll sync for ELECTRE III module tutorials.
+ * @file highlight.js
+ * @source In-house (ELECTRE III project)
+ * @license Project license (see repository root)
+ *
+ * Range highlight and click-to-scroll for ELECTRE III module tutorials.
  * Features:
- * - Click-to-scroll: code range → doc callout, callout → code range
- * - Highlight toggle on click
- * - Continuous sync scrolling (percentage-based, off by default)
+ * - Click code range marker (R1-R5) → scrolls doc pane to callout
+ * - Click callout badge in doc → scrolls code pane to range
+ * - Highlight toggle on click (click same range to deselect)
  * - Debug mode: ?debug=1 for console logging
  */
 (function() {
@@ -11,15 +15,14 @@
 
   // Constants
   var SELECTED_CLASS = 'range-selected';
-  var SYNC_ENABLED_CLASS = 'sync-enabled';
   var CODE_SCROLL_ID = 'codeScroll';
   var DOC_SCROLL_ID = 'docScroll';
 
   // State
   var DEBUG = window.location.search.indexOf('debug=1') !== -1;
   var currentRange = null;
-  var syncEnabled = false;
-  var isSyncing = false;  // Loop guard for sync
+  var prefersReducedMotion = window.matchMedia &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   // Cached DOM refs
   var codeScroll = null;
@@ -103,10 +106,12 @@
     log('scrollToElement:', {
       elementId: element.id,
       from: container.scrollTop,
-      to: targetScroll
+      to: targetScroll,
+      reducedMotion: prefersReducedMotion
     });
 
-    container.scrollTo({ top: targetScroll, behavior: 'smooth' });
+    var scrollBehavior = prefersReducedMotion ? 'auto' : 'smooth';
+    container.scrollTo({ top: targetScroll, behavior: scrollBehavior });
   }
 
   function scrollDocToRange(rangeId) {
@@ -197,87 +202,6 @@
   }
 
   // ========================================================================
-  // Continuous Sync Scrolling
-  // ========================================================================
-
-  function getScrollPercent(el) {
-    var maxScroll = el.scrollHeight - el.clientHeight;
-    return maxScroll > 0 ? el.scrollTop / maxScroll : 0;
-  }
-
-  function setScrollPercent(el, percent) {
-    var maxScroll = el.scrollHeight - el.clientHeight;
-    el.scrollTop = percent * maxScroll;
-  }
-
-  function syncScroll(source, target) {
-    if (!syncEnabled || isSyncing) return;
-
-    isSyncing = true;
-    var percent = getScrollPercent(source);
-
-    log('syncScroll:', { percent: percent.toFixed(3), from: source.id, to: target.id });
-
-    setScrollPercent(target, percent);
-
-    // Release lock after animation frame to prevent oscillation
-    requestAnimationFrame(function() {
-      requestAnimationFrame(function() {
-        isSyncing = false;
-      });
-    });
-  }
-
-  function setupSyncListeners() {
-    if (!codeScroll || !docScroll) return;
-
-    codeScroll.addEventListener('scroll', function() {
-      syncScroll(codeScroll, docScroll);
-    }, { passive: true });
-
-    docScroll.addEventListener('scroll', function() {
-      syncScroll(docScroll, codeScroll);
-    }, { passive: true });
-
-    log('Sync scroll listeners attached');
-  }
-
-  // ========================================================================
-  // Sync Toggle
-  // ========================================================================
-
-  function handleSyncToggle(e) {
-    var toggle = e.target.closest('[data-sync-toggle]');
-    if (!toggle) return;
-
-    e.preventDefault();
-    syncEnabled = !syncEnabled;
-    toggle.classList.toggle(SYNC_ENABLED_CLASS, syncEnabled);
-    toggle.setAttribute('aria-pressed', String(syncEnabled));
-
-    log('Sync toggle:', syncEnabled);
-
-    try {
-      localStorage.setItem('electre3-sync', syncEnabled ? '1' : '0');
-    } catch (err) {}
-  }
-
-  function loadSyncPreference() {
-    try {
-      var pref = localStorage.getItem('electre3-sync');
-      if (pref === '1') {
-        syncEnabled = true;
-        var toggle = document.querySelector('[data-sync-toggle]');
-        if (toggle) {
-          toggle.classList.add(SYNC_ENABLED_CLASS);
-          toggle.setAttribute('aria-pressed', 'true');
-        }
-        log('Sync preference loaded: enabled');
-      }
-    } catch (err) {}
-  }
-
-  // ========================================================================
   // Hash Navigation
   // ========================================================================
 
@@ -310,12 +234,7 @@
 
     // Event listeners
     document.addEventListener('click', handleClick, true);
-    document.addEventListener('click', handleSyncToggle, true);
     window.addEventListener('hashchange', handleHashChange);
-
-    // Setup sync scrolling
-    setupSyncListeners();
-    loadSyncPreference();
 
     // Handle initial hash
     if (location.hash) {
@@ -333,12 +252,10 @@
       scrollCodeToRange: scrollCodeToRange,
       scrollDocToRange: scrollDocToRange,
       getCurrentRange: function() { return currentRange; },
-      isSyncEnabled: function() { return syncEnabled; },
       getCodeScroll: function() { return codeScroll; },
       getDocScroll: function() { return docScroll; },
       CODE_SCROLL_ID: CODE_SCROLL_ID,
       DOC_SCROLL_ID: DOC_SCROLL_ID,
-      isSyncing: function() { return isSyncing; },
       debug: DEBUG
     };
   }

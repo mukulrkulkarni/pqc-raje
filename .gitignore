@@ -38,3 +38,9 @@ observations/
 # Editor
 .vscode/
 .idea/
+
+# Local build and design artifacts
+code/
+build_v22/
+visualizations/
+tmp_probe.html

@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js" data-theme="system">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-SouKDifKVToT3R+Pp9yfmVyVbH9Mm9dk50yWb5gotvQ='; style-src 'unsafe-inline'; img-src 'self' data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'">
+<meta name="color-scheme" content="light dark">
+<title>config.py - Module Tutorial (v2.2 mockup)</title>
+<style>
+/* ==========================================================================
+   MODULE TUTORIAL v2.2
+   Pattern: Option 2 - Linked Callouts  (unchanged from v2.1)
+   New in v2.2: (a) light/dark/system theme, (b) green selection state,
+                (c) sidebar that hosts the theme control.
+   Scope rule: every selector begins with .tut, :root or html. No bare
+   element selectors, so global site CSS is never touched.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. THEME TOKENS
+   Resolution order (mutually exclusive by attribute value - no cascade race):
+     :root                      -> LIGHT  (base)
+     [data-theme="light"]       -> LIGHT  (explicit)
+     [data-theme="system"] + @media(dark) -> DARK
+     [data-theme="dark"]        -> DARK   (explicit)
+   The attribute is always present in markup (default "system"), so with
+   JavaScript blocked the page still resolves to the device setting.
+   -------------------------------------------------------------------------- */
+:root{
+  color-scheme: light;
+
+  --bg:#f6f7f9;  --surface:#ffffff;  --surface-2:#f1f3f6;
+  --border:#d7dce4; --border-soft:#e7eaf0;
+  --text:#141922; --muted:#5b6472;
+
+  /* identity accent - links, numbers, focus. One hue, at rest. */
+  --accent:#1d4ed8; --accent-soft:rgba(29,78,216,.10);
+
+  /* SELECTION green - state only, never at rest. */
+  --sel:#0b7a4b;                 /* 5.39:1 on #fff - text safe        */
+  --sel-tint:rgba(11,122,75,.10);/* 10% - light surfaces need less    */
+  --sel-ring:rgba(11,122,75,.26);
+  --sel-on:#ffffff;              /* text on a filled green chip       */
+  --sel-lift:0 1px 2px rgba(16,24,40,.05), 0 10px 22px -8px rgba(11,122,75,.30);
+
+  --header-h:56px;
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+}
+:root[data-theme="light"]{ color-scheme: light; }
+
+@media (prefers-color-scheme: dark){
+  :root[data-theme="system"]{
+    color-scheme: dark;
+    --bg:#0f1115; --surface:#161a21; --surface-2:#1c222b;
+    --border:#2a313d; --border-soft:#222935;
+    --text:#e6e9ef; --muted:#9aa4b4;
+    --accent:#5b9dff; --accent-soft:rgba(91,157,255,.14);
+    --sel:#3ddc97;                   /* 9.87:1 on #161a21 */
+    --sel-tint:rgba(61,220,151,.12); /* 12% - dark surfaces absorb tint */
+    --sel-ring:rgba(61,220,151,.30);
+    --sel-on:#0f1115;
+    --sel-lift:0 10px 28px -10px rgba(61,220,151,.34);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --bg:#0f1115; --surface:#161a21; --surface-2:#1c222b;
+  --border:#2a313d; --border-soft:#222935;
+  --text:#e6e9ef; --muted:#9aa4b4;
+  --accent:#5b9dff; --accent-soft:rgba(91,157,255,.14);
+  --sel:#3ddc97;
+  --sel-tint:rgba(61,220,151,.12);
+  --sel-ring:rgba(61,220,151,.30);
+  --sel-on:#0f1115;
+  --sel-lift:0 10px 28px -10px rgba(61,220,151,.34);
+}
+
+/* --------------------------------------------------------------------------
+   2. PAGE CHROME (mockup shell only - the real site supplies this)
+   -------------------------------------------------------------------------- */
+*{box-sizing:border-box}
+html{background:var(--bg)}
+body{
+  margin:0; background:var(--bg); color:var(--text);
+  font-family:var(--font-sans); -webkit-font-smoothing:antialiased;
+  transition: background-color .2s ease, color .2s ease;
+}
+.site-header{
+  position:sticky; top:0; z-index:50; height:var(--header-h);
+  display:flex; align-items:center; gap:16px; padding:0 24px;
+  background:var(--surface); border-bottom:1px solid var(--border);
+  font-size:13.5px;
+}
+.site-header strong{font-weight:650}
+.site-header span{color:var(--muted)}
+
+/* --------------------------------------------------------------------------
+   3. TUTORIAL SCOPE + LOCAL LAYOUT TOKENS
+   -------------------------------------------------------------------------- */
+.tut{
+  --t-bg:        var(--bg,        #f6f7f9);
+  --t-surface:   var(--surface,   #ffffff);
+  --t-surface-2: var(--surface-2, #f1f3f6);
+  --t-border:    var(--border,    #d7dce4);
+  --t-border-sf: var(--border-soft, #e7eaf0);
+  --t-text:      var(--text,      #141922);
+  --t-muted:     var(--muted,     #5b6472);
+  --t-accent:    var(--accent,    #1d4ed8);
+  --t-accent-sf: var(--accent-soft, rgba(29,78,216,.10));
+  --t-sel:       var(--sel,       #0b7a4b);
+  --t-sel-tint:  var(--sel-tint,  rgba(11,122,75,.10));
+  --t-sel-ring:  var(--sel-ring,  rgba(11,122,75,.26));
+  --t-sel-on:    var(--sel-on,    #ffffff);
+  --t-sel-lift:  var(--sel-lift,  0 10px 22px -8px rgba(11,122,75,.30));
+  --t-mono:      var(--font-mono, ui-monospace, SFMono-Regular, Menlo, Consolas, monospace);
+  --t-sans:      var(--font-sans, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif);
+
+  /* 4px base scale - the only spacing values allowed */
+  --tut-s1:4px; --tut-s2:8px; --tut-s3:12px; --tut-s4:16px;
+  --tut-s5:24px; --tut-s6:32px; --tut-s7:48px;
+  --tut-gap: var(--tut-s6);
+  --tut-radius:10px; --tut-radius-sm:6px;
+  --tut-maxw:1520px;
+  --tut-side-w:232px;
+  --tut-header-h: var(--header-h, 56px);
+  --tut-scroll-pad: calc(var(--tut-header-h) + var(--tut-s4));
+  --tut-code-fs:13px; --tut-line-h:22px;
+  --tut-rail-w:64px;  --tut-num-w:40px;
+
+  color: var(--t-text);
+  font-family: var(--t-sans);
+}
+
+/* --------------------------------------------------------------------------
+   4. PAGE SHELL + 3-COLUMN LAYOUT  (overlap-proof: see spec R1-R12)
+   -------------------------------------------------------------------------- */
+.tut-wrap{
+  max-width: var(--tut-maxw); margin-inline:auto;
+  padding: var(--tut-s5) var(--tut-s5) var(--tut-s7);
+  scroll-padding-top: var(--tut-scroll-pad);
+}
+.tut-head{ margin-bottom: var(--tut-s5); max-width:78ch; }
+.tut-eyebrow{ font-size:11px; letter-spacing:.09em; text-transform:uppercase;
+  color:var(--t-muted); margin:0 0 var(--tut-s2); }
+.tut-title{ font-size:clamp(22px,2.4vw,30px); line-height:1.25; margin:0 0 var(--tut-s3); font-weight:650; }
+.tut-lede{ margin:0; color:var(--t-muted); font-size:15px; line-height:1.65; max-width:68ch; }
+
+.tut-layout{
+  display:grid;
+  grid-template-columns: var(--tut-side-w) minmax(0,1.15fr) minmax(0,1fr);
+  gap: var(--tut-gap);
+  align-items:start;
+}
+.tut-col{ min-width:0; }
+
+.tut-col--code{
+  position:sticky; top:var(--tut-scroll-pad);
+  max-height: calc(100vh - var(--tut-scroll-pad) - var(--tut-s5));
+  display:flex; flex-direction:column;
+}
+
+/* --------------------------------------------------------------------------
+   5. SIDEBAR  (new in v2.2 - hosts the theme control)
+   -------------------------------------------------------------------------- */
+.tut-side{
+  position:sticky; top:var(--tut-scroll-pad);
+  min-width:0;
+  display:flex; flex-direction:column; gap:var(--tut-s5);
+  padding: var(--tut-s4);
+  background: var(--t-surface);
+  border:1px solid var(--t-border);
+  border-radius: var(--tut-radius);
+}
+.tut-side__t{
+  margin:0 0 var(--tut-s3); font:600 10.5px/1 var(--t-sans);
+  letter-spacing:.09em; text-transform:uppercase; color:var(--t-muted);
+}
+.tut-nav{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:2px; }
+.tut-nav li{ min-width:0; }
+.tut-nav a{
+  display:block; min-width:0;
+  padding:6px var(--tut-s2); border-radius:var(--tut-radius-sm);
+  font:500 13px/1.4 var(--t-sans); color:var(--t-muted); text-decoration:none;
+  overflow-wrap:anywhere;
+}
+.tut-nav a:hover{ background:var(--t-surface-2); color:var(--t-text); }
+.tut-nav__cur{
+  display:block; padding:6px var(--tut-s2); border-radius:var(--tut-radius-sm);
+  font:600 13px/1.4 var(--t-sans); overflow-wrap:anywhere;
+}
+.tut-nav__cur, .tut-nav a[aria-current="page"]{
+  color:var(--t-text); font-weight:600; background:var(--t-accent-sf);
+  box-shadow: inset 2px 0 0 var(--t-accent);
+}
+.tut-jump{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:1px; counter-reset:none; }
+.tut-jump a{
+  display:flex; gap:var(--tut-s2); align-items:baseline; min-width:0;
+  padding:5px var(--tut-s2); border-radius:var(--tut-radius-sm);
+  font:400 12.5px/1.45 var(--t-sans); color:var(--t-muted); text-decoration:none;
+}
+.tut-jump a:hover{ background:var(--t-surface-2); color:var(--t-text); }
+.tut-jump b{ font:600 11px/1.6 var(--t-mono); color:var(--t-muted); flex:0 0 auto; }
+.tut-jump span{ min-width:0; overflow-wrap:anywhere; }
+
+/* --- 5.1 Theme control ---------------------------------------------------- */
+.tut-theme{
+  margin:0; padding:var(--tut-s4) 0 0; border:0;
+  border-top:1px solid var(--t-border-sf);
+  min-width:0;
+}
+.tut-theme__legend{
+  padding:0; margin:0 0 var(--tut-s3);
+  font:600 10.5px/1 var(--t-sans); letter-spacing:.09em;
+  text-transform:uppercase; color:var(--t-muted);
+}
+.tut-theme__set{
+  display:flex; min-width:0;
+  background:var(--t-surface-2);
+  border:1px solid var(--t-border);
+  border-radius:var(--tut-radius-sm);
+  padding:3px;
+  gap:2px;
+}
+/* The input stays IN FLOW at 1px. No position:absolute anywhere. */
+.tut-theme__in{
+  appearance:none; -webkit-appearance:none;
+  width:1px; height:1px; flex:0 0 1px;
+  margin:0 -1px 0 0; padding:0; border:0; opacity:0;
+}
+.tut-theme__lb{
+  flex:1 1 0; min-width:0;
+  display:flex; align-items:center; justify-content:center;
+  padding:6px 2px; border-radius:4px;
+  font:600 11.5px/1.2 var(--t-sans); color:var(--t-muted);
+  cursor:pointer; user-select:none; text-align:center;
+  transition: background-color .15s ease, color .15s ease;
+}
+.tut-theme__lb:hover{ color:var(--t-text); }
+.tut-theme__in:checked + .tut-theme__lb{
+  background:var(--t-surface); color:var(--t-text);
+  box-shadow: 0 1px 2px var(--t-sel-ring), inset 0 0 0 1px var(--t-sel);
+}
+.tut-theme__in:focus-visible + .tut-theme__lb{
+  outline:2px solid var(--t-accent); outline-offset:2px;
+}
+.tut-theme__hint{
+  margin:var(--tut-s2) 0 0; font-size:11.5px; line-height:1.5; color:var(--t-muted);
+}
+.tut-theme__warn{ display:none; margin:var(--tut-s2) 0 0; font-size:11.5px; line-height:1.5; color:var(--t-muted); }
+html.tut-nostore .tut-theme__warn{ display:block; }
+/* No JavaScript -> no persistence and no attribute switching, so the control
+   is hidden rather than shown dead. The page stays on the device setting. */
+html.no-js .tut-theme{ display:none; }
+
+/* --------------------------------------------------------------------------
+   6. CODE PANE
+   -------------------------------------------------------------------------- */
+.tut-pane{
+  background:var(--t-surface); border:1px solid var(--t-border);
+  border-radius:var(--tut-radius); overflow:hidden;
+  display:flex; flex-direction:column; min-height:0;
+}
+.tut-pane__bar{
+  display:flex; align-items:center; gap:var(--tut-s3);
+  padding:var(--tut-s3) var(--tut-s4);
+  border-bottom:1px solid var(--t-border-sf);
+  background:var(--t-surface-2); flex:0 0 auto;
+}
+.tut-pane__file{ font-family:var(--t-mono); font-size:12.5px; color:var(--t-text); }
+.tut-pane__meta{ margin-left:auto; font-size:11.5px; color:var(--t-muted); }
+.tut-code{
+  margin:0; min-height:0; flex:1 1 auto; overflow:auto;
+  scroll-padding-top:var(--tut-s4);
+  font-family:var(--t-mono); font-size:var(--tut-code-fs); line-height:var(--tut-line-h);
+}
+.tut-seg{
+  display:grid;
+  grid-template-columns: var(--tut-rail-w) var(--tut-num-w) minmax(0,1fr);
+  grid-auto-rows: var(--tut-line-h);
+  min-width:max-content;
+  border-left:3px solid transparent;
+  scroll-margin-top:var(--tut-s4);
+  transition: background-color .18s ease, border-color .18s ease, box-shadow .18s ease;
+}
+.tut-seg--ranged{ background:var(--t-accent-sf); }
+.tut-tag{
+  grid-column:1; grid-row:1 / -1;
+  position:sticky; left:0; z-index:2;
+  display:flex; flex-direction:column; align-items:center; gap:var(--tut-s1);
+  padding:var(--tut-s1) var(--tut-s2) var(--tut-s2);
+  background:var(--t-surface);
+  border-right:1px solid var(--t-border-sf);
+  text-decoration:none; color:inherit;
+}
+.tut-tag__chip{
+  display:inline-flex; align-items:center; justify-content:center;
+  min-width:20px; height:20px; padding:0 5px; border-radius:999px;
+  border:1px solid var(--t-accent); background:var(--t-surface);
+  color:var(--t-accent); font:600 11px/1 var(--t-sans); flex:0 0 auto;
+  transition: background-color .15s ease, color .15s ease, border-color .15s ease;
+}
+.tut-tag__bracket{
+  flex:1 1 auto; width:2px; min-height:6px; border-radius:1px;
+  background:var(--t-accent); opacity:.45;
+  transition: width .15s ease, opacity .15s ease, background-color .15s ease;
+}
+.tut-tag__lines{ font:500 10px/1 var(--t-sans); color:var(--t-muted); letter-spacing:.02em; }
+.tut-tag:hover .tut-tag__chip,
+.tut-tag:focus-visible .tut-tag__chip{ background:var(--t-accent); color:var(--t-surface); }
+.tut-ln{
+  grid-column:2; text-align:right; padding-right:var(--tut-s3);
+  color:var(--t-muted); opacity:.6; user-select:none; font-variant-numeric:tabular-nums;
+}
+.tut-src{ grid-column:3; white-space:pre; padding-right:var(--tut-s5); color:var(--t-text); }
+.tut-rail-spacer{
+  grid-column:1; grid-row:1 / -1; position:sticky; left:0; z-index:2;
+  background:var(--t-surface); border-right:1px solid var(--t-border-sf);
+}
+
+/* --- 6.1 SELECTED SEGMENT (green, strong) --------------------------------- */
+.tut-seg:target{
+  background: var(--t-sel-tint);
+  border-left-color: var(--t-sel);
+  box-shadow: inset 0 0 0 1px var(--t-sel-ring);
+}
+.tut-seg:target .tut-tag{ border-right-color: var(--t-sel); }
+.tut-seg:target .tut-tag__chip{
+  background: var(--t-sel); border-color: var(--t-sel); color: var(--t-sel-on);
+}
+.tut-seg:target .tut-tag__bracket{ background: var(--t-sel); opacity:1; width:3px; }
+.tut-seg:target .tut-tag__lines{ color: var(--t-sel); }
+
+/* --------------------------------------------------------------------------
+   7. DOC COLUMN - CALLOUT CARDS
+   -------------------------------------------------------------------------- */
+.tut-doc{ display:flex; flex-direction:column; gap:var(--tut-s4); }
+.tut-sectiontitle{
+  margin:var(--tut-s5) 0 0; font-size:12px; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--t-muted); font-weight:600;
+}
+.tut-sectiontitle:first-child{ margin-top:0; }
+.tut-card{
+  background:var(--t-surface);
+  border:1px solid var(--t-border);
+  border-left:3px solid var(--t-border);
+  border-radius:var(--tut-radius);
+  padding:var(--tut-s4) var(--tut-s5) var(--tut-s5);
+  scroll-margin-top:var(--tut-scroll-pad);
+  transition: border-color .18s ease, box-shadow .18s ease,
+              background-color .18s ease, transform .18s ease;
+}
+.tut-card__head{ display:flex; align-items:center; gap:var(--tut-s3); flex-wrap:wrap; margin-bottom:var(--tut-s3); }
+.tut-card__chip{
+  display:inline-flex; align-items:center; justify-content:center;
+  min-width:22px; height:22px; padding:0 6px; border-radius:999px;
+  border:1px solid var(--t-accent); background:var(--t-surface);
+  color:var(--t-accent); font:600 11.5px/1 var(--t-sans); flex:0 0 auto;
+  transition: background-color .15s ease, color .15s ease, border-color .15s ease;
+}
+.tut-card__title{ margin:0; font-size:15.5px; font-weight:620; line-height:1.35; flex:1 1 220px; min-width:0; }
+.tut-card__kind{
+  font:600 10px/1 var(--t-sans); letter-spacing:.08em; text-transform:uppercase;
+  color:var(--t-muted); border:1px solid var(--t-border-sf);
+  padding:4px 7px; border-radius:var(--tut-radius-sm); white-space:nowrap;
+}
+/* Transient, never more than one on the page. Non-colour cue for :target. */
+.tut-card__state{
+  display:none;
+  font:600 10px/1 var(--t-sans); letter-spacing:.08em; text-transform:uppercase;
+  color:var(--t-sel); border:1px solid var(--t-sel);
+  padding:4px 7px; border-radius:var(--tut-radius-sm); white-space:nowrap;
+}
+.tut-card:target .tut-card__state{ display:inline-block; }
+.tut-card__body{ margin:0; font-size:14px; line-height:1.68; color:var(--t-text); max-width:66ch; }
+.tut-card__body + .tut-card__body{ margin-top:var(--tut-s3); }
+.tut-card__body code{
+  font-family:var(--t-mono); font-size:12.5px;
+  background:var(--t-surface-2); border:1px solid var(--t-border-sf);
+  padding:1px 5px; border-radius:4px;
+}
+.tut-formula{
+  margin:var(--tut-s3) 0 0; padding:var(--tut-s3) var(--tut-s4);
+  background:var(--t-surface-2); border:1px solid var(--t-border-sf);
+  border-radius:var(--tut-radius-sm);
+  font-family:var(--t-mono); font-size:13px; line-height:1.6;
+  overflow-x:auto; white-space:pre;
+}
+.tut-card__foot{
+  display:flex; align-items:center; gap:var(--tut-s3); flex-wrap:wrap;
+  margin-top:var(--tut-s4); padding-top:var(--tut-s3);
+  border-top:1px solid var(--t-border-sf);
+}
+.tut-link{
+  display:inline-flex; align-items:center; gap:var(--tut-s2);
+  font:600 12.5px/1 var(--t-sans); text-decoration:none; color:var(--t-accent);
+  border:1px solid var(--t-border); border-radius:var(--tut-radius-sm);
+  padding:7px var(--tut-s3); background:transparent;
+  transition: background-color .15s ease, border-color .15s ease, color .15s ease;
+}
+.tut-link:hover{ background:var(--t-accent-sf); border-color:var(--t-accent); }
+.tut-link__range{ font-family:var(--t-mono); font-weight:500; color:var(--t-muted); }
+.tut-card__note{ font-size:12px; color:var(--t-muted); margin-left:auto; }
+
+/* --- 7.1 SELECTED CARD (green, strong, slight lift) ----------------------- */
+.tut-card:target{
+  background: var(--t-sel-tint);
+  border-color: var(--t-sel);
+  border-left-color: var(--t-sel);
+  box-shadow: 0 0 0 1px var(--t-sel-ring), var(--t-sel-lift);
+}
+.tut-card:target .tut-card__chip{
+  background:var(--t-sel); border-color:var(--t-sel); color:var(--t-sel-on);
+}
+.tut-card:target .tut-link{ color:var(--t-sel); border-color:var(--t-sel-ring); }
+.tut-card:target .tut-link:hover{ background:var(--t-sel-tint); border-color:var(--t-sel); }
+/* The lift is 1px inside a 16px flex gap - it can never reach a neighbour.
+   Motion is a preference, so it is opt-out. */
+@media (prefers-reduced-motion: no-preference){
+  .tut-card:target{ transform: translateY(-1px); }
+}
+
+/* --------------------------------------------------------------------------
+   8. FOCUS / MOTION / SCREEN READER
+   -------------------------------------------------------------------------- */
+.tut a:focus-visible, .tut [tabindex]:focus-visible, .tut input:focus-visible{
+  outline:2px solid var(--t-accent); outline-offset:2px; border-radius:4px;
+}
+@media (prefers-reduced-motion: no-preference){ html{ scroll-behavior:smooth; } }
+@media (prefers-reduced-motion: reduce){
+  .tut *, body{ transition:none !important; }
+}
+.tut-sr{ position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; }
+
+/* --------------------------------------------------------------------------
+   9. RESPONSIVE
+   -------------------------------------------------------------------------- */
+@media (max-width:1399px){ .tut{ --tut-side-w:208px; --tut-gap:var(--tut-s5); --tut-rail-w:56px; } }
+
+/* Below 1280 the sidebar becomes a full-width strip above the grid.
+   It is still a grid item, still in flow - it cannot overlap anything. */
+@media (max-width:1279px){
+  .tut-layout{ grid-template-columns: minmax(0,1.05fr) minmax(0,1fr); }
+  .tut-side{
+    grid-column:1 / -1; position:static;
+    flex-direction:row; flex-wrap:wrap; align-items:flex-start;
+    gap:var(--tut-s5); padding:var(--tut-s3) var(--tut-s4);
+  }
+  .tut-side__grp{ min-width:0; }
+  .tut-side__grp--jump{ display:none; }
+  .tut-side__t{ margin-bottom:var(--tut-s2); }
+  .tut-nav{ flex-direction:row; flex-wrap:wrap; gap:var(--tut-s1); }
+  .tut-theme{ margin-left:auto; border-top:0; padding-top:0; }
+  .tut-theme__set{ min-width:208px; }
+  .tut-theme__hint{ display:none; }
+}
+@media (max-height:700px) and (min-width:900px){
+  .tut-col--code{ position:static; max-height:560px; }
+  .tut-side{ position:static; }
+}
+@media (max-width:899px){
+  .tut-wrap{ padding:var(--tut-s4) var(--tut-s4) var(--tut-s6); }
+  .tut-layout{ grid-template-columns:minmax(0,1fr); gap:var(--tut-s5); }
+  .tut-col--code{ position:static; max-height:none; }
+  .tut-pane{ max-height:58vh; }
+  .tut{ --tut-rail-w:48px; --tut-num-w:34px; --tut-code-fs:12.5px; }
+  .tut-card{ padding:var(--tut-s4); }
+  .tut-tag__lines{ display:none; }
+}
+@media (max-width:559px){
+  .tut-side{ flex-direction:column; gap:var(--tut-s4); }
+  .tut-theme{ margin-left:0; width:100%; }
+  .tut-theme__set{ min-width:0; width:100%; }
+  .tut-card__kind{ display:none; }
+  .tut-card__note{ margin-left:0; flex-basis:100%; }
+}
+
+/* --------------------------------------------------------------------------
+   10. PRINT - force the light token set so the page costs no ink.
+   Declared last, so it beats [data-theme="dark"] at equal specificity.
+   -------------------------------------------------------------------------- */
+@media print{
+  :root[data-theme]{
+    color-scheme:light;
+    --bg:#ffffff; --surface:#ffffff; --surface-2:#f4f5f7;
+    --border:#c9ced8; --border-soft:#e3e6ec;
+    --text:#000000; --muted:#44505f;
+    --accent:#1d4ed8; --accent-soft:rgba(29,78,216,.08);
+    --sel:#0b5c39; --sel-tint:rgba(11,92,57,.10);
+    --sel-ring:rgba(11,92,57,.30); --sel-on:#ffffff; --sel-lift:none;
+  }
+  .site-header, .tut-side{ display:none; }
+  .tut-layout{ grid-template-columns:minmax(0,1fr); }
+  .tut-col--code{ position:static; max-height:none; }
+  .tut-pane{ max-height:none; }
+  .tut-card:target{ transform:none; }
+}
+</style>
+<script>
+(function () {
+  "use strict";
+  var KEY   = "electre3.docs.theme";
+  var VALID = ["light", "dark", "system"];
+  var root  = document.documentElement;
+  var store = null;
+
+  /* localStorage can throw: private mode, disabled storage, some file:// */
+  try {
+    store = window.localStorage;
+    store.setItem(KEY + ".probe", "1");
+    store.removeItem(KEY + ".probe");
+  } catch (e) { store = null; }
+
+  function read() {
+    var v = null;
+    try { v = store ? store.getItem(KEY) : null; } catch (e) { v = null; }
+    return VALID.indexOf(v) >= 0 ? v : "system";
+  }
+
+  var current = read();
+  root.setAttribute("data-theme", current);
+  root.className = root.className.replace(/\bno-js\b/g, "").trim();
+  if (!store) { root.className = (root.className + " tut-nostore").trim(); }
+
+  function wire() {
+    var inputs = document.querySelectorAll("input[name='tut-theme']");
+    var i;
+    for (i = 0; i < inputs.length; i++) {
+      inputs[i].checked = (inputs[i].value === current);
+      inputs[i].addEventListener("change", function () {
+        var v = this.value;
+        if (VALID.indexOf(v) < 0) { return; }
+        current = v;
+        root.setAttribute("data-theme", v);
+        try { if (store) { store.setItem(KEY, v); } } catch (e) {}
+      });
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", wire);
+  } else { wire(); }
+})();
+</script>
+</head>
+<body>
+<header class="site-header">
+  <strong>ELECTRE III</strong><span>/ Docs / Modules / config</span>
+</header>
+
+<main class="tut">
+ <div class="tut-wrap">
+  <header class="tut-head">
+    <p class="tut-eyebrow">Module tutorial &middot; v2.2</p>
+    <h1 class="tut-title">electre3/config.py &mdash; criteria and thresholds</h1>
+    <p class="tut-lede">The code is on the left. The notes are on the right. Each note has a number.
+       The same number marks the related lines in the code. Select a number to move between the two.</p>
+  </header>
+
+  <div class="tut-layout">
+
+    <!-- ===== SIDEBAR (new in v2.2) ===== -->
+    <aside class="tut-side" aria-label="Tutorial sidebar">
+      <nav class="tut-side__grp" aria-label="Modules">
+        <h2 class="tut-side__t">Modules</h2>
+        <ul class="tut-nav">
+            <li><span class="tut-nav__cur" aria-current="page">config</span></li>
+            <li><a href="/docs/modules/concordance">concordance</a></li>
+            <li><a href="/docs/modules/discordance">discordance</a></li>
+            <li><a href="/docs/modules/credibility">credibility</a></li>
+            <li><a href="/docs/modules/ranking">ranking</a></li>
+        </ul>
+      </nav>
+
+      <nav class="tut-side__grp tut-side__grp--jump" aria-label="Notes on this page">
+        <h2 class="tut-side__t">On this page</h2>
+        <ul class="tut-jump">
+            <li><a href="#c1"><b>1</b><span>Criterion record</span></a></li>
+            <li><a href="#c2"><b>2</b><span>Threshold ordering rule</span></a></li>
+            <li><a href="#c3"><b>3</b><span>Weight normalisation</span></a></li>
+            <li><a href="#c4"><b>4</b><span>Entry point and failure mode</span></a></li>
+        </ul>
+      </nav>
+
+      <fieldset class="tut-theme">
+        <legend class="tut-theme__legend">Appearance</legend>
+        <div class="tut-theme__set">
+          <input class="tut-theme__in" type="radio" name="tut-theme" id="tut-th-light"  value="light">
+          <label class="tut-theme__lb" for="tut-th-light">Light</label>
+          <input class="tut-theme__in" type="radio" name="tut-theme" id="tut-th-dark"   value="dark">
+          <label class="tut-theme__lb" for="tut-th-dark">Dark</label>
+          <input class="tut-theme__in" type="radio" name="tut-theme" id="tut-th-system" value="system" checked>
+          <label class="tut-theme__lb" for="tut-th-system">System</label>
+        </div>
+        <p class="tut-theme__hint">System uses your device setting.</p>
+        <p class="tut-theme__warn">This browser does not keep the setting.</p>
+      </fieldset>
+    </aside>
+
+    <!-- ===== CODE COLUMN ===== -->
+    <div class="tut-col tut-col--code">
+      <section class="tut-pane" aria-label="Source code of config.py">
+        <div class="tut-pane__bar">
+          <span class="tut-pane__file">electre3/config.py</span>
+          <span class="tut-pane__meta">33 lines &middot; 4 notes</span>
+        </div>
+        <div class="tut-code" tabindex="0" role="region" aria-label="Source code, scrollable">
+<div class="tut-seg tut-seg--plain"><span class="tut-rail-spacer" aria-hidden="true"></span><span class="tut-ln" aria-hidden="true">1</span><span class="tut-src">&quot;&quot;&quot;Configuration loading and validation for the ELECTRE III engine.&quot;&quot;&quot;</span><span class="tut-ln" aria-hidden="true">2</span><span class="tut-src">from __future__ import annotations</span><span class="tut-ln" aria-hidden="true">3</span><span class="tut-src">&nbsp;</span><span class="tut-ln" aria-hidden="true">4</span><span class="tut-src">from dataclasses import dataclass</span><span class="tut-ln" aria-hidden="true">5</span><span class="tut-src">&nbsp;</span></div>
+<div class="tut-seg tut-seg--ranged" id="r1"><a class="tut-tag" href="#c1" aria-label="Go to note 1: Criterion record"><span class="tut-tag__chip">1</span><span class="tut-tag__bracket" aria-hidden="true"></span><span class="tut-tag__lines">6-12</span></a><span class="tut-ln" aria-hidden="true">6</span><span class="tut-src">@dataclass(frozen=True)</span><span class="tut-ln" aria-hidden="true">7</span><span class="tut-src">class Criterion:</span><span class="tut-ln" aria-hidden="true">8</span><span class="tut-src">    name: str</span><span class="tut-ln" aria-hidden="true">9</span><span class="tut-src">    weight: float</span><span class="tut-ln" aria-hidden="true">10</span><span class="tut-src">    q: float   # indifference threshold</span><span class="tut-ln" aria-hidden="true">11</span><span class="tut-src">    p: float   # preference threshold</span><span class="tut-ln" aria-hidden="true">12</span><span class="tut-src">    v: float   # veto threshold</span></div>
+<div class="tut-seg tut-seg--plain"><span class="tut-rail-spacer" aria-hidden="true"></span><span class="tut-ln" aria-hidden="true">13</span><span class="tut-src">&nbsp;</span></div>
+<div class="tut-seg tut-seg--ranged" id="r2"><a class="tut-tag" href="#c2" aria-label="Go to note 2: Threshold ordering rule"><span class="tut-tag__chip">2</span><span class="tut-tag__bracket" aria-hidden="true"></span><span class="tut-tag__lines">14-20</span></a><span class="tut-ln" aria-hidden="true">14</span><span class="tut-src">    def validate(self) -&gt; None:</span><span class="tut-ln" aria-hidden="true">15</span><span class="tut-src">        if self.weight &lt;= 0:</span><span class="tut-ln" aria-hidden="true">16</span><span class="tut-src">            raise ValueError(&quot;weight must be positive&quot;)</span><span class="tut-ln" aria-hidden="true">17</span><span class="tut-src">        if not 0 &lt;= self.q &lt;= self.p &lt;= self.v:</span><span class="tut-ln" aria-hidden="true">18</span><span class="tut-src">            raise ValueError(&quot;thresholds must satisfy q &lt;= p &lt;= v&quot;)</span><span class="tut-ln" aria-hidden="true">19</span><span class="tut-src">        if self.p == self.q == self.v == 0:</span><span class="tut-ln" aria-hidden="true">20</span><span class="tut-src">            raise ValueError(&quot;thresholds must not all be zero&quot;)</span></div>
+<div class="tut-seg tut-seg--plain"><span class="tut-rail-spacer" aria-hidden="true"></span><span class="tut-ln" aria-hidden="true">21</span><span class="tut-src">&nbsp;</span></div>
+<div class="tut-seg tut-seg--ranged" id="r3"><a class="tut-tag" href="#c3" aria-label="Go to note 3: Weight normalisation"><span class="tut-tag__chip">3</span><span class="tut-tag__bracket" aria-hidden="true"></span><span class="tut-tag__lines">22-27</span></a><span class="tut-ln" aria-hidden="true">22</span><span class="tut-src">def normalise(criteria: list[Criterion]) -&gt; list[float]:</span><span class="tut-ln" aria-hidden="true">23</span><span class="tut-src">    total = sum(c.weight for c in criteria)</span><span class="tut-ln" aria-hidden="true">24</span><span class="tut-src">    if total == 0:</span><span class="tut-ln" aria-hidden="true">25</span><span class="tut-src">        raise ValueError(&quot;total weight must not be zero&quot;)</span><span class="tut-ln" aria-hidden="true">26</span><span class="tut-src">    return [c.weight / total for c in criteria]</span><span class="tut-ln" aria-hidden="true">27</span><span class="tut-src">&nbsp;</span></div>
+<div class="tut-seg tut-seg--ranged" id="r4"><a class="tut-tag" href="#c4" aria-label="Go to note 4: Entry point and failure mode"><span class="tut-tag__chip">4</span><span class="tut-tag__bracket" aria-hidden="true"></span><span class="tut-tag__lines">28-33</span></a><span class="tut-ln" aria-hidden="true">28</span><span class="tut-src">def load(path: str) -&gt; list[Criterion]:</span><span class="tut-ln" aria-hidden="true">29</span><span class="tut-src">    records = _read_records(path)</span><span class="tut-ln" aria-hidden="true">30</span><span class="tut-src">    criteria = [Criterion(**r) for r in records]</span><span class="tut-ln" aria-hidden="true">31</span><span class="tut-src">    for c in criteria:</span><span class="tut-ln" aria-hidden="true">32</span><span class="tut-src">        c.validate()</span><span class="tut-ln" aria-hidden="true">33</span><span class="tut-src">    return criteria</span></div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ===== DOC COLUMN ===== -->
+    <div class="tut-col">
+      <div class="tut-doc">
+        <h2 class="tut-sectiontitle">What the module does</h2>
+      <article class="tut-card" id="c1" aria-labelledby="c1-t">
+        <div class="tut-card__head">
+          <span class="tut-card__chip" aria-hidden="true">1</span>
+          <h3 class="tut-card__title" id="c1-t">Criterion record</h3>
+          <span class="tut-card__kind">Data shape</span>
+          <span class="tut-card__state">Selected</span>
+        </div>
+        <p class="tut-card__body">A <code>Criterion</code> holds one decision attribute. The record is frozen. A criterion cannot change after the engine reads it.</p><p class="tut-card__body">Three thresholds give the outranking relation its shape. <code>q</code> is the indifference limit. <code>p</code> is the preference limit. <code>v</code> is the veto limit.</p>
+        <div class="tut-card__foot">
+          <a class="tut-link" href="#r1">Show the code
+            <span class="tut-link__range">lines 6-12</span>
+            <span class="tut-sr">of config.py</span></a>
+          <span class="tut-card__note">Read this first.</span>
+        </div>
+      </article>
+      <article class="tut-card" id="c2" aria-labelledby="c2-t">
+        <div class="tut-card__head">
+          <span class="tut-card__chip" aria-hidden="true">2</span>
+          <h3 class="tut-card__title" id="c2-t">Threshold ordering rule</h3>
+          <span class="tut-card__kind">Constraint</span>
+          <span class="tut-card__state">Selected</span>
+        </div>
+        <p class="tut-card__body">The method rejects a criterion that breaks the threshold order. This keeps the concordance index monotone.</p>
+        <div class="tut-formula" role="figure" aria-label="Formula for Threshold ordering rule">0 &lt;= q &lt;= p &lt;= v      (and not q = p = v = 0)</div>
+        <div class="tut-card__foot">
+          <a class="tut-link" href="#r2">Show the code
+            <span class="tut-link__range">lines 14-20</span>
+            <span class="tut-sr">of config.py</span></a>
+          <span class="tut-card__note">Raises ValueError.</span>
+        </div>
+      </article>
+      <article class="tut-card" id="c3" aria-labelledby="c3-t">
+        <div class="tut-card__head">
+          <span class="tut-card__chip" aria-hidden="true">3</span>
+          <h3 class="tut-card__title" id="c3-t">Weight normalisation</h3>
+          <span class="tut-card__kind">Formula</span>
+          <span class="tut-card__state">Selected</span>
+        </div>
+        <p class="tut-card__body">The function divides each weight by the sum of all weights. The result is a set of weights that add up to 1.</p>
+        <div class="tut-formula" role="figure" aria-label="Formula for Weight normalisation">w&#770;_j = w_j / &#931;_k w_k ,   &#931;_j w&#770;_j = 1</div>
+        <div class="tut-card__foot">
+          <a class="tut-link" href="#r3">Show the code
+            <span class="tut-link__range">lines 22-27</span>
+            <span class="tut-sr">of config.py</span></a>
+          <span class="tut-card__note">Pure function.</span>
+        </div>
+      </article>
+      <article class="tut-card" id="c4" aria-labelledby="c4-t">
+        <div class="tut-card__head">
+          <span class="tut-card__chip" aria-hidden="true">4</span>
+          <h3 class="tut-card__title" id="c4-t">Entry point and failure mode</h3>
+          <span class="tut-card__kind">I/O</span>
+          <span class="tut-card__state">Selected</span>
+        </div>
+        <p class="tut-card__body"><code>load()</code> reads the records, builds the criteria, and validates each one. The function stops at the first bad record.</p><p class="tut-card__body">The full engine calls <code>load()</code> one time. It then gives the normalised weights to the concordance step.</p>
+        <div class="tut-card__foot">
+          <a class="tut-link" href="#r4">Show the code
+            <span class="tut-link__range">lines 28-33</span>
+            <span class="tut-sr">of config.py</span></a>
+          <span class="tut-card__note">Fails fast.</span>
+        </div>
+      </article>
+      </div>
+    </div>
+
+  </div>
+ </div>
+</main>
+</body>
+</html>

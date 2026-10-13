@@ -57,7 +57,7 @@ class TestFormatPreview:
         matrix = np.array([[1.0, np.inf], [3.0, 4.0]])
         criteria = [{"name": "A", "weight": 1, "q": 1, "p": 2, "v": 3}]
         preview = format_preview(matrix, criteria)
-        assert "infinite" in preview
+        assert "Infinite" in preview or "infinite" in preview
 
     def test_shows_pair_count(self):
         """Preview should show pairwise comparison count."""

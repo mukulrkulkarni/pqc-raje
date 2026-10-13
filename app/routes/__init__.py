@@ -1,5 +1,4 @@
 """Flask route blueprints."""
+from . import compute, preview, docs
 
-from . import compute, preview
-
-__all__ = ["compute", "preview"]
+__all__ = ["compute", "preview", "docs"]

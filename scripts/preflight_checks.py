@@ -154,15 +154,14 @@ def check_csp_headers(verbose: bool = False) -> CheckResult:
             rel_path = html_file.relative_to(PROJECT_ROOT)
             result.info(f"{rel_path}: CSP OK")
 
-    # Check Flask app for security headers
+    # Check Flask app for security headers (required)
     app_init = APP_DIR / "__init__.py"
     if app_init.exists():
         content = app_init.read_text(encoding="utf-8")
-        # Check for after_request decorator or security headers
-        if "Content-Security-Policy" not in content and "after_request" not in content:
-            result.warn(
-                "app/__init__.py: no CSP response headers found (HTML meta tags only)"
-            )
+        if "Content-Security-Policy" not in content or "after_request" not in content:
+            result.fail("app/__init__.py: missing CSP response headers via @after_request")
+        elif verbose:
+            result.info("app/__init__.py: Flask CSP headers OK")
 
     return result
 

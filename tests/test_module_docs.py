@@ -259,3 +259,139 @@ class TestConcordanceTutorialScaffold:
         assert "concordance" in concordance_html.lower()
         assert "partial_concordance" in concordance_html
         assert "global_concordance" in concordance_html
+
+
+class TestDiscordanceTutorialScaffold:
+    """Tests for discordance_tutorial_side_by_side.html scaffold."""
+
+    @pytest.fixture
+    def discordance_html(self) -> str:
+        """Load discordance_tutorial_side_by_side.html content."""
+        path = DOCS_DIR / "discordance_tutorial_side_by_side.html"
+        if not path.exists():
+            pytest.skip(f"{path} does not exist")
+        return path.read_text(encoding="utf-8")
+
+    def test_file_exists(self):
+        """discordance_tutorial_side_by_side.html must exist."""
+        path = DOCS_DIR / "discordance_tutorial_side_by_side.html"
+        assert path.exists(), "Discordance tutorial file missing"
+
+    def test_has_csp_meta_tag(self, discordance_html):
+        """Tutorial must have Content-Security-Policy meta tag."""
+        assert re.search(CSP_PATTERN, discordance_html), "Missing CSP meta tag"
+
+    def test_has_layout2_structure(self, discordance_html):
+        """Tutorial must have Layout 2 structure elements."""
+        assert 'class="shell"' in discordance_html, "Missing .shell grid"
+        assert 'class="sidebar"' in discordance_html, "Missing .sidebar"
+        assert 'class="rows"' in discordance_html, "Missing .rows container"
+
+    def test_has_r1_through_r5_rows(self, discordance_html):
+        """Tutorial must have rows R1-R5."""
+        for r in ["R1", "R2", "R3", "R4", "R5"]:
+            assert f'id="row-{r}"' in discordance_html, f"Missing row id=row-{r}"
+
+    def test_has_io_summary_section(self, discordance_html):
+        """Tutorial must have I/O Summary section."""
+        assert 'class="io-summary"' in discordance_html, "Missing .io-summary"
+        assert "I/O Summary" in discordance_html, "Missing I/O Summary heading"
+
+    def test_has_jump_navigation(self, discordance_html):
+        """Tutorial must have sidebar jump navigation."""
+        for r in ["R1", "R2", "R3", "R4", "R5"]:
+            assert f'id="jump-{r}"' in discordance_html, f"Missing jump id=jump-{r}"
+            assert f'href="#row-{r}"' in discordance_html, f"Missing href=#row-{r}"
+
+    def test_has_progress_indicator(self, discordance_html):
+        """Tutorial must have progress indicator elements."""
+        assert 'id="prog-txt"' in discordance_html, "Missing prog-txt element"
+        assert 'id="prog-fill"' in discordance_html, "Missing prog-fill element"
+
+    def test_has_theme_toggle(self, discordance_html):
+        """Tutorial must have theme toggle segment."""
+        assert 'class="seg"' in discordance_html, "Missing .seg theme toggle"
+        assert 'data-theme-value="light"' in discordance_html
+        assert 'data-theme-value="dark"' in discordance_html
+
+    def test_references_js_assets(self, discordance_html):
+        """Tutorial must reference theme.js and highlight.js."""
+        assert 'src="assets/theme.js"' in discordance_html, "Missing theme.js reference"
+        assert 'src="assets/highlight.js"' in discordance_html, "Missing highlight.js reference"
+
+    def test_each_row_has_required_subheadings(self, discordance_html):
+        """Each row must have Purpose/I/O/Why/Pitfalls subheadings."""
+        assert discordance_html.count('<h4>Purpose</h4>') >= 5, "Need 5 Purpose subheadings"
+        assert discordance_html.count('<h4>I/O</h4>') >= 5, "Need 5 I/O subheadings"
+        assert discordance_html.count('<h4>Why</h4>') >= 5, "Need 5 Why subheadings"
+        assert discordance_html.count('<h4>Pitfalls</h4>') >= 5, "Need 5 Pitfalls subheadings"
+
+    def test_no_external_assets(self, discordance_html):
+        """Tutorial must have no external asset references (security)."""
+        for pattern in EXTERNAL_PATTERNS:
+            matches = re.findall(pattern, discordance_html, re.IGNORECASE)
+            assert not matches, f"Found external reference matching: {pattern}"
+
+    def test_has_discordance_content(self, discordance_html):
+        """Tutorial must have discordance-specific content."""
+        assert "discordance" in discordance_html.lower()
+        assert "veto" in discordance_html.lower()
+        assert "d_j" in discordance_html or "d_interp" in discordance_html
+
+    def test_no_deterministic_output_assertions(self, discordance_html):
+        """Tutorial must not have deterministic output assertions like '= 1.0 (veto triggered)'."""
+        assert "= 1.0 (veto triggered)" not in discordance_html
+        assert "= 0.0 (no discordance)" not in discordance_html
+        # No exact array index output predictions
+        assert "d_j[0,0,1] = 1.0" not in discordance_html
+        assert "d_j[0,0,1] = 0.0" not in discordance_html
+
+    def test_no_absolute_causal_language(self, discordance_html):
+        """Tutorial must not use absolute causal language about veto/credibility effects."""
+        content_lower = discordance_html.lower()
+        # No 'regardless' absolute phrasing
+        assert "regardless of concordance" not in content_lower
+        assert "regardless of interpolation" not in content_lower
+        # No strong causal language about d=1 effects
+        assert "kills credibility" not in content_lower
+        assert "drive s(a,b) toward 0" not in content_lower
+        assert "attenuates concordance" not in content_lower
+        # Should use conditional language instead (may, can, depends)
+
+    def test_has_usage_disclaimer(self, discordance_html):
+        """Tutorial must have usage disclaimer about illustrative examples."""
+        assert 'class="usage-disclaimer"' in discordance_html
+        assert "illustrative" in discordance_html.lower()
+        assert "do not treat" in discordance_html.lower()
+
+    def test_output_card_marked_illustrative(self, discordance_html):
+        """Output card must be marked as illustrative, not stdout."""
+        # Should not have definitive stdout block without illustrative marker
+        assert 'illustrative' in discordance_html
+
+    def test_has_scientific_grounding_section(self, discordance_html):
+        """Tutorial must have Scientific Grounding section."""
+        assert "Scientific Grounding" in discordance_html
+        assert "Definition" in discordance_html
+        assert "Assumptions" in discordance_html
+
+    def test_has_threshold_calibration_section(self, discordance_html):
+        """Tutorial must have Threshold Calibration section."""
+        assert "Threshold Calibration" in discordance_html
+        assert "Source:" in discordance_html or "Units:" in discordance_html
+        assert "Ordering:" in discordance_html
+
+    def test_has_sanity_checks_section(self, discordance_html):
+        """Tutorial must have Sanity Checks section."""
+        assert "Sanity Checks" in discordance_html
+        assert "Range:" in discordance_html
+        assert "Spot-check:" in discordance_html
+
+    def test_no_recommended_threshold_defaults(self, discordance_html):
+        """Tutorial must not suggest specific threshold values as recommended."""
+        # Should not suggest specific p/v values as recommendations
+        assert "recommended p =" not in discordance_html.lower()
+        assert "recommended v =" not in discordance_html.lower()
+        assert "use p = " not in discordance_html.lower()
+        assert "use v = " not in discordance_html.lower()
+        # Disclaimer warning against treating examples as defaults is OK

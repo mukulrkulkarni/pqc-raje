@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; font-src 'self'; script-src 'self'; style-src 'unsafe-inline';">
+<meta name="color-scheme" content="light dark">
+<title>discordance.py - Module Tutorial</title>
+<style>
+/* ==========================================================================
+   DISCORDANCE MODULE TUTORIAL - Layout 2 Parity (matches layout2.html mock)
+   ========================================================================== */
+
+:root{
+  --bg:#ffffff; --surface:#f8fafc; --surface-2:#f1f5f9; --border:#e2e8f0;
+  --border-strong:#cbd5e1; --text:#0f172a; --text-muted:#475569; --text-dim:#64748b;
+  --accent:#2563eb; --accent-soft:#eff6ff; --accent-border:#bfdbfe;
+  --code-bg:#f8fafc; --code-text:#0f172a; --kw:#7c3aed; --str:#15803d;
+  --com:#64748b; --num:#b45309; --fn:#2563eb;
+  --ok:#15803d; --ok-soft:#f0fdf4; --warn:#b45309; --warn-soft:#fffbeb;
+  --radius:8px; --radius-sm:5px;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --sidebar-w:200px; --code-frac:62%;
+}
+html[data-theme="dark"]{
+  --bg:#0b1120; --surface:#0f172a; --surface-2:#1e293b; --border:#1e293b;
+  --border-strong:#334155; --text:#e2e8f0; --text-muted:#94a3b8; --text-dim:#64748b;
+  --accent:#60a5fa; --accent-soft:#172554; --accent-border:#1e40af;
+  --code-bg:#0f172a; --code-text:#e2e8f0; --kw:#c4b5fd; --str:#86efac;
+  --com:#64748b; --num:#fcd34d; --fn:#93c5fd;
+  --ok:#86efac; --ok-soft:#052e16; --warn:#fcd34d; --warn-soft:#2a1f05;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{background:var(--bg); color:var(--text); font-family:var(--sans);
+  font-size:14px; line-height:1.55;}
+.shell{display:grid; grid-template-columns:var(--sidebar-w) 1fr; min-height:100vh;}
+
+/* sidebar */
+.sidebar{
+  background:var(--surface); border-right:1px solid var(--border);
+  padding:var(--s4) var(--s3); position:sticky; top:0; height:100vh;
+  overflow-y:auto; display:flex; flex-direction:column;
+}
+.brand{display:flex; align-items:center; gap:var(--s2); margin-bottom:var(--s5);
+  padding:0 var(--s1);}
+.brand-mark{width:24px;height:24px;border-radius:var(--radius-sm);
+  background:var(--accent);color:#fff;display:grid;place-items:center;
+  font-weight:700;font-size:11px;flex:none;}
+.brand-text{font-weight:650;font-size:13px;}
+.brand-sub{font-size:10.5px;color:var(--text-dim);}
+.nav-label{font-size:10px; text-transform:uppercase; letter-spacing:.07em;
+  color:var(--text-dim); font-weight:650; margin:0 var(--s1) var(--s2);}
+.jump{display:flex; flex-direction:column; gap:1px; margin-bottom:var(--s5);}
+.jump a{display:grid; grid-template-columns:auto 1fr; gap:var(--s2);
+  align-items:start; padding:6px var(--s2); border-radius:var(--radius-sm);
+  text-decoration:none; color:var(--text-muted);}
+.jump a:hover{background:var(--surface-2); color:var(--text);}
+.jump a:focus-visible{outline:2px solid var(--accent); outline-offset:1px;}
+.jump a.active{background:var(--accent-soft); color:var(--accent);}
+.j-badge{font-family:var(--mono); font-size:9.5px; font-weight:700;
+  background:var(--surface-2); color:var(--text-dim); border-radius:3px;
+  padding:2px 4px; margin-top:1px;}
+.jump a.active .j-badge{background:var(--accent); color:#fff;}
+.j-title{font-size:12.5px; font-weight:600; line-height:1.3;}
+.j-desc{font-size:10.5px; color:var(--text-dim); line-height:1.35;
+  display:block; margin-top:1px;}
+.jump a.active .j-desc{color:var(--accent); opacity:.85;}
+.prog{margin-bottom:var(--s4); padding:0 var(--s2);}
+.prog-bar{height:3px; background:var(--surface-2); border-radius:2px; overflow:hidden;}
+.prog-fill{height:100%; width:20%; background:var(--accent);}
+.prog-txt{font-size:10px; color:var(--text-dim); margin-top:var(--s1);}
+.theme{margin-top:auto; border-top:1px solid var(--border); padding-top:var(--s3);}
+.seg{display:grid; grid-template-columns:repeat(3,1fr); gap:2px;
+  background:var(--surface-2); padding:3px; border-radius:var(--radius-sm);}
+.seg button{font:inherit; font-size:10.5px; font-weight:600; padding:5px 0;
+  border:0; cursor:pointer; background:transparent; color:var(--text-muted);
+  border-radius:4px;}
+.seg button[aria-pressed="true"]{background:var(--bg); color:var(--text);
+  box-shadow:0 1px 2px rgba(0,0,0,.08);}
+.seg button:focus-visible{outline:2px solid var(--accent); outline-offset:1px;}
+
+.main{padding:var(--s4) var(--s5) var(--s6); min-width:0;}
+
+/* sticky compact header merges title + I/O into one band */
+.topbar{
+  position:sticky; top:0; z-index:5; background:var(--bg);
+  border-bottom:1px solid var(--border); margin:0 calc(-1*var(--s5));
+  padding:var(--s3) var(--s5); margin-bottom:var(--s4);
+}
+.topbar-row{display:flex; align-items:center; gap:var(--s4); flex-wrap:wrap;}
+h1{font-size:18px; margin:0; letter-spacing:-.02em; white-space:nowrap;}
+.sig{
+  font-family:var(--mono); font-size:12px; color:var(--text-muted);
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--radius-sm); padding:4px var(--s2); flex:1 1 auto;
+  min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+.sig .fn{color:var(--fn); font-weight:600;}
+.sig .kw{color:var(--kw);}
+.meta-inline{display:flex; gap:var(--s3); font-size:11.5px; color:var(--text-dim);
+  white-space:nowrap;}
+.meta-inline b{color:var(--text); font-weight:600; font-family:var(--mono);
+  font-size:11px;}
+.raise{color:var(--warn); font-family:var(--mono); font-size:11px;}
+
+.rows{display:flex; flex-direction:column; gap:var(--s4);}
+.row{scroll-margin-top:64px;}
+.row-head{display:flex; align-items:center; gap:var(--s2); margin-bottom:var(--s2);
+  cursor:pointer; padding:2px 0;}
+.row-head:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+.rk{font-family:var(--mono); font-size:11px; font-weight:700; color:#fff;
+  background:var(--accent); padding:2px 7px; border-radius:4px; flex:none;}
+.row:not(.sel) .rk{background:var(--border-strong); color:var(--text-muted);}
+.row-title{font-weight:650; font-size:14px; letter-spacing:-.01em;}
+.row-lines{font-family:var(--mono); font-size:11px; color:var(--text-dim);}
+.rule{flex:1; height:1px; background:var(--border);}
+.tag{font-size:10.5px; padding:1px 6px; border-radius:3px;
+  background:var(--surface-2); color:var(--text-dim);}
+.tag.ok{background:var(--ok-soft); color:var(--ok);}
+.tag.warn{background:var(--warn-soft); color:var(--warn);}
+
+/* asymmetric split favouring code */
+.split{display:grid; grid-template-columns:var(--code-frac) 1fr; gap:18px;
+  align-items:start;}
+.code-col{border:1px solid var(--border); border-radius:var(--radius);
+  background:var(--code-bg); overflow:hidden; min-width:0;}
+.row.sel .code-col{border-color:var(--accent-border);
+  box-shadow:0 0 0 1px var(--accent-border);}
+.code-bar{display:flex; align-items:center; gap:var(--s2); padding:4px var(--s3);
+  border-bottom:1px solid var(--border); font-size:10.5px; color:var(--text-dim);
+  font-family:var(--mono); background:var(--surface);}
+.code-bar .sp{margin-left:auto;}
+pre{margin:0; padding:10px 13px; font-family:var(--mono); font-size:13px;
+  line-height:1.5; color:var(--code-text); overflow-x:auto;}
+pre code{display:block; white-space:pre;}
+.ln{color:var(--text-dim); user-select:none; display:inline-block;
+  width:2.2ch; text-align:right; margin-right:1.4ch; opacity:.6;}
+.hl{background:var(--accent-soft); display:block; margin:0 -13px; padding:0 13px;
+  border-left:2px solid var(--accent);}
+.kw{color:var(--kw);} .str{color:var(--str);} .com{color:var(--com);}
+.num{color:var(--num);} .fn{color:var(--fn);}
+
+/* explanation as a borderless margin note */
+.note-col{min-width:0; padding-top:2px;}
+.note-col h4{font-size:10px; text-transform:uppercase; letter-spacing:.05em;
+  color:var(--accent); margin:var(--s2) 0 var(--s1); font-weight:650;}
+.note-col h4:first-child{margin-top:0;}
+.note-col p{margin:0 0 var(--s2); font-size:12.5px; color:var(--text-muted);
+  line-height:1.55;}
+.note-col p:last-child{margin-bottom:0;}
+.note-col ul{margin:0 0 var(--s2); padding-left:var(--s4); font-size:12.5px;
+  color:var(--text-muted); line-height:1.5;}
+.note-col li{margin-bottom:2px;}
+.note-col strong{color:var(--text); font-weight:650;}
+.note-col code{font-family:var(--mono); font-size:11px;
+  background:var(--surface-2); padding:1px 4px; border-radius:3px;}
+.callout{border-left:2px solid var(--accent-border); padding-left:var(--s3);}
+.callout.warn{border-left-color:var(--warn);}
+.facts{display:flex; flex-wrap:wrap; gap:var(--s1) var(--s3); margin-top:var(--s2);
+  font-size:11px; color:var(--text-dim);}
+.facts span{font-family:var(--mono);}
+.facts b{color:var(--text-muted); font-weight:600;}
+
+/* I/O Summary - compact dense grid */
+.io-summary{display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));
+  gap:var(--s2); margin-bottom:var(--s4); padding:var(--s3);
+  background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);}
+.io-summary h3{font-size:11px; text-transform:uppercase; letter-spacing:.05em;
+  color:var(--accent); margin:0 0 var(--s1); font-weight:650;
+  grid-column:1/-1;}
+.io-item{font-size:11.5px; line-height:1.4;}
+.io-item b{color:var(--text); font-weight:600; display:block; margin-bottom:2px;}
+.io-item code{font-family:var(--mono); font-size:10.5px;
+  background:var(--surface-2); padding:1px 3px; border-radius:2px;}
+.io-item .type{color:var(--text-dim);}
+
+/* usage: code + output side by side */
+.usage{margin-top:var(--s6);}
+.usage .split{grid-template-columns:var(--code-frac) 1fr;}
+.out-card{border:1px solid var(--border); border-radius:var(--radius);
+  background:var(--surface); overflow:hidden;}
+.out-card .code-bar{background:var(--surface-2);}
+.out-card pre{font-size:12px; background:transparent;}
+.out-note{padding:var(--s2) var(--s3); border-top:1px solid var(--border);
+  font-size:11.5px; color:var(--text-dim); display:flex; gap:var(--s3);}
+footer{margin-top:var(--s6); padding-top:var(--s3); border-top:1px solid var(--border);
+  font-size:11.5px; color:var(--text-dim); display:flex; justify-content:space-between;}
+.badge{font-family:var(--mono); font-size:10.5px; padding:1px 6px;
+  background:var(--ok-soft); color:var(--ok); border-radius:3px;}
+
+/* Selection highlight - maps to Layout 2 .row.sel */
+.row.sel .rk{background:var(--accent); color:#fff;}
+
+/* :target fallback for no-JS */
+.row:target{scroll-margin-top:64px;}
+.row:target .rk{background:var(--accent); color:#fff;}
+.row:target .code-col{border-color:var(--accent-border);
+  box-shadow:0 0 0 1px var(--accent-border);}
+
+@media (prefers-reduced-motion:no-preference){
+  .jump a,.code-col,.rk{transition:background-color .12s ease,border-color .12s ease;}
+}
+@media (max-width:1100px){
+  .split{grid-template-columns:1fr;}
+}
+@media (max-width:900px){
+  :root{--sidebar-w:160px;}
+  .j-desc{display:none;}
+}
+@media (max-width:768px){
+  .shell{grid-template-columns:1fr;}
+  .sidebar{display:none;}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">E3</div>
+      <div>
+        <div class="brand-text">discordance.py</div>
+        <div class="brand-sub">Module tutorial</div>
+      </div>
+    </div>
+
+    <nav aria-label="Jump to section">
+      <div class="nav-label">Jump to</div>
+      <div class="jump" id="jump-nav">
+        <a href="#row-R1" data-range="R1" id="jump-R1">
+          <span class="j-badge">R1</span>
+          <span>
+            <span class="j-title">Module Overview</span>
+            <span class="j-desc">Imports & docstring</span>
+          </span>
+        </a>
+        <a href="#row-R2" data-range="R2" id="jump-R2">
+          <span class="j-badge">R2</span>
+          <span>
+            <span class="j-title">Discordance Function</span>
+            <span class="j-desc">Per-criterion d_j(a,b)</span>
+          </span>
+        </a>
+        <a href="#row-R3" data-range="R3" id="jump-R3">
+          <span class="j-badge">R3</span>
+          <span>
+            <span class="j-title">Interpolation</span>
+            <span class="j-desc">Linear in [p,v] range</span>
+          </span>
+        </a>
+        <a href="#row-R4" data-range="R4" id="jump-R4">
+          <span class="j-badge">R4</span>
+          <span>
+            <span class="j-title">Piecewise Conditions</span>
+            <span class="j-desc">Veto & no-discordance</span>
+          </span>
+        </a>
+        <a href="#row-R5" data-range="R5" id="jump-R5">
+          <span class="j-badge">R5</span>
+          <span>
+            <span class="j-title">Veto Semantics</span>
+            <span class="j-desc">Edge cases & guards</span>
+          </span>
+        </a>
+        <a href="#usage" data-range="EX" id="jump-EX">
+          <span class="j-badge">EX</span>
+          <span>
+            <span class="j-title">Usage</span>
+            <span class="j-desc">Runnable example</span>
+          </span>
+        </a>
+      </div>
+    </nav>
+
+    <div class="prog" id="prog-indicator">
+      <div class="prog-bar"><div class="prog-fill" id="prog-fill"></div></div>
+      <div class="prog-txt" id="prog-txt">No selection</div>
+    </div>
+
+    <div class="theme">
+      <div class="nav-label">Theme</div>
+      <div class="seg" role="group" aria-label="Theme">
+        <button type="button" data-theme-value="light" aria-pressed="true">Light</button>
+        <button type="button" data-theme-value="dark" aria-pressed="false">Dark</button>
+        <button type="button" data-theme-value="system" aria-pressed="false">Sys</button>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main" id="main-scroll">
+    <!-- I/O summary folded into sticky topbar -->
+    <div class="topbar">
+      <div class="topbar-row">
+        <h1>Discordance computation</h1>
+        <div class="sig">
+          <span class="fn">discordance</span>(diff, p, v) &rarr; ndarray
+        </div>
+        <div class="meta-inline">
+          <span>pure function</span>
+          <span>34 lines</span>
+          <span>5 ranges</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- I/O Summary - compact overview -->
+    <div class="io-summary">
+      <h3>I/O Summary</h3>
+      <div class="io-item">
+        <b>discordance</b>
+        <span class="type">Input:</span> <code>diff: ndarray(B1,B2,C)</code>, <code>p: ndarray(C)</code>, <code>v: ndarray(C)</code><br>
+        <span class="type">Output:</span> <code>ndarray(B1,B2,C)</code> in [0,1]<br>
+        <span class="type">Constraint:</span> <code>p &le; v</code> (validated upstream)
+      </div>
+      <div class="io-item">
+        <b>Formula</b>
+        <span class="type">d_j:</span> piecewise linear in [-v, -p] range<br>
+        <span class="type">Veto:</span> <code>d_j = 1</code> when diff &le; -v<br>
+        <span class="type">None:</span> <code>d_j = 0</code> when diff &ge; -p
+      </div>
+      <div class="io-item">
+        <b>Role in Pipeline</b>
+        <span class="type">Used by:</span> credibility module<br>
+        <span class="type">Effect:</span> May reduce credibility via veto
+      </div>
+    </div>
+
+    <!-- Scientific Grounding - compact box -->
+    <div class="io-summary">
+      <h3>Scientific Grounding</h3>
+      <div class="io-item">
+        <b>Definition</b>
+        Discordance d_j(a,b) measures opposition from criterion j to the assertion "a outranks b."
+        Values typically fall in [0,1]: 0 indicates no opposition, 1 indicates strong opposition (veto).
+      </div>
+      <div class="io-item">
+        <b>Assumptions</b>
+        This implementation assumes performance scales are oriented so that higher values indicate better performance
+        (after any maximize/minimize transformation). Thresholds p and v are in the same units as criterion scales.
+      </div>
+    </div>
+
+    <!-- Threshold Calibration - compact box -->
+    <div class="io-summary">
+      <h3>Threshold Calibration</h3>
+      <div class="io-item">
+        <ul style="margin:0;padding-left:var(--s4);font-size:12px;color:var(--text-muted);">
+          <li><b>Source:</b> Thresholds (p, v) are typically elicited from domain experts or derived from data variability analysis.</li>
+          <li><b>Units:</b> p and v should be in the same units as the criterion performance scale.</li>
+          <li><b>Ordering:</b> Must satisfy p &le; v; this is validated upstream in config module.</li>
+          <li><b>Sanity-check:</b> Compare thresholds against observed performance ranges; thresholds larger than the data range may have no effect.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Sanity Checks - compact box -->
+    <div class="io-summary">
+      <h3>Sanity Checks</h3>
+      <div class="io-item">
+        <ul style="margin:0;padding-left:var(--s4);font-size:12px;color:var(--text-muted);">
+          <li><b>Range:</b> Verify all d_j values fall in [0,1]; values outside this range suggest implementation or input errors.</li>
+          <li><b>Spot-check:</b> For a few criterion pairs, manually verify d_j matches expected piecewise formula behavior.</li>
+          <li><b>Sensitivity:</b> Consider testing how results change with small threshold perturbations.</li>
+          <li><b>Missing data:</b> This module assumes complete data; NaN/Inf values should be handled upstream.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="rows">
+      <!-- R1: Module Overview -->
+      <section class="row" id="row-R1">
+        <div class="row-head" role="button" tabindex="0" aria-expanded="true" data-range="R1" aria-label="Toggle R1: Module Overview">
+          <span class="rk">R1</span>
+          <span class="row-title">Module Overview</span>
+          <span class="row-lines">L1–L4</span>
+          <span class="tag ok">pure</span>
+          <span class="rule" aria-hidden="true"></span>
+        </div>
+        <div class="split">
+          <div class="code-col">
+            <div class="code-bar">discordance.py<span class="sp">L1–L4</span></div>
+            <pre><code><span class="ln">1</span><span class="str">"""Discordance computation for ELECTRE III."""</span>
+<span class="ln">2</span>
+<span class="ln">3</span><span class="kw">import</span> numpy <span class="kw">as</span> np
+<span class="ln">4</span></code></pre>
+          </div>
+          <div class="note-col">
+            <h4>Purpose</h4>
+            <p>[Placeholder] Module provides discordance index d_j(a,b) measuring opposition to outranking.</p>
+            <h4>I/O</h4>
+            <p>[Placeholder] No direct I/O at module level. Single function operates on NumPy arrays.</p>
+            <h4>Why</h4>
+            <p>[Placeholder] Discordance captures veto power: criterion strongly opposing "a outranks b".</p>
+            <h4>Pitfalls</h4>
+            <p>[Placeholder] Assumes p &le; v validated upstream. Invalid ordering causes undefined results.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- R2: Discordance Function Signature -->
+      <section class="row" id="row-R2">
+        <div class="row-head" role="button" tabindex="0" aria-expanded="true" data-range="R2" aria-label="Toggle R2: Discordance Function">
+          <span class="rk">R2</span>
+          <span class="row-title">Discordance Function</span>
+          <span class="row-lines">L6–L26</span>
+          <span class="tag ok">pure</span>
+          <span class="rule" aria-hidden="true"></span>
+        </div>
+        <div class="split">
+          <div class="code-col">
+            <div class="code-bar">discordance.py<span class="sp">L6–L26</span></div>
+            <pre><code><span class="ln">6</span><span class="kw">def</span> <span class="fn">discordance</span>(
+<span class="ln">7</span>    diff: np.ndarray, p: np.ndarray, v: np.ndarray
+<span class="ln">8</span>) -&gt; np.ndarray:
+<span class="ln">9</span>    <span class="str">"""Compute discordance d_j(a,b).</span>
+<span class="ln">10</span>
+<span class="ln">11</span><span class="str">    Formula:</span>
+<span class="ln">12</span><span class="str">        d_j = 0  if diff &gt;= -p</span>
+<span class="ln">13</span><span class="str">        d_j = 1  if diff &lt;= -v</span>
+<span class="ln">14</span><span class="str">        d_j = linear otherwise</span>
+<span class="ln">15</span><span class="str">    """</span></code></pre>
+          </div>
+          <div class="note-col">
+            <h4>Purpose</h4>
+            <p>[Placeholder] Computes per-criterion discordance d_j(a,b) measuring opposition to "a outranks b".</p>
+            <h4>I/O</h4>
+            <ul>
+              <li><code>diff</code> &mdash; [Placeholder] performance differences g(a)-g(b)</li>
+              <li><code>p</code> &mdash; [Placeholder] preference thresholds</li>
+              <li><code>v</code> &mdash; [Placeholder] veto thresholds</li>
+            </ul>
+            <h4>Why</h4>
+            <p>[Placeholder] Discordance provides veto mechanism absent in pure concordance models.</p>
+            <h4>Pitfalls</h4>
+            <p>[Placeholder] Shape broadcasting requirements. Must have p &le; v validated.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- R3: Interpolation Formula -->
+      <section class="row" id="row-R3">
+        <div class="row-head" role="button" tabindex="0" aria-expanded="true" data-range="R3" aria-label="Toggle R3: Interpolation">
+          <span class="rk">R3</span>
+          <span class="row-title">Interpolation</span>
+          <span class="row-lines">L27–L30</span>
+          <span class="tag ok">pure</span>
+          <span class="rule" aria-hidden="true"></span>
+        </div>
+        <div class="split">
+          <div class="code-col">
+            <div class="code-bar">discordance.py<span class="sp">L27–L30</span></div>
+            <pre><code><span class="ln">27</span>    <span class="com"># Compute interpolated values</span>
+<span class="ln">28</span>    denom = v - p
+<span class="hl"><span class="ln">29</span>    denom = np.where(denom == <span class="num">0</span>, <span class="num">1.0</span>, denom)</span>
+<span class="ln">30</span>    d_interp = (-diff - p) / denom</code></pre>
+          </div>
+          <div class="note-col">
+            <h4>Purpose</h4>
+            <p>[Placeholder] Computes linear interpolation for discordance in transition zone between p and v.</p>
+            <h4>I/O</h4>
+            <p>[Placeholder] Internal computation. Produces raw interpolated values before piecewise clamping.</p>
+            <h4>Why</h4>
+            <p>[Placeholder] Linear transition models gradual increase in opposition as performance gap widens.</p>
+            <h4>Pitfalls</h4>
+            <p>[Placeholder] Division by (v-p) guarded against zero for binary veto case (p=v).</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- R4: Piecewise Conditions -->
+      <section class="row" id="row-R4">
+        <div class="row-head" role="button" tabindex="0" aria-expanded="true" data-range="R4" aria-label="Toggle R4: Piecewise Conditions">
+          <span class="rk">R4</span>
+          <span class="row-title">Piecewise Conditions</span>
+          <span class="row-lines">L32–L34</span>
+          <span class="tag ok">pure</span>
+          <span class="rule" aria-hidden="true"></span>
+        </div>
+        <div class="split">
+          <div class="code-col">
+            <div class="code-bar">discordance.py<span class="sp">L32–L34</span></div>
+            <pre><code><span class="ln">32</span>    <span class="com"># Apply conditions: veto first, then no-discordance</span>
+<span class="hl"><span class="ln">33</span>    d = np.where(diff &lt;= -v, <span class="num">1.0</span>, np.where(diff &gt;= -p, <span class="num">0.0</span>, d_interp))</span>
+<span class="ln">34</span>    <span class="kw">return</span> np.clip(d, <span class="num">0.0</span>, <span class="num">1.0</span>)</code></pre>
+          </div>
+          <div class="note-col">
+            <h4>Purpose</h4>
+            <p>[Placeholder] Applies three-region piecewise formula: full veto, no discordance, or interpolated.</p>
+            <h4>I/O</h4>
+            <p>[Placeholder] Returns clipped array in [0,1] range.</p>
+            <h4>Why</h4>
+            <p>[Placeholder] Veto checked first ensures d=1 when threshold exceeded, taking precedence over interpolation.</p>
+            <h4>Pitfalls</h4>
+            <p>[Placeholder] Order of np.where conditions matters. Veto must be outermost check.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- R5: Veto Semantics -->
+      <section class="row" id="row-R5">
+        <div class="row-head" role="button" tabindex="0" aria-expanded="true" data-range="R5" aria-label="Toggle R5: Veto Semantics">
+          <span class="rk">R5</span>
+          <span class="row-title">Veto Semantics</span>
+          <span class="row-lines">L28–L34</span>
+          <span class="tag warn">edge</span>
+          <span class="rule" aria-hidden="true"></span>
+        </div>
+        <div class="split">
+          <div class="code-col">
+            <div class="code-bar">discordance.py<span class="sp">L28–L34</span></div>
+            <pre><code><span class="ln">28</span>    denom = v - p
+<span class="hl"><span class="ln">29</span>    denom = np.where(denom == <span class="num">0</span>, <span class="num">1.0</span>, denom)</span>
+<span class="ln">30</span>    d_interp = (-diff - p) / denom
+<span class="ln">31</span>
+<span class="ln">32</span>    <span class="com"># Veto: d=1 may reduce credibility</span>
+<span class="ln">33</span>    d = np.where(diff &lt;= -v, <span class="num">1.0</span>, ...)
+<span class="ln">34</span>    <span class="kw">return</span> np.clip(d, <span class="num">0.0</span>, <span class="num">1.0</span>)</code></pre>
+          </div>
+          <div class="note-col">
+            <h4>Purpose</h4>
+            <p>[Placeholder] Guards against division by zero when p equals v (binary veto model).</p>
+            <h4>I/O</h4>
+            <p>[Placeholder] Internal safeguards. No user-facing I/O changes.</p>
+            <h4>Why</h4>
+            <p>[Placeholder] When p=v, discordance is binary (0 or 1). Guard prevents NaN propagation.</p>
+            <h4>Pitfalls</h4>
+            <p>[Placeholder] d=1 in credibility formula may reduce S(a,b); exact effect depends on aggregation method.</p>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Usage example -->
+    <section class="usage" id="usage">
+      <div class="row-head" style="cursor:default">
+        <span class="rk">EX</span>
+        <span class="row-title">Usage example</span>
+        <span class="rule" aria-hidden="true"></span>
+      </div>
+      <div class="split">
+        <div class="code-col">
+          <div class="code-bar">python<span class="sp">illustrative</span></div>
+          <pre><code><span class="kw">from</span> electre3.discordance <span class="kw">import</span> discordance
+<span class="kw">import</span> numpy <span class="kw">as</span> np
+
+<span class="com"># Performance differences (2 alts, 3 criteria)</span>
+diff = np.array([[[ <span class="num">0.5</span>, -<span class="num">0.8</span>, <span class="num">0.1</span>]]])
+p = np.array([<span class="num">0.3</span>, <span class="num">0.3</span>, <span class="num">0.3</span>])
+v = np.array([<span class="num">0.6</span>, <span class="num">0.6</span>, <span class="num">0.6</span>])
+
+d_j = discordance(diff, p, v)
+<span class="com"># d_j shape: (1, 1, 3) - one value per criterion</span></code></pre>
+        </div>
+        <div class="out-card">
+          <div class="code-bar">result<span class="sp">illustrative</span></div>
+          <pre><code>d_j computed, shape matches input
+(actual values depend on thresholds)</code></pre>
+          <div class="out-note"><span>~0.1 ms</span><span>no I/O</span></div>
+        </div>
+      </div>
+      <p class="usage-disclaimer" style="font-size:11px;color:var(--text-dim);margin-top:var(--s2);background:var(--surface-2);padding:var(--s2);border-radius:var(--radius-sm);">
+        <strong>Note:</strong> Illustrative example inputs only. Do not treat values as recommended defaults or expected outputs. Actual outputs depend on your dataset and algorithm settings.
+      </p>
+    </section>
+
+    <footer>
+      <span>Layout 2 &mdash; code-dominant split</span>
+      <span class="badge">~70 mono chars @ 1366px</span>
+    </footer>
+  </main>
+</div>
+
+<script src="assets/theme.js" defer></script>
+<script src="assets/highlight.js" defer></script>
+</body>
+</html>

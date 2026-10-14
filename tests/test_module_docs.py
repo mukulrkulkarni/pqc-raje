@@ -181,3 +181,81 @@ class TestJSAssetFiles:
         assert "fetch('http" not in content
         assert 'fetch("http' not in content
         assert "XMLHttpRequest" not in content
+
+
+class TestConcordanceTutorialScaffold:
+    """Tests for concordance_tutorial_side_by_side.html scaffold."""
+
+    @pytest.fixture
+    def concordance_html(self) -> str:
+        """Load concordance_tutorial_side_by_side.html content."""
+        path = DOCS_DIR / "concordance_tutorial_side_by_side.html"
+        if not path.exists():
+            pytest.skip(f"{path} does not exist")
+        return path.read_text(encoding="utf-8")
+
+    def test_file_exists(self):
+        """concordance_tutorial_side_by_side.html must exist."""
+        path = DOCS_DIR / "concordance_tutorial_side_by_side.html"
+        assert path.exists(), "Concordance tutorial file missing"
+
+    def test_has_csp_meta_tag(self, concordance_html):
+        """Tutorial must have Content-Security-Policy meta tag."""
+        assert re.search(CSP_PATTERN, concordance_html), "Missing CSP meta tag"
+
+    def test_has_layout2_structure(self, concordance_html):
+        """Tutorial must have Layout 2 structure elements."""
+        assert 'class="shell"' in concordance_html, "Missing .shell grid"
+        assert 'class="sidebar"' in concordance_html, "Missing .sidebar"
+        assert 'class="rows"' in concordance_html, "Missing .rows container"
+
+    def test_has_r1_through_r5_rows(self, concordance_html):
+        """Tutorial must have rows R1-R5."""
+        for r in ["R1", "R2", "R3", "R4", "R5"]:
+            assert f'id="row-{r}"' in concordance_html, f"Missing row id=row-{r}"
+
+    def test_has_io_summary_section(self, concordance_html):
+        """Tutorial must have I/O Summary section."""
+        assert 'class="io-summary"' in concordance_html, "Missing .io-summary"
+        assert "I/O Summary" in concordance_html, "Missing I/O Summary heading"
+
+    def test_has_jump_navigation(self, concordance_html):
+        """Tutorial must have sidebar jump navigation."""
+        for r in ["R1", "R2", "R3", "R4", "R5"]:
+            assert f'id="jump-{r}"' in concordance_html, f"Missing jump id=jump-{r}"
+            assert f'href="#row-{r}"' in concordance_html, f"Missing href=#row-{r}"
+
+    def test_has_progress_indicator(self, concordance_html):
+        """Tutorial must have progress indicator elements."""
+        assert 'id="prog-txt"' in concordance_html, "Missing prog-txt element"
+        assert 'id="prog-fill"' in concordance_html, "Missing prog-fill element"
+
+    def test_has_theme_toggle(self, concordance_html):
+        """Tutorial must have theme toggle segment."""
+        assert 'class="seg"' in concordance_html, "Missing .seg theme toggle"
+        assert 'data-theme-value="light"' in concordance_html
+        assert 'data-theme-value="dark"' in concordance_html
+
+    def test_references_js_assets(self, concordance_html):
+        """Tutorial must reference theme.js and highlight.js."""
+        assert 'src="assets/theme.js"' in concordance_html, "Missing theme.js reference"
+        assert 'src="assets/highlight.js"' in concordance_html, "Missing highlight.js reference"
+
+    def test_each_row_has_required_subheadings(self, concordance_html):
+        """Each row must have Purpose/I/O/Why/Pitfalls subheadings."""
+        assert concordance_html.count('<h4>Purpose</h4>') >= 5, "Need 5 Purpose subheadings"
+        assert concordance_html.count('<h4>I/O</h4>') >= 5, "Need 5 I/O subheadings"
+        assert concordance_html.count('<h4>Why</h4>') >= 5, "Need 5 Why subheadings"
+        assert concordance_html.count('<h4>Pitfalls</h4>') >= 5, "Need 5 Pitfalls subheadings"
+
+    def test_no_external_assets(self, concordance_html):
+        """Tutorial must have no external asset references (security)."""
+        for pattern in EXTERNAL_PATTERNS:
+            matches = re.findall(pattern, concordance_html, re.IGNORECASE)
+            assert not matches, f"Found external reference matching: {pattern}"
+
+    def test_has_concordance_content(self, concordance_html):
+        """Tutorial must have concordance-specific content."""
+        assert "concordance" in concordance_html.lower()
+        assert "partial_concordance" in concordance_html
+        assert "global_concordance" in concordance_html

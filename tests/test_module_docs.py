@@ -518,3 +518,119 @@ class TestCredibilityTutorialScaffold:
         assert 'class="usage-disclaimer"' in credibility_html
         assert "illustrative" in credibility_html.lower()
         assert "do not treat" in credibility_html.lower()
+
+
+class TestRankingTutorialScaffold:
+    """Tests for ranking_tutorial_side_by_side.html scaffold with Option 3 layout."""
+
+    @pytest.fixture
+    def ranking_html(self) -> str:
+        """Load ranking_tutorial_side_by_side.html content."""
+        path = DOCS_DIR / "ranking_tutorial_side_by_side.html"
+        if not path.exists():
+            pytest.skip(f"{path} does not exist")
+        return path.read_text(encoding="utf-8")
+
+    def test_file_exists(self):
+        """ranking_tutorial_side_by_side.html must exist."""
+        path = DOCS_DIR / "ranking_tutorial_side_by_side.html"
+        assert path.exists(), "Ranking tutorial file missing"
+
+    def test_has_csp_meta_tag(self, ranking_html):
+        """Tutorial must have Content-Security-Policy meta tag."""
+        assert re.search(CSP_PATTERN, ranking_html), "Missing CSP meta tag"
+
+    def test_has_layout2_structure(self, ranking_html):
+        """Tutorial must have Layout 2 structure elements."""
+        assert 'class="shell"' in ranking_html, "Missing .shell grid"
+        assert 'class="sidebar"' in ranking_html, "Missing .sidebar"
+        assert 'class="rows"' in ranking_html, "Missing .rows container"
+
+    def test_has_r1_through_r5_rows(self, ranking_html):
+        """Tutorial must have rows R1-R5."""
+        for r in ["R1", "R2", "R3", "R4", "R5"]:
+            assert f'id="row-{r}"' in ranking_html, f"Missing row id=row-{r}"
+
+    def test_has_io_summary_section(self, ranking_html):
+        """Tutorial must have I/O Summary section."""
+        assert 'class="io-summary"' in ranking_html, "Missing .io-summary"
+        assert "I/O Summary" in ranking_html, "Missing I/O Summary heading"
+
+    def test_has_jump_navigation(self, ranking_html):
+        """Tutorial must have sidebar jump navigation."""
+        for r in ["R1", "R2", "R3", "R4", "R5"]:
+            assert f'id="jump-{r}"' in ranking_html, f"Missing jump id=jump-{r}"
+
+    def test_has_progress_indicator(self, ranking_html):
+        """Tutorial must have progress indicator elements."""
+        assert 'id="prog-txt"' in ranking_html, "Missing prog-txt element"
+        assert 'id="prog-fill"' in ranking_html, "Missing prog-fill element"
+
+    def test_references_js_assets(self, ranking_html):
+        """Tutorial must reference only theme.js and highlight.js."""
+        assert 'src="assets/theme.js"' in ranking_html, "Missing theme.js reference"
+        assert 'src="assets/highlight.js"' in ranking_html, "Missing highlight.js reference"
+
+    def test_each_row_has_required_subheadings(self, ranking_html):
+        """Each row must have Purpose/I/O/Why/Pitfalls subheadings."""
+        assert ranking_html.count('<h4>Purpose</h4>') >= 5, "Need 5 Purpose subheadings"
+        assert ranking_html.count('<h4>I/O</h4>') >= 5, "Need 5 I/O subheadings"
+        assert ranking_html.count('<h4>Why</h4>') >= 5, "Need 5 Why subheadings"
+        assert ranking_html.count('<h4>Pitfalls</h4>') >= 5, "Need 5 Pitfalls subheadings"
+
+    def test_no_external_assets(self, ranking_html):
+        """Tutorial must have no external asset references (security)."""
+        for pattern in EXTERNAL_PATTERNS:
+            matches = re.findall(pattern, ranking_html, re.IGNORECASE)
+            assert not matches, f"Found external reference matching: {pattern}"
+
+    def test_has_ranking_content(self, ranking_html):
+        """Tutorial must have ranking-specific content."""
+        assert "compute_ranking" in ranking_html
+        assert "NetFlowAccumulator" in ranking_html
+        assert "net_flow" in ranking_html.lower() or "net flow" in ranking_html.lower()
+
+    def test_has_option3_grounding_facts_line(self, ranking_html):
+        """Tutorial must have Option 3 compact facts line with dl."""
+        assert 'class="gnd-facts"' in ranking_html, "Missing .gnd-facts container"
+        assert "<dl>" in ranking_html, "Missing dl element for facts"
+        assert "<dt>" in ranking_html, "Missing dt elements"
+        assert "<dd>" in ranking_html, "Missing dd elements"
+
+    def test_has_option3_expandable_details(self, ranking_html):
+        """Tutorial must have Option 3 expandable details/summary for rationale."""
+        assert 'class="gnd-details"' in ranking_html, "Missing .gnd-details"
+        assert "<details" in ranking_html, "Missing details element"
+        assert "<summary>" in ranking_html, "Missing summary element"
+        assert 'class="gnd-content"' in ranking_html, "Missing .gnd-content"
+
+    def test_grounding_has_key_invariants(self, ranking_html):
+        """Grounding facts must include key invariants."""
+        assert "Criteria" in ranking_html
+        assert "non-empty" in ranking_html.lower()
+        assert "Diagonal" in ranking_html
+        assert "Memory" in ranking_html
+
+    def test_no_deterministic_output_assertions(self, ranking_html):
+        """Tutorial must not have deterministic output assertions."""
+        assert "ranking[0] =" not in ranking_html
+        assert "= [0, 1, 2]" not in ranking_html
+        assert "expected ranking" not in ranking_html.lower()
+
+    def test_no_seed_mention(self, ranking_html):
+        """Tutorial must not mention seed since ranking.py does not use it."""
+        assert "seed" not in ranking_html.lower()
+
+    def test_no_phi_norm_reference(self, ranking_html):
+        """Tutorial must not reference phi_norm unless code computes it."""
+        assert "phi_norm" not in ranking_html
+
+    def test_no_electre_iii_ii_typo(self, ranking_html):
+        """Tutorial must not have 'ELECTRE III II' typo."""
+        assert "ELECTRE III II" not in ranking_html
+
+    def test_has_usage_disclaimer(self, ranking_html):
+        """Tutorial must have usage disclaimer about illustrative examples."""
+        assert 'class="usage-disclaimer"' in ranking_html
+        assert "illustrative" in ranking_html.lower()
+        assert "do not treat" in ranking_html.lower()

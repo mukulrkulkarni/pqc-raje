@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; font-src 'self'; script-src 'self'; style-src 'unsafe-inline';">
+<meta name="color-scheme" content="light dark">
+<title>ranking.py - Module Tutorial</title>
+<style>
+/* ==========================================================================
+   RANKING MODULE TUTORIAL - Layout 2 Parity (matches layout2.html mock)
+   ========================================================================== */
+
+:root{
+  --bg:#ffffff; --surface:#f8fafc; --surface-2:#f1f5f9; --border:#e2e8f0;
+  --border-strong:#cbd5e1; --text:#0f172a; --text-muted:#475569; --text-dim:#64748b;
+  --accent:#2563eb; --accent-soft:#eff6ff; --accent-border:#bfdbfe;
+  --code-bg:#f8fafc; --code-text:#0f172a; --kw:#7c3aed; --str:#15803d;
+  --com:#64748b; --num:#b45309; --fn:#2563eb;
+  --ok:#15803d; --ok-soft:#f0fdf4; --warn:#b45309; --warn-soft:#fffbeb;
+  --radius:8px; --radius-sm:5px;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --sidebar-w:200px; --code-frac:62%;
+}
+html[data-theme="dark"]{
+  --bg:#0b1120; --surface:#0f172a; --surface-2:#1e293b; --border:#1e293b;
+  --border-strong:#334155; --text:#e2e8f0; --text-muted:#94a3b8; --text-dim:#64748b;
+  --accent:#60a5fa; --accent-soft:#172554; --accent-border:#1e40af;
+  --code-bg:#0f172a; --code-text:#e2e8f0; --kw:#c4b5fd; --str:#86efac;
+  --com:#64748b; --num:#fcd34d; --fn:#93c5fd;
+  --ok:#86efac; --ok-soft:#052e16; --warn:#fcd34d; --warn-soft:#2a1f05;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{background:var(--bg); color:var(--text); font-family:var(--sans);
+  font-size:14px; line-height:1.55;}
+.shell{display:grid; grid-template-columns:var(--sidebar-w) 1fr; min-height:100vh;}
+
+/* sidebar */
+.sidebar{
+  background:var(--surface); border-right:1px solid var(--border);
+  padding:var(--s4) var(--s3); position:sticky; top:0; height:100vh;
+  overflow-y:auto; display:flex; flex-direction:column;
+}
+.brand{display:flex; align-items:center; gap:var(--s2); margin-bottom:var(--s5);
+  padding:0 var(--s1);}
+.brand-mark{width:24px;height:24px;border-radius:var(--radius-sm);
+  background:var(--accent);color:#fff;display:grid;place-items:center;
+  font-weight:700;font-size:11px;flex:none;}
+.brand-text{font-weight:650;font-size:13px;}
+.brand-sub{font-size:10.5px;color:var(--text-dim);}
+.nav-label{font-size:10px; text-transform:uppercase; letter-spacing:.07em;
+  color:var(--text-dim); font-weight:650; margin:0 var(--s1) var(--s2);}
+.jump{display:flex; flex-direction:column; gap:1px; margin-bottom:var(--s5);}
+.jump a{display:grid; grid-template-columns:auto 1fr; gap:var(--s2);
+  align-items:start; padding:6px var(--s2); border-radius:var(--radius-sm);
+  text-decoration:none; color:var(--text-muted);}
+.jump a:hover{background:var(--surface-2); color:var(--text);}
+.jump a:focus-visible{outline:2px solid var(--accent); outline-offset:1px;}
+.jump a.active{background:var(--accent-soft); color:var(--accent);}
+.j-badge{font-family:var(--mono); font-size:9.5px; font-weight:700;
+  background:var(--surface-2); color:var(--text-dim); border-radius:3px;
+  padding:2px 4px; margin-top:1px;}
+.jump a.active .j-badge{background:var(--accent); color:#fff;}
+.j-title{font-size:12.5px; font-weight:600; line-height:1.3;}
+.j-desc{font-size:10.5px; color:var(--text-dim); line-height:1.35;
+  display:block; margin-top:1px;}
+.jump a.active .j-desc{color:var(--accent); opacity:.85;}
+.prog{margin-bottom:var(--s4); padding:0 var(--s2);}
+.prog-bar{height:3px; background:var(--surface-2); border-radius:2px; overflow:hidden;}
+.prog-fill{height:100%; width:20%; background:var(--accent);}
+.prog-txt{font-size:10px; color:var(--text-dim); margin-top:var(--s1);}
+.theme{margin-top:auto; border-top:1px solid var(--border); padding-top:var(--s3);}
+.seg{display:grid; grid-template-columns:repeat(3,1fr); gap:2px;
+  background:var(--surface-2); padding:3px; border-radius:var(--radius-sm);}
+.seg button{font:inherit; font-size:10.5px; font-weight:600; padding:5px 0;
+  border:0; cursor:pointer; background:transparent; color:var(--text-muted);
+  border-radius:4px;}
+.seg button[aria-pressed="true"]{background:var(--bg); color:var(--text);
+  box-shadow:0 1px 2px rgba(0,0,0,.08);}
+.seg button:focus-visible{outline:2px solid var(--accent); outline-offset:1px;}
+
+.main{padding:var(--s4) var(--s5) var(--s6); min-width:0;}
+
+/* sticky compact header merges title + I/O into one band */
+.topbar{
+  position:sticky; top:0; z-index:5; background:var(--bg);
+  border-bottom:1px solid var(--border); margin:0 calc(-1*var(--s5));
+  padding:var(--s3) var(--s5); margin-bottom:var(--s4);
+}
+.topbar-row{display:flex; align-items:center; gap:var(--s4); flex-wrap:wrap;}
+h1{font-size:18px; margin:0; letter-spacing:-.02em; white-space:nowrap;}
+.sig{
+  font-family:var(--mono); font-size:12px; color:var(--text-muted);
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--radius-sm); padding:4px var(--s2); flex:1 1 auto;
+  min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+.sig .fn{color:var(--fn); font-weight:600;}
+.sig .kw{color:var(--kw);}
+.meta-inline{display:flex; gap:var(--s3); font-size:11.5px; color:var(--text-dim);
+  white-space:nowrap;}
+.meta-inline b{color:var(--text); font-weight:600; font-family:var(--mono);
+  font-size:11px;}
+.raise{color:var(--warn); font-family:var(--mono); font-size:11px;}
+
+.rows{display:flex; flex-direction:column; gap:var(--s4);}
+.row{scroll-margin-top:64px;}
+.row-head{display:flex; align-items:center; gap:var(--s2); margin-bottom:var(--s2);
+  cursor:pointer; padding:2px 0;}
+.row-head:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+.rk{font-family:var(--mono); font-size:11px; font-weight:700; color:#fff;
+  background:var(--accent); padding:2px 7px; border-radius:4px; flex:none;}
+.row:not(.sel) .rk{background:var(--border-strong); color:var(--text-muted);}
+.row-title{font-weight:650; font-size:14px; letter-spacing:-.01em;}
+.row-lines{font-family:var(--mono); font-size:11px; color:var(--text-dim);}
+.rule{flex:1; height:1px; background:var(--border);}
+.tag{font-size:10.5px; padding:1px 6px; border-radius:3px;
+  background:var(--surface-2); color:var(--text-dim);}
+.tag.ok{background:var(--ok-soft); color:var(--ok);}
+.tag.warn{background:var(--warn-soft); color:var(--warn);}
+
+/* asymmetric split favouring code */
+.split{display:grid; grid-template-columns:var(--code-frac) 1fr; gap:18px;
+  align-items:start;}
+.code-col{border:1px solid var(--border); border-radius:var(--radius);
+  background:var(--code-bg); overflow:hidden; min-width:0;}
+.row.sel .code-col{border-color:var(--accent-border);
+  box-shadow:0 0 0 1px var(--accent-border);}
+.code-bar{display:flex; align-items:center; gap:var(--s2); padding:4px var(--s3);
+  border-bottom:1px solid var(--border); font-size:10.5px; color:var(--text-dim);
+  font-family:var(--mono); background:var(--surface);}
+.code-bar .sp{margin-left:auto;}
+pre{margin:0; padding:10px 13px; font-family:var(--mono); font-size:13px;
+  line-height:1.5; color:var(--code-text); overflow-x:auto;}
+pre code{display:block; white-space:pre;}
+.ln{color:var(--text-dim); user-select:none; display:inline-block;
+  width:2.2ch; text-align:right; margin-right:1.4ch; opacity:.6;}
+.hl{background:var(--accent-soft); display:block; margin:0 -13px; padding:0 13px;
+  border-left:2px solid var(--accent);}
+.kw{color:var(--kw);} .str{color:var(--str);} .com{color:var(--com);}
+.num{color:var(--num);} .fn{color:var(--fn);}
+
+/* explanation as a borderless margin note */
+.note-col{min-width:0; padding-top:2px;}
+.note-col h4{font-size:10px; text-transform:uppercase; letter-spacing:.05em;
+  color:var(--accent); margin:var(--s2) 0 var(--s1); font-weight:650;}
+.note-col h4:first-child{margin-top:0;}
+.note-col p{margin:0 0 var(--s2); font-size:12.5px; color:var(--text-muted);
+  line-height:1.55;}
+.note-col p:last-child{margin-bottom:0;}
+.note-col ul{margin:0 0 var(--s2); padding-left:var(--s4); font-size:12.5px;
+  color:var(--text-muted); line-height:1.5;}
+.note-col li{margin-bottom:2px;}
+.note-col strong{color:var(--text); font-weight:650;}
+.note-col code{font-family:var(--mono); font-size:11px;
+  background:var(--surface-2); padding:1px 4px; border-radius:3px;}
+.callout{border-left:2px solid var(--accent-border); padding-left:var(--s3);}
+.callout.warn{border-left-color:var(--warn);}
+.facts{display:flex; flex-wrap:wrap; gap:var(--s1) var(--s3); margin-top:var(--s2);
+  font-size:11px; color:var(--text-dim);}
+.facts span{font-family:var(--mono);}
+.facts b{color:var(--text-muted); font-weight:600;}
+
+/* I/O Summary - compact dense grid */
+.io-summary{display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));
+  gap:var(--s2); margin-bottom:var(--s4); padding:var(--s3);
+  background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);}
+.io-summary h3{font-size:11px; text-transform:uppercase; letter-spacing:.05em;
+  color:var(--accent); margin:0 0 var(--s1); font-weight:650;
+  grid-column:1/-1;}
+.io-item{font-size:11.5px; line-height:1.4;}
+.io-item b{color:var(--text); font-weight:600; display:block; margin-bottom:2px;}
+.io-item code{font-family:var(--mono); font-size:10.5px;
+  background:var(--surface-2); padding:1px 3px; border-radius:2px;}
+.io-item .type{color:var(--text-dim);}
+
+/* Option 3: Grounding facts line + expandable rationale */
+.gnd-facts{display:flex; flex-wrap:wrap; gap:var(--s2) var(--s4);
+  margin-bottom:var(--s3); padding:var(--s2) var(--s3);
+  background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+  font-size:11px; color:var(--text-muted);}
+.gnd-facts dl{display:flex; flex-wrap:wrap; gap:var(--s1) var(--s4); margin:0;}
+.gnd-facts dt{font-weight:600; color:var(--text); white-space:nowrap;}
+.gnd-facts dt::after{content:":";}
+.gnd-facts dd{margin:0; margin-right:var(--s3);}
+.gnd-details{margin-bottom:var(--s4);}
+.gnd-details summary{font-size:11px; color:var(--accent); cursor:pointer;
+  font-weight:600; padding:var(--s1) 0; list-style:none;}
+.gnd-details summary::before{content:"▸ "; font-size:10px;}
+.gnd-details[open] summary::before{content:"▾ ";}
+.gnd-details summary:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+.gnd-content{font-size:11.5px; color:var(--text-muted); line-height:1.45;
+  padding:var(--s2) 0 0 var(--s3); border-left:2px solid var(--border);}
+.gnd-content p{margin:0 0 var(--s2);}
+.gnd-content ul{margin:0 0 var(--s2); padding-left:var(--s4);}
+.gnd-content li{margin-bottom:2px;}
+.gnd-content b{color:var(--text); font-weight:600;}
+
+/* usage: code + output side by side */
+.usage{margin-top:var(--s6);}
+.usage .split{grid-template-columns:var(--code-frac) 1fr;}
+.out-card{border:1px solid var(--border); border-radius:var(--radius);
+  background:var(--surface); overflow:hidden;}
+.out-card .code-bar{background:var(--surface-2);}
+.out-card pre{font-size:12px; background:transparent;}
+.out-note{padding:var(--s2) var(--s3); border-top:1px solid var(--border);
+  font-size:11.5px; color:var(--text-dim); display:flex; gap:var(--s3);}
+footer{margin-top:var(--s6); padding-top:var(--s3); border-top:1px solid var(--border);
+  font-size:11.5px; color:var(--text-dim); display:flex; justify-content:space-between;}
+.badge{font-family:var(--mono); font-size:10.5px; padding:1px 6px;
+  background:var(--ok-soft); color:var(--ok); border-radius:3px;}
+
+/* Selection highlight - maps to Layout 2 .row.sel */
+.row.sel .rk{background:var(--accent); color:#fff;}
+
+/* :target fallback for no-JS */
+.row:target{scroll-margin-top:64px;}
+.row:target .rk{background:var(--accent); color:#fff;}
+.row:target .code-col{border-color:var(--accent-border);
+  box-shadow:0 0 0 1px var(--accent-border);}
+
+@media (prefers-reduced-motion:no-preference){
+  .jump a,.code-col,.rk{transition:background-color .12s ease,border-color .12s ease;}
+}
+@media (max-width:1100px){
+  .split{grid-template-columns:1fr;}
+}
+@media (max-width:900px){
+  :root{--sidebar-w:160px;}
+  .j-desc{display:none;}
+}
+@media (max-width:768px){
+  .shell{grid-template-columns:1fr;}
+  .sidebar{display:none;}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">E3</div>
+      <div>
+        <div class="brand-text">ranking.py</div>
+        <div class="brand-sub">Module tutorial</div>
+      </div>
+    </div>
+
+    <nav aria-label="Jump to section">
+      <div class="nav-label">Jump to</div>
+      <div class="jump" id="jump-nav">
+        <a href="#row-R1" data-range="R1" id="jump-R1">
+          <span class="j-badge">R1</span>
+          <span>
+            <span class="j-title">Pipeline Overview</span>
+            <span class="j-desc">Inputs &amp; outputs</span>
+          </span>
+        </a>
+        <a href="#row-R2" data-range="R2" id="jump-R2">
+          <span class="j-badge">R2</span>
+          <span>
+            <span class="j-title">Blocking Strategy</span>
+            <span class="j-desc">Memory-efficient loop</span>
+          </span>
+        </a>
+        <a href="#row-R3" data-range="R3" id="jump-R3">
+          <span class="j-badge">R3</span>
+          <span>
+            <span class="j-title">compute_block</span>
+            <span class="j-desc">Diagonal handling</span>
+          </span>
+        </a>
+        <a href="#row-R4" data-range="R4" id="jump-R4">
+          <span class="j-badge">R4</span>
+          <span>
+            <span class="j-title">Accumulator</span>
+            <span class="j-desc">Net flow &amp; phi</span>
+          </span>
+        </a>
+        <a href="#row-R5" data-range="R5" id="jump-R5">
+          <span class="j-badge">R5</span>
+          <span>
+            <span class="j-title">Edge Cases</span>
+            <span class="j-desc">Validations</span>
+          </span>
+        </a>
+        <a href="#usage" data-range="EX" id="jump-EX">
+          <span class="j-badge">EX</span>
+          <span>
+            <span class="j-title">Usage</span>
+            <span class="j-desc">Runnable example</span>
+          </span>
+        </a>
+      </div>
+    </nav>
+
+    <div class="prog" id="prog-indicator">
+      <div class="prog-bar"><div class="prog-fill" id="prog-fill"></div></div>
+      <div class="prog-txt" id="prog-txt">No selection</div>
+    </div>
+
+    <div class="theme">
+      <div class="nav-label">Theme</div>
+      <div class="seg" role="group" aria-label="Theme">
+        <button type="button" data-theme-value="light" aria-pressed="true">Light</button>
+        <button type="button" data-theme-value="dark" aria-pressed="false">Dark</button>
+        <button type="button" data-theme-value="system" aria-pressed="false">Sys</button>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main" id="main-scroll">
+    <!-- I/O summary folded into sticky topbar -->
+    <div class="topbar">
+      <div class="topbar-row">
+        <h1>Ranking pipeline</h1>
+        <div class="sig">
+          <span class="fn">compute_ranking</span>(G, criteria, config) &rarr; (ndarray, NetFlowAccumulator)
+        </div>
+        <div class="meta-inline">
+          <span>raises <span class="raise">ValueError</span></span>
+          <span>33 lines</span>
+          <span>5 ranges</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- I/O Summary - compact overview -->
+    <div class="io-summary">
+      <h3>I/O Summary</h3>
+      <div class="io-item">
+        <b>compute_ranking</b>
+        <span class="type">Input:</span> <code>G: ndarray(N,C)</code>, <code>criteria: list[CriterionConfig]</code>, <code>config: ComputeConfig|None</code><br>
+        <span class="type">Output:</span> <code>(ranking: ndarray(N,), acc: NetFlowAccumulator)</code><br>
+        <span class="type">Raises:</span> <code>ValueError</code> if criteria empty, matrix invalid, or thresholds malformed
+      </div>
+      <div class="io-item">
+        <b>NetFlowAccumulator</b>
+        <span class="type">Tracks:</span> outflow &phi;<sup>+</sup>, inflow &phi;<sup>-</sup> per alternative<br>
+        <span class="type">Provides:</span> <code>net_flow()</code> &rarr; &phi;<sup>+</sup> - &phi;<sup>-</sup><br>
+        <span class="type">Memory:</span> O(N) not O(N&sup2;)
+      </div>
+      <div class="io-item">
+        <b>Pipeline</b>
+        <span class="type">Steps:</span> validate &rarr; normalize &rarr; block loop &rarr; accumulate &rarr; argsort<br>
+        <span class="type">Blocking:</span> O(block_size&sup2;) memory per iteration
+      </div>
+    </div>
+
+    <!-- Option 3: Compact facts line + expandable rationale -->
+    <div class="gnd-facts">
+      <dl>
+        <dt>Criteria</dt><dd>must be non-empty</dd>
+        <dt>S range</dt><dd>assumes S &isin; [0,1] from block</dd>
+        <dt>Diagonal</dt><dd>excluded via is_diagonal flag in block</dd>
+        <dt>Memory</dt><dd>O(N) accumulator + O(B&sup2;) per block</dd>
+      </dl>
+    </div>
+
+    <details class="gnd-details">
+      <summary>Scientific grounding &amp; calibration notes</summary>
+      <div class="gnd-content">
+        <p><b>Definition:</b> The ranking pipeline computes ELECTRE III net flow scores and returns alternatives sorted by descending net flow. Net flow &phi; = &phi;<sup>+</sup> - &phi;<sup>-</sup> where &phi;<sup>+</sup> is outflow (how much a dominates others) and &phi;<sup>-</sup> is inflow (how much others dominate a).</p>
+        <p><b>Blocking strategy:</b> For large N, storing full N&times;N credibility matrix is infeasible. Block processing computes B&times;B submatrices and accumulates flows incrementally. Memory is O(N) for accumulator + O(B&sup2;) per block iteration.</p>
+        <p><b>Calibration notes:</b></p>
+        <ul>
+          <li><b>Block size:</b> Larger blocks may be faster but use more memory; tune based on available RAM.</li>
+          <li><b>Ties:</b> Alternatives with equal net flow may resolve by index order or NumPy implementation details; argsort is deterministic but tie order is not guaranteed.</li>
+          <li><b>Normalization:</b> Weights are normalized to sum to 1; relative ratios preserved.</li>
+        </ul>
+        <p><b>Sanity checks:</b></p>
+        <ul>
+          <li>Verify ranking length equals N (number of alternatives).</li>
+          <li>Verify ranking contains each index 0..N-1 exactly once.</li>
+          <li>Spot-check that top-ranked alternatives have highest net flow.</li>
+          <li>NaN/Inf in input matrix should be rejected; validate upstream.</li>
+        </ul>
+      </div>
+    </details>
+
+    <div class="rows">
+      <!-- R1: Pipeline Overview -->
+      <section class="row" id="row-R1">
+        <div class="row-head" role="button" tabindex="0" aria-expanded="true" data-range="R1" aria-label="Toggle R1: Pipeline Overview">
+          <span class="rk">R1</span>
+          <span class="row-title">Pipeline Overview</span>
+          <span class="row-lines">L1–L11</span>
+          <span class="tag ok">entry</span>
+          <span class="rule" aria-hidden="true"></span>
+        </div>
+        <div class="split">
+          <div class="code-col">
+            <div class="code-bar">ranking.py<span class="sp">L1–L11</span></div>
+            <pre><code><span class="ln">1</span><span class="str">"""Main ranking pipeline for ELECTRE III."""</span>
+<span class="ln">2</span><span class="kw">import</span> numpy <span class="kw">as</span> np
+<span class="ln">3</span><span class="kw">from</span> typing <span class="kw">import</span> Optional
+<span class="ln">4</span><span class="kw">from</span> .config <span class="kw">import</span> CriterionConfig, ComputeConfig
+<span class="ln">5</span><span class="kw">from</span> .validate <span class="kw">import</span> validate_thresholds, ...
+<span class="ln">6</span><span class="kw">from</span> .accumulator <span class="kw">import</span> NetFlowAccumulator
+<span class="ln">7</span><span class="kw">from</span> .block <span class="kw">import</span> compute_block
+<span class="ln">9</span><span class="kw">def</span> <span class="fn">compute_ranking</span>(
+<span class="ln">10</span>    G: np.ndarray, criteria: list[CriterionConfig], ...</code></pre>
+          </div>
+          <div class="note-col">
+            <h4>Purpose</h4>
+            <p>[Placeholder] Entry point for ELECTRE III ranking. Orchestrates validation, blocking, and accumulation.</p>
+            <h4>I/O</h4>
+            <ul>
+              <li><code>G</code> &mdash; [Placeholder] performance matrix (N alternatives &times; C criteria)</li>
+              <li><code>criteria</code> &mdash; [Placeholder] list of CriterionConfig with thresholds</li>
+              <li><code>config</code> &mdash; [Placeholder] optional ComputeConfig (block_size)</li>
+            </ul>
+            <h4>Why</h4>
+            <p>[Placeholder] Single entry point simplifies API; internal modules remain decoupled.</p>
+            <h4>Pitfalls</h4>
+            <p>[Placeholder] Empty criteria list raises ValueError immediately.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- R2: Blocking Strategy -->
+      <section class="row" id="row-R2">
+        <div class="row-head" role="button" tabindex="0" aria-expanded="true" data-range="R2" aria-label="Toggle R2: Blocking Strategy">
+          <span class="rk">R2</span>
+          <span class="row-title">Blocking Strategy</span>
+          <span class="row-lines">L27–L32</span>
+          <span class="tag ok">loop</span>
+          <span class="rule" aria-hidden="true"></span>
+        </div>
+        <div class="split">
+          <div class="code-col">
+            <div class="code-bar">ranking.py<span class="sp">L27–L32</span></div>
+            <pre><code><span class="ln">27</span>    N, B = G.shape[<span class="num">0</span>], config.block_size
+<span class="ln">28</span>    acc = NetFlowAccumulator(N)
+<span class="hl"><span class="ln">29</span>    <span class="kw">for</span> rs <span class="kw">in</span> range(<span class="num">0</span>, N, B):</span>
+<span class="hl"><span class="ln">30</span>        <span class="kw">for</span> cs <span class="kw">in</span> range(<span class="num">0</span>, N, B):</span>
+<span class="ln">31</span>            S = compute_block(...)
+<span class="ln">32</span>            acc.update(S, rs, cs)</code></pre>
+          </div>
+          <div class="note-col">
+            <h4>Purpose</h4>
+            <p>[Placeholder] Iterates over B&times;B blocks to compute credibility submatrices without storing full N&times;N.</p>
+            <h4>I/O</h4>
+            <p>[Placeholder] Each iteration produces S block and updates accumulator. Memory: O(B&sup2;) per block.</p>
+            <h4>Why</h4>
+            <p>[Placeholder] N=100k would need 80GB for N&times;N. Blocking keeps memory at O(B&sup2;).</p>
+            <h4>Pitfalls</h4>
+            <p>[Placeholder] Very small block_size increases loop overhead; very large exhausts memory.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- R3: compute_block Integration -->
+      <section class="row" id="row-R3">
+        <div class="row-head" role="button" tabindex="0" aria-expanded="true" data-range="R3" aria-label="Toggle R3: compute_block">
+          <span class="rk">R3</span>
+          <span class="row-title">compute_block Integration</span>
+          <span class="row-lines">L31</span>
+          <span class="tag ok">call</span>
+          <span class="rule" aria-hidden="true"></span>
+        </div>
+        <div class="split">
+          <div class="code-col">
+            <div class="code-bar">ranking.py<span class="sp">L31</span></div>
+            <pre><code><span class="hl"><span class="ln">31</span>            S = compute_block(G_adj[rs:...], G_adj[cs:...], q, p, v, weights, rs==cs)</span></code></pre>
+          </div>
+          <div class="note-col">
+            <h4>Purpose</h4>
+            <p>[Placeholder] Calls compute_block with is_diagonal=(rs==cs) to handle self-comparisons.</p>
+            <h4>I/O</h4>
+            <ul>
+              <li><code>G_adj[rs:...]</code> &mdash; [Placeholder] row slice for this block</li>
+              <li><code>rs==cs</code> &mdash; [Placeholder] True when block is on diagonal</li>
+            </ul>
+            <h4>Why</h4>
+            <p>[Placeholder] Diagonal blocks contain S(a,a) which should be 0; is_diagonal flag triggers zeroing.</p>
+            <h4>Pitfalls</h4>
+            <p>[Placeholder] Forgetting is_diagonal would leave S(a,a) non-zero, corrupting net flow.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- R4: Accumulator Update -->
+      <section class="row" id="row-R4">
+        <div class="row-head" role="button" tabindex="0" aria-expanded="true" data-range="R4" aria-label="Toggle R4: Accumulator">
+          <span class="rk">R4</span>
+          <span class="row-title">Accumulator Update</span>
+          <span class="row-lines">L28, L32–L33</span>
+          <span class="tag ok">accum</span>
+          <span class="rule" aria-hidden="true"></span>
+        </div>
+        <div class="split">
+          <div class="code-col">
+            <div class="code-bar">ranking.py<span class="sp">L28, L32–L33</span></div>
+            <pre><code><span class="ln">28</span>    acc = NetFlowAccumulator(N)
+<span class="ln">32</span>            acc.update(S, rs, cs)
+<span class="hl"><span class="ln">33</span>    <span class="kw">return</span> np.argsort(-acc.net_flow()), acc</span></code></pre>
+          </div>
+          <div class="note-col">
+            <h4>Purpose</h4>
+            <p>[Placeholder] Accumulates &phi;<sup>+</sup> and &phi;<sup>-</sup> from each block; final argsort produces ranking.</p>
+            <h4>I/O</h4>
+            <ul>
+              <li><code>acc.update(S, rs, cs)</code> &mdash; [Placeholder] adds S contributions to flows</li>
+              <li><code>acc.net_flow()</code> &mdash; [Placeholder] returns &phi;<sup>+</sup> - &phi;<sup>-</sup></li>
+            </ul>
+            <h4>Why</h4>
+            <p>[Placeholder] Net flow ranking is standard ELECTRE III output; accumulator enables blocking.</p>
+            <h4>Pitfalls</h4>
+            <p>[Placeholder] Returning accumulator allows inspection but is mutable; caller should not modify.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- R5: Edge Cases & Validations -->
+      <section class="row" id="row-R5">
+        <div class="row-head" role="button" tabindex="0" aria-expanded="true" data-range="R5" aria-label="Toggle R5: Edge Cases">
+          <span class="rk">R5</span>
+          <span class="row-title">Edge Cases &amp; Validations</span>
+          <span class="row-lines">L12–L22</span>
+          <span class="tag warn">guard</span>
+          <span class="rule" aria-hidden="true"></span>
+        </div>
+        <div class="split">
+          <div class="code-col">
+            <div class="code-bar">ranking.py<span class="sp">L12–L22</span></div>
+            <pre><code><span class="hl"><span class="ln">12</span>    <span class="kw">if not</span> criteria:</span>
+<span class="hl"><span class="ln">13</span>        <span class="kw">raise</span> ValueError(<span class="str">"criteria list cannot be empty"</span>)</span>
+<span class="ln">16</span>    validate_thresholds(criteria)
+<span class="ln">17</span>    weights = normalize_weights(criteria)
+<span class="ln">18</span>    validate_matrix(G, len(criteria))
+<span class="ln">22</span>    validate_arrays_match(q, p, v, weights)</code></pre>
+          </div>
+          <div class="note-col">
+            <h4>Purpose</h4>
+            <p>[Placeholder] Guards against invalid inputs: empty criteria, malformed thresholds, matrix shape mismatch.</p>
+            <h4>I/O</h4>
+            <p>[Placeholder] Raises ValueError with descriptive message on failure; no partial state leaked.</p>
+            <h4>Why</h4>
+            <p>[Placeholder] Fail-fast prevents cryptic downstream errors (division by zero, shape mismatch).</p>
+            <h4>Pitfalls</h4>
+            <p>[Placeholder] NaN/Inf in G rejected by validate_matrix; caller must ensure clean data.</p>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Usage example -->
+    <section class="usage" id="usage">
+      <div class="row-head" style="cursor:default">
+        <span class="rk">EX</span>
+        <span class="row-title">Usage example</span>
+        <span class="rule" aria-hidden="true"></span>
+      </div>
+      <div class="split">
+        <div class="code-col">
+          <div class="code-bar">python<span class="sp">illustrative</span></div>
+          <pre><code><span class="kw">from</span> electre3.ranking <span class="kw">import</span> compute_ranking
+<span class="kw">from</span> electre3.config <span class="kw">import</span> CriterionConfig, ComputeConfig
+<span class="kw">import</span> numpy <span class="kw">as</span> np
+
+G = np.array([[<span class="num">1.0</span>, <span class="num">2.0</span>], [<span class="num">3.0</span>, <span class="num">1.0</span>], [<span class="num">2.0</span>, <span class="num">3.0</span>]])
+criteria = [
+    CriterionConfig(<span class="str">"c1"</span>, weight=<span class="num">1.0</span>, q=<span class="num">0.1</span>, p=<span class="num">0.3</span>, v=<span class="num">0.5</span>),
+    CriterionConfig(<span class="str">"c2"</span>, weight=<span class="num">1.0</span>, q=<span class="num">0.1</span>, p=<span class="num">0.3</span>, v=<span class="num">0.5</span>),
+]
+ranking, acc = compute_ranking(G, criteria)
+<span class="com"># ranking shape: (3,) - indices sorted by net flow</span></code></pre>
+        </div>
+        <div class="out-card">
+          <div class="code-bar">result<span class="sp">illustrative</span></div>
+          <pre><code>ranking computed, length matches N
+(actual order depends on data)</code></pre>
+          <div class="out-note"><span>~1 ms</span><span>no I/O</span></div>
+        </div>
+      </div>
+      <p class="usage-disclaimer" style="font-size:11px;color:var(--text-dim);margin-top:var(--s2);background:var(--surface-2);padding:var(--s2);border-radius:var(--radius-sm);">
+        <strong>Note:</strong> Illustrative example inputs only. Do not treat values as recommended defaults or expected outputs. Actual outputs depend on your dataset and algorithm settings.
+      </p>
+    </section>
+
+    <footer>
+      <span>Layout 2 &mdash; code-dominant split</span>
+      <span class="badge">~70 mono chars @ 1366px</span>
+    </footer>
+  </main>
+</div>
+
+<script src="assets/theme.js" defer></script>
+<script src="assets/highlight.js" defer></script>
+</body>
+</html>

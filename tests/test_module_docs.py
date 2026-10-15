@@ -369,23 +369,28 @@ class TestDiscordanceTutorialScaffold:
         # Should not have definitive stdout block without illustrative marker
         assert 'illustrative' in discordance_html
 
-    def test_has_scientific_grounding_section(self, discordance_html):
-        """Tutorial must have Scientific Grounding section."""
-        assert "Scientific Grounding" in discordance_html
+    def test_has_option3_grounding_facts_line(self, discordance_html):
+        """Tutorial must have Option 3 compact facts line with dl."""
+        assert 'class="gnd-facts"' in discordance_html, "Missing .gnd-facts container"
+        assert "<dl>" in discordance_html, "Missing dl element for facts"
+        assert "<dt>" in discordance_html, "Missing dt elements"
+        assert "<dd>" in discordance_html, "Missing dd elements"
+
+    def test_has_option3_expandable_details(self, discordance_html):
+        """Tutorial must have Option 3 expandable details/summary for rationale."""
+        assert 'class="gnd-details"' in discordance_html, "Missing .gnd-details"
+        assert "<details" in discordance_html, "Missing details element"
+        assert "<summary>" in discordance_html, "Missing summary element"
+        assert 'class="gnd-content"' in discordance_html, "Missing .gnd-content"
+
+    def test_grounding_has_key_invariants(self, discordance_html):
+        """Grounding facts must include key invariants."""
+        # Facts line should have key invariants
+        assert "Range" in discordance_html
+        assert "[0,1]" in discordance_html
+        assert "p &le; v" in discordance_html or "p ≤ v" in discordance_html
+        # Expandable section should have Definition
         assert "Definition" in discordance_html
-        assert "Assumptions" in discordance_html
-
-    def test_has_threshold_calibration_section(self, discordance_html):
-        """Tutorial must have Threshold Calibration section."""
-        assert "Threshold Calibration" in discordance_html
-        assert "Source:" in discordance_html or "Units:" in discordance_html
-        assert "Ordering:" in discordance_html
-
-    def test_has_sanity_checks_section(self, discordance_html):
-        """Tutorial must have Sanity Checks section."""
-        assert "Sanity Checks" in discordance_html
-        assert "Range:" in discordance_html
-        assert "Spot-check:" in discordance_html
 
     def test_no_recommended_threshold_defaults(self, discordance_html):
         """Tutorial must not suggest specific threshold values as recommended."""

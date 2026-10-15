@@ -177,6 +177,28 @@ pre code{display:block; white-space:pre;}
   background:var(--surface-2); padding:1px 3px; border-radius:2px;}
 .io-item .type{color:var(--text-dim);}
 
+/* Option 3: Grounding facts line + expandable rationale */
+.gnd-facts{display:flex; flex-wrap:wrap; gap:var(--s2) var(--s4);
+  margin-bottom:var(--s3); padding:var(--s2) var(--s3);
+  background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+  font-size:11px; color:var(--text-muted);}
+.gnd-facts dl{display:flex; flex-wrap:wrap; gap:var(--s1) var(--s4); margin:0;}
+.gnd-facts dt{font-weight:600; color:var(--text); white-space:nowrap;}
+.gnd-facts dt::after{content:":";}
+.gnd-facts dd{margin:0; margin-right:var(--s3);}
+.gnd-details{margin-bottom:var(--s4);}
+.gnd-details summary{font-size:11px; color:var(--accent); cursor:pointer;
+  font-weight:600; padding:var(--s1) 0; list-style:none;}
+.gnd-details summary::before{content:"▸ "; font-size:10px;}
+.gnd-details[open] summary::before{content:"▾ ";}
+.gnd-details summary:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+.gnd-content{font-size:11.5px; color:var(--text-muted); line-height:1.45;
+  padding:var(--s2) 0 0 var(--s3); border-left:2px solid var(--border);}
+.gnd-content p{margin:0 0 var(--s2);}
+.gnd-content ul{margin:0 0 var(--s2); padding-left:var(--s4);}
+.gnd-content li{margin-bottom:2px;}
+.gnd-content b{color:var(--text); font-weight:600;}
+
 /* usage: code + output side by side */
 .usage{margin-top:var(--s6);}
 .usage .split{grid-template-columns:var(--code-frac) 1fr;}
@@ -328,46 +350,36 @@ footer{margin-top:var(--s6); padding-top:var(--s3); border-top:1px solid var(--b
       </div>
     </div>
 
-    <!-- Scientific Grounding - compact box -->
-    <div class="io-summary">
-      <h3>Scientific Grounding</h3>
-      <div class="io-item">
-        <b>Definition</b>
-        Discordance d_j(a,b) measures opposition from criterion j to the assertion "a outranks b."
-        Values typically fall in [0,1]: 0 indicates no opposition, 1 indicates strong opposition (veto).
-      </div>
-      <div class="io-item">
-        <b>Assumptions</b>
-        This implementation assumes performance scales are oriented so that higher values indicate better performance
-        (after any maximize/minimize transformation). Thresholds p and v are in the same units as criterion scales.
-      </div>
+    <!-- Option 3: Compact facts line + expandable rationale -->
+    <div class="gnd-facts">
+      <dl>
+        <dt>Range</dt><dd>d_j &isin; [0,1]</dd>
+        <dt>Veto</dt><dd>d_j = 1 may reduce credibility</dd>
+        <dt>Constraint</dt><dd>p &le; v (validated upstream)</dd>
+        <dt>Scale</dt><dd>higher-is-better after transformation</dd>
+      </dl>
     </div>
 
-    <!-- Threshold Calibration - compact box -->
-    <div class="io-summary">
-      <h3>Threshold Calibration</h3>
-      <div class="io-item">
-        <ul style="margin:0;padding-left:var(--s4);font-size:12px;color:var(--text-muted);">
-          <li><b>Source:</b> Thresholds (p, v) are typically elicited from domain experts or derived from data variability analysis.</li>
-          <li><b>Units:</b> p and v should be in the same units as the criterion performance scale.</li>
-          <li><b>Ordering:</b> Must satisfy p &le; v; this is validated upstream in config module.</li>
-          <li><b>Sanity-check:</b> Compare thresholds against observed performance ranges; thresholds larger than the data range may have no effect.</li>
+    <details class="gnd-details">
+      <summary>Scientific grounding &amp; calibration notes</summary>
+      <div class="gnd-content">
+        <p><b>Definition:</b> Discordance d_j(a,b) measures opposition from criterion j to the assertion "a outranks b." Values typically fall in [0,1]: 0 indicates no opposition, 1 indicates strong opposition (veto).</p>
+        <p><b>Assumptions:</b> This implementation assumes performance scales are oriented so higher values indicate better performance (after any maximize/minimize transformation). Thresholds p and v are in the same units as criterion scales.</p>
+        <p><b>Threshold calibration:</b></p>
+        <ul>
+          <li><b>Source:</b> Thresholds typically elicited from domain experts or derived from data variability.</li>
+          <li><b>Units:</b> p and v should match the criterion performance scale.</li>
+          <li><b>Ordering:</b> Must satisfy p &le; v; validated upstream in config module.</li>
+        </ul>
+        <p><b>Sanity checks:</b></p>
+        <ul>
+          <li>Verify d_j values fall in [0,1]; values outside suggest errors.</li>
+          <li>Spot-check formula behavior for a few criterion pairs.</li>
+          <li>Consider sensitivity testing with threshold perturbations.</li>
+          <li>NaN/Inf values should be handled upstream; this module assumes complete data.</li>
         </ul>
       </div>
-    </div>
-
-    <!-- Sanity Checks - compact box -->
-    <div class="io-summary">
-      <h3>Sanity Checks</h3>
-      <div class="io-item">
-        <ul style="margin:0;padding-left:var(--s4);font-size:12px;color:var(--text-muted);">
-          <li><b>Range:</b> Verify all d_j values fall in [0,1]; values outside this range suggest implementation or input errors.</li>
-          <li><b>Spot-check:</b> For a few criterion pairs, manually verify d_j matches expected piecewise formula behavior.</li>
-          <li><b>Sensitivity:</b> Consider testing how results change with small threshold perturbations.</li>
-          <li><b>Missing data:</b> This module assumes complete data; NaN/Inf values should be handled upstream.</li>
-        </ul>
-      </div>
-    </div>
+    </details>
 
     <div class="rows">
       <!-- R1: Module Overview -->

@@ -634,3 +634,195 @@ class TestRankingTutorialScaffold:
         assert 'class="usage-disclaimer"' in ranking_html
         assert "illustrative" in ranking_html.lower()
         assert "do not treat" in ranking_html.lower()
+
+
+class TestValidateTutorialScaffold:
+    """Tests for validate_tutorial_side_by_side.html scaffold."""
+
+    @pytest.fixture
+    def validate_html(self):
+        """Load validate tutorial HTML."""
+        path = DOCS_DIR / "validate_tutorial_side_by_side.html"
+        return path.read_text(encoding="utf-8")
+
+    def test_file_exists(self):
+        """Validate tutorial file must exist."""
+        path = DOCS_DIR / "validate_tutorial_side_by_side.html"
+        assert path.exists(), f"Missing file: {path}"
+
+    def test_has_doctype(self, validate_html):
+        """Tutorial must have HTML5 doctype."""
+        assert validate_html.strip().startswith("<!DOCTYPE html>")
+
+    def test_has_csp_meta(self, validate_html):
+        """Tutorial must have Content-Security-Policy meta tag."""
+        assert 'http-equiv="Content-Security-Policy"' in validate_html
+        assert "script-src 'self'" in validate_html
+
+    def test_has_shell_structure(self, validate_html):
+        """Tutorial must have Layout2 .shell structure."""
+        assert 'class="shell"' in validate_html
+
+    def test_has_sidebar(self, validate_html):
+        """Tutorial must have .sidebar element."""
+        assert 'class="sidebar"' in validate_html
+
+    def test_has_rows_container(self, validate_html):
+        """Tutorial must have .rows container."""
+        assert 'class="rows"' in validate_html
+
+    def test_has_five_range_rows(self, validate_html):
+        """Tutorial must have 5 range rows (R1-R5)."""
+        assert 'id="row-R1"' in validate_html
+        assert 'id="row-R2"' in validate_html
+        assert 'id="row-R3"' in validate_html
+        assert 'id="row-R4"' in validate_html
+        assert 'id="row-R5"' in validate_html
+
+    def test_has_jump_navigation(self, validate_html):
+        """Tutorial must have jump-to navigation for R1-R5."""
+        assert 'href="#row-R1"' in validate_html
+        assert 'href="#row-R2"' in validate_html
+        assert 'href="#row-R3"' in validate_html
+        assert 'href="#row-R4"' in validate_html
+        assert 'href="#row-R5"' in validate_html
+
+    def test_has_theme_toggle(self, validate_html):
+        """Tutorial must have theme toggle buttons."""
+        assert 'data-theme-value="light"' in validate_html
+        assert 'data-theme-value="dark"' in validate_html
+        assert 'data-theme-value="system"' in validate_html
+
+    def test_has_progress_indicator(self, validate_html):
+        """Tutorial must have progress indicator."""
+        assert 'id="prog-indicator"' in validate_html or 'class="prog"' in validate_html
+
+    def test_references_local_scripts(self, validate_html):
+        """Tutorial must reference only theme.js and highlight.js."""
+        assert 'src="assets/theme.js"' in validate_html
+        assert 'src="assets/highlight.js"' in validate_html
+
+    def test_each_row_has_required_subheadings(self, validate_html):
+        """Each row must have Purpose/I/O/Why/Pitfalls subheadings."""
+        assert validate_html.count('<h4>Purpose</h4>') >= 5, "Need 5 Purpose subheadings"
+        assert validate_html.count('<h4>I/O</h4>') >= 5, "Need 5 I/O subheadings"
+        assert validate_html.count('<h4>Why</h4>') >= 5, "Need 5 Why subheadings"
+        assert validate_html.count('<h4>Pitfalls</h4>') >= 5, "Need 5 Pitfalls subheadings"
+
+    def test_no_external_assets(self, validate_html):
+        """Tutorial must have no external asset references (security)."""
+        for pattern in EXTERNAL_PATTERNS:
+            matches = re.findall(pattern, validate_html, re.IGNORECASE)
+            assert not matches, f"Found external reference matching: {pattern}"
+
+    def test_has_validate_content(self, validate_html):
+        """Tutorial must have validate-specific content."""
+        assert "validate_matrix" in validate_html
+        assert "normalize_weights" in validate_html
+        assert "validate_arrays_match" in validate_html
+        assert "validate_thresholds" in validate_html
+
+    def test_has_option3_grounding_facts_line(self, validate_html):
+        """Tutorial must have Option 3 compact facts line with dl."""
+        assert 'class="gnd-facts"' in validate_html, "Missing .gnd-facts container"
+        assert "<dl>" in validate_html, "Missing dl element for facts"
+        assert "<dt>" in validate_html, "Missing dt elements"
+        assert "<dd>" in validate_html, "Missing dd elements"
+
+    def test_has_option3_expandable_details(self, validate_html):
+        """Tutorial must have Option 3 expandable details/summary for rationale."""
+        assert 'class="gnd-details"' in validate_html, "Missing .gnd-details"
+        assert "<details" in validate_html, "Missing details element"
+        assert "<summary>" in validate_html, "Missing summary element"
+        assert 'class="gnd-content"' in validate_html, "Missing .gnd-content"
+
+    def test_grounding_has_key_invariants(self, validate_html):
+        """Grounding facts must include key invariants."""
+        assert "2D" in validate_html or "2-D" in validate_html
+        assert "finite" in validate_html.lower()
+        assert "sum = 1" in validate_html or "sum=1" in validate_html
+
+    def test_no_deterministic_output_assertions(self, validate_html):
+        """Tutorial must not have deterministic output assertions."""
+        assert "weights[0] =" not in validate_html
+        assert "= [0.5, 0.5]" not in validate_html
+        assert "expected weights" not in validate_html.lower()
+
+    def test_has_io_summary(self, validate_html):
+        """Tutorial must have I/O Summary section."""
+        assert 'class="io-summary"' in validate_html
+        assert "I/O Summary" in validate_html
+
+    def test_has_usage_disclaimer(self, validate_html):
+        """Tutorial must have usage disclaimer about illustrative examples."""
+        assert 'class="usage-disclaimer"' in validate_html
+        assert "illustrative" in validate_html.lower()
+        assert "do not treat" in validate_html.lower()
+
+    def test_mentions_fail_fast(self, validate_html):
+        """Tutorial should mention fail-fast philosophy."""
+        assert "fail-fast" in validate_html.lower() or "fail fast" in validate_html.lower()
+
+    def test_mentions_valueerror(self, validate_html):
+        """Tutorial must mention ValueError as the exception type."""
+        assert "ValueError" in validate_html
+
+    # Dark mode readability tests
+    def test_has_dark_mode_note_text_token(self, validate_html):
+        """Tutorial must have --note-text CSS token for dark mode readability."""
+        assert "--note-text:" in validate_html
+
+    def test_has_dark_mode_note_size_token(self, validate_html):
+        """Tutorial must have --note-size CSS token for dark mode text sizing."""
+        assert "--note-size:" in validate_html
+
+    def test_has_dark_mode_h4_color_token(self, validate_html):
+        """Tutorial must have --h4-color CSS token for header contrast."""
+        assert "--h4-color:" in validate_html
+
+    def test_has_dark_mode_h4_border_token(self, validate_html):
+        """Tutorial must have --h4-border CSS token for green accent."""
+        assert "--h4-border:" in validate_html
+
+    def test_note_col_uses_note_text_token(self, validate_html):
+        """Note column must use --note-text token for text color."""
+        assert "color:var(--note-text)" in validate_html
+
+    def test_note_col_uses_note_size_token(self, validate_html):
+        """Note column must use --note-size token for font size."""
+        assert "font-size:var(--note-size)" in validate_html
+
+    def test_h4_uses_h4_color_token(self, validate_html):
+        """H4 headers must use --h4-color token."""
+        assert "color:var(--h4-color)" in validate_html
+
+    def test_h4_has_border_left(self, validate_html):
+        """H4 headers must have border-left for green accent mark."""
+        assert "border-left:" in validate_html and "--h4-border" in validate_html
+
+    # Variant B selection highlight tests
+    def test_has_selection_accent_token(self, validate_html):
+        """Tutorial must have --sel-accent CSS token for green selection."""
+        assert "--sel-accent:" in validate_html
+
+    def test_has_selection_soft_token(self, validate_html):
+        """Tutorial must have --sel-soft CSS token for selection background."""
+        assert "--sel-soft:" in validate_html
+
+    def test_has_selection_border_token(self, validate_html):
+        """Tutorial must have --sel-border CSS token for selection border."""
+        assert "--sel-border:" in validate_html
+
+    def test_has_row_sel_styles(self, validate_html):
+        """Tutorial must have .row.sel selection styles."""
+        assert ".row.sel" in validate_html
+
+    def test_selection_has_non_color_cue(self, validate_html):
+        """Selection must have non-color cue (text chip 'selected')."""
+        assert '"selected"' in validate_html or "'selected'" in validate_html
+
+    def test_hl_uses_selection_tokens(self, validate_html):
+        """Code highlight (.hl) must use selection tokens."""
+        assert ".hl{" in validate_html or ".hl {" in validate_html
+        assert "--sel-soft" in validate_html
+        assert "--sel-accent" in validate_html

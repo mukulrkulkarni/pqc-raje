@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dark text style B — Mild neon</title>
+<style>
+/* Layout2 token structure — dark values, Option B: mild neon headings/links */
+:root{
+  --bg:#0b1120; --surface:#0f172a; --surface-2:#1e293b; --border:#1e293b;
+  --border-strong:#334155;
+  /* body text stays calm; headings/links carry restrained neon */
+  --text:#dde3ec; --text-muted:#9aa6b8; --text-dim:#64748b;
+  --heading:#5eead4;              /* h4 = mild neon teal (not saturated cyan) */
+  --accent:#7dd3fc;               /* links = soft neon sky */
+  --accent-soft:#082f3a; --accent-border:#155e75;
+  /* code tokens — unchanged from Layout2 dark */
+  --code-bg:#0f172a; --code-text:#e2e8f0; --kw:#c4b5fd; --str:#86efac;
+  --com:#64748b; --num:#fcd34d; --fn:#93c5fd;
+  --radius:8px; --radius-sm:5px;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --code-frac:58%;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{background:var(--bg); color:var(--text); font-family:var(--sans);
+  font-size:14px; line-height:1.55; padding:var(--s5);}
+.label{font-size:11px; letter-spacing:.08em; text-transform:uppercase;
+  color:var(--text-dim); margin-bottom:var(--s4);}
+.split{display:grid; grid-template-columns:var(--code-frac) 1fr; gap:18px;
+  align-items:start; max-width:1100px;}
+
+/* code column — unchanged */
+.code-col{border:1px solid var(--border); border-radius:var(--radius);
+  background:var(--code-bg); overflow:hidden; min-width:0;}
+.code-bar{display:flex; align-items:center; gap:var(--s2); padding:4px var(--s3);
+  border-bottom:1px solid var(--border); font-size:10.5px; color:var(--text-dim);
+  font-family:var(--mono); background:var(--surface);}
+pre{margin:0; padding:10px 13px; font-family:var(--mono); font-size:13px;
+  line-height:1.5; color:var(--code-text); overflow-x:auto;}
+pre code{display:block; white-space:pre;}
+.kw{color:var(--kw);} .str{color:var(--str);} .com{color:var(--com);}
+.num{color:var(--num);} .fn{color:var(--fn);}
+
+/* note column — the part under evaluation */
+.note-col{min-width:0; padding-top:2px;}
+.note-col h4{margin:0 0 var(--s1); font-size:12px; font-weight:700;
+  letter-spacing:.05em; text-transform:uppercase; color:var(--heading);
+  text-shadow:0 0 12px rgba(94,234,212,.18);} /* faint glow, no bloom */
+.note-col section{margin-bottom:var(--s4);}
+.note-col p{margin:0 0 var(--s2); font-size:13px; color:var(--text-muted);
+  line-height:1.6;}
+.note-col strong{color:var(--text); font-weight:650;}
+.note-col code{font-family:var(--mono); font-size:11.5px;
+  background:var(--surface-2); padding:1px 4px; border-radius:3px;
+  color:var(--text);}
+.note-col ul{margin:0; padding-left:18px;}
+.note-col li{font-size:13px; color:var(--text-muted); line-height:1.6;
+  margin-bottom:2px;}
+.note-col li::marker{color:var(--heading); opacity:.7;}
+.note-col a{color:var(--accent); text-decoration:underline;
+  text-underline-offset:2px; text-decoration-color:var(--accent-border);}
+.note-col a:hover{text-shadow:0 0 10px rgba(125,211,252,.35);}
+.facts{display:flex; flex-wrap:wrap; gap:var(--s1) var(--s3); margin-top:var(--s2);
+  font-size:11px; color:var(--text-dim);}
+.facts span{font-family:var(--mono);}
+.facts b{color:var(--heading); font-weight:600;}
+@media (max-width:900px){ .split{grid-template-columns:1fr;} }
+</style>
+</head>
+<body>
+<div class="label">Option B &mdash; mild neon headings &amp; links · body stays calm</div>
+<div class="split">
+  <div class="code-col">
+    <div class="code-bar">config.py · L12&ndash;24</div>
+    <pre><code><span class="kw">from</span> dataclasses <span class="kw">import</span> dataclass
+
+<span class="kw">@dataclass</span>(frozen=<span class="kw">True</span>)
+<span class="kw">class</span> <span class="fn">Thresholds</span>:
+    <span class="com"># indifference / preference / veto</span>
+    q: <span class="kw">float</span> = <span class="num">0.05</span>
+    p: <span class="kw">float</span> = <span class="num">0.2</span>
+    v: <span class="kw">float</span> = <span class="num">0.6</span>
+
+    <span class="kw">def</span> <span class="fn">validate</span>(self):
+        <span class="kw">if not</span> self.q &lt;= self.p &lt; self.v:
+            <span class="kw">raise</span> <span class="fn">ValueError</span>(<span class="str">"q &le; p &lt; v required"</span>)</code></pre>
+  </div>
+  <div class="note-col">
+    <section>
+      <h4>Purpose</h4>
+      <p>Holds the three ELECTRE discrimination thresholds as one
+        <strong>immutable value object</strong> so every module reads the same
+        numbers.</p>
+    </section>
+    <section>
+      <h4>Inputs &amp; outputs</h4>
+      <ul>
+        <li>In: <code>q</code>, <code>p</code>, <code>v</code> floats (defaulted)</li>
+        <li>Out: frozen <code>Thresholds</code> instance</li>
+        <li>Raises: <code>ValueError</code> on bad ordering</li>
+      </ul>
+    </section>
+    <section>
+      <h4>Why</h4>
+      <p>Freezing prevents mid-run mutation; validation fails fast at
+        construction instead of deep inside the <a href="#">outranking step</a>.</p>
+    </section>
+    <section>
+      <h4>Pitfalls</h4>
+      <ul>
+        <li>Equality of <code>p</code> and <code>v</code> is rejected by design.</li>
+        <li>Defaults assume criteria scaled to [0,&nbsp;1].</li>
+      </ul>
+      <div class="facts">
+        <span><b>complexity</b> O(1)</span>
+        <span><b>deps</b> stdlib</span>
+        <span><b>since</b> v0.3</span>
+      </div>
+    </section>
+  </div>
+</div>
+</body>
+</html>

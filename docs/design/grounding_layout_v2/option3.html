@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Grounding v2 — Option 3: Always-on facts line + details footnote</title>
+<style>
+/* Layout2 tokens (verbatim subset from tutorial scaffolds) */
+:root{
+  --bg:#ffffff; --surface:#f8fafc; --surface-2:#f1f5f9; --border:#e2e8f0;
+  --border-strong:#cbd5e1; --text:#0f172a; --text-muted:#475569; --text-dim:#64748b;
+  --accent:#2563eb; --accent-soft:#eff6ff; --accent-border:#bfdbfe;
+  --ok:#15803d; --ok-soft:#f0fdf4; --warn:#b45309; --warn-soft:#fffbeb;
+  --radius:8px; --radius-sm:5px;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+html[data-theme="dark"]{
+  --bg:#0b1120; --surface:#0f172a; --surface-2:#1e293b; --border:#1e293b;
+  --border-strong:#334155; --text:#e2e8f0; --text-muted:#94a3b8; --text-dim:#64748b;
+  --accent:#60a5fa; --accent-soft:#172554; --accent-border:#1e40af;
+  --ok:#86efac; --ok-soft:#052e16; --warn:#fcd34d; --warn-soft:#2a1f05;
+}
+*{box-sizing:border-box;}
+body{margin:0; padding:var(--s5); background:var(--bg); color:var(--text);
+  font-family:var(--sans); font-size:14px; line-height:1.55; max-width:1100px;}
+h1{font-size:18px; letter-spacing:-.02em; margin:0 0 var(--s2);}
+.demo-label{font-size:11px; text-transform:uppercase; letter-spacing:.07em;
+  color:var(--text-dim); font-weight:650; margin:var(--s5) 0 var(--s2);}
+
+/* pros/cons header */
+.pc{display:grid; grid-template-columns:1fr 1fr; gap:var(--s2);
+  margin:0 0 var(--s4); font-size:12px;}
+.pc div{border:1px solid var(--border); border-radius:var(--radius);
+  padding:var(--s2) var(--s3);}
+.pc .pros{background:var(--ok-soft);} .pc .cons{background:var(--warn-soft);}
+.pc b{display:block; font-size:10.5px; text-transform:uppercase;
+  letter-spacing:.06em; margin-bottom:2px;}
+.pc .pros b{color:var(--ok);} .pc .cons b{color:var(--warn);}
+.pc ul{margin:0; padding-left:var(--s4); color:var(--text-muted);}
+
+/* ==========================================================================
+   OPTION 3 — always-on facts line + <details> footnote
+   Grounding is split by importance: the 4–5 must-know facts live in a
+   permanent single-line definition list (no interaction needed, ~30px);
+   the long-form rationale sits in a borderless inline <details> footnote
+   directly beneath ("Why these thresholds? …"), styled like a link.
+   ========================================================================== */
+.facts{display:flex; flex-wrap:wrap; gap:0 var(--s4); align-items:baseline;
+  padding:5px var(--s3); background:var(--surface);
+  border:1px solid var(--border); border-radius:var(--radius);
+  font-size:11.5px; margin-bottom:2px;}
+.facts .lbl{font-size:11px; text-transform:uppercase; letter-spacing:.05em;
+  color:var(--accent); font-weight:650; flex:none; margin-right:var(--s1);}
+.facts dl{display:contents; margin:0;}
+.facts dt{display:inline; color:var(--text-dim); font-weight:600;}
+.facts dt::after{content:" ";}
+.facts dd{display:inline; margin:0; color:var(--text-muted);}
+.facts .pair{white-space:nowrap;}
+.facts code{font-family:var(--mono); font-size:10.5px;
+  background:var(--surface-2); padding:1px 4px; border-radius:3px;}
+
+.more{margin:0 0 var(--s4);}
+.more summary{display:inline-flex; align-items:center; gap:var(--s1);
+  font-size:11px; color:var(--accent); cursor:pointer; list-style:none;
+  padding:3px var(--s1); border-radius:var(--radius-sm); user-select:none;}
+.more summary::-webkit-details-marker{display:none;}
+.more summary:hover{background:var(--accent-soft);}
+.more summary:focus-visible{outline:2px solid var(--accent); outline-offset:1px;}
+.more summary .tri{width:0; height:0; border-left:4px solid currentColor;
+  border-top:3.5px solid transparent; border-bottom:3.5px solid transparent;
+  transition:transform .12s ease;}
+.more[open] summary .tri{transform:rotate(90deg);}
+.more[open] summary .closed-txt{display:none;}
+.more:not([open]) summary .open-txt{display:none;}
+.more-body{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:var(--s3); padding:var(--s2) var(--s3);
+  border-left:2px solid var(--accent-border); margin-top:var(--s1);}
+.more-sec{min-width:0;}
+.more-sec h3{font-size:11px; text-transform:uppercase; letter-spacing:.05em;
+  color:var(--accent); margin:0 0 var(--s1); font-weight:650;}
+.more-sec p{margin:0 0 var(--s1); font-size:11.5px; line-height:1.45;
+  color:var(--text-muted);}
+.more-sec b{color:var(--text); font-weight:600;}
+.more-list{margin:0; padding:0; list-style:none; font-size:11.5px;
+  line-height:1.45; color:var(--text-muted);}
+.more-list li{padding-left:var(--s3); position:relative; margin-bottom:2px;}
+.more-list li::before{content:"·"; position:absolute; left:2px;
+  color:var(--text-dim); font-weight:700;}
+
+/* theme toggle (demo only) */
+.seg{display:inline-grid; grid-template-columns:repeat(2,1fr); gap:2px;
+  background:var(--surface-2); padding:3px; border-radius:var(--radius-sm);
+  margin-bottom:var(--s3);}
+.seg button{font:inherit; font-size:10.5px; font-weight:600; padding:5px 12px;
+  border:0; cursor:pointer; background:transparent; color:var(--text-muted);
+  border-radius:4px;}
+.seg button[aria-pressed="true"]{background:var(--bg); color:var(--text);
+  box-shadow:0 1px 2px rgba(0,0,0,.08);}
+.seg button:focus-visible{outline:2px solid var(--accent); outline-offset:1px;}
+</style>
+</head>
+<body>
+<h1>Option 3 — Always-on facts line + <code>&lt;details&gt;</code> footnote</h1>
+
+<div class="pc">
+  <div class="pros"><b>Pros</b>
+    <ul>
+      <li>Must-know invariants are always visible — zero interaction, no hidden critical info.</li>
+      <li>Collapsed cost ≈ 30px facts line + one text-link row; lightest visual weight (no second border box).</li>
+      <li>Progressive disclosure matches reading intent: skim facts, expand rationale only if curious.</li>
+      <li>Semantic <code>&lt;dl&gt;</code> for facts + native <code>&lt;details&gt;</code>; keyboard and SR friendly, no JS.</li>
+    </ul>
+  </div>
+  <div class="cons"><b>Cons</b>
+    <ul>
+      <li>Requires editorial judgement to pick which facts are "always-on."</li>
+      <li>Footnote link is subtler than a bar — slightly lower discoverability of the long form.</li>
+      <li>Facts line wraps to two lines below ~700px.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="seg" role="group" aria-label="Theme">
+  <button type="button" onclick="document.documentElement.dataset.theme='light';sync(this)" aria-pressed="true">Light</button>
+  <button type="button" onclick="document.documentElement.dataset.theme='dark';sync(this)" aria-pressed="false">Dark</button>
+</div>
+
+<div class="demo-label">Collapsed (default): facts line + footnote link</div>
+<div class="facts" role="group" aria-label="Key methodological facts">
+  <span class="lbl">Key facts</span>
+  <dl>
+    <span class="pair"><dt>Range</dt><dd><code>d_j &isin; [0,1]</code></dd></span>
+    <span class="pair"><dt>Veto</dt><dd><code>diff &le; &minus;v &rArr; d_j = 1</code></dd></span>
+    <span class="pair"><dt>Ordering</dt><dd><code>0 &le; p &le; v</code></dd></span>
+    <span class="pair"><dt>Units</dt><dd>same as criterion scale</dd></span>
+    <span class="pair"><dt>Missing data</dt><dd>handled upstream</dd></span>
+  </dl>
+</div>
+<details class="more">
+  <summary>
+    <span class="tri" aria-hidden="true"></span>
+    <span class="closed-txt">Why these thresholds? Grounding, calibration &amp; sanity checks</span>
+    <span class="open-txt">Hide grounding details</span>
+  </summary>
+  <div class="more-body">
+    <section class="more-sec" aria-labelledby="o3-sci">
+      <h3 id="o3-sci">Scientific Grounding</h3>
+      <p><b>Definition:</b> Discordance d_j(a,b) measures opposition from criterion j
+        to "a outranks b." Values in [0,1]: 0 = no opposition, 1 = veto.</p>
+      <p><b>Assumptions:</b> Scales oriented so higher = better; thresholds p, v in
+        the same units as criterion scales.</p>
+    </section>
+    <section class="more-sec" aria-labelledby="o3-cal">
+      <h3 id="o3-cal">Threshold Calibration</h3>
+      <ul class="more-list">
+        <li><b>Source:</b> expert elicitation or data-variability analysis.</li>
+        <li><b>Units:</b> same units as the criterion performance scale.</li>
+        <li><b>Ordering:</b> p &le; v; validated upstream in config module.</li>
+        <li><b>Sanity:</b> thresholds beyond the data range have no effect.</li>
+      </ul>
+    </section>
+    <section class="more-sec" aria-labelledby="o3-chk">
+      <h3 id="o3-chk">Sanity Checks</h3>
+      <ul class="more-list">
+        <li><b>Range:</b> all d_j values in [0,1].</li>
+        <li><b>Spot-check:</b> verify piecewise formula on a few pairs.</li>
+        <li><b>Sensitivity:</b> perturb thresholds slightly; inspect deltas.</li>
+        <li><b>Missing data:</b> NaN/Inf must be handled upstream.</li>
+      </ul>
+    </section>
+  </div>
+</details>
+
+<div class="demo-label">Expanded footnote</div>
+<div class="facts" role="group" aria-label="Key methodological facts — demo expanded">
+  <span class="lbl">Key facts</span>
+  <dl>
+    <span class="pair"><dt>Range</dt><dd><code>d_j &isin; [0,1]</code></dd></span>
+    <span class="pair"><dt>Veto</dt><dd><code>diff &le; &minus;v &rArr; d_j = 1</code></dd></span>
+    <span class="pair"><dt>Ordering</dt><dd><code>0 &le; p &le; v</code></dd></span>
+    <span class="pair"><dt>Units</dt><dd>same as criterion scale</dd></span>
+    <span class="pair"><dt>Missing data</dt><dd>handled upstream</dd></span>
+  </dl>
+</div>
+<details class="more" open>
+  <summary>
+    <span class="tri" aria-hidden="true"></span>
+    <span class="closed-txt">Why these thresholds? Grounding, calibration &amp; sanity checks</span>
+    <span class="open-txt">Hide grounding details</span>
+  </summary>
+  <div class="more-body">
+    <section class="more-sec" aria-labelledby="o3b-sci">
+      <h3 id="o3b-sci">Scientific Grounding</h3>
+      <p><b>Definition:</b> Discordance d_j(a,b) measures opposition from criterion j
+        to "a outranks b." Values in [0,1]: 0 = no opposition, 1 = veto.</p>
+      <p><b>Assumptions:</b> Scales oriented so higher = better; thresholds p, v in
+        the same units as criterion scales.</p>
+    </section>
+    <section class="more-sec" aria-labelledby="o3b-cal">
+      <h3 id="o3b-cal">Threshold Calibration</h3>
+      <ul class="more-list">
+        <li><b>Source:</b> expert elicitation or data-variability analysis.</li>
+        <li><b>Units:</b> same units as the criterion performance scale.</li>
+        <li><b>Ordering:</b> p &le; v; validated upstream in config module.</li>
+        <li><b>Sanity:</b> thresholds beyond the data range have no effect.</li>
+      </ul>
+    </section>
+    <section class="more-sec" aria-labelledby="o3b-chk">
+      <h3 id="o3b-chk">Sanity Checks</h3>
+      <ul class="more-list">
+        <li><b>Range:</b> all d_j values in [0,1].</li>
+        <li><b>Spot-check:</b> verify piecewise formula on a few pairs.</li>
+        <li><b>Sensitivity:</b> perturb thresholds slightly; inspect deltas.</li>
+        <li><b>Missing data:</b> NaN/Inf must be handled upstream.</li>
+      </ul>
+    </section>
+  </div>
+</details>
+
+<script>
+function sync(btn){
+  document.querySelectorAll('.seg button').forEach(b=>b.setAttribute('aria-pressed', b===btn ? 'true':'false'));
+}
+</script>
+</body>
+</html>

@@ -400,3 +400,121 @@ class TestDiscordanceTutorialScaffold:
         assert "use p = " not in discordance_html.lower()
         assert "use v = " not in discordance_html.lower()
         # Disclaimer warning against treating examples as defaults is OK
+
+
+class TestCredibilityTutorialScaffold:
+    """Tests for credibility_tutorial_side_by_side.html scaffold with Option 3 layout."""
+
+    @pytest.fixture
+    def credibility_html(self) -> str:
+        """Load credibility_tutorial_side_by_side.html content."""
+        path = DOCS_DIR / "credibility_tutorial_side_by_side.html"
+        if not path.exists():
+            pytest.skip(f"{path} does not exist")
+        return path.read_text(encoding="utf-8")
+
+    def test_file_exists(self):
+        """credibility_tutorial_side_by_side.html must exist."""
+        path = DOCS_DIR / "credibility_tutorial_side_by_side.html"
+        assert path.exists(), "Credibility tutorial file missing"
+
+    def test_has_csp_meta_tag(self, credibility_html):
+        """Tutorial must have Content-Security-Policy meta tag."""
+        assert re.search(CSP_PATTERN, credibility_html), "Missing CSP meta tag"
+
+    def test_has_layout2_structure(self, credibility_html):
+        """Tutorial must have Layout 2 structure elements."""
+        assert 'class="shell"' in credibility_html, "Missing .shell grid"
+        assert 'class="sidebar"' in credibility_html, "Missing .sidebar"
+        assert 'class="rows"' in credibility_html, "Missing .rows container"
+
+    def test_has_r1_through_r5_rows(self, credibility_html):
+        """Tutorial must have rows R1-R5."""
+        for r in ["R1", "R2", "R3", "R4", "R5"]:
+            assert f'id="row-{r}"' in credibility_html, f"Missing row id=row-{r}"
+
+    def test_has_io_summary_section(self, credibility_html):
+        """Tutorial must have I/O Summary section."""
+        assert 'class="io-summary"' in credibility_html, "Missing .io-summary"
+        assert "I/O Summary" in credibility_html, "Missing I/O Summary heading"
+
+    def test_has_jump_navigation(self, credibility_html):
+        """Tutorial must have sidebar jump navigation."""
+        for r in ["R1", "R2", "R3", "R4", "R5"]:
+            assert f'id="jump-{r}"' in credibility_html, f"Missing jump id=jump-{r}"
+
+    def test_has_progress_indicator(self, credibility_html):
+        """Tutorial must have progress indicator elements."""
+        assert 'id="prog-txt"' in credibility_html, "Missing prog-txt element"
+        assert 'id="prog-fill"' in credibility_html, "Missing prog-fill element"
+
+    def test_references_js_assets(self, credibility_html):
+        """Tutorial must reference only theme.js and highlight.js."""
+        assert 'src="assets/theme.js"' in credibility_html, "Missing theme.js reference"
+        assert 'src="assets/highlight.js"' in credibility_html, "Missing highlight.js reference"
+
+    def test_each_row_has_required_subheadings(self, credibility_html):
+        """Each row must have Purpose/I/O/Why/Pitfalls subheadings."""
+        assert credibility_html.count('<h4>Purpose</h4>') >= 5, "Need 5 Purpose subheadings"
+        assert credibility_html.count('<h4>I/O</h4>') >= 5, "Need 5 I/O subheadings"
+        assert credibility_html.count('<h4>Why</h4>') >= 5, "Need 5 Why subheadings"
+        assert credibility_html.count('<h4>Pitfalls</h4>') >= 5, "Need 5 Pitfalls subheadings"
+
+    def test_no_external_assets(self, credibility_html):
+        """Tutorial must have no external asset references (security)."""
+        for pattern in EXTERNAL_PATTERNS:
+            matches = re.findall(pattern, credibility_html, re.IGNORECASE)
+            assert not matches, f"Found external reference matching: {pattern}"
+
+    def test_has_credibility_content(self, credibility_html):
+        """Tutorial must have credibility-specific content."""
+        assert "credibility" in credibility_html.lower()
+        assert "S(a,b)" in credibility_html or "S_ab" in credibility_html
+        assert "concordance" in credibility_html.lower()
+
+    def test_has_option3_grounding_facts_line(self, credibility_html):
+        """Tutorial must have Option 3 compact facts line with dl."""
+        assert 'class="gnd-facts"' in credibility_html, "Missing .gnd-facts container"
+        assert "<dl>" in credibility_html, "Missing dl element for facts"
+        assert "<dt>" in credibility_html, "Missing dt elements"
+        assert "<dd>" in credibility_html, "Missing dd elements"
+
+    def test_has_option3_expandable_details(self, credibility_html):
+        """Tutorial must have Option 3 expandable details/summary for rationale."""
+        assert 'class="gnd-details"' in credibility_html, "Missing .gnd-details"
+        assert "<details" in credibility_html, "Missing details element"
+        assert "<summary>" in credibility_html, "Missing summary element"
+        assert 'class="gnd-content"' in credibility_html, "Missing .gnd-content"
+
+    def test_grounding_has_key_invariants(self, credibility_html):
+        """Grounding facts must include key invariants."""
+        assert "Range" in credibility_html
+        assert "[0,1]" in credibility_html
+        assert "Diagonal" in credibility_html
+        assert "Definition" in credibility_html
+
+    def test_uses_implementation_contract_wording(self, credibility_html):
+        """Tutorial must use implementation contract wording, not vague 'typically'."""
+        # Should use clips/implementation language
+        assert "clips output to [0,1]" in credibility_html
+        # Should NOT use vague 'typically fall' language
+        assert "typically fall in [0,1]" not in credibility_html
+
+    def test_diagonal_not_enforced_here_wording(self, credibility_html):
+        """Tutorial must clarify diagonal is not enforced by this function."""
+        # Should clarify diagonal handled upstream, not enforced here
+        assert "not enforce" in credibility_html.lower() or "does not enforce" in credibility_html.lower()
+        # Should NOT claim S(a,a)=0 is guaranteed/set by this function
+        assert "S(a,a) = 0 (set upstream)" not in credibility_html
+
+    def test_no_deterministic_output_assertions(self, credibility_html):
+        """Tutorial must not have deterministic output assertions."""
+        assert "= 0.8 (" not in credibility_html
+        assert "= 1.0 (" not in credibility_html
+        assert "S[0,0] =" not in credibility_html
+
+    def test_has_usage_disclaimer(self, credibility_html):
+        """Tutorial must have usage disclaimer about illustrative examples."""
+        assert 'class="usage-disclaimer"' in credibility_html
+        assert "illustrative" in credibility_html.lower()
+        assert "do not treat" in credibility_html.lower()

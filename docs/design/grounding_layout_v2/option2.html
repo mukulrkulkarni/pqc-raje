@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Grounding v2 — Option 2: Accordion columns</title>
+<style>
+/* Layout2 tokens (verbatim subset from tutorial scaffolds) */
+:root{
+  --bg:#ffffff; --surface:#f8fafc; --surface-2:#f1f5f9; --border:#e2e8f0;
+  --border-strong:#cbd5e1; --text:#0f172a; --text-muted:#475569; --text-dim:#64748b;
+  --accent:#2563eb; --accent-soft:#eff6ff; --accent-border:#bfdbfe;
+  --ok:#15803d; --ok-soft:#f0fdf4; --warn:#b45309; --warn-soft:#fffbeb;
+  --radius:8px; --radius-sm:5px;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+html[data-theme="dark"]{
+  --bg:#0b1120; --surface:#0f172a; --surface-2:#1e293b; --border:#1e293b;
+  --border-strong:#334155; --text:#e2e8f0; --text-muted:#94a3b8; --text-dim:#64748b;
+  --accent:#60a5fa; --accent-soft:#172554; --accent-border:#1e40af;
+  --ok:#86efac; --ok-soft:#052e16; --warn:#fcd34d; --warn-soft:#2a1f05;
+}
+*{box-sizing:border-box;}
+body{margin:0; padding:var(--s5); background:var(--bg); color:var(--text);
+  font-family:var(--sans); font-size:14px; line-height:1.55; max-width:1100px;}
+h1{font-size:18px; letter-spacing:-.02em; margin:0 0 var(--s2);}
+.demo-label{font-size:11px; text-transform:uppercase; letter-spacing:.07em;
+  color:var(--text-dim); font-weight:650; margin:var(--s5) 0 var(--s2);}
+
+/* pros/cons header */
+.pc{display:grid; grid-template-columns:1fr 1fr; gap:var(--s2);
+  margin:0 0 var(--s4); font-size:12px;}
+.pc div{border:1px solid var(--border); border-radius:var(--radius);
+  padding:var(--s2) var(--s3);}
+.pc .pros{background:var(--ok-soft);} .pc .cons{background:var(--warn-soft);}
+.pc b{display:block; font-size:10.5px; text-transform:uppercase;
+  letter-spacing:.06em; margin-bottom:2px;}
+.pc .pros b{color:var(--ok);} .pc .cons b{color:var(--warn);}
+.pc ul{margin:0; padding-left:var(--s4); color:var(--text-muted);}
+
+/* ==========================================================================
+   OPTION 2 — accordion columns
+   Three sibling <details> rendered as columns in one bordered container.
+   Collapsed = one slim bar showing all three section names + a one-line
+   teaser each, so every topic is discoverable. Each column opens
+   independently; the grid keeps unopened columns slim.
+   ========================================================================== */
+.acc{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  border:1px solid var(--border); border-radius:var(--radius);
+  background:var(--surface); overflow:hidden; margin-bottom:var(--s4);
+  align-items:start;}
+.acc details{min-width:0;}
+.acc details + details{border-left:1px solid var(--border);}
+.acc summary{display:flex; align-items:baseline; gap:var(--s2);
+  padding:6px var(--s3); cursor:pointer; list-style:none; user-select:none;
+  min-height:30px;}
+.acc summary::-webkit-details-marker{display:none;}
+.acc summary:hover{background:var(--surface-2);}
+.acc summary:focus-visible{outline:2px solid var(--accent); outline-offset:-2px;}
+.acc .t{font-size:11px; text-transform:uppercase; letter-spacing:.05em;
+  color:var(--accent); font-weight:650; flex:none; white-space:nowrap;}
+.acc .teaser{font-size:10.5px; color:var(--text-dim); min-width:0;
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex:1;}
+.acc details[open] .teaser{display:none;}
+.acc .chev{flex:none; margin-left:auto; width:0; height:0;
+  border-left:4px solid transparent; border-right:4px solid transparent;
+  border-top:5px solid var(--text-dim); align-self:center;
+  transition:transform .12s ease;}
+.acc details[open] .chev{transform:rotate(180deg);}
+.acc-body{padding:0 var(--s3) var(--s2); font-size:11.5px; line-height:1.45;
+  color:var(--text-muted);}
+.acc-body p{margin:0 0 var(--s1);}
+.acc-body b{color:var(--text); font-weight:600;}
+.acc-list{margin:0; padding:0; list-style:none;}
+.acc-list li{padding-left:var(--s3); position:relative; margin-bottom:2px;}
+.acc-list li::before{content:"·"; position:absolute; left:2px;
+  color:var(--text-dim); font-weight:700;}
+@media (max-width:860px){
+  .acc{grid-template-columns:1fr;}
+  .acc details + details{border-left:0; border-top:1px solid var(--border);}
+}
+
+/* theme toggle (demo only) */
+.seg{display:inline-grid; grid-template-columns:repeat(2,1fr); gap:2px;
+  background:var(--surface-2); padding:3px; border-radius:var(--radius-sm);
+  margin-bottom:var(--s3);}
+.seg button{font:inherit; font-size:10.5px; font-weight:600; padding:5px 12px;
+  border:0; cursor:pointer; background:transparent; color:var(--text-muted);
+  border-radius:4px;}
+.seg button[aria-pressed="true"]{background:var(--bg); color:var(--text);
+  box-shadow:0 1px 2px rgba(0,0,0,.08);}
+.seg button:focus-visible{outline:2px solid var(--accent); outline-offset:1px;}
+</style>
+</head>
+<body>
+<h1>Option 2 — Accordion columns (three independent <code>&lt;details&gt;</code>)</h1>
+
+<div class="pc">
+  <div class="pros"><b>Pros</b>
+    <ul>
+      <li>Granular: readers open only the section they need; others stay one line tall.</li>
+      <li>All three section names + a teaser are visible while collapsed — strong discoverability.</li>
+      <li>Collapsed cost is one ~32px bar across the full width.</li>
+      <li>Native elements: each summary is a tab stop, toggled with Enter/Space; no JS.</li>
+    </ul>
+  </div>
+  <div class="cons"><b>Cons</b>
+    <ul>
+      <li>Opening one column makes row heights uneven (ragged bottom edge).</li>
+      <li>Three toggles = more interaction cost to see everything.</li>
+      <li>Teaser text is truncated with ellipsis; relies on expanding for full content.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="seg" role="group" aria-label="Theme">
+  <button type="button" onclick="document.documentElement.dataset.theme='light';sync(this)" aria-pressed="true">Light</button>
+  <button type="button" onclick="document.documentElement.dataset.theme='dark';sync(this)" aria-pressed="false">Dark</button>
+</div>
+
+<div class="demo-label">Collapsed (default): one bar, three labelled toggles</div>
+<div class="acc" role="group" aria-label="Methodological grounding">
+  <details>
+    <summary><span class="t">Grounding</span>
+      <span class="teaser">d_j &isin; [0,1]; 1 = veto</span>
+      <span class="chev" aria-hidden="true"></span></summary>
+    <div class="acc-body">
+      <p><b>Definition:</b> Discordance d_j(a,b) measures opposition from criterion j
+        to "a outranks b." Values in [0,1]: 0 = no opposition, 1 = veto.</p>
+      <p><b>Assumptions:</b> Scales oriented so higher = better; thresholds p, v in
+        the same units as criterion scales.</p>
+    </div>
+  </details>
+  <details>
+    <summary><span class="t">Calibration</span>
+      <span class="teaser">p &le; v, same units as scale</span>
+      <span class="chev" aria-hidden="true"></span></summary>
+    <div class="acc-body">
+      <ul class="acc-list">
+        <li><b>Source:</b> expert elicitation or data-variability analysis.</li>
+        <li><b>Units:</b> same units as the criterion performance scale.</li>
+        <li><b>Ordering:</b> p &le; v; validated upstream in config module.</li>
+        <li><b>Sanity:</b> thresholds beyond the data range have no effect.</li>
+      </ul>
+    </div>
+  </details>
+  <details>
+    <summary><span class="t">Sanity checks</span>
+      <span class="teaser">range, spot-check, sensitivity</span>
+      <span class="chev" aria-hidden="true"></span></summary>
+    <div class="acc-body">
+      <ul class="acc-list">
+        <li><b>Range:</b> all d_j values in [0,1].</li>
+        <li><b>Spot-check:</b> verify piecewise formula on a few pairs.</li>
+        <li><b>Sensitivity:</b> perturb thresholds slightly; inspect deltas.</li>
+        <li><b>Missing data:</b> NaN/Inf must be handled upstream.</li>
+      </ul>
+    </div>
+  </details>
+</div>
+
+<div class="demo-label">One section opened (others stay slim)</div>
+<div class="acc" role="group" aria-label="Methodological grounding — demo expanded">
+  <details>
+    <summary><span class="t">Grounding</span>
+      <span class="teaser">d_j &isin; [0,1]; 1 = veto</span>
+      <span class="chev" aria-hidden="true"></span></summary>
+    <div class="acc-body">
+      <p><b>Definition:</b> Discordance d_j(a,b) measures opposition from criterion j
+        to "a outranks b." Values in [0,1]: 0 = no opposition, 1 = veto.</p>
+      <p><b>Assumptions:</b> Scales oriented so higher = better; thresholds p, v in
+        the same units as criterion scales.</p>
+    </div>
+  </details>
+  <details open>
+    <summary><span class="t">Calibration</span>
+      <span class="teaser">p &le; v, same units as scale</span>
+      <span class="chev" aria-hidden="true"></span></summary>
+    <div class="acc-body">
+      <ul class="acc-list">
+        <li><b>Source:</b> expert elicitation or data-variability analysis.</li>
+        <li><b>Units:</b> same units as the criterion performance scale.</li>
+        <li><b>Ordering:</b> p &le; v; validated upstream in config module.</li>
+        <li><b>Sanity:</b> thresholds beyond the data range have no effect.</li>
+      </ul>
+    </div>
+  </details>
+  <details>
+    <summary><span class="t">Sanity checks</span>
+      <span class="teaser">range, spot-check, sensitivity</span>
+      <span class="chev" aria-hidden="true"></span></summary>
+    <div class="acc-body">
+      <ul class="acc-list">
+        <li><b>Range:</b> all d_j values in [0,1].</li>
+        <li><b>Spot-check:</b> verify piecewise formula on a few pairs.</li>
+        <li><b>Sensitivity:</b> perturb thresholds slightly; inspect deltas.</li>
+        <li><b>Missing data:</b> NaN/Inf must be handled upstream.</li>
+      </ul>
+    </div>
+  </details>
+</div>
+
+<script>
+function sync(btn){
+  document.querySelectorAll('.seg button').forEach(b=>b.setAttribute('aria-pressed', b===btn ? 'true':'false'));
+}
+</script>
+</body>
+</html>

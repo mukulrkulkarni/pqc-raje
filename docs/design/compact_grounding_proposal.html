@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Design proposal: compact grounding strip</title>
+<style>
+/* Layout2 tokens (verbatim subset from tutorial scaffolds) */
+:root{
+  --bg:#ffffff; --surface:#f8fafc; --surface-2:#f1f5f9; --border:#e2e8f0;
+  --border-strong:#cbd5e1; --text:#0f172a; --text-muted:#475569; --text-dim:#64748b;
+  --accent:#2563eb; --accent-soft:#eff6ff; --accent-border:#bfdbfe;
+  --ok:#15803d; --ok-soft:#f0fdf4; --warn:#b45309; --warn-soft:#fffbeb;
+  --radius:8px; --radius-sm:5px;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+html[data-theme="dark"]{
+  --bg:#0b1120; --surface:#0f172a; --surface-2:#1e293b; --border:#1e293b;
+  --border-strong:#334155; --text:#e2e8f0; --text-muted:#94a3b8; --text-dim:#64748b;
+  --accent:#60a5fa; --accent-soft:#172554; --accent-border:#1e40af;
+  --ok:#86efac; --ok-soft:#052e16; --warn:#fcd34d; --warn-soft:#2a1f05;
+}
+*{box-sizing:border-box;}
+body{margin:0; padding:var(--s5); background:var(--bg); color:var(--text);
+  font-family:var(--sans); font-size:14px; line-height:1.55; max-width:1100px;}
+h1{font-size:18px; letter-spacing:-.02em; margin:0 0 var(--s2);}
+.demo-label{font-size:11px; text-transform:uppercase; letter-spacing:.07em;
+  color:var(--text-dim); font-weight:650; margin:var(--s5) 0 var(--s2);}
+.demo-label.first{margin-top:var(--s3);}
+
+/* ====== REFERENCE: existing I/O Summary (unchanged, for density parity) ====== */
+.io-summary{display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));
+  gap:var(--s2); margin-bottom:var(--s4); padding:var(--s3);
+  background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);}
+.io-summary h3{font-size:11px; text-transform:uppercase; letter-spacing:.05em;
+  color:var(--accent); margin:0 0 var(--s1); font-weight:650; grid-column:1/-1;}
+.io-item{font-size:11.5px; line-height:1.4;}
+.io-item b{color:var(--text); font-weight:600; display:block; margin-bottom:2px;}
+.io-item code{font-family:var(--mono); font-size:10.5px;
+  background:var(--surface-2); padding:1px 3px; border-radius:2px;}
+.io-item .type{color:var(--text-dim);}
+
+/* ====== CURRENT: three stacked boxes (reproduced for comparison) ====== */
+.old .io-item ul{margin:0;padding-left:var(--s4);font-size:12px;color:var(--text-muted);}
+
+/* ==========================================================================
+   PROPOSED: .gnd grounding strip — one container, three columns
+   Uses Layout2 tokens only. No external assets. No JS required.
+   ========================================================================== */
+.gnd{display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));
+  gap:0; margin-bottom:var(--s4); background:var(--surface);
+  border:1px solid var(--border); border-radius:var(--radius); overflow:hidden;}
+.gnd-sec{min-width:0; padding:var(--s2) var(--s3);}
+.gnd-sec + .gnd-sec{border-left:1px solid var(--border);}
+.gnd-sec h3{font-size:11px; text-transform:uppercase; letter-spacing:.05em;
+  color:var(--accent); margin:0 0 var(--s1); font-weight:650;}
+.gnd-sec p{margin:0 0 var(--s1); font-size:11.5px; line-height:1.45;
+  color:var(--text-muted);}
+.gnd-sec p:last-child, .gnd-sec ul:last-child{margin-bottom:0;}
+.gnd-sec b{color:var(--text); font-weight:600;}
+.gnd-sec code{font-family:var(--mono); font-size:10.5px;
+  background:var(--surface-2); padding:1px 3px; border-radius:2px;}
+.gnd-list{margin:0; padding:0; list-style:none; font-size:11.5px;
+  line-height:1.45; color:var(--text-muted);}
+.gnd-list li{padding-left:var(--s3); position:relative; margin-bottom:2px;}
+.gnd-list li:last-child{margin-bottom:0;}
+.gnd-list li::before{content:"·"; position:absolute; left:2px;
+  color:var(--text-dim); font-weight:700;}
+/* stacked columns get a top rule instead of a left rule when wrapped */
+@media (max-width:860px){
+  .gnd{grid-template-columns:1fr;}
+  .gnd-sec + .gnd-sec{border-left:0; border-top:1px solid var(--border);}
+}
+
+/* theme toggle for the demo only */
+.seg{display:inline-grid; grid-template-columns:repeat(2,1fr); gap:2px;
+  background:var(--surface-2); padding:3px; border-radius:var(--radius-sm); margin-bottom:var(--s3);}
+.seg button{font:inherit; font-size:10.5px; font-weight:600; padding:5px 12px;
+  border:0; cursor:pointer; background:transparent; color:var(--text-muted); border-radius:4px;}
+.seg button[aria-pressed="true"]{background:var(--bg); color:var(--text);
+  box-shadow:0 1px 2px rgba(0,0,0,.08);}
+.seg button:focus-visible{outline:2px solid var(--accent); outline-offset:1px;}
+</style>
+</head>
+<body>
+<h1>Compact grounding strip — design proposal</h1>
+<div class="seg" role="group" aria-label="Theme">
+  <button type="button" onclick="document.documentElement.dataset.theme='light';sync(this)" aria-pressed="true">Light</button>
+  <button type="button" onclick="document.documentElement.dataset.theme='dark';sync(this)" aria-pressed="false">Dark</button>
+</div>
+
+<div class="demo-label first">Reference density target: existing I/O Summary</div>
+<div class="io-summary">
+  <h3>I/O Summary</h3>
+  <div class="io-item"><b>discordance</b>
+    <span class="type">Input:</span> <code>diff: ndarray(B1,B2,C)</code>, <code>p: ndarray(C)</code>, <code>v: ndarray(C)</code><br>
+    <span class="type">Output:</span> <code>ndarray(B1,B2,C)</code> in [0,1]</div>
+  <div class="io-item"><b>Formula</b>
+    <span class="type">d_j:</span> piecewise linear in [-v, -p]<br>
+    <span class="type">Veto:</span> <code>d_j = 1</code> when diff &le; -v</div>
+  <div class="io-item"><b>Role in Pipeline</b>
+    <span class="type">Used by:</span> credibility module<br>
+    <span class="type">Effect:</span> may reduce credibility via veto</div>
+</div>
+
+<div class="demo-label">Current: three stacked boxes (~3&times; vertical cost)</div>
+<div class="old">
+<div class="io-summary">
+  <h3>Scientific Grounding</h3>
+  <div class="io-item"><b>Definition</b>
+    Discordance d_j(a,b) measures opposition from criterion j to the assertion "a outranks b."
+    Values typically fall in [0,1]: 0 indicates no opposition, 1 indicates strong opposition (veto).</div>
+  <div class="io-item"><b>Assumptions</b>
+    Performance scales oriented so higher values indicate better performance.
+    Thresholds p and v are in the same units as criterion scales.</div>
+</div>
+<div class="io-summary">
+  <h3>Threshold Calibration</h3>
+  <div class="io-item">
+    <ul>
+      <li><b>Source:</b> Thresholds (p, v) typically elicited from domain experts or data variability analysis.</li>
+      <li><b>Units:</b> p and v in the same units as the criterion performance scale.</li>
+      <li><b>Ordering:</b> Must satisfy p &le; v; validated upstream in config module.</li>
+      <li><b>Sanity-check:</b> Thresholds larger than data range may have no effect.</li>
+    </ul>
+  </div>
+</div>
+<div class="io-summary">
+  <h3>Sanity Checks</h3>
+  <div class="io-item">
+    <ul>
+      <li><b>Range:</b> Verify all d_j values fall in [0,1].</li>
+      <li><b>Spot-check:</b> Manually verify d_j matches piecewise formula for a few pairs.</li>
+      <li><b>Sensitivity:</b> Test small threshold perturbations.</li>
+      <li><b>Missing data:</b> NaN/Inf handled upstream; this module assumes complete data.</li>
+    </ul>
+  </div>
+</div>
+</div>
+
+<div class="demo-label">Proposed: single grounding strip (one border, three columns)</div>
+<div class="gnd" role="group" aria-label="Methodological grounding">
+  <section class="gnd-sec" aria-labelledby="gnd-sci">
+    <h3 id="gnd-sci">Scientific Grounding</h3>
+    <p><b>Definition:</b> Discordance d_j(a,b) measures opposition from criterion j to
+      "a outranks b." Values in [0,1]: 0 = no opposition, 1 = veto.</p>
+    <p><b>Assumptions:</b> Scales oriented so higher = better; thresholds p, v in the
+      same units as criterion scales.</p>
+  </section>
+  <section class="gnd-sec" aria-labelledby="gnd-cal">
+    <h3 id="gnd-cal">Threshold Calibration</h3>
+    <ul class="gnd-list">
+      <li><b>Source:</b> elicited from experts or data variability analysis.</li>
+      <li><b>Units:</b> same units as the criterion performance scale.</li>
+      <li><b>Ordering:</b> <code>p &le; v</code>, validated upstream in config.</li>
+      <li><b>Check:</b> thresholds beyond the data range have no effect.</li>
+    </ul>
+  </section>
+  <section class="gnd-sec" aria-labelledby="gnd-chk">
+    <h3 id="gnd-chk">Sanity Checks</h3>
+    <ul class="gnd-list">
+      <li><b>Range:</b> all d_j values in [0,1].</li>
+      <li><b>Spot-check:</b> verify piecewise formula on a few pairs.</li>
+      <li><b>Sensitivity:</b> perturb thresholds slightly; inspect deltas.</li>
+      <li><b>Missing data:</b> NaN/Inf must be handled upstream.</li>
+    </ul>
+  </section>
+</div>
+
+<script>
+function sync(btn){
+  document.querySelectorAll('.seg button').forEach(b=>b.setAttribute('aria-pressed', b===btn ? 'true':'false'));
+}
+</script>
+</body>
+</html>

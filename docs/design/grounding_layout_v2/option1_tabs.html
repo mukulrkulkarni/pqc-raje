@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Option 1 &middot; Compact tabs</title>
+<style>
+
+  :root{
+    --bg:#ffffff; --surface:#f8fafc; --surface-2:#f1f5f9; --border:#e2e8f0;
+    --border-strong:#cbd5e1; --text:#0f172a; --text-muted:#475569; --text-dim:#64748b;
+    --accent:#2563eb; --accent-soft:#eff6ff; --accent-border:#bfdbfe;
+    --ok:#15803d; --ok-soft:#f0fdf4; --warn:#b45309; --warn-soft:#fffbeb;
+    --radius:8px; --radius-sm:5px;
+    --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px;
+    --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  [data-theme="dark"]{
+    --bg:#0b1120; --surface:#0f172a; --surface-2:#1e293b; --border:#1e293b;
+    --border-strong:#334155; --text:#e2e8f0; --text-muted:#94a3b8; --text-dim:#64748b;
+    --accent:#60a5fa; --accent-soft:#172554; --accent-border:#1e40af;
+    --ok:#86efac; --ok-soft:#052e16; --warn:#fcd34d; --warn-soft:#2a1f05;
+  }
+
+
+  *{box-sizing:border-box;}
+  body{margin:0; padding:var(--s5); background:var(--bg); color:var(--text);
+       font-family:var(--sans); font-size:14px; line-height:1.5;}
+  .wrap{max-width:980px; margin:0 auto;}
+
+  /* ---- page chrome (mockup only, not part of the proposal) ---- */
+  .mockbar{display:flex; align-items:center; gap:var(--s3); flex-wrap:wrap;
+    margin-bottom:var(--s4); padding-bottom:var(--s3);
+    border-bottom:1px solid var(--border);}
+  .mockbar h1{font-size:15px; margin:0; font-weight:650;}
+  .mockbar .tag{font-family:var(--mono); font-size:10.5px; color:var(--text-dim);
+    border:1px solid var(--border); border-radius:var(--radius-sm); padding:1px 6px;}
+  .mockbar button{margin-left:auto; font:inherit; font-size:11.5px; cursor:pointer;
+    background:var(--surface); color:var(--text-muted);
+    border:1px solid var(--border-strong); border-radius:var(--radius-sm);
+    padding:3px 10px;}
+  .mockbar button:hover{color:var(--text); border-color:var(--accent);}
+
+  h2.sec{font-size:12px; text-transform:uppercase; letter-spacing:.05em;
+    color:var(--text-dim); font-weight:650; margin:var(--s5) 0 var(--s2);}
+
+  /* ---- I/O summary: density reference, copied verbatim from Layout2 ---- */
+  .io-summary{display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));
+    gap:var(--s2); margin-bottom:var(--s3); padding:var(--s3);
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);}
+  .io-summary h3{font-size:11px; text-transform:uppercase; letter-spacing:.05em;
+    color:var(--accent); margin:0 0 var(--s1); font-weight:650; grid-column:1/-1;}
+  .io-item{font-size:11.5px; line-height:1.4;}
+  .io-item b{color:var(--text); font-weight:600; display:block; margin-bottom:2px;}
+  .io-item code{font-family:var(--mono); font-size:10.5px;
+    background:var(--surface-2); padding:1px 3px; border-radius:2px;}
+  .io-item .type{color:var(--text-dim);}
+
+  /* ---- shared grounding typography (all 3 options share this) ---- */
+  .g-body{font-size:11.5px; line-height:1.45; color:var(--text-muted);}
+  .g-body p{margin:0 0 var(--s1);}
+  .g-body p:last-child{margin-bottom:0;}
+  .g-body ul{margin:0; padding:0; list-style:none;}
+  .g-body li{position:relative; padding-left:var(--s3); margin-bottom:2px;}
+  .g-body li:last-child{margin-bottom:0;}
+  .g-body li::before{content:""; position:absolute; left:3px; top:.55em;
+    width:3px; height:3px; border-radius:50%; background:var(--border-strong);}
+  .g-body b{color:var(--text); font-weight:600;}
+  .g-body code{font-family:var(--mono); font-size:10.5px;
+    background:var(--surface-2); padding:1px 3px; border-radius:2px;}
+
+  /* visible focus everywhere (a11y requirement) */
+  :focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:3px;}
+
+  .sr-only{position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+    overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0;}
+
+  /* ---- continuing page content, proves "in context" ---- */
+  .after{margin-top:var(--s4); border:1px solid var(--border);
+    border-radius:var(--radius); overflow:hidden;}
+  .after .bar{background:var(--surface-2); padding:var(--s1) var(--s3);
+    font-family:var(--mono); font-size:10.5px; color:var(--text-dim);
+    border-bottom:1px solid var(--border);}
+  .after pre{margin:0; padding:var(--s3); font-family:var(--mono); font-size:11.5px;
+    color:var(--text-muted); overflow-x:auto;}
+
+  .note{margin-top:var(--s5); padding-top:var(--s3); border-top:1px solid var(--border);
+    font-size:11px; color:var(--text-dim);}
+  .note b{color:var(--text-muted);}
+
+
+  /* ===== Option 1: compact segmented control + single shared panel ===== */
+  .gnd1{border:1px solid var(--border); border-radius:var(--radius);
+    background:var(--surface); overflow:hidden;}
+
+  .gnd1-head{display:flex; align-items:center; gap:var(--s2);
+    padding:var(--s1) var(--s2) var(--s1) var(--s3);
+    border-bottom:1px solid var(--border); background:var(--surface-2);}
+  .gnd1-title{font-size:10px; text-transform:uppercase; letter-spacing:.05em;
+    color:var(--accent); font-weight:650; white-space:nowrap;}
+
+  /* segmented control */
+  .seg{display:flex; gap:2px; padding:2px; margin-left:auto;
+    background:var(--bg); border:1px solid var(--border);
+    border-radius:var(--radius-sm);}
+  .seg button{font:inherit; font-size:11px; font-weight:550; cursor:pointer;
+    border:0; background:transparent; color:var(--text-muted);
+    padding:3px 10px; border-radius:3px; white-space:nowrap; line-height:1.3;}
+  .seg button:hover{color:var(--text); background:var(--surface-2);}
+  .seg button[aria-selected="true"]{background:var(--accent-soft); color:var(--accent);
+    box-shadow:inset 0 0 0 1px var(--accent-border);}
+  [data-theme="dark"] .seg button[aria-selected="true"]{color:var(--text);}
+
+  /* collapse affordance */
+  .gnd1-toggle{font:inherit; font-size:11px; cursor:pointer; line-height:1;
+    background:transparent; border:1px solid transparent; color:var(--text-dim);
+    padding:4px 6px; border-radius:3px;}
+  .gnd1-toggle:hover{color:var(--text); border-color:var(--border-strong);}
+  .gnd1-toggle .chev{display:inline-block; transition:transform .15s ease;}
+  .gnd1-toggle[aria-expanded="false"] .chev{transform:rotate(-90deg);}
+
+  .gnd1-panels{padding:var(--s2) var(--s3) var(--s3);}
+  .gnd1[data-collapsed="true"] .gnd1-panels{display:none;}
+  .gnd1[data-collapsed="true"] .seg{opacity:.45; pointer-events:none;}
+  .gnd1-panels [role="tabpanel"][hidden]{display:none;}
+  .gnd1-panels [role="tabpanel"]{padding-top:var(--s1);}
+
+  @media (max-width:720px){
+    .gnd1-head{flex-wrap:wrap;}
+    .seg{margin-left:0; width:100%;}
+    .seg button{flex:1; text-align:center; padding:4px 4px;}
+  }
+  @media (prefers-reduced-motion:reduce){.gnd1-toggle .chev{transition:none;}}
+
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="mockbar">
+    <h1>Option 1 &middot; Compact tabs</h1>
+    <span class="tag">segmented control / WAI-ARIA tabs</span>
+    <button id="themeBtn" type="button" aria-pressed="false">Dark theme</button>
+  </div>
+
+
+    <div class="io-summary">
+      <h3>I/O Summary</h3>
+      <div class="io-item">
+        <b>discordance</b>
+        <span class="type">Input:</span> <code>diff: ndarray(B1,B2,C)</code>, <code>p: ndarray(C)</code>, <code>v: ndarray(C)</code><br>
+        <span class="type">Output:</span> <code>ndarray(B1,B2,C)</code> in [0,1]<br>
+        <span class="type">Constraint:</span> <code>p &le; v</code> (validated upstream)
+      </div>
+      <div class="io-item">
+        <b>Formula</b>
+        <span class="type">d_j:</span> piecewise linear in [-v, -p] range<br>
+        <span class="type">Veto:</span> <code>d_j = 1</code> when diff &le; -v<br>
+        <span class="type">None:</span> <code>d_j = 0</code> when diff &ge; -p
+      </div>
+      <div class="io-item">
+        <b>Role in Pipeline</b>
+        <span class="type">Used by:</span> credibility module<br>
+        <span class="type">Effect:</span> May reduce credibility via veto
+      </div>
+    </div>
+
+
+  <h2 class="sec">Background</h2>
+
+  <div class="gnd1" id="gnd1" data-collapsed="false">
+    <div class="gnd1-head">
+      <span class="gnd1-title" id="gnd1-title">Background</span>
+      <div class="seg" role="tablist" aria-labelledby="gnd1-title">
+        <button role="tab" id="t-grounding" aria-controls="p-grounding"
+          aria-selected="true" tabindex="0"
+          type="button">Scientific grounding</button>
+        <button role="tab" id="t-calib" aria-controls="p-calib"
+          aria-selected="false" tabindex="-1"
+          type="button">Threshold calibration</button>
+        <button role="tab" id="t-sanity" aria-controls="p-sanity"
+          aria-selected="false" tabindex="-1"
+          type="button">Sanity checks</button>
+      </div>
+      <button class="gnd1-toggle" id="gnd1Toggle" type="button"
+        aria-expanded="true" aria-controls="gnd1Panels">
+        <span class="chev" aria-hidden="true">&#9662;</span>
+        <span class="sr-only">Collapse background section</span>
+      </button>
+    </div>
+    <div class="gnd1-panels" id="gnd1Panels">
+      <div role="tabpanel" id="p-grounding" aria-labelledby="t-grounding" tabindex="0"
+        class="g-body">
+          <p><b>Definition:</b> Discordance <code>d_j(a,b)</code> measures opposition from
+            criterion j to &ldquo;a outranks b.&rdquo; Values in [0,1]: 0 = no opposition,
+            1 = strong opposition (veto).</p>
+          <p><b>Assumptions:</b> Scales oriented higher-is-better (after transformation).
+            Thresholds <code>p</code>, <code>v</code> in criterion units.</p>
+      </div>
+      <div role="tabpanel" id="p-calib" aria-labelledby="t-calib" tabindex="0"
+        class="g-body" hidden>
+          <ul>
+            <li><b>Source:</b> Elicited from experts or data variability.</li>
+            <li><b>Units:</b> Same as criterion scale.</li>
+            <li><b>Ordering:</b> <code>p &le; v</code> (validated upstream).</li>
+            <li><b>Check:</b> Compare vs observed data range.</li>
+          </ul>
+      </div>
+      <div role="tabpanel" id="p-sanity" aria-labelledby="t-sanity" tabindex="0"
+        class="g-body" hidden>
+          <ul>
+            <li><b>Range:</b> Verify <code>d_j</code> in [0,1].</li>
+            <li><b>Spot-check:</b> Verify formula behavior.</li>
+            <li><b>Sensitivity:</b> Test threshold perturbations.</li>
+            <li><b>Missing data:</b> NaN/Inf handled upstream.</li>
+          </ul>
+      </div>
+    </div>
+  </div>
+
+
+    <h2 class="sec">Step 1 &middot; Compute per-criterion discordance</h2>
+    <div class="after">
+      <div class="bar">electre3/discordance.py</div>
+<pre>d = discordance(diff, p=p, v=v)
+assert d.min() &gt;= 0.0 and d.max() &lt;= 1.0</pre>
+    </div>
+
+
+  <p class="note"><b>Mockup only.</b> Design exploration for the grounding sections &mdash;
+  no production tutorial page is modified by this file. Tokens are Layout2 tokens, inlined
+  so the mockup is self-contained.</p>
+
+</div>
+<script>
+
+  (function(){
+    var b=document.getElementById('themeBtn');
+    if(!b) return;
+    b.addEventListener('click',function(){
+      var r=document.documentElement;
+      var dark=r.getAttribute('data-theme')==='dark';
+      r.setAttribute('data-theme', dark?'light':'dark');
+      b.setAttribute('aria-pressed', String(!dark));
+      b.textContent = dark ? 'Dark theme' : 'Light theme';
+    });
+  })();
+
+
+  (function(){
+    var list=document.querySelector('.seg');
+    var tabs=[].slice.call(list.querySelectorAll('[role="tab"]'));
+    function select(tab, focus){
+      tabs.forEach(function(t){
+        var on = t===tab;
+        t.setAttribute('aria-selected', String(on));
+        t.tabIndex = on ? 0 : -1;
+        document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
+      });
+      if(focus) tab.focus();
+    }
+    tabs.forEach(function(t){ t.addEventListener('click', function(){ select(t,false); }); });
+    list.addEventListener('keydown', function(e){
+      var i=tabs.indexOf(document.activeElement); if(i<0) return;
+      var n=null;
+      if(e.key==='ArrowRight'||e.key==='ArrowDown') n=tabs[(i+1)%tabs.length];
+      else if(e.key==='ArrowLeft'||e.key==='ArrowUp') n=tabs[(i-1+tabs.length)%tabs.length];
+      else if(e.key==='Home') n=tabs[0];
+      else if(e.key==='End') n=tabs[tabs.length-1];
+      if(n){ e.preventDefault(); select(n,true); }
+    });
+
+    var box=document.getElementById('gnd1'), btn=document.getElementById('gnd1Toggle');
+    btn.addEventListener('click', function(){
+      var open = btn.getAttribute('aria-expanded')==='true';
+      btn.setAttribute('aria-expanded', String(!open));
+      box.setAttribute('data-collapsed', String(open));
+      btn.querySelector('.sr-only').textContent =
+        (open?'Expand':'Collapse')+' background section';
+    });
+  })();
+
+</script>
+</body>
+</html>

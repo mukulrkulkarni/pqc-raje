@@ -1018,3 +1018,185 @@ class TestBlockTutorialScaffold:
         assert "compute_block guarantees" not in block_html.lower()
         assert "compute_block enforces" not in block_html.lower()
         assert "enforces shapes" not in block_html.lower()
+
+
+class TestAccumulatorTutorialScaffold:
+    """Tests for accumulator_tutorial_side_by_side.html scaffold."""
+
+    @pytest.fixture
+    def accumulator_html(self):
+        """Load accumulator tutorial HTML."""
+        path = DOCS_DIR / "accumulator_tutorial_side_by_side.html"
+        return path.read_text(encoding="utf-8")
+
+    def test_file_exists(self):
+        """Accumulator tutorial file must exist."""
+        path = DOCS_DIR / "accumulator_tutorial_side_by_side.html"
+        assert path.exists(), f"Missing file: {path}"
+
+    def test_has_doctype(self, accumulator_html):
+        """Tutorial must have HTML5 doctype."""
+        assert accumulator_html.strip().startswith("<!DOCTYPE html>")
+
+    def test_has_csp_meta(self, accumulator_html):
+        """Tutorial must have Content-Security-Policy meta tag."""
+        assert 'http-equiv="Content-Security-Policy"' in accumulator_html
+        assert "script-src 'self'" in accumulator_html
+
+    def test_has_style_standard_v1(self, accumulator_html):
+        """Tutorial must have dark mode readability + Variant B selection style standard."""
+        assert_style_standard_v1(accumulator_html)
+
+    def test_has_shell_structure(self, accumulator_html):
+        """Tutorial must have Layout2 .shell structure."""
+        assert 'class="shell"' in accumulator_html
+
+    def test_has_sidebar(self, accumulator_html):
+        """Tutorial must have .sidebar element."""
+        assert 'class="sidebar"' in accumulator_html
+
+    def test_has_rows_container(self, accumulator_html):
+        """Tutorial must have .rows container."""
+        assert 'class="rows"' in accumulator_html
+
+    def test_has_five_range_rows(self, accumulator_html):
+        """Tutorial must have 5 range rows (R1-R5)."""
+        assert 'id="row-R1"' in accumulator_html
+        assert 'id="row-R2"' in accumulator_html
+        assert 'id="row-R3"' in accumulator_html
+        assert 'id="row-R4"' in accumulator_html
+        assert 'id="row-R5"' in accumulator_html
+
+    def test_has_jump_navigation(self, accumulator_html):
+        """Tutorial must have jump-to navigation for R1-R5."""
+        assert 'href="#row-R1"' in accumulator_html
+        assert 'href="#row-R2"' in accumulator_html
+        assert 'href="#row-R3"' in accumulator_html
+        assert 'href="#row-R4"' in accumulator_html
+        assert 'href="#row-R5"' in accumulator_html
+
+    def test_has_theme_toggle(self, accumulator_html):
+        """Tutorial must have theme toggle buttons."""
+        assert 'data-theme-value="light"' in accumulator_html
+        assert 'data-theme-value="dark"' in accumulator_html
+        assert 'data-theme-value="system"' in accumulator_html
+
+    def test_has_progress_indicator(self, accumulator_html):
+        """Tutorial must have progress indicator."""
+        assert 'id="prog-indicator"' in accumulator_html or 'class="prog"' in accumulator_html
+
+    def test_references_local_scripts(self, accumulator_html):
+        """Tutorial must reference only theme.js and highlight.js."""
+        assert 'src="assets/theme.js"' in accumulator_html
+        assert 'src="assets/highlight.js"' in accumulator_html
+
+    def test_each_row_has_required_subheadings(self, accumulator_html):
+        """Each row must have Purpose/I/O/Why/Pitfalls subheadings."""
+        assert accumulator_html.count('<h4>Purpose</h4>') >= 5, "Need 5 Purpose subheadings"
+        assert accumulator_html.count('<h4>I/O</h4>') >= 5, "Need 5 I/O subheadings"
+        assert accumulator_html.count('<h4>Why</h4>') >= 5, "Need 5 Why subheadings"
+        assert accumulator_html.count('<h4>Pitfalls</h4>') >= 5, "Need 5 Pitfalls subheadings"
+
+    def test_no_external_assets(self, accumulator_html):
+        """Tutorial must have no external asset references (security)."""
+        for pattern in EXTERNAL_PATTERNS:
+            matches = re.findall(pattern, accumulator_html, re.IGNORECASE)
+            assert not matches, f"Found external reference matching: {pattern}"
+
+    def test_has_accumulator_content(self, accumulator_html):
+        """Tutorial must have accumulator-specific content."""
+        assert "NetFlowAccumulator" in accumulator_html
+        assert "outflow" in accumulator_html
+        assert "inflow" in accumulator_html
+        assert "update" in accumulator_html
+        assert "net_flow" in accumulator_html
+
+    def test_has_option3_grounding_facts_line(self, accumulator_html):
+        """Tutorial must have Option 3 compact facts line with dl."""
+        assert 'class="gnd-facts"' in accumulator_html, "Missing .gnd-facts container"
+        assert "<dl>" in accumulator_html, "Missing dl element for facts"
+        assert "<dt>" in accumulator_html, "Missing dt elements"
+        assert "<dd>" in accumulator_html, "Missing dd elements"
+
+    def test_has_option3_expandable_details(self, accumulator_html):
+        """Tutorial must have Option 3 expandable details/summary for rationale."""
+        assert 'class="gnd-details"' in accumulator_html, "Missing .gnd-details"
+        assert "<details" in accumulator_html, "Missing details element"
+        assert "<summary>" in accumulator_html, "Missing summary element"
+        assert 'class="gnd-content"' in accumulator_html, "Missing .gnd-content"
+
+    def test_grounding_has_key_invariants(self, accumulator_html):
+        """Grounding facts must include key invariants."""
+        assert "O(N)" in accumulator_html
+        assert "Diagonal" in accumulator_html
+        assert "Preconditions" in accumulator_html
+
+    def test_no_deterministic_output_assertions(self, accumulator_html):
+        """Tutorial must not have deterministic output assertions."""
+        assert "outflow[0] =" not in accumulator_html
+        assert "expected outflow" not in accumulator_html.lower()
+
+    def test_has_io_summary(self, accumulator_html):
+        """Tutorial must have I/O Summary section."""
+        assert 'class="io-summary"' in accumulator_html
+        assert "I/O Summary" in accumulator_html
+
+    def test_has_usage_disclaimer(self, accumulator_html):
+        """Tutorial must have usage disclaimer about illustrative examples."""
+        assert 'class="usage-disclaimer"' in accumulator_html
+        assert "illustrative" in accumulator_html.lower()
+        assert "do not treat" in accumulator_html.lower()
+
+    def test_mentions_o_n_memory(self, accumulator_html):
+        """Tutorial must mention O(N) memory benefit."""
+        assert "O(N)" in accumulator_html
+
+    def test_mentions_block_tiling(self, accumulator_html):
+        """Tutorial must mention block tiling/iteration."""
+        assert "block" in accumulator_html.lower()
+
+    def test_has_preconditions_wording(self, accumulator_html):
+        """Tutorial must label bounds as preconditions."""
+        assert "Preconditions" in accumulator_html or "precondition" in accumulator_html.lower()
+        assert "not enforced here" in accumulator_html.lower()
+
+    def test_has_conditional_flow_conservation(self, accumulator_html):
+        """Tutorial must make flow conservation conditional on correct tiling."""
+        assert "if tiling covers" in accumulator_html.lower() or "if tiling is correct" in accumulator_html.lower()
+
+    def test_normalize_mentions_min_max(self, accumulator_html):
+        """Tutorial must clarify normalize() uses min-max scaling."""
+        assert "min-max" in accumulator_html.lower()
+
+    def test_normalize_mentions_hides_scale(self, accumulator_html):
+        """Tutorial must note normalize() hides absolute scale."""
+        assert "hides absolute scale" in accumulator_html.lower() or "hide" in accumulator_html.lower()
+
+    def test_flow_conservation_mentions_exactly_once(self, accumulator_html):
+        """Tutorial must mention tiling covers pairs exactly once."""
+        assert "exactly once" in accumulator_html.lower()
+
+    def test_flow_conservation_mentions_no_overlap(self, accumulator_html):
+        """Tutorial must mention no overlap in tiling."""
+        assert "no overlap" in accumulator_html.lower()
+
+    def test_flow_conservation_mentions_no_gaps(self, accumulator_html):
+        """Tutorial must mention no gaps in tiling."""
+        assert "no gaps" in accumulator_html.lower()
+
+    def test_normalize_mentions_outliers(self, accumulator_html):
+        """Tutorial must mention normalize() sensitivity to outliers."""
+        assert "outlier" in accumulator_html.lower()
+
+    def test_normalize_mentions_convention(self, accumulator_html):
+        """Tutorial must note 0.5 for all-equal is a convention."""
+        assert "convention" in accumulator_html.lower()
+
+    def test_flow_conservation_mentions_same_weights_for_all_blocks(self, accumulator_html):
+        """Tutorial must mention same weights for all blocks."""
+        assert "same weights" in accumulator_html.lower()
+        assert "for all blocks" in accumulator_html.lower()
+
+    def test_flow_conservation_mentions_floating_point_tolerance(self, accumulator_html):
+        """Tutorial must mention floating-point tolerance instead of approximate symbol."""
+        assert "floating-point" in accumulator_html.lower() or "tolerance" in accumulator_html.lower()

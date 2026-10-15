@@ -212,6 +212,11 @@
     var selected = document.querySelectorAll('.row.' + SELECTED_CLASS);
     selected.forEach(function(el) {
       el.classList.remove(SELECTED_CLASS);
+      // Clear aria-pressed on row-head
+      var rowHead = el.querySelector('.row-head[role="button"]');
+      if (rowHead) {
+        rowHead.setAttribute('aria-pressed', 'false');
+      }
     });
     clearSidebarActive();
     updateProgressIndicator(null);
@@ -245,6 +250,11 @@
     clearSelection();
     currentRange = rangeId;
     row.classList.add(SELECTED_CLASS);
+    // Set aria-pressed on row-head
+    var rowHead = row.querySelector('.row-head[role="button"]');
+    if (rowHead) {
+      rowHead.setAttribute('aria-pressed', 'true');
+    }
     setSidebarActive(rangeId);
     updateProgressIndicator(rangeId);
 
@@ -311,6 +321,48 @@
   }
 
   // ========================================================================
+  // Keyboard Handler (WCAG 2.1.1)
+  // ========================================================================
+
+  function handleKeydown(e) {
+    // Only handle Enter and Space on role="button" elements
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+
+    // Check for row-head with role="button"
+    var rowHead = e.target.closest('.row-head[role="button"][data-range]');
+    if (rowHead) {
+      var rangeId = rowHead.getAttribute('data-range');
+      if (rangeId) {
+        // Prevent default (Space scrolls page)
+        e.preventDefault();
+        e.stopPropagation();
+        var wasSelected = currentRange === rangeId;
+        var selected = selectRow(rangeId);
+        if (selected && !wasSelected) {
+          scrollToRow(rangeId);
+        }
+        return;
+      }
+    }
+
+    // Check for sidebar jump link with role="button"
+    var jumpLink = e.target.closest('.jump a[data-range]');
+    if (jumpLink) {
+      var rangeId = jumpLink.getAttribute('data-range');
+      if (rangeId) {
+        e.preventDefault();
+        e.stopPropagation();
+        var wasSelected = currentRange === rangeId;
+        var selected = selectRow(rangeId);
+        if (selected && !wasSelected) {
+          scrollToRow(rangeId);
+        }
+        return;
+      }
+    }
+  }
+
+  // ========================================================================
   // Hash Navigation
   // ========================================================================
 
@@ -336,6 +388,7 @@
 
     // Event listeners
     document.addEventListener('click', handleClick, true);
+    document.addEventListener('keydown', handleKeydown, true);
     window.addEventListener('hashchange', handleHashChange);
 
     // Handle initial hash

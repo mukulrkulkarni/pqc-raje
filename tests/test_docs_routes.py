@@ -673,6 +673,56 @@ class TestRowSelectionToggle:
         assert "handleHashChange" in content
 
 
+class TestKeyboardOperability:
+    """Tests for keyboard operability (WCAG 2.1.1) in highlight.js."""
+
+    def test_highlight_js_binds_keydown(self, client):
+        """highlight.js must bind keydown event listener."""
+        response = client.get("/docs/modules/config/assets/highlight.js")
+        content = response.data.decode("utf-8")
+        assert "addEventListener('keydown'" in content or \
+               'addEventListener("keydown"' in content
+
+    def test_highlight_js_handles_enter_key(self, client):
+        """highlight.js must check for Enter key."""
+        response = client.get("/docs/modules/config/assets/highlight.js")
+        content = response.data.decode("utf-8")
+        assert "'Enter'" in content or '"Enter"' in content
+
+    def test_highlight_js_handles_space_key(self, client):
+        """highlight.js must check for Space key."""
+        response = client.get("/docs/modules/config/assets/highlight.js")
+        content = response.data.decode("utf-8")
+        assert "' '" in content or '" "' in content
+
+    def test_highlight_js_prevents_default_on_space(self, client):
+        """highlight.js must prevent default on Space to avoid page scroll."""
+        response = client.get("/docs/modules/config/assets/highlight.js")
+        content = response.data.decode("utf-8")
+        assert "preventDefault" in content
+
+    def test_highlight_js_sets_aria_pressed_on_select(self, client):
+        """highlight.js must set aria-pressed on selection."""
+        response = client.get("/docs/modules/config/assets/highlight.js")
+        content = response.data.decode("utf-8")
+        assert "aria-pressed" in content
+        assert "'true'" in content or '"true"' in content
+
+    def test_highlight_js_clears_aria_pressed_on_clear(self, client):
+        """highlight.js must clear aria-pressed on clearSelection."""
+        response = client.get("/docs/modules/config/assets/highlight.js")
+        content = response.data.decode("utf-8")
+        assert "'false'" in content or '"false"' in content
+
+    def test_highlight_js_keydown_no_throw_missing_element(self, client):
+        """highlight.js keydown handler must no-op without throwing if element missing."""
+        response = client.get("/docs/modules/config/assets/highlight.js")
+        content = response.data.decode("utf-8")
+        assert "handleKeydown" in content
+        # Should guard against missing elements like click handler does
+        assert "closest" in content
+
+
 class TestRowLayoutAccessibility:
     """Tests for accessibility in row-based tutorial layout."""
 

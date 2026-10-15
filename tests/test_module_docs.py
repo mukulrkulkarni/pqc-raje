@@ -19,6 +19,22 @@ EXTERNAL_PATTERNS = [
 CSP_PATTERN = r'<meta\s+http-equiv="Content-Security-Policy"'
 
 
+def assert_style_standard_v1(html: str) -> None:
+    """Shared assertion for dark mode readability + Variant B selection style standard."""
+    # Dark mode readability tokens
+    assert "--note-text:" in html, "Missing --note-text token"
+    assert "--note-size:" in html, "Missing --note-size token"
+    assert "--h4-color:" in html, "Missing --h4-color token"
+    assert "--h4-border:" in html, "Missing --h4-border token"
+    # Variant B selection tokens
+    assert "--sel-accent:" in html, "Missing --sel-accent token"
+    assert "--sel-soft:" in html, "Missing --sel-soft token"
+    assert "--sel-border:" in html, "Missing --sel-border token"
+    # Selection uses tokens (not hardcoded accent)
+    assert ".row.sel" in html, "Missing .row.sel styles"
+    assert '"selected"' in html or "'selected'" in html, "Missing 'selected' non-color cue"
+
+
 class TestTutorialStaticFile:
     """Tests for config_tutorial_side_by_side.html static file validation."""
 
@@ -46,6 +62,10 @@ class TestTutorialStaticFile:
         if csp_match:
             csp = csp_match.group(1)
             assert "'unsafe-eval'" not in csp, "CSP should not allow unsafe-eval"
+
+    def test_has_style_standard_v1(self, tutorial_html):
+        """Tutorial must have dark mode readability + Variant B selection style standard."""
+        assert_style_standard_v1(tutorial_html)
 
     def test_has_threshold_docs(self, tutorial_html):
         """Tutorial must document threshold semantics."""
@@ -203,6 +223,10 @@ class TestConcordanceTutorialScaffold:
         """Tutorial must have Content-Security-Policy meta tag."""
         assert re.search(CSP_PATTERN, concordance_html), "Missing CSP meta tag"
 
+    def test_has_style_standard_v1(self, concordance_html):
+        """Tutorial must have dark mode readability + Variant B selection style standard."""
+        assert_style_standard_v1(concordance_html)
+
     def test_has_layout2_structure(self, concordance_html):
         """Tutorial must have Layout 2 structure elements."""
         assert 'class="shell"' in concordance_html, "Missing .shell grid"
@@ -280,6 +304,10 @@ class TestDiscordanceTutorialScaffold:
     def test_has_csp_meta_tag(self, discordance_html):
         """Tutorial must have Content-Security-Policy meta tag."""
         assert re.search(CSP_PATTERN, discordance_html), "Missing CSP meta tag"
+
+    def test_has_style_standard_v1(self, discordance_html):
+        """Tutorial must have dark mode readability + Variant B selection style standard."""
+        assert_style_standard_v1(discordance_html)
 
     def test_has_layout2_structure(self, discordance_html):
         """Tutorial must have Layout 2 structure elements."""
@@ -422,6 +450,10 @@ class TestCredibilityTutorialScaffold:
         """Tutorial must have Content-Security-Policy meta tag."""
         assert re.search(CSP_PATTERN, credibility_html), "Missing CSP meta tag"
 
+    def test_has_style_standard_v1(self, credibility_html):
+        """Tutorial must have dark mode readability + Variant B selection style standard."""
+        assert_style_standard_v1(credibility_html)
+
     def test_has_layout2_structure(self, credibility_html):
         """Tutorial must have Layout 2 structure elements."""
         assert 'class="shell"' in credibility_html, "Missing .shell grid"
@@ -539,6 +571,10 @@ class TestRankingTutorialScaffold:
     def test_has_csp_meta_tag(self, ranking_html):
         """Tutorial must have Content-Security-Policy meta tag."""
         assert re.search(CSP_PATTERN, ranking_html), "Missing CSP meta tag"
+
+    def test_has_style_standard_v1(self, ranking_html):
+        """Tutorial must have dark mode readability + Variant B selection style standard."""
+        assert_style_standard_v1(ranking_html)
 
     def test_has_layout2_structure(self, ranking_html):
         """Tutorial must have Layout 2 structure elements."""

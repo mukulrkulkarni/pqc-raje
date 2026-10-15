@@ -862,3 +862,159 @@ class TestValidateTutorialScaffold:
         assert ".hl{" in validate_html or ".hl {" in validate_html
         assert "--sel-soft" in validate_html
         assert "--sel-accent" in validate_html
+
+
+class TestBlockTutorialScaffold:
+    """Tests for block_tutorial_side_by_side.html scaffold."""
+
+    @pytest.fixture
+    def block_html(self):
+        """Load block tutorial HTML."""
+        path = DOCS_DIR / "block_tutorial_side_by_side.html"
+        return path.read_text(encoding="utf-8")
+
+    def test_file_exists(self):
+        """Block tutorial file must exist."""
+        path = DOCS_DIR / "block_tutorial_side_by_side.html"
+        assert path.exists(), f"Missing file: {path}"
+
+    def test_has_doctype(self, block_html):
+        """Tutorial must have HTML5 doctype."""
+        assert block_html.strip().startswith("<!DOCTYPE html>")
+
+    def test_has_csp_meta(self, block_html):
+        """Tutorial must have Content-Security-Policy meta tag."""
+        assert 'http-equiv="Content-Security-Policy"' in block_html
+        assert "script-src 'self'" in block_html
+
+    def test_has_style_standard_v1(self, block_html):
+        """Tutorial must have dark mode readability + Variant B selection style standard."""
+        assert_style_standard_v1(block_html)
+
+    def test_has_shell_structure(self, block_html):
+        """Tutorial must have Layout2 .shell structure."""
+        assert 'class="shell"' in block_html
+
+    def test_has_sidebar(self, block_html):
+        """Tutorial must have .sidebar element."""
+        assert 'class="sidebar"' in block_html
+
+    def test_has_rows_container(self, block_html):
+        """Tutorial must have .rows container."""
+        assert 'class="rows"' in block_html
+
+    def test_has_five_range_rows(self, block_html):
+        """Tutorial must have 5 range rows (R1-R5)."""
+        assert 'id="row-R1"' in block_html
+        assert 'id="row-R2"' in block_html
+        assert 'id="row-R3"' in block_html
+        assert 'id="row-R4"' in block_html
+        assert 'id="row-R5"' in block_html
+
+    def test_has_jump_navigation(self, block_html):
+        """Tutorial must have jump-to navigation for R1-R5."""
+        assert 'href="#row-R1"' in block_html
+        assert 'href="#row-R2"' in block_html
+        assert 'href="#row-R3"' in block_html
+        assert 'href="#row-R4"' in block_html
+        assert 'href="#row-R5"' in block_html
+
+    def test_has_theme_toggle(self, block_html):
+        """Tutorial must have theme toggle buttons."""
+        assert 'data-theme-value="light"' in block_html
+        assert 'data-theme-value="dark"' in block_html
+        assert 'data-theme-value="system"' in block_html
+
+    def test_has_progress_indicator(self, block_html):
+        """Tutorial must have progress indicator."""
+        assert 'id="prog-indicator"' in block_html or 'class="prog"' in block_html
+
+    def test_references_local_scripts(self, block_html):
+        """Tutorial must reference only theme.js and highlight.js."""
+        assert 'src="assets/theme.js"' in block_html
+        assert 'src="assets/highlight.js"' in block_html
+
+    def test_each_row_has_required_subheadings(self, block_html):
+        """Each row must have Purpose/I/O/Why/Pitfalls subheadings."""
+        assert block_html.count('<h4>Purpose</h4>') >= 5, "Need 5 Purpose subheadings"
+        assert block_html.count('<h4>I/O</h4>') >= 5, "Need 5 I/O subheadings"
+        assert block_html.count('<h4>Why</h4>') >= 5, "Need 5 Why subheadings"
+        assert block_html.count('<h4>Pitfalls</h4>') >= 5, "Need 5 Pitfalls subheadings"
+
+    def test_no_external_assets(self, block_html):
+        """Tutorial must have no external asset references (security)."""
+        for pattern in EXTERNAL_PATTERNS:
+            matches = re.findall(pattern, block_html, re.IGNORECASE)
+            assert not matches, f"Found external reference matching: {pattern}"
+
+    def test_has_block_content(self, block_html):
+        """Tutorial must have block-specific content."""
+        assert "compute_block" in block_html
+        assert "G_rows" in block_html
+        assert "G_cols" in block_html
+        assert "is_diagonal" in block_html
+
+    def test_has_option3_grounding_facts_line(self, block_html):
+        """Tutorial must have Option 3 compact facts line with dl."""
+        assert 'class="gnd-facts"' in block_html, "Missing .gnd-facts container"
+        assert "<dl>" in block_html, "Missing dl element for facts"
+        assert "<dt>" in block_html, "Missing dt elements"
+        assert "<dd>" in block_html, "Missing dd elements"
+
+    def test_has_option3_expandable_details(self, block_html):
+        """Tutorial must have Option 3 expandable details/summary for rationale."""
+        assert 'class="gnd-details"' in block_html, "Missing .gnd-details"
+        assert "<details" in block_html, "Missing details element"
+        assert "<summary>" in block_html, "Missing summary element"
+        assert 'class="gnd-content"' in block_html, "Missing .gnd-content"
+
+    def test_grounding_has_key_invariants(self, block_html):
+        """Grounding facts must include key invariants."""
+        assert "Diagonal" in block_html
+        assert "[0,1]" in block_html or "0,1" in block_html
+        assert "B1" in block_html and "B2" in block_html
+
+    def test_no_deterministic_output_assertions(self, block_html):
+        """Tutorial must not have deterministic output assertions."""
+        assert "S[0,1] =" not in block_html
+        assert "expected S" not in block_html.lower()
+
+    def test_has_io_summary(self, block_html):
+        """Tutorial must have I/O Summary section."""
+        assert 'class="io-summary"' in block_html
+        assert "I/O Summary" in block_html
+
+    def test_has_usage_disclaimer(self, block_html):
+        """Tutorial must have usage disclaimer about illustrative examples."""
+        assert 'class="usage-disclaimer"' in block_html
+        assert "illustrative" in block_html.lower()
+        assert "do not treat" in block_html.lower()
+
+    def test_mentions_concordance_discordance_credibility(self, block_html):
+        """Tutorial must mention integrated modules."""
+        assert "concordance" in block_html.lower()
+        assert "discordance" in block_html.lower()
+        assert "credibility" in block_html.lower()
+
+    def test_has_preconditions_wording(self, block_html):
+        """Tutorial must label shape requirements as preconditions."""
+        assert "Preconditions" in block_html or "precondition" in block_html.lower()
+        assert "not enforced here" in block_html.lower()
+
+    def test_has_min_b1_b2_diagonal_wording(self, block_html):
+        """Tutorial must clarify diagonal zeros min(B1,B2) elements."""
+        assert "min(B1,B2)" in block_html
+
+    def test_has_mismatch_silently_mis_compute_wording(self, block_html):
+        """Tutorial must warn about silent mis-compute on C mismatch."""
+        assert "silently mis-compute" in block_html or "may error" in block_html
+
+    def test_clipping_attributed_to_credibility_stage(self, block_html):
+        """Tutorial must attribute clipping to credibility stage, not compute_block."""
+        assert "credibility stage" in block_html.lower() or "clipped in credibility" in block_html.lower()
+
+    def test_no_misleading_guarantee_phrases(self, block_html):
+        """Tutorial must not claim compute_block guarantees or enforces shapes."""
+        assert "compute_block guarantees" not in block_html.lower()
+        assert "compute_block enforces" not in block_html.lower()
+        assert "enforces shapes" not in block_html.lower()

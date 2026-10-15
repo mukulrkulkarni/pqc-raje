@@ -119,16 +119,18 @@ class TestNetFlowAccumulator:
         assert acc.inflow[3] == 0.2 + 0.5
         assert acc.inflow[4] == 0.3 + 0.6
 
-    def test_deterministic_accumulation(self):
-        """Same updates should give same results."""
+    def test_repeatable_accumulation_with_fixed_inputs(self):
+        """Same updates with fixed inputs should give same results."""
         acc1 = NetFlowAccumulator(4)
         acc2 = NetFlowAccumulator(4)
 
+        # Use fixed arrays instead of random for repeatable test
+        rng = np.random.default_rng(seed=42)
         blocks = [
-            (np.random.rand(2, 2), 0, 0),
-            (np.random.rand(2, 2), 0, 2),
-            (np.random.rand(2, 2), 2, 0),
-            (np.random.rand(2, 2), 2, 2),
+            (rng.random((2, 2)), 0, 0),
+            (rng.random((2, 2)), 0, 2),
+            (rng.random((2, 2)), 2, 0),
+            (rng.random((2, 2)), 2, 2),
         ]
 
         for S, rs, cs in blocks:

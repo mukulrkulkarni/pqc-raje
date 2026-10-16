@@ -284,6 +284,149 @@ class TestConcordanceTutorialScaffold:
         assert "partial_concordance" in concordance_html
         assert "global_concordance" in concordance_html
 
+    # === Deep content tests (C1) ===
+
+    def test_has_option3_grounding_facts(self, concordance_html):
+        """Tutorial must have Option 3 compact facts line with dl."""
+        assert 'class="gnd-facts"' in concordance_html, "Missing .gnd-facts container"
+        assert "<dl" in concordance_html, "Missing dl element for facts"
+        assert "<dt" in concordance_html, "Missing dt elements"
+        assert "<dd" in concordance_html, "Missing dd elements"
+
+    def test_has_option3_expandable_details(self, concordance_html):
+        """Tutorial must have Option 3 expandable details/summary for rationale."""
+        assert 'class="gnd-details"' in concordance_html or "<details" in concordance_html, "Missing expandable details"
+        assert "<summary" in concordance_html, "Missing summary element"
+
+    def test_r1_has_substantive_content(self, concordance_html):
+        """R1 must have substantive content about concordance role in ELECTRE III."""
+        # Must mention the three-stage pipeline
+        assert "discordance" in concordance_html.lower(), "R1 should mention discordance"
+        assert "credibility" in concordance_html.lower(), "R1 should mention credibility"
+        # Must mention coalition/support concept
+        assert "coalition" in concordance_html.lower() or "support" in concordance_html.lower()
+
+    def test_r2_has_piecewise_formula_content(self, concordance_html):
+        """R2 must have piecewise formula content with q and p thresholds."""
+        # Must mention piecewise
+        assert "piecewise" in concordance_html.lower()
+        # Must mention indifference and preference thresholds
+        assert "indifference" in concordance_html.lower()
+        assert "preference" in concordance_html.lower()
+        # Must mention the boundary conditions
+        assert "-q" in concordance_html or "&minus;q" in concordance_html.lower()
+        assert "-p" in concordance_html or "&minus;p" in concordance_html.lower()
+
+    def test_r2_mentions_maximize_minimize(self, concordance_html):
+        """R2 should note maximize vs minimize semantics."""
+        assert "maximize" in concordance_html.lower() or "minimize" in concordance_html.lower()
+
+    def test_r3_has_implementation_details(self, concordance_html):
+        """R3 must have implementation details about vectorization and clipping."""
+        assert "vectoriz" in concordance_html.lower() or "broadcast" in concordance_html.lower()
+        assert "clip" in concordance_html.lower()
+        assert "monoton" in concordance_html.lower(), "Should mention monotonicity"
+
+    def test_r4_has_weight_normalization_content(self, concordance_html):
+        """R4 must explain weight normalization contract."""
+        assert "normalize" in concordance_html.lower()
+        assert "sum" in concordance_html.lower() and ("weights" in concordance_html.lower() or "= 1" in concordance_html)
+        assert "einsum" in concordance_html.lower(), "Should mention einsum implementation"
+
+    def test_r4_weights_nonnegative_requirement(self, concordance_html):
+        """R4 must require weights >= 0."""
+        # Check for non-negative weights requirement
+        assert "weights" in concordance_html.lower() and (
+            "&ge; 0" in concordance_html or ">= 0" in concordance_html or "≥ 0" in concordance_html
+        ), "Must require weights >= 0"
+
+    def test_r4_upstream_enforcement(self, concordance_html):
+        """R4 must clarify that normalize_weights enforcement is upstream-only."""
+        lower = concordance_html.lower()
+        assert "upstream" in lower, "Must mention upstream enforcement"
+        assert "not enforced" in lower or "does not validate" in lower, "Must clarify not enforced in this module"
+
+    def test_r3_qp_masked_wording(self, concordance_html):
+        """R3 must use 'masked' wording for q=p case, not 'never used'."""
+        lower = concordance_html.lower()
+        # Should NOT say "never used"
+        assert "never used" not in lower, "Should not say 'never used' for c_interp"
+        # Should say "masked" or similar
+        assert "masked" in lower, "Should say c_interp is 'masked' by piecewise branches"
+
+    def test_r5_has_edge_cases_content(self, concordance_html):
+        """R5 must have edge cases: NaN/Inf, criteria mismatch, q=p degeneracy."""
+        lower = concordance_html.lower()
+        assert "nan" in lower or "NaN" in concordance_html, "Should mention NaN handling"
+        assert "q=p" in concordance_html or "q equals p" in lower or "degener" in lower, "Should mention q=p degeneracy"
+        assert "mismatch" in lower or "criteria" in lower, "Should mention criteria mismatch"
+
+    def test_io_summary_has_shapes_and_invariants(self, concordance_html):
+        """I/O Summary must include shapes and invariants."""
+        # Check for shape notation
+        assert "B1,B2,C" in concordance_html or "B1, B2, C" in concordance_html
+        assert "ndarray" in concordance_html.lower()
+        # Check for invariant/precondition language
+        assert "invariant" in concordance_html.lower() or "precondition" in concordance_html.lower()
+
+    def test_has_usage_disclaimer(self, concordance_html):
+        """Tutorial must have usage disclaimer about illustrative examples."""
+        assert 'class="usage-disclaimer"' in concordance_html or "usage-disclaimer" in concordance_html
+        assert "illustrative" in concordance_html.lower()
+
+    def test_no_deterministic_output_assertions(self, concordance_html):
+        """Tutorial must not have deterministic output assertions."""
+        # Should not claim specific numeric outputs
+        assert "c_j[0] =" not in concordance_html
+        assert "C[0,1] =" not in concordance_html
+        assert "expected c_j" not in concordance_html.lower()
+        assert "expected concordance" not in concordance_html.lower()
+
+    def test_no_unqualified_speedup_claims(self, concordance_html):
+        """Tutorial must not make unqualified speedup claims."""
+        lower = concordance_html.lower()
+        # If "faster" or "speedup" mentioned, must be qualified
+        if "faster" in lower or "speedup" in lower:
+            assert "typically" in lower or "may be" in lower or "qualified" in lower or "memory" in lower, \
+                "Speedup claims must be qualified"
+
+    def test_grounding_mentions_electre_context(self, concordance_html):
+        """Grounding section must mention ELECTRE III context."""
+        assert "ELECTRE" in concordance_html
+        # Should explain the three-pillar structure
+        assert "concordance" in concordance_html.lower() and "discordance" in concordance_html.lower()
+
+    # === Notation and shape clarification tests (C1-fix1) ===
+
+    def test_has_notation_block(self, concordance_html):
+        """Tutorial must have Notation block defining B1, B2, C, N."""
+        assert "Notation" in concordance_html, "Missing Notation heading"
+        # Must define the key dimension variables
+        lower = concordance_html.lower()
+        assert "b1" in lower and "b2" in lower, "Notation must define B1 and B2"
+        assert "number of alternatives" in lower or "alternatives" in lower
+        assert "number of criteria" in lower or "criteria" in lower
+
+    def test_notation_explains_g_function(self, concordance_html):
+        """Notation must explain g(a,j) performance function."""
+        assert "g(a" in concordance_html.lower() or "g(a,j)" in concordance_html, "Must explain g(a,j)"
+        assert "performance" in concordance_html.lower()
+
+    def test_explains_diff_shape_with_example(self, concordance_html):
+        """Tutorial must explain diff shape (B1,B2,C) with triple-bracket example."""
+        # Must explain the triple bracket structure
+        assert "[[[" in concordance_html, "Must include triple-bracket example like [[[d1,d2,d3]]]"
+        # Must explain what each bracket level means
+        lower = concordance_html.lower()
+        assert "row" in lower and "col" in lower, "Must explain row/column dimensions"
+
+    def test_example_clarifies_alts_terminology(self, concordance_html):
+        """Usage example must clarify 'alts' means alternatives."""
+        # The example comment should explain the terminology
+        assert "alternative" in concordance_html.lower(), "Should use full word 'alternative'"
+        # Should show the shape explicitly
+        assert "B1=" in concordance_html or "B1=1" in concordance_html, "Should show B1 dimension in example"
+
 
 class TestDiscordanceTutorialScaffold:
     """Tests for discordance_tutorial_side_by_side.html scaffold."""

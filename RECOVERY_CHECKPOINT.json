@@ -1,0 +1,15 @@
+{
+  "recovered_head": "ea0e56209203eadb6e4fd1ba220a1ec50214135d",
+  "restored_files": 205,
+  "restored_bytes_match_archive": true,
+  "preflight": "PASS; warning: 3 fixed/absolute CSS positions",
+  "targeted_tests": "233 passed in 1.05s: test_module_docs.py, test_concordance.py, test_discordance.py",
+  "full_suite": "Not run for this fast recovery checkpoint",
+  "reviewer_gates": "Not rerun",
+  "backup_location": "recovery/isolated-20261016T140439Z",
+  "archives": {
+    "head.zip": "e3d350a27ff945984045913b28c1798d652d0470e4a276843d5a959794a4e658",
+    "working-files.zip": "297040db8b8428a73711067573e023cb9e750081fccf4b93f9f2364c0e78afd6"
+  },
+  "limitations": "Git cannot recover uncommitted changes to missing files. Local ignored backups are not off-device backups."
+}

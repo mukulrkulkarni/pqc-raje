@@ -44,3 +44,6 @@ code/
 build_v22/
 visualizations/
 tmp_probe.html
+
+# Local recovery snapshots (checkpoint manifest is tracked)
+/recovery/

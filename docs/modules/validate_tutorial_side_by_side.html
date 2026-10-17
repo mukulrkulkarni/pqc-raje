@@ -427,7 +427,7 @@ footer{margin-top:var(--s6); padding-top:var(--s3); border-top:1px solid var(--b
           </div>
           <div class="note-col">
             <h4>Purpose</h4>
-            <p>[Placeholder] Central validation module for ELECTRE III inputs. Enforces fail-fast pattern: reject invalid data before computation begins.</p>
+            <p>Central validation module for ELECTRE III inputs. It enforces a fail-fast contract: reject malformed data before vectorised math begins.</p>
             <h4>I/O</h4>
             <ul>
               <li><code>validate_thresholds</code> &mdash; checks q &ge; 0, p &ge; q, v &ge; p</li>
@@ -436,9 +436,9 @@ footer{margin-top:var(--s6); padding-top:var(--s3); border-top:1px solid var(--b
               <li><code>validate_arrays_match</code> &mdash; checks length consistency</li>
             </ul>
             <h4>Why</h4>
-            <p>[Placeholder] Centralized validation ensures consistent error messages and prevents silent corruption from propagating through the pipeline.</p>
+            <p>Centralized validation produces consistent error messages and prevents silent corruption (NaN/Inf, shape mismatches, inconsistent thresholds).</p>
             <h4>Pitfalls</h4>
-            <p>[Placeholder] Validation functions raise ValueError; callers should handle or let propagate for user feedback.</p>
+            <p>All checks raise <code>ValueError</code> on failure. High-level entry points (for example <code>compute_ranking</code>) call these helpers so failures surface early and consistently.</p>
           </div>
         </div>
       </section>
@@ -469,7 +469,7 @@ footer{margin-top:var(--s6); padding-top:var(--s3); border-top:1px solid var(--b
           </div>
           <div class="note-col">
             <h4>Purpose</h4>
-            <p>[Placeholder] Validates performance matrix G: must be 2D, have at least 2 rows (alternatives), correct number of columns (criteria), and contain only finite values.</p>
+            <p>Validates the performance matrix <code>G</code>: it must be 2D, have N≥2 alternatives, have exactly C columns, and contain only finite values.</p>
             <h4>I/O</h4>
             <ul>
               <li><code>G</code> &mdash; performance matrix to validate</li>
@@ -477,9 +477,9 @@ footer{margin-top:var(--s6); padding-top:var(--s3); border-top:1px solid var(--b
               <li>Returns <code>None</code>; raises <code>ValueError</code> on failure</li>
             </ul>
             <h4>Why</h4>
-            <p>[Placeholder] Shape mismatches cause cryptic indexing errors downstream. NaN/Inf corrupt concordance calculations silently.</p>
+            <p>Shape mismatches cause cryptic downstream failures. NaN/Inf can propagate through vectorised code and corrupt results without a clear origin.</p>
             <h4>Pitfalls</h4>
-            <p>[Placeholder] Does not check for negative values (valid in some contexts). Does not coerce dtype (caller responsibility).</p>
+            <p><code>validate_matrix</code> does not enforce a value range. Negative values are valid after “minimise column negation”. It also does not coerce dtype.</p>
           </div>
         </div>
       </section>
@@ -509,16 +509,16 @@ footer{margin-top:var(--s6); padding-top:var(--s3); border-top:1px solid var(--b
           </div>
           <div class="note-col">
             <h4>Purpose</h4>
-            <p>[Placeholder] Extracts weights from criteria, validates finiteness, and normalizes to sum = 1. Preserves relative ratios.</p>
+            <p>Extracts weights from <code>criteria</code>, rejects NaN/Inf, and returns a float64 array with <code>w.sum() == 1</code>. Relative ratios are preserved.</p>
             <h4>I/O</h4>
             <ul>
               <li><code>criteria</code> &mdash; list of CriterionConfig with weight attribute</li>
               <li>Returns <code>ndarray</code> of normalized weights (sum = 1.0)</li>
             </ul>
             <h4>Why</h4>
-            <p>[Placeholder] Concordance formula assumes weights sum to 1. Normalization allows users to specify relative weights without manual scaling.</p>
+            <p>Concordance uses a weighted sum. Normalization lets users specify relative weights (2 vs 3) without manual scaling; only ratios matter.</p>
             <h4>Pitfalls</h4>
-            <p>[Placeholder] Zero or negative total weight is rejected. Individual negative weights are allowed if total is positive (unusual but valid for some use cases).</p>
+            <p>Zero or negative total weight is rejected. Note: <code>CriterionConfig</code> also enforces <code>weight &gt; 0</code> at construction time.</p>
           </div>
         </div>
       </section>
@@ -543,7 +543,7 @@ footer{margin-top:var(--s6); padding-top:var(--s3); border-top:1px solid var(--b
           </div>
           <div class="note-col">
             <h4>Purpose</h4>
-            <p>[Placeholder] Ensures threshold arrays q, p, v and weight array w all have the same length (one entry per criterion).</p>
+            <p>Ensures the arrays <code>q</code>, <code>p</code>, <code>v</code>, and <code>w</code> all have the same length (one entry per criterion).</p>
             <h4>I/O</h4>
             <ul>
               <li><code>q, p, v</code> &mdash; indifference, preference, veto threshold arrays</li>
@@ -551,9 +551,9 @@ footer{margin-top:var(--s6); padding-top:var(--s3); border-top:1px solid var(--b
               <li>Returns <code>None</code>; raises <code>ValueError</code> on mismatch</li>
             </ul>
             <h4>Why</h4>
-            <p>[Placeholder] Mismatched lengths cause silent broadcasting errors or index-out-of-bounds in vectorized operations.</p>
+            <p>Mismatched lengths can trigger silent broadcasting or index errors inside vectorised code. Rejecting early makes the failure local and clear.</p>
             <h4>Pitfalls</h4>
-            <p>[Placeholder] Does not validate array contents (finiteness checked elsewhere). Only checks length equality.</p>
+            <p>This function only checks length equality. Content checks (finite weights; threshold ordering) are done by other validators.</p>
           </div>
         </div>
       </section>
@@ -581,16 +581,16 @@ footer{margin-top:var(--s6); padding-top:var(--s3); border-top:1px solid var(--b
           </div>
           <div class="note-col">
             <h4>Purpose</h4>
-            <p>[Placeholder] Validates threshold ordering per criterion: q &ge; 0, p &ge; q, v &ge; p. Names the offending criterion in error message.</p>
+            <p>Validates threshold ordering per criterion: <code>q &ge; 0</code>, <code>p &ge; q</code>, <code>v &ge; p</code>. Error messages include the criterion name.</p>
             <h4>I/O</h4>
             <ul>
               <li><code>criteria</code> &mdash; list to validate</li>
               <li>Returns <code>None</code>; raises <code>ValueError</code> on failure</li>
             </ul>
             <h4>Why</h4>
-            <p>[Placeholder] Threshold ordering is a mathematical constraint of ELECTRE III. Violations indicate configuration errors.</p>
+            <p>Threshold ordering is a structural constraint of ELECTRE III. Violations indicate a configuration error, not a data issue.</p>
             <h4>Pitfalls</h4>
-            <p>[Placeholder] Error message names the first failing criterion only. Multiple violations require iterative fixes.</p>
+            <p>The function stops at the first failing criterion. Fix threshold issues iteratively until validation succeeds for the full list.</p>
           </div>
         </div>
       </section>

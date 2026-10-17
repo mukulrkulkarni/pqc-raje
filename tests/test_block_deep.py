@@ -6,6 +6,9 @@ This file focuses on the composition contract of compute_block:
 - diagonal clearing only when is_diagonal=True
 - diagonal clearing affects the local diagonal only (min(B1,B2))
 - off-diagonal blocks must NOT be zeroed by accident
+
+Engineering gate note:
+- We include an asymmetric oracle so a sign flip or stage swap is detected.
 """
 
 from __future__ import annotations
@@ -79,3 +82,50 @@ def test_fill_diagonal_zeros_only_min_dimension() -> None:
     assert S[1, 1] == 0.0
     # This is not on the local diagonal; must remain 1.
     assert S[0, 1] == 1.0
+
+
+def test_asymmetric_oracle_detects_directionality_and_composition() -> None:
+    """Detect sign flips and stage swaps by checking a strict asymmetry.
+
+    Construct a case with one criterion where:
+    - a strongly outranks b (diff positive) => S(a,b)=1
+    - b is worse => S(b,a)=0
+
+    With q=0, p=1, v=2 and w=1:
+    - diff=+2 => concordance=1, discordance=0 => S=1
+    - diff=-2 => concordance=0, discordance=1 => S=0
+    """
+    G_rows = np.array([[2.0]])
+    G_cols = np.array([[0.0]])
+    q = np.array([0.0])
+    p = np.array([1.0])
+    v = np.array([2.0])
+    w = np.array([1.0])
+
+    Sab = compute_block(G_rows, G_cols, q, p, v, w, is_diagonal=False)
+    Sba = compute_block(G_cols, G_rows, q, p, v, w, is_diagonal=False)
+    assert Sab.item() == 1.0
+    assert Sba.item() == 0.0
+
+
+def test_boundary_precedence_q_equals_p_and_p_equals_v() -> None:
+    """Regression for equality boundaries documented in the tutorial."""
+    # q=p: at diff=-q, concordance should be 1.
+    G_rows = np.array([[0.0]])
+    G_cols = np.array([[1.0]])
+    q = np.array([1.0])
+    p = np.array([1.0])
+    v = np.array([2.0])
+    w = np.array([1.0])
+    S = compute_block(G_rows, G_cols, q, p, v, w, is_diagonal=False)
+    assert S.item() == 1.0
+
+    # p=v: at diff=-v, discordance should be 1, driving S to 0.
+    G_rows = np.array([[0.0]])
+    G_cols = np.array([[2.0]])
+    q = np.array([0.0])
+    p = np.array([2.0])
+    v = np.array([2.0])
+    w = np.array([1.0])
+    S = compute_block(G_rows, G_cols, q, p, v, w, is_diagonal=False)
+    assert S.item() == 0.0

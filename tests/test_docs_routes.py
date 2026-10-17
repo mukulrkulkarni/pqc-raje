@@ -70,6 +70,8 @@ class TestModuleDocs:
         """Valid module doc should return 200."""
         response = client.get("/docs/modules/config")
         assert response.status_code == 200
+        response = client.get("/docs/modules/block")
+        assert response.status_code == 200
 
     def test_module_doc_has_csp(self, client):
         """Module doc should have CSP header."""
@@ -131,7 +133,7 @@ class TestAllowListEnforcement:
 
     def test_only_allowed_modules_served(self, client):
         """Only allow-listed modules should be served."""
-        allowed = ["config"]  # Only config exists currently
+        allowed = ["config", "block"]  # Keep in sync with server allow-list
         for name in allowed:
             response = client.get(f"/docs/modules/{name}")
             assert response.status_code == 200, f"{name} should be allowed"
@@ -231,31 +233,36 @@ class TestTutorialAssetRoute:
 
     def test_tutorial_references_relative_asset(self, client):
         """Tutorial HTML should reference assets/theme.js."""
-        response = client.get("/docs/modules/config/tutorial")
-        assert response.status_code == 200
-        assert b'src="assets/theme.js"' in response.data
+        for name in ["config", "block"]:
+            response = client.get(f"/docs/modules/{name}/tutorial")
+            assert response.status_code == 200
+            assert b'src="assets/theme.js"' in response.data
 
     def test_tutorial_references_relative_highlight(self, client):
         """Tutorial HTML should reference assets/highlight.js."""
-        response = client.get("/docs/modules/config/tutorial")
-        assert response.status_code == 200
-        assert b'src="assets/highlight.js"' in response.data
+        for name in ["config", "block"]:
+            response = client.get(f"/docs/modules/{name}/tutorial")
+            assert response.status_code == 200
+            assert b'src="assets/highlight.js"' in response.data
 
     def test_tutorial_no_static_references(self, client):
         """Tutorial HTML must NOT reference /static/ paths (use relative only)."""
-        response = client.get("/docs/modules/config/tutorial")
-        assert response.status_code == 200
-        assert b'/static/' not in response.data, "Tutorial should use relative paths, not /static/"
+        for name in ["config", "block"]:
+            response = client.get(f"/docs/modules/{name}/tutorial")
+            assert response.status_code == 200
+            assert b'/static/' not in response.data, "Tutorial should use relative paths, not /static/"
 
     def test_tutorial_asset_served(self, client):
-        """theme.js should be served at /docs/modules/config/assets/theme.js."""
-        response = client.get("/docs/modules/config/assets/theme.js")
-        assert response.status_code == 200
+        """theme.js should be served at /docs/modules/<name>/assets/theme.js."""
+        for name in ["config", "block"]:
+            response = client.get(f"/docs/modules/{name}/assets/theme.js")
+            assert response.status_code == 200
 
     def test_highlight_js_asset_served(self, client):
-        """highlight.js should be served at /docs/modules/config/assets/highlight.js."""
-        response = client.get("/docs/modules/config/assets/highlight.js")
-        assert response.status_code == 200
+        """highlight.js should be served at /docs/modules/<name>/assets/highlight.js."""
+        for name in ["config", "block"]:
+            response = client.get(f"/docs/modules/{name}/assets/highlight.js")
+            assert response.status_code == 200
 
     def test_tutorial_asset_content_type(self, client):
         """theme.js should have correct content type."""

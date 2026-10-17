@@ -19,10 +19,15 @@
 
   function getStoredTheme() {
     try {
-      return localStorage.getItem(STORAGE_KEY) || 'light';
+      return localStorage.getItem(STORAGE_KEY) || 'system';
     } catch (e) {
-      return 'light';
+      return 'system';
     }
+  }
+
+  function resolveSystemTheme() {
+    if (!window.matchMedia) return 'light';
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   }
 
   function setStoredTheme(theme) {
@@ -34,7 +39,8 @@
   }
 
   function applyTheme(theme) {
-    root.setAttribute('data-theme', theme);
+    var effective = theme === 'system' ? resolveSystemTheme() : theme;
+    root.setAttribute('data-theme', effective);
     updateToggleButtons(theme);
   }
 

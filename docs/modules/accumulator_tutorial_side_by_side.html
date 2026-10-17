@@ -374,7 +374,8 @@ footer{margin-top:var(--s6); padding-top:var(--s3); border-top:1px solid var(--b
       <dl>
         <dt>Memory</dt><dd>O(N) for accumulator arrays; S_block is O(B1&times;B2) per call</dd>
         <dt>update()</dt><dd>outflow adds row sums; inflow adds column sums; blocks_done counts calls</dd>
-        <dt>Tiling</dt><dd>caller ensures block grid covers all off-diagonal pairs exactly once; not enforced here</dd>
+        <dt>Preconditions</dt><dd>row_start,col_start ≥ 0; row_start+B1 ≤ N; col_start+B2 ≤ N; not enforced here</dd>
+        <dt>Tiling</dt><dd>caller ensures block grid covers all off-diagonal pairs exactly once (no overlap, no gaps); not enforced here</dd>
         <dt>Diagonal</dt><dd>excluded upstream by compute_block(is_diagonal=True)</dd>
         <dt>Ranking</dt><dd>project ranks by raw net flow (descending); normalize() is optional</dd>
       </dl>
@@ -385,8 +386,9 @@ footer{margin-top:var(--s6); padding-top:var(--s3); border-top:1px solid var(--b
       <div class="gnd-content">
         <p><b>What is being accumulated:</b> In ELECTRE net-flow ranking, each alternative i has an outgoing flow φ⁺(i)=∑ⱼ S(i,j) and an incoming flow φ⁻(i)=∑ⱼ S(j,i), where S is the credibility matrix (diagonal excluded). Net flow is φ(i)=φ⁺(i)−φ⁻(i).</p>
         <p><b>Block mapping:</b> A block <code>S_block</code> corresponds to global indices (row_start+i, col_start+j). The accumulator updates <code>outflow[row_start+i]</code> by the row sum and <code>inflow[col_start+j]</code> by the column sum.</p>
-        <p><b>Why this is correct:</b> Summing all blocks (with no overlap and no gaps) is equivalent to summing the full matrix, but you never store N×N.</p>
-        <p><b>What conservation can and cannot tell you:</b> For any sequence of <code>update()</code> calls, <code>outflow.sum()</code> equals <code>inflow.sum()</code> within tolerance, because each block contributes the same total mass to both arrays (sum of all entries). This is a useful <em>numerical drift</em> check, but it does <strong>not</strong> detect missing blocks or double-counting. To validate tiling, you need index-coverage tests (bounds and non-overlap) or an oracle comparison for small N.</p>
+        <p><b>Why this is correct:</b> Summing all blocks (with no overlap and no gaps) is equivalent to summing the full matrix, but you never store N×N. This equivalence assumes the same weights and thresholds are used for all blocks (i.e., block partitioning is only a performance strategy).</p>
+        <p><b>If tiling is correct:</b> If tiling covers each off-diagonal pair exactly once (no overlap, no gaps), and you use the same weights for all blocks, then the accumulated outflow/inflow correspond to the full-matrix row/column sums. In that case, <code>outflow.sum()</code> equals <code>inflow.sum()</code> within floating-point tolerance because both equal the total mass ∑ᵢ∑ⱼ S(i,j) over the covered pairs.</p>
+        <p><b>Limit of this check:</b> Even with incorrect tiling, <code>outflow.sum()</code> and <code>inflow.sum()</code> still match (each <code>update()</code> adds the same block total to both sums). Treat equality of sums as a numerical sanity check, not a coverage proof.</p>
         <p><b>Normalization caveat:</b> Min-max scaling preserves order (monotonic) but hides absolute gaps and is sensitive to outliers. This project ranks by raw net flow; <code>normalize()</code> is for optional presentation.</p>
       </div>
     </details>
@@ -419,7 +421,7 @@ footer{margin-top:var(--s6); padding-top:var(--s3); border-top:1px solid var(--b
               <li><code>n_alternatives</code> is N, the number of alternatives.</li>
               <li>Creates <code>outflow</code> and <code>inflow</code> as <code>float64</code> arrays.</li>
             </ul>
-            <h4>Why this exists</h4>
+            <h4>Why</h4>
             <p>Net flow needs only <strong>row sums</strong> and <strong>column sums</strong> of the credibility matrix S. Computing S block-by-block lets you scale to large N without O(N²) storage.</p>
             <h4>Pitfalls</h4>
             <p>The class is intentionally small. It does <strong>not</strong> validate tiling coverage or index bounds; the caller owns those invariants.</p>
@@ -449,12 +451,18 @@ footer{margin-top:var(--s6); padding-top:var(--s3); border-top:1px solid var(--b
 <span class="ln">14</span>        <span class="kw">self</span>.inflow = np.zeros(<span class="kw">self</span>.n_alternatives, dtype=np.float64)</code></pre>
           </div>
           <div class="note-col">
-            <h4>Meaning of fields</h4>
-            <p><code>outflow[i]</code> accumulates ∑ⱼ S(i,j). <code>inflow[i]</code> accumulates ∑ⱼ S(j,i). The counter <code>blocks_done</code> is a cheap sanity check that your loop is calling <code>update()</code> the expected number of times.</p>
-            <h4>Why float64</h4>
-            <p>Even when each S(i,j) is in [0,1], you can add O(N) terms per alternative. <code>float64</code> reduces rounding drift in large runs.</p>
-            <h4>Contract note</h4>
-            <p><code>n_alternatives</code> must be non-negative. For N=0, NumPy constructs empty arrays but <code>normalize()</code> will fail on <code>min()</code>/<code>max()</code>. For N=1, every flow stays zero because there are no comparisons.</p>
+            <h4>Purpose</h4>
+            <p>Store the <strong>only</strong> state needed for net flow: two length-N vectors plus a counter.</p>
+            <h4>I/O</h4>
+            <ul>
+              <li><code>outflow[i]</code> accumulates ∑ⱼ S(i,j).</li>
+              <li><code>inflow[i]</code> accumulates ∑ⱼ S(j,i).</li>
+              <li><code>blocks_done</code> counts <code>update()</code> calls (loop sanity check).</li>
+            </ul>
+            <h4>Why</h4>
+            <p>Even when each S(i,j) is in [0,1], you can add O(N) terms per alternative. Using <code>float64</code> reduces rounding drift in large runs.</p>
+            <h4>Pitfalls</h4>
+            <p><code>n_alternatives</code> must be non-negative. For N=0, NumPy constructs empty arrays but <code>normalize()</code> fails on <code>min()</code>/<code>max()</code>. For N=1, every flow stays zero because there are no comparisons.</p>
           </div>
         </div>
       </section>
@@ -478,20 +486,21 @@ footer{margin-top:var(--s6); padding-top:var(--s3); border-top:1px solid var(--b
 <span class="ln">20</span>        <span class="kw">self</span>.blocks_done += <span class="num">1</span></code></pre>
           </div>
           <div class="note-col">
-            <h4>Index mapping</h4>
-            <p>By construction, <code>S_block[i,j]</code> represents <code>S[row_start+i, col_start+j]</code>. Therefore:</p>
+            <h4>Purpose</h4>
+            <p>Accumulate one computed block into the global flow vectors.</p>
+            <h4>I/O</h4>
             <ul>
-              <li><strong>Row sum</strong> of the block contributes to φ⁺ for those global rows.</li>
-              <li><strong>Column sum</strong> of the block contributes to φ⁻ for those global columns.</li>
+              <li>Input: <code>S_block</code> with shape (B1,B2) and global offsets <code>row_start</code>, <code>col_start</code>.</li>
+              <li>Effect: adds <code>S_block.sum(axis=1)</code> to the corresponding <code>outflow</code> slice and <code>S_block.sum(axis=0)</code> to the corresponding <code>inflow</code> slice.</li>
             </ul>
-            <h4>Tiling invariants (caller-owned)</h4>
+            <h4>Why</h4>
+            <p>Because <code>S_block[i,j]</code> represents <code>S[row_start+i, col_start+j]</code>, row sums contribute to outgoing dominance (φ⁺) and column sums contribute to incoming dominance (φ⁻).</p>
+            <h4>Pitfalls</h4>
             <ul>
-              <li><code>0 &le; row_start</code>, <code>0 &le; col_start</code></li>
-              <li><code>row_start + B1 &lt;= N</code>, <code>col_start + B2 &lt;= N</code></li>
-              <li>Each off-diagonal pair (i,j) appears in exactly one block update.</li>
+              <li><strong>Preconditions</strong> (not enforced here): <code>row_start</code>, <code>col_start</code> are non-negative and <code>row_start + B1 &lt;= N</code>, <code>col_start + B2 &lt;= N</code>.</li>
+              <li><strong>Tiling coverage</strong>: each off-diagonal pair appears exactly once across all blocks (no overlap, no gaps).</li>
+              <li>Swapping <code>row_start</code> and <code>col_start</code> can look plausible but is wrong; keep an asymmetric oracle test for this.</li>
             </ul>
-            <h4>Common failure mode</h4>
-            <p>If you accidentally swap <code>row_start</code> and <code>col_start</code>, net flows become wrong but may still look plausible. The tests include an asymmetric oracle to detect that class of bug.</p>
           </div>
         </div>
       </section>
@@ -519,12 +528,20 @@ footer{margin-top:var(--s6); padding-top:var(--s3); border-top:1px solid var(--b
 <span class="ln">30</span>        <span class="kw">return</span> (flow - min_val) / (max_val - min_val)</code></pre>
           </div>
           <div class="note-col">
-            <h4>Net flow is the ranking score</h4>
-            <p>In this codebase, the final ranking is by <strong>raw</strong> <code>net_flow()</code> in descending order. Do not normalize before ranking unless your ranking contract explicitly says so.</p>
-            <h4>Normalization is monotonic</h4>
-            <p>Min-max scaling is strictly monotonic when <code>max_val != min_val</code> and all values are finite. It preserves ordering but changes absolute gaps and compresses extremes.</p>
-            <h4>All-equal case</h4>
-            <p>If every net flow is equal, the min-max denominator is zero. Returning 0.5 is a deterministic convention: it signals “no discrimination” without preferring endpoints.</p>
+            <h4>Purpose</h4>
+            <p>Expose the scalar ranking signal: net flow φ = φ⁺ − φ⁻ for each alternative.</p>
+            <h4>I/O</h4>
+            <ul>
+              <li><code>net_flow()</code> returns <code>outflow - inflow</code> (can be negative).</li>
+              <li><code>normalize()</code> returns a min-max scaled copy in [0,1] when non-degenerate.</li>
+            </ul>
+            <h4>Why</h4>
+            <p>In this codebase, the final ranking is by <strong>raw</strong> <code>net_flow()</code> in descending order. Normalization is for optional presentation only.</p>
+            <h4>Pitfalls</h4>
+            <ul>
+              <li>Min-max scaling is monotonic when <code>max_val != min_val</code> and values are finite, but it hides absolute scale and is sensitive to outliers.</li>
+              <li>If every net flow is equal, the denominator is zero; returning 0.5 is a deterministic convention.</li>
+            </ul>
           </div>
         </div>
       </section>
@@ -558,14 +575,19 @@ footer{margin-top:var(--s6); padding-top:var(--s3); border-top:1px solid var(--b
 <span class="com">#    S_block should be finite; typical credibility values are in [0,1].</span></code></pre>
           </div>
           <div class="note-col">
-            <h4>Bounds</h4>
-            <p><strong>Bounds are critical</strong> because the update uses slices. If the slice length and the sum length differ, NumPy raises a broadcasting error; if they match by accident, you get silent corruption.</p>
-            <h4>No overlap, no gaps</h4>
-            <p>The accumulator assumes the calling loop enumerates a block grid that covers every required pair once. If you skip a block you undercount; if you repeat a block you double-count.</p>
-            <h4>Diagonal exclusion</h4>
-            <p>Diagonal entries S(i,i) must not contribute to either flow. This is handled upstream by passing <code>is_diagonal=True</code> to the block computation and zeroing the local diagonal before calling <code>update()</code>.</p>
-            <h4>Conservation check</h4>
-            <p><code>outflow.sum()</code> and <code>inflow.sum()</code> match within tolerance even for an incorrect tiling (missing or duplicated blocks), because each <code>update()</code> adds the same block total to both sums. Treat this equality as a numerical sanity check only, not a coverage proof.</p>
+            <h4>Purpose</h4>
+            <p>Make the caller-owned contracts explicit: bounds, tiling coverage, diagonal handling, and numeric sanity checks.</p>
+            <h4>I/O</h4>
+            <p>No new API is introduced in this range. These notes define how to call <code>update()</code> safely and interpret the resulting flows.</p>
+            <h4>Why</h4>
+            <p>The accumulator is intentionally minimal to keep the hot path fast. The loop that drives block computation must enforce these contracts.</p>
+            <h4>Pitfalls</h4>
+            <ul>
+              <li><strong>Bounds:</strong> if slice length and sum length differ, NumPy raises a broadcasting error; if they match by accident, results corrupt silently.</li>
+              <li><strong>Tiling:</strong> if you skip a block you undercount; if you repeat a block you double-count (no overlap, no gaps).</li>
+              <li><strong>Diagonal:</strong> ensure diagonal entries are zeroed upstream for diagonal blocks.</li>
+              <li><strong>Sum equality:</strong> <code>outflow.sum()</code> equals <code>inflow.sum()</code> even for incorrect tiling; do not treat it as coverage proof.</li>
+            </ul>
           </div>
         </div>
       </section>
@@ -603,7 +625,7 @@ Net flow: [ 0.8 -0.2 -0.6]</code></pre>
         </div>
       </div>
       <p class="usage-disclaimer" style="font-size:11px;color:var(--text-dim);margin-top:var(--s2);background:var(--surface-2);padding:var(--s2);border-radius:var(--radius-sm);">
-        <strong>Note:</strong> This shows the accumulator interface only. In the real pipeline, S comes from <code>compute_block</code> iterated over a block grid.
+        <strong>Note:</strong> Illustrative example inputs only. Do not treat values as recommended defaults or expected outputs. In the real pipeline, S comes from <code>compute_block</code> iterated over a block grid.
       </p>
     </section>
 

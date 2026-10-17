@@ -1,0 +1,22 @@
+theme | pair | fg | bg | ratio | WCAG normal text
+light | body text --text on --bg | #0f172a | #ffffff | 17.85:1 | AA
+light | note text --note-text on --bg | #475569 | #ffffff | 7.58:1 | AA
+light | dim text --text-dim on --bg | #64748b | #ffffff | 4.76:1 | AA
+light | dim text --text-dim on --surface | #64748b | #f8fafc | 4.55:1 | AA
+light | accent h4 --accent on --bg | #2563eb | #ffffff | 5.17:1 | AA
+light | sel 'selected' cue --sel-accent on --sel-soft | #15803d | #f0fdf4 | 4.79:1 | AA
+light | sel badge #fff on --sel-accent | #ffffff | #15803d | 5.02:1 | AA
+light | unsel badge --text-muted on --border-strong | #475569 | #cbd5e1 | 5.10:1 | AA
+light | code kw --kw on --code-bg | #7c3aed | #f8fafc | 5.45:1 | AA
+light | code com --com on --code-bg | #64748b | #f8fafc | 4.55:1 | AA
+dark | body text --text on --bg | #e2e8f0 | #0b1120 | 15.27:1 | AA
+dark | note text --note-text on --bg | #d1d5db | #0b1120 | 12.78:1 | AA
+dark | dim text --text-dim on --bg | #9ca3af | #0b1120 | 7.42:1 | AA
+dark | dim text --text-dim on --surface | #9ca3af | #0f172a | 7.03:1 | AA
+dark | h4 --h4-color on --bg | #f3f4f6 | #0b1120 | 17.11:1 | AA
+dark | sel 'selected' cue --sel-accent on --sel-soft | #86efac | #052e16 | 10.62:1 | AA
+dark | sel badge #fff on --sel-accent (existing) | #ffffff | #86efac | 1.40:1 | FAIL
+dark | sel badge #052e16 on --sel-accent (proposed) | #052e16 | #86efac | 10.62:1 | AA
+dark | unsel badge --text-muted on --border-strong | #d1d5db | #334155 | 7.03:1 | AA
+dark | code kw --kw on --code-bg | #c4b5fd | #0f172a | 9.67:1 | AA
+dark | code com --com on --code-bg | #9ca3af | #0f172a | 7.03:1 | AA

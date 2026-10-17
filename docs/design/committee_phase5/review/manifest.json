@@ -1,0 +1,8 @@
+{
+  "head": "74d0ae041f4f262c23d8b45deaf05af9f57d7190",
+  "files": {
+    "docs/modules/concordance_tutorial_side_by_side.html": "e4d5e38ac4247ea663871959fa6c6c44b847b1ac21bd4eed977eda264646a4c1",
+    "app/routes/docs.py": "abfffe1fe6483f9c1b12d113f344cbdece9db130a50864e4d2ce576604bb00fd",
+    "tests/test_concordance_n1.py": "66152a4be29d59b3c3e74f781b30ba5b1078a2514aaa2d67d0dcd1e773a1209a"
+  }
+}

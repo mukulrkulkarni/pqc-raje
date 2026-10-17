@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'; style-src 'unsafe-inline';">
+<meta name="color-scheme" content="light dark">
+<title>N2 prototype - Notation AFTER I/O Summary - concordance.py</title>
+<style>
+/* Phase 5 prototype. Tokens copied from docs/modules/concordance_tutorial_side_by_side.html (Layout 2).
+   No JS, no external assets. Theme = CSS-only radio inputs. */
+.shell{
+  --bg:#ffffff; --surface:#f8fafc; --surface-2:#f1f5f9; --border:#e2e8f0;
+  --border-strong:#cbd5e1; --text:#0f172a; --text-muted:#475569; --text-dim:#64748b;
+  --accent:#2563eb; --accent-soft:#eff6ff; --accent-border:#bfdbfe;
+  --code-bg:#f8fafc; --code-text:#0f172a; --kw:#7c3aed; --str:#15803d;
+  --com:#64748b; --num:#b45309; --fn:#2563eb;
+  --ok:#15803d; --ok-soft:#f0fdf4; --warn:#b45309; --warn-soft:#fffbeb;
+  --note-text:#475569; --note-size:12.5px;
+  --h4-color:#2563eb; --h4-border:transparent;
+  --sel-accent:#15803d; --sel-soft:#f0fdf4; --sel-border:#86efac; --sel-fg:#ffffff;
+}
+#t-dark:checked ~ .shell{
+  --bg:#0b1120; --surface:#0f172a; --surface-2:#1e293b; --border:#1e293b;
+  --border-strong:#334155; --text:#e2e8f0; --text-muted:#d1d5db; --text-dim:#9ca3af;
+  --accent:#60a5fa; --accent-soft:#172554; --accent-border:#1e40af;
+  --code-bg:#0f172a; --code-text:#e2e8f0; --kw:#c4b5fd; --str:#86efac;
+  --com:#9ca3af; --num:#fcd34d; --fn:#93c5fd;
+  --ok:#86efac; --ok-soft:#052e16; --warn:#fcd34d; --warn-soft:#2a1f05;
+  --note-text:#d1d5db; --note-size:13.5px;
+  --h4-color:#f3f4f6; --h4-border:#86efac;
+  --sel-accent:#86efac; --sel-soft:#052e16; --sel-border:#22c55e; --sel-fg:#052e16;
+}
+@media (prefers-color-scheme:dark){
+ #t-sys:checked ~ .shell{
+  --bg:#0b1120; --surface:#0f172a; --surface-2:#1e293b; --border:#1e293b;
+  --border-strong:#334155; --text:#e2e8f0; --text-muted:#d1d5db; --text-dim:#9ca3af;
+  --accent:#60a5fa; --accent-soft:#172554; --accent-border:#1e40af;
+  --code-bg:#0f172a; --code-text:#e2e8f0; --kw:#c4b5fd; --str:#86efac;
+  --com:#9ca3af; --num:#fcd34d; --fn:#93c5fd;
+  --ok:#86efac; --ok-soft:#052e16; --warn:#fcd34d; --warn-soft:#2a1f05;
+  --note-text:#d1d5db; --note-size:13.5px;
+  --h4-color:#f3f4f6; --h4-border:#86efac;
+  --sel-accent:#86efac; --sel-soft:#052e16; --sel-border:#22c55e; --sel-fg:#052e16;
+ }
+}
+:root{ --radius:8px; --radius-sm:5px;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --sidebar-w:200px; --code-frac:62%; }
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{font-family:var(--sans); font-size:14px; line-height:1.55; background:#fff;}
+.vh{position:absolute; width:1px; height:1px; margin:-1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap;}
+.shell{display:grid; grid-template-columns:var(--sidebar-w) 1fr; min-height:100vh;
+  background:var(--bg); color:var(--text);}
+.sidebar{background:var(--surface); border-right:1px solid var(--border);
+  padding:var(--s4) var(--s3); position:sticky; top:0; height:100vh; overflow-y:auto;
+  display:flex; flex-direction:column;}
+.brand{display:flex; align-items:center; gap:var(--s2); margin-bottom:var(--s5); padding:0 var(--s1);}
+.brand-mark{width:24px;height:24px;border-radius:var(--radius-sm); background:var(--accent);
+  color:#fff;display:grid;place-items:center; font-weight:700;font-size:11px;flex:none;}
+.brand-text{font-weight:650;font-size:13px;} .brand-sub{font-size:10.5px;color:var(--text-dim);}
+.nav-label{font-size:10px; text-transform:uppercase; letter-spacing:.07em; color:var(--text-dim);
+  font-weight:650; margin:0 var(--s1) var(--s2);}
+.jump{display:flex; flex-direction:column; gap:1px; margin-bottom:var(--s5);}
+.jump a{display:grid; grid-template-columns:auto 1fr; gap:var(--s2); align-items:start;
+  padding:6px var(--s2); border-radius:var(--radius-sm); text-decoration:none; color:var(--text-muted);}
+.jump a:hover{background:var(--surface-2); color:var(--text);}
+.jump a:focus-visible{outline:2px solid var(--accent); outline-offset:1px;}
+.jump a.active{background:var(--sel-soft); color:var(--sel-accent);}
+.j-badge{font-family:var(--mono); font-size:9.5px; font-weight:700; background:var(--surface-2);
+  color:var(--text-dim); border-radius:3px; padding:2px 4px; margin-top:1px;}
+.jump a.active .j-badge{background:var(--sel-accent); color:var(--sel-fg);}
+.j-title{font-size:12.5px; font-weight:600; line-height:1.3;}
+.j-desc{font-size:10.5px; color:var(--text-dim); line-height:1.35; display:block; margin-top:1px;}
+.prog{margin-bottom:var(--s4); padding:0 var(--s2);}
+.prog-bar{height:3px; background:var(--surface-2); border-radius:2px; overflow:hidden;}
+.prog-fill{height:100%; width:60%; background:var(--sel-accent);}
+.prog-txt{font-size:10px; color:var(--text-dim); margin-top:var(--s1);}
+.theme{margin-top:auto; border-top:1px solid var(--border); padding-top:var(--s3);}
+.seg{display:grid; grid-template-columns:repeat(3,1fr); gap:2px; background:var(--surface-2);
+  padding:3px; border-radius:var(--radius-sm);}
+.seg label{font-size:10.5px; font-weight:600; padding:5px 0; text-align:center; cursor:pointer;
+  color:var(--text-muted); border-radius:4px;}
+#t-light:checked ~ .shell label[for="t-light"],
+#t-dark:checked ~ .shell label[for="t-dark"],
+#t-sys:checked ~ .shell label[for="t-sys"]{background:var(--bg); color:var(--text);
+  box-shadow:0 1px 2px rgba(0,0,0,.08);}
+#t-light:focus-visible ~ .shell label[for="t-light"],
+#t-dark:focus-visible ~ .shell label[for="t-dark"],
+#t-sys:focus-visible ~ .shell label[for="t-sys"]{outline:2px solid var(--accent); outline-offset:1px;}
+.main{padding:var(--s4) var(--s5) var(--s6); min-width:0;}
+.topbar{position:sticky; top:0; z-index:5; background:var(--bg); border-bottom:1px solid var(--border);
+  margin:0 calc(-1*var(--s5)); padding:var(--s3) var(--s5); margin-bottom:var(--s4);}
+.topbar-row{display:flex; align-items:center; gap:var(--s4); flex-wrap:wrap;}
+h1{font-size:18px; margin:0; letter-spacing:-.02em; white-space:nowrap;}
+.sig{font-family:var(--mono); font-size:12px; color:var(--text-muted); background:var(--surface);
+  border:1px solid var(--border); border-radius:var(--radius-sm); padding:4px var(--s2);
+  flex:1 1 auto; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.sig .fn{color:var(--fn); font-weight:600;}
+.meta-inline{display:flex; gap:var(--s3); font-size:11.5px; color:var(--text-dim); white-space:nowrap;}
+.proto{font-size:11.5px; color:var(--warn); background:var(--warn-soft); border-radius:var(--radius-sm);
+  padding:var(--s2) var(--s3); margin-bottom:var(--s4); border-left:3px solid var(--warn);}
+.proto b{color:var(--text);}
+/* compact cards: I/O Summary and Notation share this grid */
+.card{display:grid; grid-template-columns:repeat(auto-fit, minmax(230px, 1fr)); gap:var(--s2) var(--s4);
+  margin-bottom:var(--s3); padding:var(--s3); background:var(--surface);
+  border:1px solid var(--border); border-radius:var(--radius); scroll-margin-top:64px;}
+.card h3{font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:var(--accent);
+  margin:0 0 var(--s1); font-weight:650; grid-column:1/-1; display:flex; gap:var(--s2); align-items:center;}
+.card h3 .blk{font-family:var(--mono); font-size:9.5px; font-weight:700; background:var(--surface-2);
+  color:var(--text-dim); border-radius:3px; padding:1px 4px; text-transform:none; letter-spacing:0;}
+.item{font-size:12px; line-height:1.45; color:var(--note-text);}
+.item b{color:var(--text); font-weight:600; display:block; margin-bottom:2px;}
+.item code, .note-col code, .facts code, .ex code{font-family:var(--mono); font-size:11px;
+  background:var(--surface-2); padding:1px 4px; border-radius:3px; color:var(--text);}
+.item ul{margin:0; padding-left:var(--s4);} .item li{margin-bottom:2px;}
+.item .type{color:var(--text-dim);}
+.math{font-family:"Times New Roman",Georgia,serif; font-size:13.5px; color:var(--text); white-space:nowrap;}
+.math var{font-style:italic;}
+.micro{grid-column:1/-1; font-size:11.5px; color:var(--text); background:var(--sel-soft);
+  border-left:3px solid var(--sel-accent); padding:3px var(--s2); border-radius:3px;}
+.micro a{color:var(--sel-accent);}
+/* Option 3 facts (compact dl) + borderless details */
+.facts{margin-bottom:var(--s3); padding:var(--s2); background:var(--surface); border-radius:var(--radius-sm);}
+.facts dl{display:flex; flex-wrap:wrap; gap:var(--s1) var(--s4); margin:0; font-size:11.5px;}
+.facts dt{font-weight:600; color:var(--text-muted);} .facts dd{margin:0; color:var(--text-dim);}
+details{margin-bottom:var(--s3); font-size:12px;}
+details summary{cursor:pointer; font-weight:600; color:var(--accent); padding:var(--s2);
+  list-style-position:inside;}
+details summary:focus-visible{outline:2px solid var(--accent); outline-offset:1px;}
+details > div{padding:var(--s2) var(--s3); background:var(--surface); border-radius:var(--radius-sm);
+  color:var(--note-text); line-height:1.55;}
+details p{margin:0 0 var(--s2);} details p:last-child{margin-bottom:0;}
+.ex table{border-collapse:collapse; font-size:11.5px; margin:var(--s1) 0 var(--s2);}
+.ex th,.ex td{padding:2px 8px; text-align:left; border-bottom:1px solid var(--border); color:var(--note-text);}
+.ex th{color:var(--text); font-weight:600;}
+.ex .lbl{font-size:10.5px; padding:1px 6px; border-radius:3px; background:var(--warn-soft); color:var(--warn);
+  font-weight:600; margin-left:var(--s1);}
+.ex .lbl.ok{background:var(--ok-soft); color:var(--ok);}
+.ex .steps{columns:2; column-gap:var(--s5);} .ex .steps p{break-inside:avoid;}
+@media (max-width:1100px){.ex .steps{columns:1;}}
+/* rows */
+.rows{display:flex; flex-direction:column; gap:var(--s4);}
+.row{scroll-margin-top:64px;}
+.row-head{display:flex; align-items:center; gap:var(--s2); margin-bottom:var(--s2); padding:2px 0;}
+.rk{font-family:var(--mono); font-size:11px; font-weight:700; color:var(--text-muted);
+  background:var(--border-strong); padding:2px 7px; border-radius:4px; flex:none;}
+.row-title{font-weight:650; font-size:14px; letter-spacing:-.01em;}
+.row-lines{font-family:var(--mono); font-size:11px; color:var(--text-dim);}
+.rule{flex:1; height:1px; background:var(--border);}
+.tag{font-size:10.5px; padding:1px 6px; border-radius:3px; background:var(--surface-2); color:var(--text-dim);}
+.tag.ok{background:var(--ok-soft); color:var(--ok);}
+.split{display:grid; grid-template-columns:var(--code-frac) 1fr; gap:18px; align-items:start;}
+.code-col{border:1px solid var(--border); border-radius:var(--radius); background:var(--code-bg);
+  overflow:hidden; min-width:0;}
+.code-bar{display:flex; align-items:center; gap:var(--s2); padding:4px var(--s3);
+  border-bottom:1px solid var(--border); font-size:10.5px; color:var(--text-dim);
+  font-family:var(--mono); background:var(--surface);}
+.code-bar .sp{margin-left:auto;}
+pre{margin:0; padding:10px 13px; font-family:var(--mono); font-size:13px; line-height:1.5;
+  color:var(--code-text); overflow-x:auto;}
+pre code{display:block; white-space:pre;}
+.ln{color:var(--text-dim); user-select:none; display:inline-block; width:2.2ch; text-align:right;
+  margin-right:1.4ch; opacity:.6;}
+.hl{background:var(--sel-soft); display:block; margin:0 -13px; padding:0 13px; border-left:3px solid var(--sel-accent);}
+.row.sel .hl{border-left-width:4px;}
+.kw{color:var(--kw);} .str{color:var(--str);} .com{color:var(--com);} .num{color:var(--num);} .fn{color:var(--fn);}
+/* Variant B selection: green + non-color cue */
+.row.sel .rk{background:var(--sel-accent); color:var(--sel-fg);}
+.row.sel .code-col{border-color:var(--sel-border); box-shadow:0 0 0 2px var(--sel-border);}
+.row.sel .row-head::after{content:"selected"; font-size:9px; font-weight:600; color:var(--sel-accent);
+  background:var(--sel-soft); padding:2px 6px; border-radius:3px; margin-left:var(--s2);
+  text-transform:uppercase; letter-spacing:.03em;}
+.note-col{min-width:0; padding-top:2px;}
+.note-col h4{font-size:10px; text-transform:uppercase; letter-spacing:.05em; color:var(--h4-color);
+  margin:var(--s2) 0 var(--s1); font-weight:650; padding-left:var(--s2); border-left:2px solid var(--h4-border);}
+.note-col h4:first-child{margin-top:0;}
+.note-col p{margin:0 0 var(--s2); font-size:var(--note-size); color:var(--note-text); line-height:1.55;}
+.note-col strong{color:var(--text); font-weight:650;}
+a{color:var(--accent);} a:focus-visible{outline:2px solid var(--accent); outline-offset:1px;}
+.links{font-size:12px; color:var(--note-text); margin:var(--s4) 0;}
+.links a{margin-right:var(--s3);}
+footer{margin-top:var(--s5); padding-top:var(--s3); border-top:1px solid var(--border); font-size:11.5px;
+  color:var(--text-dim); display:flex; justify-content:space-between; gap:var(--s3); flex-wrap:wrap;}
+.badge{font-family:var(--mono); font-size:10.5px; padding:1px 6px; background:var(--ok-soft); color:var(--ok); border-radius:3px;}
+@media (max-width:1100px){.split{grid-template-columns:1fr;}}
+@media (max-width:768px){.shell{grid-template-columns:1fr;} .sidebar{position:static; height:auto;}}
+</style>
+</head>
+<body>
+<!-- CSS-only theme state. Inputs are visually hidden but keyboard reachable; labels live in the sidebar. -->
+<input class="vh" type="radio" name="theme" id="t-light" checked>
+<input class="vh" type="radio" name="theme" id="t-dark">
+<input class="vh" type="radio" name="theme" id="t-sys">
+<div class="shell">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">E3</div>
+      <div><div class="brand-text">concordance.py</div><div class="brand-sub">Prototype N2</div></div>
+    </div>
+    <nav aria-label="Jump to section">
+      <div class="nav-label">Jump to</div>
+      <div class="jump">
+        <a href="#io"><span class="j-badge">IO</span><span><span class="j-title">I/O Summary</span><span class="j-desc">Inputs, outputs, shapes</span></span></a>
+        <a href="#notation"><span class="j-badge">NT</span><span><span class="j-title">Notation</span><span class="j-desc">a, b, a&rarr;b, B1/B2, C</span></span></a>
+        <a href="#example"><span class="j-badge">EX</span><span><span class="j-title">Worked example</span><span class="j-desc">A&rarr;B 0.85, B&rarr;A 0.75</span></span></a>
+        <a href="#row-R3" class="active" aria-current="true"><span class="j-badge">R3</span><span><span class="j-title">Formula Logic</span><span class="j-desc">Piecewise interpolation</span></span></a>
+        <a href="#backlinks"><span class="j-badge">&larr;</span><span><span class="j-title">Backlinks</span><span class="j-desc">Where this is used</span></span></a>
+      </div>
+    </nav>
+    <div class="prog"><div class="prog-bar"><div class="prog-fill"></div></div>
+      <div class="prog-txt">R3 selected &middot; static mock</div></div>
+    <div class="theme">
+      <div class="nav-label">Theme</div>
+      <div class="seg" role="group" aria-label="Theme (CSS-only preview)">
+        <label for="t-light">Light</label><label for="t-dark">Dark</label><label for="t-sys">Sys</label>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar"><div class="topbar-row">
+      <h1>Concordance computation</h1>
+      <div class="sig"><span class="fn">partial_concordance</span>(diff, q, p) &rarr; ndarray</div>
+      <div class="meta-inline"><span>pure function</span><span>47 lines</span><span>N2: I/O first</span></div>
+    </div></div>
+
+    <p class="proto"><b>Prototype, not production.</b> Static HTML mock for layout comparison. Theme switch works (CSS only). Row toggles, scroll-spy and progress do <em>not</em> run here. Compare with <a href="N1.html">N1 (notation before I/O)</a>.</p>
+
+    <!-- Block 1: I/O Summary -->
+    <section class="card" id="io" aria-labelledby="h-io">
+      <h3 id="h-io"><span class="blk">1</span>I/O Summary</h3>
+      <p class="micro"><strong>a, b are objects</strong> (not criteria); <strong>a &rarr; b</strong> is the directed claim being assessed. Full definitions in <a href="#notation">Notation</a> below.</p>
+      <div class="item"><b>partial_concordance(diff, q, p)</b>
+        <span class="type">Input:</span> <code>diff: ndarray(B1,B2,C)</code> already-oriented differences g(a)&minus;g(b); <code>q, p: ndarray(C)</code> indifference / preference thresholds<br>
+        <span class="type">Output:</span> <code>ndarray(B1,B2,C)</code>, each <span class="math"><var>c</var><sub>j</sub>(a,b)</span> in [0,1]<br>
+        <span class="type">Precondition:</span> 0 &le; q &le; p (checked upstream by <code>validate_thresholds</code>)</div>
+      <div class="item"><b>global_concordance(c_j, weights)</b>
+        <span class="type">Input:</span> <code>c_j: ndarray(B1,B2,C)</code>, <code>weights: ndarray(C)</code> nonnegative, sum 1<br>
+        <span class="type">Output:</span> <code>ndarray(B1,B2)</code> = <span class="math">C(a,b) = &Sigma;<sub>j</sub> w<sub>j</sub> &middot; c<sub>j</sub>(a,b)</span><br>
+        <span class="type">Note:</span> does not validate or normalize weights itself</div>
+      <div class="item"><b>Rule per criterion j</b>
+        <span class="math">c<sub>j</sub> = 1</span> if diff &ge; &minus;q<sub>j</sub>; &nbsp;<span class="math">c<sub>j</sub> = 0</span> if diff &le; &minus;p<sub>j</sub>; &nbsp;else <span class="math">(diff + p<sub>j</sub>) / (p<sub>j</sub> &minus; q<sub>j</sub>)</span>, clipped to [0,1]<br>
+        <span class="type">Orientation:</span> lower-is-better criteria are negated by <code>ranking.compute_ranking</code> before this call; direct callers must pass oriented data.</div>
+    </section>
+
+    <!-- Block 2: Notation contract (N2 places it AFTER the I/O Summary) -->
+    <section class="card" id="notation" aria-labelledby="h-nt">
+      <h3 id="h-nt"><span class="blk">2</span>Notation</h3>
+      <div class="item"><b>a and b are objects</b>
+        Both are things being ranked (IP addresses, items, projects). They are <strong>not</strong> criteria. A criterion is a property we measure on every object.</div>
+      <div class="item"><b>a &rarr; b is an assertion under assessment</b>
+        <span class="math"><var>a</var> &rarr; <var>b</var></span> reads &ldquo;<var>a</var> is at least as good as <var>b</var>&rdquo;. We are <em>testing</em> this claim, not stating it is already established. <span class="math"><var>b</var> &rarr; <var>a</var></span> is a different claim with its own numbers.</div>
+      <div class="item"><b>Counts (no symbol collisions)</b>
+        <ul><li><strong>N</strong> &mdash; number of objects in the whole dataset</li>
+            <li><strong>C</strong> &mdash; number of criteria (a count only)</li>
+            <li><strong>C(a,b)</strong> &mdash; global concordance of the pair (a value in [0,1]); never plain C</li></ul></div>
+      <div class="item"><b>B1 and B2 are comparison groups</b>
+        One block compares a group of <strong>B1 row objects</strong> (playing <var>a</var>) against a group of <strong>B2 column objects</strong> (playing <var>b</var>). These are object groups chosen for computation, not groups of data fields.</div>
+      <div class="item"><b>Why diff has three axes (B1, B2, C)</b>
+        <code>diff[i,j,k] = g(row i, crit k) &minus; g(col j, crit k)</code>. Axis 1 picks the row object, axis 2 the column object, axis 3 the criterion. Every <var>a</var>,<var>b</var> pair gets one number per criterion.</div>
+      <div class="item"><b>Triple brackets</b>
+        <code>[[[d1, d2, d3]]]</code> = B1&nbsp;=&nbsp;1 (outer), B2&nbsp;=&nbsp;1 (middle), C&nbsp;=&nbsp;3 (inner). Two objects {A,&nbsp;B} give two non-self directed comparisons: A&rarr;B uses <code>g(A)&minus;g(B)</code>, B&rarr;A uses <code>g(B)&minus;g(A)</code>; same magnitudes, flipped signs.</div>
+    </section>
+
+    <!-- Option 3 compact facts + borderless details -->
+    <div class="facts"><dl>
+      <dt>Range</dt><dd>c<sub>j</sub>, C(a,b) &isin; [0,1]</dd>
+      <dt>Boundaries</dt><dd>diff = &minus;q &rArr; c = 1; diff = &minus;p &rArr; c = 0 (when q &lt; p)</dd>
+      <dt>q = p</dt><dd>outer branch wins: c = 1 at and above &minus;q, else 0; step semantics preserved</dd>
+      <dt>Monotone</dt><dd>c<sub>j</sub> non-decreasing in diff</dd>
+    </dl></div>
+    <details>
+      <summary>Scientific grounding &amp; boundary notes</summary>
+      <div>
+        <p><strong>Role in ELECTRE III.</strong> Concordance measures how strongly the criteria support the assertion <span class="math"><var>a</var> &rarr; <var>b</var></span>. Discordance can later veto it; credibility combines both.</p>
+        <p><strong>Boundary at q = p.</strong> The denominator guard only prevents unsafe division. The nested <code>np.where</code> branches select 1 or 0, so the step function is preserved (verified by <code>verify_example.py</code>).</p>
+        <p><strong>Weights.</strong> C(a,b) stays in [0,1] only if partial values are finite in [0,1] and weights are nonnegative and sum to 1. Use <code>normalize_weights</code> upstream.</p>
+      </div>
+    </details>
+
+    <!-- Block 5: Worked example (collapsible, identical in N1 and N2) -->
+    <details class="ex" id="example">
+      <summary>Worked example: 1 row object &times; 1 column object &times; 3 criteria <span class="lbl">illustrative inputs</span><span class="lbl ok">outputs verified by verify_example.py</span></summary>
+      <div>
+        <p>Objects <strong>A</strong> and <strong>B</strong>; criteria C&nbsp;=&nbsp;3, all already oriented higher-is-better. Inputs are illustrative, not recommended defaults.</p>
+        <table>
+          <tr><th>Input</th><th>Value</th></tr>
+          <tr><td>g(A), g(B)</td><td><code>[10, 5, 7]</code>, <code>[8, 7, 6]</code></td></tr>
+          <tr><td>q, p, v</td><td><code>[1,1,1]</code>, <code>[3,3,3]</code>, <code>[6,6,6]</code></td></tr>
+          <tr><td>w (sum 1)</td><td><code>[0.5, 0.3, 0.2]</code></td></tr>
+        </table>
+        <div class="steps">
+          <p><strong>Direction A &rarr; B.</strong> <code>diff = g(A) &minus; g(B) = [[[2, &minus;2, 1]]]</code> (B1=1, B2=1, C=3).</p>
+          <p><strong>Partial c<sub>j</sub>(A,B).</strong> crit 1: 2 &ge; &minus;1 &rArr; 1. crit 2: &minus;3 &lt; &minus;2 &lt; &minus;1 &rArr; (&minus;2+3)/(3&minus;1) = 0.5. crit 3: 1 &ge; &minus;1 &rArr; 1. So <code>[[[1.0, 0.5, 1.0]]]</code>.</p>
+          <p><strong>Global.</strong> C(A,B) = 0.5&middot;1 + 0.3&middot;0.5 + 0.2&middot;1 = <strong>0.85</strong>.</p>
+          <p><strong>Discordance.</strong> all diff &ge; &minus;p = &minus;3 &rArr; d<sub>j</sub> = <code>[[[0, 0, 0]]]</code>. No veto, no reduction: S(A,B) = <strong>0.85</strong>.</p>
+          <p><strong>Reverse B &rarr; A.</strong> <code>diff = [[[&minus;2, 2, &minus;1]]]</code>. c = <code>[[[0.5, 1.0, 1.0]]]</code> (crit 3 sits exactly at &minus;q, so c = 1). C(B,A) = 0.25 + 0.3 + 0.2 = <strong>0.75</strong>; d = 0; S(B,A) = <strong>0.75</strong>.</p>
+          <p><strong>Read-out.</strong> Same two objects, two different directed claims, two different values. Source: <code>example_results.json</code>.</p>
+        </div>
+      </div>
+    </details>
+
+    <!-- Representative code/explanation row -->
+    <div class="rows">
+      <section class="row sel" id="row-R3">
+        <div class="row-head">
+          <span class="rk">R3</span><span class="row-title">Formula Logic</span>
+          <span class="row-lines">L24&ndash;L31</span><span class="tag ok">pure</span>
+          <span class="rule" aria-hidden="true"></span>
+        </div>
+        <div class="split">
+          <div class="code-col">
+            <div class="code-bar">concordance.py<span class="sp">L24&ndash;L31</span></div>
+<pre><code><span class="ln">24</span>    <span class="com"># Interpolation</span>
+<span class="ln">25</span>    denom = p - q
+<span class="ln">26</span>    denom = np.where(denom == <span class="num">0</span>, <span class="num">1.0</span>, denom)
+<span class="ln">27</span>    c_interp = (diff + p) / denom
+<span class="ln">28</span>
+<span class="hl"><span class="ln">29</span>    <span class="com"># Apply piecewise conditions</span></span>
+<span class="hl"><span class="ln">30</span>    c = np.where(diff &gt;= -q, <span class="num">1.0</span>, np.where(diff &lt;= -p, <span class="num">0.0</span>, c_interp))</span>
+<span class="ln">31</span>    <span class="kw">return</span> np.clip(c, <span class="num">0.0</span>, <span class="num">1.0</span>)</code></pre>
+          </div>
+          <div class="note-col">
+            <h4>Purpose</h4>
+            <p>Three regions for each criterion: diff &ge; &minus;q gives 1, diff &le; &minus;p gives 0, otherwise linear <span class="math">(diff + p)/(p &minus; q)</span>. The outer <code>np.where</code> wins on ties.</p>
+            <h4>Why</h4>
+            <p>Vectorised: <code>c_interp</code> is computed for every element, then masked. The final clip guards floating-point drift.</p>
+            <h4>Pitfalls</h4>
+            <p><strong>q = p:</strong> the guard sets denom = 1; the outer branch still yields the step function. <strong>Sign:</strong> diff is g(a)&minus;g(b); reversing <var>a</var>,<var>b</var> flips every sign. See <a href="#notation">Notation</a>.</p>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <p class="links">Related: <a href="#notation">Notation</a> <a href="#io">I/O Summary</a> <a href="#example">Worked example</a> <a href="../../modules/discordance_tutorial_side_by_side.html">discordance.py tutorial</a> <a href="../../modules/credibility_tutorial_side_by_side.html">credibility.py tutorial</a></p>
+
+    <details id="backlinks">
+      <summary>Backlinks: where concordance is used</summary>
+      <div>
+        <p><a href="../../modules/block_tutorial_side_by_side.html">block.py</a> &mdash; builds <code>diff</code> of shape (B1,B2,C) and calls partial then global concordance.</p>
+        <p><a href="../../modules/credibility_tutorial_side_by_side.html">credibility.py</a> &mdash; starts from C(a,b) and applies discordance reductions.</p>
+        <p><a href="../../modules/ranking_tutorial_side_by_side.html">ranking.py</a> &mdash; orients lower-is-better criteria before any pairwise call.</p>
+      </div>
+    </details>
+
+    <footer>
+      <span>Layout 2 &mdash; code-dominant split &middot; N2 notation after I/O</span>
+      <span class="badge">60 mono chars @ 1366px budget</span>
+    </footer>
+  </main>
+</div>
+</body>
+</html>

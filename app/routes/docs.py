@@ -60,6 +60,14 @@ def module_tutorial(name: str):
     return send_file(tutorial_path, mimetype="text/html")
 
 
+@bp.route("/docs/modules/<name>/<target>_tutorial_side_by_side.html")
+def linked_tutorial(name: str, target: str):
+    """Resolve offline-compatible sibling links through the tutorial allow-list."""
+    if not _validate_doc_name(name):
+        abort(404)
+    return module_tutorial(target)
+
+
 @bp.route("/docs/modules/<name>/assets/<asset>")
 def tutorial_asset(name: str, asset: str):
     """Serve tutorial assets (theme.js only) with strict allow-list."""

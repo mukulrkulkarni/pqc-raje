@@ -1,0 +1,16 @@
+{
+  "snapshot_hashes": "PASS; all three match live and manifest",
+  "snapshot_files": [
+    "snapshot/app/routes/docs.py",
+    "snapshot/docs/modules/concordance_tutorial_side_by_side.html",
+    "snapshot/tests/test_concordance_n1.py"
+  ],
+  "credibility_finding_scope": "Pre-existing: credibility.py content unchanged from HEAD, not introduced by N1",
+  "gate_results": {
+    "Scientific": "NEEDS WORK",
+    "Engineering": "APPROVED",
+    "Security": "APPROVED",
+    "UI_UX": "APPROVED"
+  },
+  "unverified": "Browser interaction, rendered width and exact baseline alignment"
+}

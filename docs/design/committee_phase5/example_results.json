@@ -1,0 +1,81 @@
+{
+  "A_to_B": {
+    "diff": [
+      [
+        [
+          2.0,
+          -2.0,
+          1.0
+        ]
+      ]
+    ],
+    "partial": [
+      [
+        [
+          1.0,
+          0.5,
+          1.0
+        ]
+      ]
+    ],
+    "global": [
+      [
+        0.85
+      ]
+    ],
+    "discordance": [
+      [
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ]
+    ],
+    "credibility": [
+      [
+        0.85
+      ]
+    ]
+  },
+  "B_to_A": {
+    "diff": [
+      [
+        [
+          -2.0,
+          2.0,
+          -1.0
+        ]
+      ]
+    ],
+    "partial": [
+      [
+        [
+          0.5,
+          1.0,
+          1.0
+        ]
+      ]
+    ],
+    "global": [
+      [
+        0.75
+      ]
+    ],
+    "discordance": [
+      [
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ]
+    ],
+    "credibility": [
+      [
+        0.75
+      ]
+    ]
+  },
+  "boundary_checks": "PASS: q=p at equality gives c=1; p=v at equality gives d=1."
+}

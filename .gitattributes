@@ -1,0 +1,2 @@
+# Preserve review patch context markers; they are not source whitespace errors.
+docs/design/committee_phase5/review/pilot.diff -whitespace

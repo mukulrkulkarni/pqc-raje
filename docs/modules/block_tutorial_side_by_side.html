@@ -501,7 +501,7 @@ footer{margin-top:var(--s6); padding-top:var(--s3); border-top:1px solid var(--b
             <h4>Why</h4>
             <p>Keeping concordance/discordance in separate modules enables focused unit tests. <code>compute_block</code> is the composition point tested end-to-end.</p>
             <h4>Pitfalls</h4>
-            <p>Ensure structural constraints hold: <code>0  q  p  v</code> and <code>w.sum()  1</code> (use <code>np.isclose</code>). In this codebase, high-level entry points validate inputs; <code>compute_block</code> assumes inputs are consistent.</p>
+            <p>Ensure structural constraints hold: <code>0 ≤ q ≤ p ≤ v</code> and <code>w.sum() ≈ 1</code> (use <code>np.isclose</code>). Equality is allowed and has defined boundary behavior: at <code>q=p</code>, concordance returns 1 at <code>diff=-q</code>; at <code>p=v</code>, discordance returns 1 at <code>diff=-v</code>. In this codebase, high-level entry points validate shapes and basic consistency; note: validate.py enforces ordering of q/p/v but does not check q/p/v finiteness if you bypass CriterionConfig; <code>compute_block</code> assumes inputs are consistent.</p>
           </div>
         </div>
       </section>
@@ -565,7 +565,7 @@ footer{margin-top:var(--s6); padding-top:var(--s3); border-top:1px solid var(--b
               <li><code>S</code> &mdash; modified in place; first min(B1,B2) diagonal elements set to 0.0</li>
             </ul>
             <h4>Why</h4>
-            <p>Self-comparison is undefined, so the project uses the convention <code>S(a,a)=0</code>. In net-flow ranking, diagonal entries cancel in <code>()-()</code>, but clearing them keeps the matrix convention explicit and keeps the separate components ( and ) free of self-terms.</p>
+            <p>Self-comparison is undefined, so the project uses the convention <code>S(a,a)=0</code>. In net-flow ranking, diagonal entries cancel in <code>outflow(a) - inflow(a)</code>, but clearing them keeps the matrix convention explicit and keeps the separate components (outflow and inflow) free of self-terms.</p>
             <h4>Pitfalls</h4>
             <p><code>np.fill_diagonal</code> always zeros <code>min(B1,B2)</code> entries, even for rectangular blocks. The ranking pipeline only sets <code>is_diagonal=True</code> when the block is truly diagonal (same alternatives in rows and cols), so self-terms exist at matching local indices.</p>
           </div>

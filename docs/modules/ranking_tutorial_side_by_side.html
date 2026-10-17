@@ -187,6 +187,28 @@ pre code{display:block; white-space:pre;}
   background:var(--surface-2); padding:1px 3px; border-radius:2px;}
 .io-item .type{color:var(--text-dim);}
 
+/* Option 3: Grounding facts line + expandable rationale */
+.gnd-facts{display:flex; flex-wrap:wrap; gap:var(--s2) var(--s4);
+  margin-bottom:var(--s3); padding:var(--s2) var(--s3);
+  background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+  font-size:11px; color:var(--text-muted);}
+.gnd-facts dl{display:flex; flex-wrap:wrap; gap:var(--s1) var(--s4); margin:0;}
+.gnd-facts dt{font-weight:600; color:var(--text); white-space:nowrap;}
+.gnd-facts dt::after{content:":";}
+.gnd-facts dd{margin:0; margin-right:var(--s3);}
+.gnd-details{margin-bottom:var(--s4);}
+.gnd-details summary{font-size:11px; color:var(--accent); cursor:pointer;
+  font-weight:600; padding:var(--s1) 0; list-style:none;}
+.gnd-details summary::before{content:"▸ "; font-size:10px;}
+.gnd-details[open] summary::before{content:"▾ ";}
+.gnd-details summary:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+.gnd-content{font-size:11.5px; color:var(--text-muted); line-height:1.45;
+  padding:var(--s2) 0 0 var(--s3); border-left:2px solid var(--border);}
+.gnd-content p{margin:0 0 var(--s2);}
+.gnd-content ul{margin:0 0 var(--s2); padding-left:var(--s4);}
+.gnd-content li{margin-bottom:2px;}
+.gnd-content b{color:var(--text); font-weight:600;}
+
 /* usage: code + output side by side */
 .usage{margin-top:var(--s6);}
 .usage .split{grid-template-columns:var(--code-frac) 1fr;}
@@ -228,72 +250,6 @@ footer{margin-top:var(--s6); padding-top:var(--s3); border-top:1px solid var(--b
   .shell{grid-template-columns:1fr;}
   .sidebar{display:none;}
 }
-/* compact cards: I/O Summary and Notation share this grid */
-.card{display:grid; grid-template-columns:repeat(auto-fit, minmax(230px, 1fr)); gap:var(--s2) var(--s4);
-  margin-bottom:var(--s3); padding:var(--s3); background:var(--surface);
-  border:1px solid var(--border); border-radius:var(--radius); scroll-margin-top:64px;}
-.card h3{font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:var(--accent);
-  margin:0 0 var(--s1); font-weight:650; grid-column:1/-1; display:flex; gap:var(--s2); align-items:center;}
-.card h3 .blk{font-family:var(--mono); font-size:9.5px; font-weight:700; background:var(--surface-2);
-  color:var(--text-dim); border-radius:3px; padding:1px 4px; text-transform:none; letter-spacing:0;}
-.item{font-size:12px; line-height:1.45; color:var(--note-text);}
-.item b{color:var(--text); font-weight:600; display:block; margin-bottom:2px;}
-.item code, .note-col code, .gnd-facts code, .ex code{font-family:var(--mono); font-size:11px;
-  background:var(--surface-2); padding:1px 4px; border-radius:3px; color:var(--text);}
-.item ul{margin:0; padding-left:var(--s4);} .item li{margin-bottom:2px;}
-.item .type{color:var(--text-dim);}
-.math{font-family:"Times New Roman",Georgia,serif; font-size:13.5px; color:var(--text); white-space:nowrap;}
-.math var{font-style:italic;}
-.micro{grid-column:1/-1; font-size:11.5px; color:var(--text); background:var(--sel-soft);
-  border-left:3px solid var(--sel-accent); padding:3px var(--s2); border-radius:3px;}
-.micro a{color:var(--sel-accent);}
-/* Option 3 facts (compact dl) + borderless details */
-.gnd-facts{margin-bottom:var(--s3); padding:var(--s2); background:var(--surface); border-radius:var(--radius-sm);}
-.gnd-facts dl{display:flex; flex-wrap:wrap; gap:var(--s1) var(--s4); margin:0; font-size:11.5px;}
-.gnd-facts dt{font-weight:600; color:var(--text-muted);} .gnd-facts dd{margin:0; color:var(--text-dim);}
-details{margin-bottom:var(--s3); font-size:12px;}
-details summary{cursor:pointer; font-weight:600; color:var(--accent); padding:var(--s2);
-  list-style-position:inside;}
-details summary:focus-visible{outline:2px solid var(--accent); outline-offset:1px;}
-details > div{padding:var(--s2) var(--s3); background:var(--surface); border-radius:var(--radius-sm);
-  color:var(--note-text); line-height:1.55;}
-details p{margin:0 0 var(--s2);} details p:last-child{margin-bottom:0;}
-.ex table{border-collapse:collapse; font-size:11.5px; margin:var(--s1) 0 var(--s2);}
-.ex th,.ex td{padding:2px 8px; text-align:left; border-bottom:1px solid var(--border); color:var(--note-text);}
-.ex th{color:var(--text); font-weight:600;}
-.ex .lbl{font-size:10.5px; padding:1px 6px; border-radius:3px; background:var(--warn-soft); color:var(--warn);
-  font-weight:600; margin-left:var(--s1);}
-.ex .lbl.ok{background:var(--ok-soft); color:var(--ok);}
-.ex .steps{columns:2; column-gap:var(--s5);} .ex .steps p{break-inside:avoid;}
-@media (max-width:1100px){.ex .steps{columns:1;}}
-
-/* N1 pilot: accessible links and selected badges; Python syntax tokens unchanged. */
-a{color:var(--accent);} a:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
-:root{--sel-fg:#ffffff;--accent-fg:#ffffff;}
-html[data-theme="dark"]{--sel-fg:#052e16;--accent-fg:#0b1120;}
-.row.sel .rk,.row:target .rk{color:var(--sel-fg);}
-.jump a.active .j-badge{background:var(--sel-accent);color:var(--sel-fg);}
-.brand-mark{color:var(--accent-fg);}
-.card h3,.io-summary h3{color:var(--h4-color);}
-.card strong{display:inline;} .math{white-space:normal;}
-.prog-fill{width:0%;}
-.concept-nav{display:flex;flex-wrap:wrap;gap:8px 16px;margin:0 0 12px;font-size:12px;}
-#notation,#io,#example,#backlinks{scroll-margin-top:80px;}
-@media(max-width:768px){.sidebar{display:flex;position:static;height:auto;}.theme{margin-top:12px;}.jump{display:grid;grid-template-columns:1fr 1fr;}.topbar{position:static;}}
-
-@media(prefers-color-scheme:dark){html[data-theme="system"]{
-  --bg:#0b1120; --surface:#0f172a; --surface-2:#1e293b; --border:#1e293b;
-  --border-strong:#334155; --text:#e2e8f0; --text-muted:#d1d5db; --text-dim:#9ca3af;
-  --accent:#60a5fa; --accent-soft:#172554; --accent-border:#1e40af;
-  --code-bg:#0f172a; --code-text:#e2e8f0; --kw:#c4b5fd; --str:#86efac;
-  --com:#9ca3af; --num:#fcd34d; --fn:#93c5fd;
-  --ok:#86efac; --ok-soft:#052e16; --warn:#fcd34d; --warn-soft:#2a1f05;
-  /* Dark mode: neutral near-white text, green accents for headers/selection */
-  --note-text:#d1d5db; --note-size:13.5px;
-  --h4-color:#f3f4f6; --h4-border:#86efac;
-  --sel-accent:#86efac; --sel-soft:#052e16; --sel-border:#22c55e;
---sel-fg:#052e16;--accent-fg:#0b1120;}}
-
 </style>
 </head>
 <body>
@@ -313,39 +269,39 @@ html[data-theme="dark"]{--sel-fg:#052e16;--accent-fg:#0b1120;}
         <a href="#row-R1" data-range="R1" id="jump-R1">
           <span class="j-badge">R1</span>
           <span>
-            <span class="j-title">Contract & imports</span>
-            <span class="j-desc">Inputs, outputs and row IDs</span>
+            <span class="j-title">Pipeline Overview</span>
+            <span class="j-desc">Inputs &amp; outputs</span>
           </span>
         </a>
         <a href="#row-R2" data-range="R2" id="jump-R2">
           <span class="j-badge">R2</span>
           <span>
-            <span class="j-title">Validation</span>
-            <span class="j-desc">Shapes, weights and thresholds</span>
+            <span class="j-title">Blocking Strategy</span>
+            <span class="j-desc">Memory-efficient loop</span>
           </span>
         </a>
         <a href="#row-R3" data-range="R3" id="jump-R3">
           <span class="j-badge">R3</span>
           <span>
-            <span class="j-title">Orientation</span>
-            <span class="j-desc">Minimize criteria on a copy</span>
+            <span class="j-title">compute_block</span>
+            <span class="j-desc">Diagonal handling</span>
           </span>
         </a>
         <a href="#row-R4" data-range="R4" id="jump-R4">
           <span class="j-badge">R4</span>
           <span>
-            <span class="j-title">Blocks & flows</span>
-            <span class="j-desc">Both directions and diagonal</span>
+            <span class="j-title">Accumulator</span>
+            <span class="j-desc">Net flow &amp; phi</span>
           </span>
         </a>
         <a href="#row-R5" data-range="R5" id="jump-R5">
           <span class="j-badge">R5</span>
           <span>
-            <span class="j-title">Order & scaling</span>
-            <span class="j-desc">Raw flow; optional display</span>
+            <span class="j-title">Edge Cases</span>
+            <span class="j-desc">Validations</span>
           </span>
         </a>
-        <a href="#usage" id="jump-EX">
+        <a href="#usage" data-range="EX" id="jump-EX">
           <span class="j-badge">EX</span>
           <span>
             <span class="j-title">Usage</span>
@@ -374,199 +330,118 @@ html[data-theme="dark"]{--sel-fg:#052e16;--accent-fg:#0b1120;}
     <!-- I/O summary folded into sticky topbar -->
     <div class="topbar">
       <div class="topbar-row">
-        <h1>Ranking computation</h1>
+        <h1>Ranking pipeline</h1>
         <div class="sig">
-          <span class="fn">compute_ranking</span>(G, criteria, config=None) &rarr; (order, acc)
+          <span class="fn">compute_ranking</span>(G, criteria, config) &rarr; (ndarray, NetFlowAccumulator)
         </div>
         <div class="meta-inline">
-          <span>pure function</span>
-          <span>source excerpts</span>
+          <span>raises <span class="raise">ValueError</span></span>
+          <span>33 lines</span>
           <span>5 ranges</span>
         </div>
       </div>
     </div>
 
-    <nav class="concept-nav" aria-label="Concepts"><a href="#notation">Notation</a><a href="#io">I/O Summary</a><a href="#example">Worked example</a><a href="#backlinks">Related concepts</a></nav>
-    <section class="card" id="notation" aria-labelledby="h-nt">
-      <h3 id="h-nt">Notation &mdash; read this first</h3>
-      <div class="item"><b>a and b are objects</b>
-        Both are alternatives: things being ranked (IP addresses, items, projects). They are <strong>not</strong> criteria. A criterion is a property we measure on every object.</div>
-      <div class="item"><b>a &rarr; b is an assertion under assessment</b>
-        <span class="math"><var>a</var> &rarr; <var>b</var></span> reads &ldquo;<var>a</var> is at least as good as <var>b</var>&rdquo;. We are <em>testing</em> this claim, not stating it is already established. <span class="math"><var>b</var> &rarr; <var>a</var></span> is a different claim with its own numbers.</div>
-      <div class="item"><b>Counts (no symbol collisions)</b>
-        <ul><li><strong>N</strong> &mdash; number of objects in the whole dataset</li>
-            <li><strong>C</strong> &mdash; number of criteria (a count only)</li>
-            <li><strong>C(a,b)</strong> &mdash; global concordance of the pair; in [0,1] under the weight contract below; never plain C</li></ul></div>
-      <div class="item"><b>B1 and B2 count objects in comparison groups</b>
-        One block compares a group of <strong>B1 row objects</strong> (playing <var>a</var>) against a group of <strong>B2 column objects</strong> (playing <var>b</var>). Both groups contain object rows from the same performance matrix, not groups of data fields. Row/column names describe their positions in the pairwise result. Groups may overlap, and B1 need not equal B2.</div>
-      <div class="item"><b>Why diff has three axes (B1, B2, C)</b>
-        <code>diff[i,j,k] = g(row i, crit k) &minus; g(col j, crit k)</code>. Here g(a,j) is the oriented performance of object a on criterion j. Axis 1 picks the row object, axis 2 the column object, axis 3 the criterion. Every <var>a</var>,<var>b</var> pair gets one number per criterion.</div>
-      <div class="item"><b>Triple brackets</b>
-        <code>[[[d1, d2, d3]]]</code> = B1&nbsp;=&nbsp;1 (outer), B2&nbsp;=&nbsp;1 (middle), C&nbsp;=&nbsp;3 (inner). Two objects {A,&nbsp;B} give two non-self directed comparisons: A&rarr;B uses <code>g(A)&minus;g(B)</code>, B&rarr;A uses <code>g(B)&minus;g(A)</code>; same magnitudes, flipped signs.</div>
-    </section>
-    <section class="io-summary" id="io" aria-labelledby="h-io">
-      <h3 id="h-io">I/O Summary</h3>
-      <div class="item"><b>compute_ranking(G, criteria, config=None)</b>
-        <span class="type">Inputs:</span> finite numeric <code>G: ndarray(N,C)</code>, N &ge; 2; non-empty list of C CriterionConfig objects; ComputeConfig with positive integer block_size B.<br>
-        <span class="type">Output:</span> <code>(order, acc)</code>. order is a permutation of zero-based row indices, shape (N,), NOT object IDs or scores. acc is a NetFlowAccumulator.<br>
-        Use a signed floating-point matrix for safe minimization: negating unsigned values can wrap. The function copies G but preserves its dtype.</div>
-      <div class="item"><b>Raw net flow drives ordering</b>
-        <span class="math">out(a)=&Sigma;<sub>b&ne;a</sub>S(a,b)</span>; <span class="math">in(a)=&Sigma;<sub>b&ne;a</sub>S(b,a)</span>.<br>
-        <span class="math">&phi;(a)=out(a)&minus;in(a)</span>. The return uses <code>np.argsort(-acc.net_flow())</code>: largest raw flow first.<br>
-        Tie order is not explicitly stabilized or resolved by object ID. A position in order is not a confidence measure.</div>
-      <div class="item"><b>Normalization terminology</b>
-        <code>phi_norm</code> is a planning term, not a variable computed by ranking.py. This function does not call normalize().<br>
-        Optional <code>acc.normalize()</code> uses min&ndash;max scaling: <span class="math">(&phi;&minus;min &phi;)/(max &phi;&minus;min &phi;)</span>; all equal maps to 0.5.<br>
-        Dividing raw flow by N&minus;1 is a different convention, not this method. Neither changes strict order within one dataset in exact arithmetic; near ties can be affected by floating-point rounding.</div>
-    </section>
-    <div class="gnd-facts"><dl>
-      <dt>Criteria</dt><dd>non-empty, one configuration per matrix column</dd>
-      <dt>Diagonal</dt><dd>matching self-comparisons cleared inside compute_block</dd>
-      <dt>Memory</dt><dd>O(NC + N + B&sup2;C) working scale, not O(N) overall</dd>
-      <dt>Work</dt><dd>O(N&sup2;C) pairs/criteria plus O(N log N) sorting</dd>
-    </dl></div>
-    <details class="gnd-details"><summary>Scientific grounding, scaling and sanity checks</summary><div class="gnd-content">
-      <p><b>Definition:</b> Ranking exploits ELECTRE III credibility using a net-flow score. This is not ELECTRE III distillation. A sorted list does not make the underlying directed outranking relation transitive, nor prove that each higher-ranked object outranks every lower-ranked object.</p>
-      <p><b>Block dimensions:</b> B is the configured maximum number of objects per block side. B1 and B2 are actual row/column group sizes; the final groups can be smaller. The two loops visit every ordered block, including both directions, so they do not assume symmetry.</p>
-      <p><b>Memory and performance:</b> The accumulator arrays use O(N), but G_adj copies O(NC) data and block differences/intermediates use O(B1&times;B2&times;C). Blocking avoids retaining the full N&times;N credibility matrix; it does not remove quadratic pairwise work. Measure on your hardware/data; no runtime or speedup is guaranteed here.</p>
-      <p><b>Current configuration behavior:</b> ranking.py reads block_size; it does not read seed or use_numba. These fields do not select tie-breaking or an accelerated backend in this function. Do not infer backend behavior from configuration names alone.</p>
-      <p><b>Normalization:</b> Min&ndash;max scores are relative to the current set and sensitive to extreme scores. A value of 1 means the largest flow in this set, not perfect credibility or probability. Constant-score 0.5 is a display convention. Dividing by N&minus;1 instead puts finite valid net flow within [&minus;1,1]; it is not the implementation's normalize() method.</p>
-      <p><b>Validation ownership:</b> The entry point rejects empty criteria, malformed/non-finite performance matrices and non-finite weights, and checks threshold ordering. Constructors check finite thresholds and positive weights/block sizes. Public dataclasses remain mutable; post-construction mutation can bypass some checks. Overflow from extreme finite values is not comprehensively guarded. This is not a promise that every bad dtype or configuration receives a friendly ValueError.</p>
-      <p><b>Sanity checks:</b> order must be a permutation of input row indices; flow at those indices must be non-increasing. Test B=1, a non-divisor of N, and B&gt;N. Flow sums approximately to zero for consistently accumulated blocks, but this alone cannot prove diagonal exclusion: a diagonal contribution cancels between inflow and outflow.</p>
-    </div></details>
-    <details class="ex" id="example"><summary>Worked example: two objects, four blocks, one ordering</summary><div>
-      <p class="usage-disclaimer">Illustrative example inputs only. Do not treat these thresholds as recommended defaults. These calculated values apply to the specified two objects, not every dataset.</p>
-      <p>Use the shared baseline: A=[10,5,7], B=[8,7,6], q=[1,1,1], p=[3,3,3], v=[6,6,6], weights=[0.5,0.3,0.2]. All criteria are higher-is-better. N=2, C=3 and block_size=1, so B1=B2=1 in each of four calls.</p>
-      <table id="pair-results"><caption>Credibility blocks in loop order (diagonal already cleared)</caption><thead><tr><th scope="col">Row object</th><th scope="col">Column object</th><th scope="col">S</th></tr></thead><tbody>
-      <tr><th scope="row">A</th><td>A</td><td>0</td></tr>
-      <tr><th scope="row">A</th><td>B</td><td>0.85</td></tr>
-      <tr><th scope="row">B</th><td>A</td><td>0.75</td></tr>
-      <tr><th scope="row">B</th><td>B</td><td>0</td></tr>
-      </tbody></table>
-      <table id="flow-results"><caption>Accumulator arrays retain original object order, not sorted order</caption><thead><tr><th scope="col">Object</th><th scope="col">Outflow</th><th scope="col">Inflow</th><th scope="col">Raw flow</th><th scope="col">Optional min&ndash;max</th></tr></thead><tbody>
-      <tr><th scope="row">A</th><td>0.85</td><td>0.75</td><td>0.10</td><td>1</td></tr>
-      <tr><th scope="row">B</th><td>0.75</td><td>0.85</td><td>-0.10</td><td>0</td></tr>
-      </tbody></table>
-      <div class="steps"><p><b>Return:</b> order is <code>[0, 1]</code>, which maps to IDs <code>[A, B]</code>. The caller must keep that ID mapping; the function only sees matrix rows.</p>
-      <p><b>Direction:</b> <a href="concordance_tutorial_side_by_side.html#example">A &rarr; B has 0.85 support</a>; the reverse direction has 0.75. Both are needed. The difference in outgoing/incoming support gives the flow.</p>
-      <p><b>Optional display:</b> acc.normalize() maps the two raw flows to 1 and 0. Ranking did not call it. A larger set can change those display values even if a pair's credibility stays fixed.</p>
-      <p><b>Interpretation:</b> A ranks first by net flow in this set. This does not claim certainty, an absolute quality score, or superiority under every criterion.</p></div>
-    </div></details>
+    <!-- I/O Summary - compact overview -->
+    <div class="io-summary">
+      <h3>I/O Summary</h3>
+      <div class="io-item">
+        <b>compute_ranking</b>
+        <span class="type">Input:</span> <code>G: ndarray(N,C)</code>, <code>criteria: list[CriterionConfig]</code>, <code>config: ComputeConfig|None</code><br>
+        <span class="type">Output:</span> <code>(ranking: ndarray(N,), acc: NetFlowAccumulator)</code><br>
+        <span class="type">Raises:</span> <code>ValueError</code> if criteria empty, matrix invalid, or thresholds malformed
+      </div>
+      <div class="io-item">
+        <b>NetFlowAccumulator</b>
+        <span class="type">Tracks:</span> outflow &phi;<sup>+</sup>, inflow &phi;<sup>-</sup> per alternative<br>
+        <span class="type">Provides:</span> <code>net_flow()</code> &rarr; &phi;<sup>+</sup> - &phi;<sup>-</sup><br>
+        <span class="type">Memory:</span> O(N) not O(N&sup2;)
+      </div>
+      <div class="io-item">
+        <b>Pipeline</b>
+        <span class="type">Steps:</span> validate &rarr; normalize &rarr; block loop &rarr; accumulate &rarr; argsort<br>
+        <span class="type">Blocking:</span> O(block_size&sup2;) memory per iteration
+      </div>
+    </div>
+
+    <!-- Option 3: Compact facts line + expandable rationale -->
+    <div class="gnd-facts">
+      <dl>
+        <dt>Criteria</dt><dd>must be non-empty</dd>
+        <dt>S range</dt><dd>assumes S &isin; [0,1] from block</dd>
+        <dt>Diagonal</dt><dd>excluded via is_diagonal flag in block</dd>
+        <dt>Memory</dt><dd>O(N) accumulator + O(B&sup2;) per block</dd>
+      </dl>
+    </div>
+
+    <details class="gnd-details">
+      <summary>Scientific grounding &amp; calibration notes</summary>
+      <div class="gnd-content">
+        <p><b>Definition:</b> The ranking pipeline computes ELECTRE III net flow scores and returns alternatives sorted by descending net flow. Net flow &phi; = &phi;<sup>+</sup> - &phi;<sup>-</sup> where &phi;<sup>+</sup> is outflow (how much a dominates others) and &phi;<sup>-</sup> is inflow (how much others dominate a).</p>
+        <p><b>Blocking strategy:</b> For large N, storing full N&times;N credibility matrix is infeasible. Block processing computes B&times;B submatrices and accumulates flows incrementally. Memory is O(N) for accumulator + O(B&sup2;) per block iteration.</p>
+        <p><b>Calibration notes:</b></p>
+        <ul>
+          <li><b>Block size:</b> Larger blocks may be faster but use more memory; tune based on available RAM.</li>
+          <li><b>Ties:</b> Alternatives with equal net flow may resolve by index order or NumPy implementation details; argsort is deterministic but tie order is not guaranteed.</li>
+          <li><b>Normalization:</b> Weights are normalized to sum to 1; relative ratios preserved.</li>
+        </ul>
+        <p><b>Sanity checks:</b></p>
+        <ul>
+          <li>Verify ranking length equals N (number of alternatives).</li>
+          <li>Verify ranking contains each index 0..N-1 exactly once.</li>
+          <li>Spot-check that top-ranked alternatives have highest net flow.</li>
+          <li>NaN/Inf in input matrix should be rejected; validate upstream.</li>
+        </ul>
+      </div>
+    </details>
+
     <div class="rows">
-      <!-- R1: Module Overview -->
+      <!-- R1: Pipeline Overview -->
       <section class="row" id="row-R1">
-        <div class="row-head" role="button" tabindex="0" aria-pressed="false" data-range="R1" aria-label="Toggle R1: Contract & imports">
+        <div class="row-head" role="button" tabindex="0" aria-expanded="true" data-range="R1" aria-label="Toggle R1: Pipeline Overview">
           <span class="rk">R1</span>
-          <span class="row-title">Contract & imports</span>
+          <span class="row-title">Pipeline Overview</span>
           <span class="row-lines">L1–L11</span>
-          <span class="tag ok">pure</span>
+          <span class="tag ok">entry</span>
           <span class="rule" aria-hidden="true"></span>
         </div>
         <div class="split">
           <div class="code-col">
             <div class="code-bar">ranking.py<span class="sp">L1–L11</span></div>
-            <pre><code><span class="ln">1</span><span class="str">&quot;&quot;&quot;Main ranking pipeline for ELECTRE III.&quot;&quot;&quot;</span>
+            <pre><code><span class="ln">1</span><span class="str">"""Main ranking pipeline for ELECTRE III."""</span>
 <span class="ln">2</span><span class="kw">import</span> numpy <span class="kw">as</span> np
 <span class="ln">3</span><span class="kw">from</span> typing <span class="kw">import</span> Optional
 <span class="ln">4</span><span class="kw">from</span> .config <span class="kw">import</span> CriterionConfig, ComputeConfig
-<span class="ln">5</span><span class="kw">from</span> .validate <span class="kw">import</span> validate_thresholds, normalize_weights, validate_matrix, validate_arrays_match
+<span class="ln">5</span><span class="kw">from</span> .validate <span class="kw">import</span> validate_thresholds, ...
 <span class="ln">6</span><span class="kw">from</span> .accumulator <span class="kw">import</span> NetFlowAccumulator
 <span class="ln">7</span><span class="kw">from</span> .block <span class="kw">import</span> compute_block
-<span class="ln">8</span>
-<span class="ln">9</span><span class="kw">def</span> compute_ranking(
-<span class="ln">10</span>    G: np.ndarray, criteria: list[CriterionConfig], config: Optional[ComputeConfig] = <span class="kw">None</span>
-<span class="ln">11</span>) -&gt; tuple[np.ndarray, NetFlowAccumulator]:</code></pre>
+<span class="ln">9</span><span class="kw">def</span> <span class="fn">compute_ranking</span>(
+<span class="ln">10</span>    G: np.ndarray, criteria: list[CriterionConfig], ...</code></pre>
           </div>
           <div class="note-col">
             <h4>Purpose</h4>
-            <p>compute_ranking connects validated performances to pairwise credibility and then to a net-flow ordering. It accepts object rows and criterion configurations; it does not accept an NxN pairwise matrix or a comparator callback.</p>
+            <p>[Placeholder] Entry point for ELECTRE III ranking. Orchestrates validation, blocking, and accumulation.</p>
             <h4>I/O</h4>
-            <p>The function returns order and an accumulator. order contains zero-based positions into G. The accumulator keeps outflow and inflow arrays indexed by original row positions, not positions in the sorted order.</p>
+            <ul>
+              <li><code>G</code> &mdash; [Placeholder] performance matrix (N alternatives &times; C criteria)</li>
+              <li><code>criteria</code> &mdash; [Placeholder] list of CriterionConfig with thresholds</li>
+              <li><code>config</code> &mdash; [Placeholder] optional ComputeConfig (block_size)</li>
+            </ul>
             <h4>Why</h4>
-            <p>Keeping the accumulator supports diagnostics and optional score display without storing all pairwise results. The scalar exploitation produces a usable ordering even when the credibility relation is not transitive.</p>
+            <p>[Placeholder] Single entry point simplifies API; internal modules remain decoupled.</p>
             <h4>Pitfalls</h4>
-            <p>Keep external object IDs alongside G and index them with order. Never treat an order array as scores. The type annotations do not enforce numeric dtype; prefer a signed floating-point matrix for reliable orientation and arithmetic.</p>
-
+            <p>[Placeholder] Empty criteria list raises ValueError immediately.</p>
           </div>
         </div>
       </section>
 
-      <!-- R2: Input Arrays -->
+      <!-- R2: Blocking Strategy -->
       <section class="row" id="row-R2">
-        <div class="row-head" role="button" tabindex="0" aria-pressed="false" data-range="R2" aria-label="Toggle R2: Validation">
+        <div class="row-head" role="button" tabindex="0" aria-expanded="true" data-range="R2" aria-label="Toggle R2: Blocking Strategy">
           <span class="rk">R2</span>
-          <span class="row-title">Validation</span>
-          <span class="row-lines">L12–L22</span>
-          <span class="tag ok">pure</span>
-          <span class="rule" aria-hidden="true"></span>
-        </div>
-        <div class="split">
-          <div class="code-col">
-            <div class="code-bar">ranking.py<span class="sp">L12–L22</span></div>
-            <pre><code><span class="ln">12</span>    <span class="kw">if</span> <span class="kw">not</span> criteria:
-<span class="ln">13</span>        <span class="kw">raise</span> ValueError(<span class="str">&quot;criteria list cannot be empty&quot;</span>)
-<span class="ln">14</span>    <span class="kw">if</span> config <span class="kw">is</span> <span class="kw">None</span>:
-<span class="ln">15</span>        config = ComputeConfig()
-<span class="ln">16</span>    validate_thresholds(criteria)
-<span class="hl"><span class="ln">17</span>    weights = normalize_weights(criteria)</span>
-<span class="ln">18</span>    validate_matrix(G, len(criteria))
-<span class="ln">19</span>    q = np.array([c.q <span class="kw">for</span> c <span class="kw">in</span> criteria], dtype=np.float64)
-<span class="ln">20</span>    p = np.array([c.p <span class="kw">for</span> c <span class="kw">in</span> criteria], dtype=np.float64)
-<span class="ln">21</span>    v = np.array([c.v <span class="kw">for</span> c <span class="kw">in</span> criteria], dtype=np.float64)
-<span class="ln">22</span>    validate_arrays_match(q, p, v, weights)</code></pre>
-          </div>
-          <div class="note-col">
-            <h4>Purpose</h4>
-            <p>Reject empty criteria, choose a default configuration if needed, validate threshold ordering, normalize weights and validate the matrix. Then assemble threshold vectors with one entry per criterion.</p>
-            <h4>I/O</h4>
-            <p>G must be two-dimensional with at least two rows and exactly len(criteria) columns; NaN/Inf performance values are rejected. Weights are normalized separately; q, p and v become float64 arrays before length matching.</p>
-            <h4>Why</h4>
-            <p>A consistent final criterion axis is essential for broadcasting in the block helper. Normalized positive weights give the global concordance weighted-average interpretation. Constructor checks enforce initial finite thresholds, their ordering and positive weights.</p>
-            <h4>Pitfalls</h4>
-            <p>Do not generalize these checks into complete runtime type validation. Configurations can be mutated after construction; validate_thresholds does not repeat every constructor check. normalize_weights rejects non-finite values and nonpositive total, not every possible mutated negative component. Treat configuration objects as immutable in use.</p>
-
-          </div>
-        </div>
-      </section>
-
-      <!-- R3: Veto Logic -->
-      <section class="row" id="row-R3">
-        <div class="row-head" role="button" tabindex="0" aria-pressed="false" data-range="R3" aria-label="Toggle R3: Orientation">
-          <span class="rk">R3</span>
-          <span class="row-title">Orientation</span>
-          <span class="row-lines">L23–L26</span>
-          <span class="tag warn">veto</span>
-          <span class="rule" aria-hidden="true"></span>
-        </div>
-        <div class="split">
-          <div class="code-col">
-            <div class="code-bar">ranking.py<span class="sp">L23–L26</span></div>
-            <pre><code><span class="ln">23</span>    G_adj = G.copy()
-<span class="ln">24</span>    <span class="kw">for</span> j, c <span class="kw">in</span> enumerate(criteria):
-<span class="ln">25</span>        <span class="kw">if</span> <span class="kw">not</span> c.maximize:
-<span class="hl"><span class="ln">26</span>            G_adj[:, j] = -G_adj[:, j]</span></code></pre>
-          </div>
-          <div class="note-col">
-            <h4>Purpose</h4>
-            <p>Copy G and negate each column whose criterion has maximize=False. After this step, larger oriented values mean better performance for every criterion. Differences can then use one sign convention.</p>
-            <h4>I/O</h4>
-            <p>G_adj has the same shape and dtype as G. Original input values are preserved. Thresholds remain nonnegative distances in each criterion’s units; they are not negated with the performances.</p>
-            <h4>Why</h4>
-            <p>A lower cost becomes a larger negative-cost value, reversing preference consistently without changing distance magnitudes. This orientation happens once before blocking rather than separately inside every pair computation.</p>
-            <h4>Pitfalls</h4>
-            <p>Do not pre-negate a column and also mark it minimize, because that reverses orientation twice. Unsigned or extreme integer values can wrap/overflow under negation. Use signed floating-point values and check practical scale ranges; finite input checks alone do not prove every later subtraction is safe.</p>
-
-          </div>
-        </div>
-      </section>
-
-      <!-- R4: Aggregation -->
-      <section class="row" id="row-R4">
-        <div class="row-head" role="button" tabindex="0" aria-pressed="false" data-range="R4" aria-label="Toggle R4: Blocks & flows">
-          <span class="rk">R4</span>
-          <span class="row-title">Blocks & flows</span>
+          <span class="row-title">Blocking Strategy</span>
           <span class="row-lines">L27–L32</span>
-          <span class="tag ok">pure</span>
+          <span class="tag ok">loop</span>
           <span class="rule" aria-hidden="true"></span>
         </div>
         <div class="split">
@@ -574,88 +449,156 @@ html[data-theme="dark"]{--sel-fg:#052e16;--accent-fg:#0b1120;}
             <div class="code-bar">ranking.py<span class="sp">L27–L32</span></div>
             <pre><code><span class="ln">27</span>    N, B = G.shape[<span class="num">0</span>], config.block_size
 <span class="ln">28</span>    acc = NetFlowAccumulator(N)
-<span class="ln">29</span>    <span class="kw">for</span> rs <span class="kw">in</span> range(<span class="num">0</span>, N, B):
-<span class="ln">30</span>        <span class="kw">for</span> cs <span class="kw">in</span> range(<span class="num">0</span>, N, B):
-<span class="hl"><span class="ln">31</span>            S = compute_block(G_adj[rs:min(rs+B,N)], G_adj[cs:min(cs+B,N)], q, p, v, weights, rs==cs)</span>
-<span class="hl"><span class="ln">32</span>            acc.update(S, rs, cs)</span></code></pre>
+<span class="hl"><span class="ln">29</span>    <span class="kw">for</span> rs <span class="kw">in</span> range(<span class="num">0</span>, N, B):</span>
+<span class="hl"><span class="ln">30</span>        <span class="kw">for</span> cs <span class="kw">in</span> range(<span class="num">0</span>, N, B):</span>
+<span class="ln">31</span>            S = compute_block(...)
+<span class="ln">32</span>            acc.update(S, rs, cs)</code></pre>
           </div>
           <div class="note-col">
             <h4>Purpose</h4>
-            <p>Visit every row block and every column block using steps of B. Each helper result is accumulated immediately: row sums add outgoing support, column sums add incoming support. The next block can replace the temporary matrix.</p>
+            <p>[Placeholder] Iterates over B&times;B blocks to compute credibility submatrices without storing full N&times;N.</p>
             <h4>I/O</h4>
-            <p>B1=min(B,N-rs), B2=min(B,N-cs). Each S has shape (B1,B2). update(S,rs,cs) writes sums to the matching index slices. With K=ceil(N/B), K² blocks are processed, including both off-diagonal directions.</p>
+            <p>[Placeholder] Each iteration produces S block and updates accumulator. Memory: O(B&sup2;) per block.</p>
             <h4>Why</h4>
-            <p>The identical partition on both axes makes rs==cs identify corresponding self-comparison blocks. compute_block clears their local diagonal before update. Other blocks must not clear their local diagonal: those positions represent different objects.</p>
+            <p>[Placeholder] N=100k would need 80GB for N&times;N. Blocking keeps memory at O(B&sup2;).</p>
             <h4>Pitfalls</h4>
-            <p>Equal local row/column positions do not always mean the same object. A test of net-flow sum alone misses self-comparison leakage because diagonal terms cancel. Test block diagonals and accumulated outflow/inflow directly. O(N) describes accumulator storage only, not the entire pipeline.</p>
-
+            <p>[Placeholder] Very small block_size increases loop overhead; very large exhausts memory.</p>
           </div>
         </div>
       </section>
 
-      <!-- R5: Edge Cases -->
-      <section class="row" id="row-R5">
-        <div class="row-head" role="button" tabindex="0" aria-pressed="false" data-range="R5" aria-label="Toggle R5: Order & scaling">
-          <span class="rk">R5</span>
-          <span class="row-title">Order & scaling</span>
-          <span class="row-lines">L33–L33</span>
-          <span class="tag warn">edge</span>
+      <!-- R3: compute_block Integration -->
+      <section class="row" id="row-R3">
+        <div class="row-head" role="button" tabindex="0" aria-expanded="true" data-range="R3" aria-label="Toggle R3: compute_block">
+          <span class="rk">R3</span>
+          <span class="row-title">compute_block Integration</span>
+          <span class="row-lines">L31</span>
+          <span class="tag ok">call</span>
           <span class="rule" aria-hidden="true"></span>
         </div>
         <div class="split">
           <div class="code-col">
-            <div class="code-bar">ranking.py<span class="sp">L33–L33</span></div>
-            <pre><code><span class="hl"><span class="ln">33</span>    <span class="kw">return</span> np.argsort(-acc.net_flow()), acc</span></code></pre>
+            <div class="code-bar">ranking.py<span class="sp">L31</span></div>
+            <pre><code><span class="hl"><span class="ln">31</span>            S = compute_block(G_adj[rs:...], G_adj[cs:...], q, p, v, weights, rs==cs)</span></code></pre>
           </div>
           <div class="note-col">
             <h4>Purpose</h4>
-            <p>Sort negative raw flow with np.argsort to place the largest flow first. The returned accumulator remains available for inspecting each object’s incoming and outgoing support or requesting optional normalized display values.</p>
+            <p>[Placeholder] Calls compute_block with is_diagonal=(rs==cs) to handle self-comparisons.</p>
             <h4>I/O</h4>
-            <p>Raw flow is outflow minus inflow, with no division by N−1 here. acc.normalize() is a separate min–max operation; all equal values map to 0.5. The planning name phi_norm is not a symbol computed or returned by ranking.py.</p>
+            <ul>
+              <li><code>G_adj[rs:...]</code> &mdash; [Placeholder] row slice for this block</li>
+              <li><code>rs==cs</code> &mdash; [Placeholder] True when block is on diagonal</li>
+            </ul>
             <h4>Why</h4>
-            <p>For one fixed dataset, strictly increasing scaling preserves strict order in exact arithmetic, so raw-flow sorting need not first compute display scores. Min–max values remain relative to the current set and do not measure confidence.</p>
+            <p>[Placeholder] Diagonal blocks contain S(a,a) which should be 0; is_diagonal flag triggers zeroing.</p>
             <h4>Pitfalls</h4>
-            <p>No explicit stable sort, object-ID secondary key or tie policy is supplied. Equal scores may appear in any order consistent with NumPy’s chosen sort; do not assert a particular tied permutation across versions. Changing block size can change floating-point summation order near ties. seed and use_numba are not read by this function.</p>
+            <p>[Placeholder] Forgetting is_diagonal would leave S(a,a) non-zero, corrupting net flow.</p>
+          </div>
+        </div>
+      </section>
 
+      <!-- R4: Accumulator Update -->
+      <section class="row" id="row-R4">
+        <div class="row-head" role="button" tabindex="0" aria-expanded="true" data-range="R4" aria-label="Toggle R4: Accumulator">
+          <span class="rk">R4</span>
+          <span class="row-title">Accumulator Update</span>
+          <span class="row-lines">L28, L32–L33</span>
+          <span class="tag ok">accum</span>
+          <span class="rule" aria-hidden="true"></span>
+        </div>
+        <div class="split">
+          <div class="code-col">
+            <div class="code-bar">ranking.py<span class="sp">L28, L32–L33</span></div>
+            <pre><code><span class="ln">28</span>    acc = NetFlowAccumulator(N)
+<span class="ln">32</span>            acc.update(S, rs, cs)
+<span class="hl"><span class="ln">33</span>    <span class="kw">return</span> np.argsort(-acc.net_flow()), acc</span></code></pre>
+          </div>
+          <div class="note-col">
+            <h4>Purpose</h4>
+            <p>[Placeholder] Accumulates &phi;<sup>+</sup> and &phi;<sup>-</sup> from each block; final argsort produces ranking.</p>
+            <h4>I/O</h4>
+            <ul>
+              <li><code>acc.update(S, rs, cs)</code> &mdash; [Placeholder] adds S contributions to flows</li>
+              <li><code>acc.net_flow()</code> &mdash; [Placeholder] returns &phi;<sup>+</sup> - &phi;<sup>-</sup></li>
+            </ul>
+            <h4>Why</h4>
+            <p>[Placeholder] Net flow ranking is standard ELECTRE III output; accumulator enables blocking.</p>
+            <h4>Pitfalls</h4>
+            <p>[Placeholder] Returning accumulator allows inspection but is mutable; caller should not modify.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- R5: Edge Cases & Validations -->
+      <section class="row" id="row-R5">
+        <div class="row-head" role="button" tabindex="0" aria-expanded="true" data-range="R5" aria-label="Toggle R5: Edge Cases">
+          <span class="rk">R5</span>
+          <span class="row-title">Edge Cases &amp; Validations</span>
+          <span class="row-lines">L12–L22</span>
+          <span class="tag warn">guard</span>
+          <span class="rule" aria-hidden="true"></span>
+        </div>
+        <div class="split">
+          <div class="code-col">
+            <div class="code-bar">ranking.py<span class="sp">L12–L22</span></div>
+            <pre><code><span class="hl"><span class="ln">12</span>    <span class="kw">if not</span> criteria:</span>
+<span class="hl"><span class="ln">13</span>        <span class="kw">raise</span> ValueError(<span class="str">"criteria list cannot be empty"</span>)</span>
+<span class="ln">16</span>    validate_thresholds(criteria)
+<span class="ln">17</span>    weights = normalize_weights(criteria)
+<span class="ln">18</span>    validate_matrix(G, len(criteria))
+<span class="ln">22</span>    validate_arrays_match(q, p, v, weights)</code></pre>
+          </div>
+          <div class="note-col">
+            <h4>Purpose</h4>
+            <p>[Placeholder] Guards against invalid inputs: empty criteria, malformed thresholds, matrix shape mismatch.</p>
+            <h4>I/O</h4>
+            <p>[Placeholder] Raises ValueError with descriptive message on failure; no partial state leaked.</p>
+            <h4>Why</h4>
+            <p>[Placeholder] Fail-fast prevents cryptic downstream errors (division by zero, shape mismatch).</p>
+            <h4>Pitfalls</h4>
+            <p>[Placeholder] NaN/Inf in G rejected by validate_matrix; caller must ensure clean data.</p>
           </div>
         </div>
       </section>
     </div>
 
-    <section class="usage" id="usage" aria-labelledby="usage-title">
-      <h2 id="usage-title">Run the two-object ranking example</h2>
-      <p class="usage-disclaimer">Illustrative inputs only. Do not treat these values as recommended defaults. The example computes the displayed flows and ordering.</p>
-      <div class="split"><div class="code-col"><div class="code-bar">Python — same objects and thresholds as the earlier pages</div>
-<pre><code>import numpy as np
-from electre3.config import CriterionConfig, ComputeConfig
-from electre3.ranking import compute_ranking
+    <!-- Usage example -->
+    <section class="usage" id="usage">
+      <div class="row-head" style="cursor:default">
+        <span class="rk">EX</span>
+        <span class="row-title">Usage example</span>
+        <span class="rule" aria-hidden="true"></span>
+      </div>
+      <div class="split">
+        <div class="code-col">
+          <div class="code-bar">python<span class="sp">illustrative</span></div>
+          <pre><code><span class="kw">from</span> electre3.ranking <span class="kw">import</span> compute_ranking
+<span class="kw">from</span> electre3.config <span class="kw">import</span> CriterionConfig, ComputeConfig
+<span class="kw">import</span> numpy <span class="kw">as</span> np
 
-ids = np.array(["A", "B"])
-G = np.array([[10., 5., 7.], [8., 7., 6.]])
-weights = [0.5, 0.3, 0.2]
+G = np.array([[<span class="num">1.0</span>, <span class="num">2.0</span>], [<span class="num">3.0</span>, <span class="num">1.0</span>], [<span class="num">2.0</span>, <span class="num">3.0</span>]])
 criteria = [
-    CriterionConfig(f"criterion {j+1}", w, 1., 3., 6.)
-    for j, w in enumerate(weights)
+    CriterionConfig(<span class="str">"c1"</span>, weight=<span class="num">1.0</span>, q=<span class="num">0.1</span>, p=<span class="num">0.3</span>, v=<span class="num">0.5</span>),
+    CriterionConfig(<span class="str">"c2"</span>, weight=<span class="num">1.0</span>, q=<span class="num">0.1</span>, p=<span class="num">0.3</span>, v=<span class="num">0.5</span>),
 ]
-order, acc = compute_ranking(
-    G, criteria, ComputeConfig(block_size=1)
-)
-raw_flow = acc.net_flow()
-display_score = acc.normalize()  # optional, separate call
-ranked_ids = ids[order]
-print(ranked_ids, raw_flow, display_score)
-print(acc.outflow, acc.inflow, acc.blocks_done)</code></pre></div>
-      <div class="note-col"><h4>Read the result</h4><p>Map indices back to IDs using ids[order]. Scores in raw_flow and display_score still follow the original G row order; use raw_flow[order] for sorted scores.</p><p>Four blocks are processed here. They do not imply four objects: there are two objects and four ordered pairs including self-comparisons, whose credibility entries are cleared.</p></div></div>
+ranking, acc = compute_ranking(G, criteria)
+<span class="com"># ranking shape: (3,) - indices sorted by net flow</span></code></pre>
+        </div>
+        <div class="out-card">
+          <div class="code-bar">result<span class="sp">illustrative</span></div>
+          <pre><code>ranking computed, length matches N
+(actual order depends on data)</code></pre>
+          <div class="out-note"><span>~1 ms</span><span>no I/O</span></div>
+        </div>
+      </div>
+      <p class="usage-disclaimer" style="font-size:11px;color:var(--text-dim);margin-top:var(--s2);background:var(--surface-2);padding:var(--s2);border-radius:var(--radius-sm);">
+        <strong>Note:</strong> Illustrative example inputs only. Do not treat values as recommended defaults or expected outputs. Actual outputs depend on your dataset and algorithm settings.
+      </p>
     </section>
-    <p class="concept-nav">Related: <a href="credibility_tutorial_side_by_side.html#row-R4">Credibility aggregation</a><a href="accumulator_tutorial_side_by_side.html#row-R3">Accumulator updates</a><a href="block_tutorial_side_by_side.html#row-R5">Self-comparison clearing</a></p>
-    <details id="backlinks"><summary>Backlinks and related concepts: tracing a ranking result</summary><div>
-      <p><a href="concordance_tutorial_side_by_side.html#example">Concordance</a>, <a href="discordance_tutorial_side_by_side.html#example">discordance</a> and <a href="credibility_tutorial_side_by_side.html#example">credibility</a> explain the shared pair values.</p>
-      <p><a href="validate_tutorial_side_by_side.html#row-R2">Matrix validation</a> and <a href="config_tutorial_side_by_side.html#row-R3">compute configuration</a> define pipeline inputs.</p>
-      <p><a href="#notation">Return to notation</a>. Curated local links, not automatic backlink indexing. A separate end-to-end composition guide remains planned.</p>
-    </div></details>
+
     <footer>
       <span>Layout 2 &mdash; code-dominant split</span>
-      <span class="badge">60+ columns: width budget, browser check pending</span>
+      <span class="badge">~70 mono chars @ 1366px</span>
     </footer>
   </main>
 </div>

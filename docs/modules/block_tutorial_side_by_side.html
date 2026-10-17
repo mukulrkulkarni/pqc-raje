@@ -455,7 +455,7 @@ footer{margin-top:var(--s6); padding-top:var(--s3); border-top:1px solid var(--b
           </div>
           <div class="note-col">
             <h4>Purpose</h4>
-            <p>Computes pairwise differences for all (a,b) pairs across all criteria. Broadcasting produces <code>diff</code> with shape <code>(B1,B2,C)</code>.</p>
+            <p>Computes pairwise differences for all (a,b) pairs across all criteria. By definition <code>diff[i,j,k] = g_k(a_i) - g_k(b_j)</code>, so positive values mean the row alternative performs better on criterion k (after any minimise-column negation done upstream).</p>
             <h4>I/O</h4>
             <ul>
               <li><code>G_rows[:, np.newaxis, :]</code> &mdash; shape (B1, 1, C)</li>
@@ -501,7 +501,7 @@ footer{margin-top:var(--s6); padding-top:var(--s3); border-top:1px solid var(--b
             <h4>Why</h4>
             <p>Keeping concordance/discordance in separate modules enables focused unit tests. <code>compute_block</code> is the composition point tested end-to-end.</p>
             <h4>Pitfalls</h4>
-            <p>[Placeholder] Ensure q &le; p &le; v (validated upstream). Ensure weights are normalized (sum = 1).</p>
+            <p>Ensure structural constraints hold: <code>0  q  p  v</code> and <code>w.sum()  1</code> (use <code>np.isclose</code>). In this codebase, high-level entry points validate inputs; <code>compute_block</code> assumes inputs are consistent.</p>
           </div>
         </div>
       </section>
@@ -523,7 +523,7 @@ footer{margin-top:var(--s6); padding-top:var(--s3); border-top:1px solid var(--b
           </div>
           <div class="note-col">
             <h4>Purpose</h4>
-            <p>[Placeholder] Combines global concordance and per-criterion discordance into final credibility S(a,b). Veto criteria with d_j &gt; C_ab reduce S accordingly.</p>
+            <p>Combines global concordance <code>C_ab</code> and per-criterion discordance <code>d_j</code> into final credibility <code>S(a,b)</code>. Only criteria with <code>d_j &gt; C_ab</code> attenuate credibility (veto pressure).</p>
             <h4>I/O</h4>
             <ul>
               <li><code>C_ab</code> &mdash; global concordance (B1, B2)</li>
@@ -531,9 +531,9 @@ footer{margin-top:var(--s6); padding-top:var(--s3); border-top:1px solid var(--b
               <li><code>S</code> &mdash; credibility matrix (B1, B2), values in [0,1]</li>
             </ul>
             <h4>Why</h4>
-            <p>[Placeholder] Credibility module handles the veto effect formula. Output is clipped to [0,1] assuming finite inputs.</p>
+            <p>The credibility module implements the ELECTRE III veto aggregation. It clips the final <code>S</code> into [0,1] for finite numeric inputs. This is not input validation: NaN remains NaN; direct callers must validate.</p>
             <h4>Pitfalls</h4>
-            <p>[Placeholder] If d_j contains values outside [0,1], credibility may produce unexpected results. Validated upstream.</p>
+            <p>If inputs are inconsistent (wrong shapes, NaN/Inf, non-normalised weights), downstream modules can return NaN or misleading values. High-level entry points validate; <code>compute_block</code> does not.</p>
           </div>
         </div>
       </section>
@@ -558,16 +558,16 @@ footer{margin-top:var(--s6); padding-top:var(--s3); border-top:1px solid var(--b
           </div>
           <div class="note-col">
             <h4>Purpose</h4>
-            <p>[Placeholder] When is_diagonal=True, zeros the first min(B1,B2) diagonal elements. Full S(a,a)=0 only if block is square and rows/cols are same alternatives.</p>
+            <p>When <code>is_diagonal=True</code>, NumPy clears the first <code>min(B1,B2)</code> diagonal entries of S. In the ranking pipeline, <code>is_diagonal</code> is only true for diagonal blocks (same alternative group in rows and cols), so these entries correspond to self-comparisons <code>S(a,a)</code>.</p>
             <h4>I/O</h4>
             <ul>
               <li><code>is_diagonal</code> &mdash; True when G_rows and G_cols reference the same alternatives</li>
               <li><code>S</code> &mdash; modified in place; first min(B1,B2) diagonal elements set to 0.0</li>
             </ul>
             <h4>Why</h4>
-            <p>[Placeholder] Self-comparison is undefined in ELECTRE III. Zeroing diagonal ensures accumulator does not count self-dominance in net flow calculation.</p>
+            <p>Self-comparison is undefined, so the project uses the convention <code>S(a,a)=0</code>. In net-flow ranking, diagonal entries cancel in <code>()-()</code>, but clearing them keeps the matrix convention explicit and keeps the separate components ( and ) free of self-terms.</p>
             <h4>Pitfalls</h4>
-            <p>[Placeholder] np.fill_diagonal zeros min(B1,B2) elements regardless of shape. Caller should only set is_diagonal=True for square blocks where rows/cols are same alternatives.</p>
+            <p><code>np.fill_diagonal</code> always zeros <code>min(B1,B2)</code> entries, even for rectangular blocks. The ranking pipeline only sets <code>is_diagonal=True</code> when the block is truly diagonal (same alternatives in rows and cols), so self-terms exist at matching local indices.</p>
           </div>
         </div>
       </section>
@@ -599,7 +599,7 @@ print(<span class="str">f"S diagonal: {np.diag(S)}"</span>)</code></pre>
           <pre><code>S shape: (3, 3)
 S diagonal: [0. 0. 0.]</code></pre>
           <div class="out-note">
-            <span>[Placeholder] Output shape and diagonal depend on input</span>
+            <span>Diagonal is cleared only when is_diagonal=True</span>
           </div>
         </div>
       </div>
@@ -610,7 +610,7 @@ S diagonal: [0. 0. 0.]</code></pre>
 
     <footer>
       <span>block.py &middot; ELECTRE III</span>
-      <span class="badge">scaffold</span>
+      <span class="badge">deep</span>
     </footer>
   </main>
 </div>

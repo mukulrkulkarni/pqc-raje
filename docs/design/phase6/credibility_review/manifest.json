@@ -1,0 +1,20 @@
+{
+  "head": "26ccab6eab59d3d506709e9262ac53543a5368d1",
+  "files": {
+    "docs/modules/credibility_tutorial_side_by_side.html": {
+      "sha256": "530204c9615015ee8a6cfe6d2ecb5e2301d4fe4bbbd6e1153e2c37fdd429c89d",
+      "snapshot": "docs/design/phase6/credibility_review/snapshot/docs/modules/credibility_tutorial_side_by_side.html",
+      "bytes": 43023
+    },
+    "tests/test_credibility_deep.py": {
+      "sha256": "f14ee8f7a8cf326b825632f519976930eeb482423d589ccf2aad4b7f4933c726",
+      "snapshot": "docs/design/phase6/credibility_review/snapshot/tests/test_credibility_deep.py",
+      "bytes": 8505
+    },
+    "tests/test_module_docs.py": {
+      "sha256": "6330dd0f234fee94e6d1294dbb7f13e5033101b6c2661ba80771ed0267f03431",
+      "snapshot": "docs/design/phase6/credibility_review/snapshot/tests/test_module_docs.py",
+      "bytes": 68786
+    }
+  }
+}

@@ -1,0 +1,225 @@
+{
+  "base_commit": "26ccab6eab59d3d506709e9262ac53543a5368d1",
+  "root": "Repository root containing .git, electre3/, app/, tests/; never snapshot/",
+  "authorization": "User approved correction and Scientific/Engineering/Security completions; one bounded batch",
+  "snapshot_policy": "Read-only evidence, not an executable checkout or distribution",
+  "files": [
+    {
+      "path": "app/__init__.py",
+      "role": "local dependency",
+      "bytes": 1758,
+      "sha256": "fabed6907779d33590bfdfe43a4d6fd947222a38cdec064af71f59e07df63622"
+    },
+    {
+      "path": "app/routes/__init__.py",
+      "role": "local dependency",
+      "bytes": 113,
+      "sha256": "e68e07e65b186e7699cf84f42c54c0bedc8db0ebda785ae801f9043af0e2afaa"
+    },
+    {
+      "path": "app/routes/compute.py",
+      "role": "local dependency",
+      "bytes": 1957,
+      "sha256": "516a721591232d3fc4151f25bf68650dc9d3bf86fb62bc51edce6f484ce88185"
+    },
+    {
+      "path": "app/routes/docs.py",
+      "role": "local dependency",
+      "bytes": 3119,
+      "sha256": "abfffe1fe6483f9c1b12d113f344cbdece9db130a50864e4d2ce576604bb00fd"
+    },
+    {
+      "path": "app/routes/preview.py",
+      "role": "local dependency",
+      "bytes": 2286,
+      "sha256": "e0f01498df70f4c4201b509cca1ca813ddf22179ec188831afc63f9d5dc70128"
+    },
+    {
+      "path": "app/services/__init__.py",
+      "role": "local dependency",
+      "bytes": 107,
+      "sha256": "32fd613a928bd8894c784731a7a789ad5d1d006a42f8ccd14efbd7e66cd8572b"
+    },
+    {
+      "path": "app/services/preview.py",
+      "role": "local dependency",
+      "bytes": 3223,
+      "sha256": "b8fae1ed9e4405d71b91c55783362f31384a7caf0362c79b1c2908882a5c6077"
+    },
+    {
+      "path": "app/services/security.py",
+      "role": "local dependency",
+      "bytes": 2736,
+      "sha256": "a5320a3d3d17a902aeb5d848919bd39223bf5ca8e16db1c00c89a87eaac78cf3"
+    },
+    {
+      "path": "docs/modules/accumulator_tutorial_side_by_side.html",
+      "role": "local dependency",
+      "bytes": 34983,
+      "sha256": "20a339ed6b2aacf975eb9f9ab6479280af56f56a65332274c160c96824076672"
+    },
+    {
+      "path": "docs/modules/assets/highlight.js",
+      "role": "local dependency",
+      "bytes": 13822,
+      "sha256": "b2d314d773cf8975a967c5e5825f234b6373f5e41afa210b163e7c9d76236c1a"
+    },
+    {
+      "path": "docs/modules/assets/theme.js",
+      "role": "local dependency",
+      "bytes": 2472,
+      "sha256": "59207d29e629e8f4fbfd7e7b7e69b5f7aaba0ffa3ddcfa2c0a7aa167c2d0e0ab"
+    },
+    {
+      "path": "docs/modules/block_tutorial_side_by_side.html",
+      "role": "local dependency",
+      "bytes": 33218,
+      "sha256": "ca1840023331ebafd899ea3cc883048e9110ef05e8e241ae275d270f5ebcb45c"
+    },
+    {
+      "path": "docs/modules/concordance_tutorial_side_by_side.html",
+      "role": "local dependency",
+      "bytes": 45521,
+      "sha256": "e4d5e38ac4247ea663871959fa6c6c44b847b1ac21bd4eed977eda264646a4c1"
+    },
+    {
+      "path": "docs/modules/config_tutorial_side_by_side.html",
+      "role": "local dependency",
+      "bytes": 29289,
+      "sha256": "fe2b8592f73931c0873408c442dd1a56492390d45be5b747c2459e4fc24a9009"
+    },
+    {
+      "path": "docs/modules/credibility_tutorial_side_by_side.html",
+      "role": "changed",
+      "bytes": 43389,
+      "sha256": "87790bdd4fc386b7ac91a4ce966a9a92af32c2dbb581a53839533ffec2b09b7b"
+    },
+    {
+      "path": "docs/modules/discordance_tutorial_side_by_side.html",
+      "role": "local dependency",
+      "bytes": 42913,
+      "sha256": "0a30dc9bba6e7949852724d66b5ae2ee0d9658511a4fc2b88f96058df8af6900"
+    },
+    {
+      "path": "docs/modules/ranking_tutorial_side_by_side.html",
+      "role": "local dependency",
+      "bytes": 32268,
+      "sha256": "b9b5c97f50b5e66d9d87ee1a2cd65d64026c98b632f3cc1a445114d8b8e101b4"
+    },
+    {
+      "path": "docs/modules/validate_tutorial_side_by_side.html",
+      "role": "local dependency",
+      "bytes": 36095,
+      "sha256": "75c58f147d5a954b1f50ee74c28b9bc69bc5b7ee840a357ae0b373629d8e8ddb"
+    },
+    {
+      "path": "electre3/__init__.py",
+      "role": "local dependency",
+      "bytes": 69,
+      "sha256": "4fb9033f9d023efcb6f8cfaeed4bebdd44ca8e21fd0b1ec9290f546256d47594"
+    },
+    {
+      "path": "electre3/accelerate.py",
+      "role": "local dependency",
+      "bytes": 1292,
+      "sha256": "c47f26e54f7a6e6638feba1190991c256ccefa02be1f7f2821026c5667fdfe69"
+    },
+    {
+      "path": "electre3/accumulator.py",
+      "role": "local dependency",
+      "bytes": 1130,
+      "sha256": "2637b5b8a2b3322ed508b636b26442ce1473207ed1bb89c2ec4f6fb561f7c178"
+    },
+    {
+      "path": "electre3/block.py",
+      "role": "local dependency",
+      "bytes": 1469,
+      "sha256": "f043d61a9847a5f7b0e77e3e92640b5f7382a454f69f434acb2b12a7fae807cb"
+    },
+    {
+      "path": "electre3/bruteforce.py",
+      "role": "local dependency",
+      "bytes": 1435,
+      "sha256": "0e59d7a26802a24da4e708056fe440edddbc3c84233ffba676b4b431a6b79200"
+    },
+    {
+      "path": "electre3/cli.py",
+      "role": "local dependency",
+      "bytes": 2106,
+      "sha256": "8fc43941629be07d4f3de555671a41ba6af23b6918fd410ee698e57f8372971d"
+    },
+    {
+      "path": "electre3/cli_run.py",
+      "role": "local dependency",
+      "bytes": 1622,
+      "sha256": "7275e13d091f6a4aa8e73df7a65e6dd826a8841c390861745d157cdb845a2b33"
+    },
+    {
+      "path": "electre3/concordance.py",
+      "role": "local dependency",
+      "bytes": 1446,
+      "sha256": "565ce29b27533d6112166d61a8b34f9d30e7daae00f7b7515c86809564c01ab3"
+    },
+    {
+      "path": "electre3/config.py",
+      "role": "local dependency",
+      "bytes": 1557,
+      "sha256": "3c211be8dd8b18f490c0449548547ffe6469a41fdf3e273869da4baad4c0976e"
+    },
+    {
+      "path": "electre3/credibility.py",
+      "role": "local dependency",
+      "bytes": 1355,
+      "sha256": "4f3ba731acd71532cb3f70f8680b23f7757e9aea72f740db3864053150c04670"
+    },
+    {
+      "path": "electre3/data.py",
+      "role": "local dependency",
+      "bytes": 946,
+      "sha256": "4fc46a03bfa49a2bc0f1e2923aaa3df81b63c92c212d7a3ff76557b5e5660a7a"
+    },
+    {
+      "path": "electre3/discordance.py",
+      "role": "local dependency",
+      "bytes": 1132,
+      "sha256": "6a4e7a91ecf4aff2fbc558d026af8f8c8072056ab321edeb604e8d7e81f46bdd"
+    },
+    {
+      "path": "electre3/ranking.py",
+      "role": "local dependency",
+      "bytes": 1425,
+      "sha256": "26d78d57652cb324b7d8a8f3d412492b50de014904da878a7e70c5285ac43d3c"
+    },
+    {
+      "path": "electre3/validate.py",
+      "role": "local dependency",
+      "bytes": 1840,
+      "sha256": "56aec0052fb78ef144a25279bd74ddf261d0bd63b0d5b9912673624aff5ddd7c"
+    },
+    {
+      "path": "tests/__init__.py",
+      "role": "local dependency",
+      "bytes": 31,
+      "sha256": "32f548455f5be16266cec9c498dd48ecbcc96dc3d897c7dba937e6e663e3cc46"
+    },
+    {
+      "path": "tests/test_credibility_deep.py",
+      "role": "changed",
+      "bytes": 9044,
+      "sha256": "a0aa5bc9a2f5d5a94fbc694b6f45b17d931a1776399087cb397b6594a6be38a0"
+    },
+    {
+      "path": "tests/test_module_docs.py",
+      "role": "changed",
+      "bytes": 68786,
+      "sha256": "6330dd0f234fee94e6d1294dbb7f13e5033101b6c2661ba80771ed0267f03431"
+    }
+  ],
+  "allowed_test_commands": [
+    "python -m pytest -q tests/test_credibility_deep.py tests/test_module_docs.py::TestCredibilityDeepTutorial"
+  ],
+  "execution_requires": "Separate approval for correction/review batch; tests only from repository root",
+  "external_runtime_dependencies": "Existing Python/NumPy/Flask/pytest installation; no installation or provenance certification in this preparation",
+  "readiness_command": "python docs/design/phase6/credibility_review/verify_review_package.py",
+  "verification": "40 canonical targeted tests passed in 0.77s; preflight passed; readiness verifies paths/hashes only"
+}

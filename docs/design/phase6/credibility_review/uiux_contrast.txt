@@ -1,0 +1,32 @@
+ 7.58:1  AA   light note-text #475569 on bg #ffffff
+ 7.24:1  AA   light note-text #475569 on surface #f8fafc
+ 4.76:1  AA   light text-dim #64748b on bg #ffffff (11px facts/dd)
+ 4.55:1  AA   light text-dim #64748b on surface #f8fafc (gnd-facts dd)
+ 4.79:1  AA   light sel-accent #15803d on sel-soft #f0fdf4 (micro/hl border)
+ 5.02:1  AA   light sel-fg #ffffff on sel-accent #15803d (rk badge)
+ 5.17:1  AA   light accent #2563eb on bg #ffffff (links)
+ 4.84:1  AA   light warn #b45309 on warn-soft #fffbeb (tag warn)
+ 4.79:1  AA   light ok #15803d on ok-soft #f0fdf4 (tag ok/badge)
+17.05:1  AA   light code-text #0f172a on sel-soft #f0fdf4 (hl line)
+ 4.79:1  AA   light str #15803d on sel-soft #f0fdf4
+ 4.80:1  AA   light num #b45309 on sel-soft #f0fdf4
+ 4.55:1  AA   light com #64748b on sel-soft #f0fdf4
+12.78:1  AA   dark note-text #d1d5db on bg #0b1120
+12.12:1  AA   dark note-text #d1d5db on surface #0f172a
+ 7.42:1  AA   dark text-dim #9ca3af on bg #0b1120
+ 7.03:1  AA   dark text-dim #9ca3af on surface #0f172a (gnd-facts dd)
+10.62:1  AA   dark sel-fg #052e16 on sel-accent #86efac (rk badge)
+ 7.41:1  AA   dark accent #60a5fa on bg #0b1120 (links)
+ 7.02:1  AA   dark accent #60a5fa on surface #0f172a (summary)
+17.11:1  AA   dark h4 #f3f4f6 on bg #0b1120
+12.09:1  AA   dark code-text #e2e8f0 on sel-soft #052e16 (hl line)
+10.62:1  AA   dark str #86efac on sel-soft #052e16
+10.34:1  AA   dark num #fcd34d on sel-soft #052e16
+ 5.87:1  AA   dark com #9ca3af on sel-soft #052e16
+ 8.07:1  AA   dark kw #c4b5fd on sel-soft #052e16
+10.62:1  AA   dark ok #86efac on ok-soft #052e16 (tag/badge)
+11.23:1  AA   dark warn #fcd34d on warn-soft #2a1f05
+12.09:1  AA   dark micro text #e2e8f0 on sel-soft #052e16
+ 7.41:1  AA   dark accent-fg #0b1120 on accent #60a5fa (brand)
+ 7.83:1  AA   dark sel-border #22c55e vs surface #0f172a (non-text)
+ 1.40:1  FAIL  light sel-border #86efac vs bg #ffffff (non-text)

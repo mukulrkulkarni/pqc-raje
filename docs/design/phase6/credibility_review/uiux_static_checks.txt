@@ -1,0 +1,103 @@
+docs/modules/credibility_tutorial_side_by_side.html: sha256=530204c9615015ee.. bytes=43023 match=True
+docs/design/phase6/credibility_review/snapshot/docs/modules/credibility_tutorial_side_by_side.html: sha256=530204c9615015ee.. bytes=43023 match=True
+tests/test_credibility_deep.py: sha256=f14ee8f7a8cf326b.. bytes=8505 match=True
+docs/design/phase6/credibility_review/snapshot/tests/test_credibility_deep.py: sha256=f14ee8f7a8cf326b.. bytes=8505 match=True
+tests/test_module_docs.py: sha256=6330dd0f234fee94.. bytes=68786 match=True
+docs/design/phase6/credibility_review/snapshot/tests/test_module_docs.py: sha256=6330dd0f234fee94.. bytes=68786 match=True
+source: .\docs\design\committee_phase5\review\followup\snapshot\electre3\credibility.py
+  1| """Credibility computation for ELECTRE III."""
+  2|
+  3| import numpy as np
+  4|
+  5|
+  6| def credibility(C_ab: np.ndarray, d_j: np.ndarray) -> np.ndarray:
+  7|     """Compute credibility S(a,b) from concordance and discordance.
+  8|
+  9|     Formula:
+ 10|         S(a,b) = C(a,b) × ∏ F_j(a,b)
+ 11|
+ 12|     Where:
+ 13|         F_j(a,b) = 1                         if d_j(a,b) <= C(a,b)
+ 14|         F_j(a,b) = (1 - d_j(a,b))/(1 - C(a,b))  otherwise
+ 15|
+ 16|     Edge cases:
+ 17|         - If any d_j >= 1: S = 0 (full veto, including when C(a,b) = 1)
+ 18|         - If C(a,b) = 1 and all finite d_j < 1: S = 1
+ 19|
+ 20|     Args:
+ 21|         C_ab: Global concordance values, shape (B1, B2).
+ 22|         d_j: Discordance values per criterion, shape (B1, B2, C).
+ 23|
+ 24|     Returns:
+ 25|         Credibility values, shape (B1, B2).
+ 26|     """
+ 27|     S = C_ab.copy()
+ 28|
+ 29|     # For each criterion, apply the discordance reduction
+ 30|     n_criteria = d_j.shape[2]
+ 31|     for j in range(n_criteria):
+ 32|         d = d_j[:, :, j]
+ 33|
+ 34|         # Full veto (d=1) always sets S=0
+ 35|         S[d >= 1.0] = 0.0
+ 36|
+ 37|         # Where d > C and d < 1: multiply by (1-d)/(1-C)
+ 38|         mask = (d > C_ab) & (d < 1.0)
+ 39|         if mask.any():
+ 40|             denom = 1.0 - C_ab[mask]
+ 41|             denom = np.where(denom == 0, 1e-10, denom)
+ 42|             factor = (1.0 - d[mask]) / denom
+ 43|             S[mask] *= np.clip(factor, 0.0, 1.0)
+ 44|
+ 45|     return np.clip(S, 0.0, 1.0)
+=== snippet comparison ===
+L1 OK  html='"""Credibility computation for ELECTRE III."""' src='"""Credibility computation for ELECTRE III."""'
+L2 OK  html='' src=''
+L3 OK  html='import numpy as np' src='import numpy as np'
+L4 OK  html='' src=''
+L5 OK  html='' src=''
+L6 OK  html='def credibility(C_ab: np.ndarray, d_j: np.ndarray) -> np.ndarray:' src='def credibility(C_ab: np.ndarray, d_j: np.ndarray) -> np.ndarray:'
+L27 OK  html='    S = C_ab.copy()' src='    S = C_ab.copy()'
+L30 OK  html='    n_criteria = d_j.shape[2]' src='    n_criteria = d_j.shape[2]'
+L31 OK  html='    for j in range(n_criteria):' src='    for j in range(n_criteria):'
+L32 OK  html='        d = d_j[:, :, j]' src='        d = d_j[:, :, j]'
+L34 OK  html='        # Full veto (d=1) always sets S=0' src='        # Full veto (d=1) always sets S=0'
+L35 OK  html='        S[d >= 1.0] = 0.0' src='        S[d >= 1.0] = 0.0'
+L37 OK  html='        # Where d > C and d < 1: multiply by (1-d)/(1-C)' src='        # Where d > C and d < 1: multiply by (1-d)/(1-C)'
+L38 OK  html='        mask = (d > C_ab) & (d < 1.0)' src='        mask = (d > C_ab) & (d < 1.0)'
+L39 OK  html='        if mask.any():' src='        if mask.any():'
+L40 OK  html='            denom = 1.0 - C_ab[mask]' src='            denom = 1.0 - C_ab[mask]'
+L41 OK  html='            denom = np.where(denom == 0, 1e-10, denom)' src='            denom = np.where(denom == 0, 1e-10, denom)'
+L42 OK  html='            factor = (1.0 - d[mask]) / denom' src='            factor = (1.0 - d[mask]) / denom'
+L43 OK  html='            S[mask] *= np.clip(factor, 0.0, 1.0)' src='            S[mask] *= np.clip(factor, 0.0, 1.0)'
+L40 OK  html='            denom = 1.0 - C_ab[mask]' src='            denom = 1.0 - C_ab[mask]'
+L41 OK  html='            denom = np.where(denom == 0, 1e-10, denom)' src='            denom = np.where(denom == 0, 1e-10, denom)'
+L42 OK  html='            factor = (1.0 - d[mask]) / denom' src='            factor = (1.0 - d[mask]) / denom'
+L43 OK  html='            S[mask] *= np.clip(factor, 0.0, 1.0)' src='            S[mask] *= np.clip(factor, 0.0, 1.0)'
+L44 OK  html='' src=''
+L45 OK  html='    return np.clip(S, 0.0, 1.0)' src='    return np.clip(S, 0.0, 1.0)'
+CSS identical to discordance N1 (modulo module name): True
+docs/modules/assets/theme.js exists=True bytes=2472
+docs/modules/assets/highlight.js exists=True bytes=13822
+order indices: {'id="notation"': 19963, 'id="io"': 22295, 'id="example"': 25933, 'class="rows"': 28292, 'id="backlinks"': 41436, 'class="usage"': 39587}
+anchor #row-R1: OK
+anchor #row-R2: OK
+anchor #row-R3: OK
+anchor #row-R4: OK
+anchor #row-R5: OK
+anchor #usage: OK
+anchor #notation: OK
+anchor #io: OK
+anchor #example: OK
+anchor #backlinks: OK
+link block_tutorial_side_by_side.html#row-R5: file=True frag=True
+link ranking_tutorial_side_by_side.html#row-R4: file=True frag=True
+link concordance_tutorial_side_by_side.html#example: file=True frag=True
+anchor #example: OK
+link concordance_tutorial_side_by_side.html#row-R4: file=True frag=True
+link discordance_tutorial_side_by_side.html#row-R4: file=True frag=True
+link ranking_tutorial_side_by_side.html#row-R4: file=True frag=True
+link block_tutorial_side_by_side.html#row-R4: file=True frag=True
+link concordance_tutorial_side_by_side.html#example: file=True frag=True
+link discordance_tutorial_side_by_side.html#example: file=True frag=True
+anchor #notation: OK

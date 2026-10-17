@@ -564,7 +564,7 @@ class TestDiscordanceDeepTutorial:
         # Disclaimer warning against treating examples as defaults is OK
 
 
-class TestCredibilityTutorialScaffold:
+class TestCredibilityDeepTutorial:
     """Tests for credibility_tutorial_side_by_side.html scaffold with Option 3 layout."""
 
     @pytest.fixture
@@ -673,11 +673,11 @@ class TestCredibilityTutorialScaffold:
         # Should NOT claim S(a,a)=0 is guaranteed/set by this function
         assert "S(a,a) = 0 (set upstream)" not in credibility_html
 
-    def test_no_deterministic_output_assertions(self, credibility_html):
-        """Tutorial must not have deterministic output assertions."""
-        assert "= 0.8 (" not in credibility_html
-        assert "= 1.0 (" not in credibility_html
-        assert "S[0,0] =" not in credibility_html
+    def test_example_has_computed_table_not_faux_stdout(self, credibility_html):
+        """Computed examples are allowed and verified by executable tests."""
+        assert 'id="scenario-results"' in credibility_html
+        assert '[Placeholder]' not in credibility_html
+        assert 'stdout' not in credibility_html and '~0.1 ms' not in credibility_html
 
     def test_has_usage_disclaimer(self, credibility_html):
         """Tutorial must have usage disclaimer about illustrative examples."""

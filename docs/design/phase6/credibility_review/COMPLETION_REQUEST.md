@@ -1,0 +1,8 @@
+# Authorized completion batch
+User approved mitigation, then explicitly approved this batch. REVIEW_CONTRACT.md execution rules apply; its earlier preparation-only status is superseded for this one batch. REVIEW_PACKAGE.json is the current canonical hash manifest. Old manifest.json and snapshot/ remain historical evidence and DO NOT contain the new clarification. Do not run old snapshot tests or compare new files to obsolete hashes.
+
+Production delta since first review: one caller-responsibility sentence in credibility I/O plus one scoped regression test. All core/scripts/routes unchanged. 40 tests passed from canonical repository-root paths in 0.77s; preflight passed with existing CSS-position warning. Package readiness: 35 canonical paths/hashes pass. PACKAGE_READINESS reports actions of readiness script only, not an assertion that no tests have run in the batch.
+
+Mandatory readiness: read current package, verify assigned canonical paths/root; report evidence availability. Open exact files, no snapshot directory enumeration. Tests only from repository root using allowed command. Reuse PI evidence unless execution necessary. If inaccessible stop BLOCKED, not product NEEDS WORK. No production edits, extra agents, scope expansion or retries.
+
+Save SCIENTIFIC_COMPLETION.md, ENGINEERING_COMPLETION.md, or SECURITY_COMPLETION.md. Preserve original verdicts as history. Clarify requirements on valid input versus enforced runtime checks. Review unchanged dependencies from canonical paths pinned in package. Scoped reports may use static evidence with disclosed limits. No hidden reasoning requested.

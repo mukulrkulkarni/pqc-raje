@@ -1,0 +1,14 @@
+{
+  "status": "READY",
+  "base_commit": "26ccab6eab59d3d506709e9262ac53543a5368d1",
+  "verified_files": 35,
+  "root_marker_checks": [
+    ".git",
+    "electre3",
+    "app",
+    "tests"
+  ],
+  "production_tests_executed": false,
+  "reviewer_retries_executed": false,
+  "limitation": "Local paths and hashes only; agent access and browser behavior not verified."
+}

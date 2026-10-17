@@ -1,0 +1,22 @@
+{
+  "docs/modules/assets/theme.js": {
+    "sha256": "59207d29e629e8f4fbfd7e7b7e69b5f7aaba0ffa3ddcfa2c0a7aa167c2d0e0ab",
+    "unchanged_from_base": true
+  },
+  "docs/modules/assets/highlight.js": {
+    "sha256": "b2d314d773cf8975a967c5e5825f234b6373f5e41afa210b163e7c9d76236c1a",
+    "unchanged_from_base": true
+  },
+  "app/routes/docs.py": {
+    "sha256": "abfffe1fe6483f9c1b12d113f344cbdece9db130a50864e4d2ce576604bb00fd",
+    "unchanged_from_base": true
+  },
+  "app/__init__.py": {
+    "sha256": "fabed6907779d33590bfdfe43a4d6fd947222a38cdec064af71f59e07df63622",
+    "unchanged_from_base": true
+  },
+  "electre3/credibility.py": {
+    "sha256": "4f3ba731acd71532cb3f70f8680b23f7757e9aea72f740db3864053150c04670",
+    "unchanged_from_base": true
+  }
+}

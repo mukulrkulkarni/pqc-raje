@@ -386,7 +386,7 @@ footer{margin-top:var(--s6); padding-top:var(--s3); border-top:1px solid var(--b
         <p><b>What is being accumulated:</b> In ELECTRE net-flow ranking, each alternative i has an outgoing flow φ⁺(i)=∑ⱼ S(i,j) and an incoming flow φ⁻(i)=∑ⱼ S(j,i), where S is the credibility matrix (diagonal excluded). Net flow is φ(i)=φ⁺(i)−φ⁻(i).</p>
         <p><b>Block mapping:</b> A block <code>S_block</code> corresponds to global indices (row_start+i, col_start+j). The accumulator updates <code>outflow[row_start+i]</code> by the row sum and <code>inflow[col_start+j]</code> by the column sum.</p>
         <p><b>Why this is correct:</b> Summing all blocks (with no overlap and no gaps) is equivalent to summing the full matrix, but you never store N×N.</p>
-        <p><b>Conservation sanity check:</b> For a fully covered tiling, ∑ᵢ outflow[i] equals ∑ᵢ inflow[i] within floating-point tolerance, because both equal ∑ᵢ∑ⱼ S(i,j) over the same set of pairs.</p>
+        <p><b>What conservation can and cannot tell you:</b> For any sequence of <code>update()</code> calls, <code>outflow.sum()</code> equals <code>inflow.sum()</code> within tolerance, because each block contributes the same total mass to both arrays (sum of all entries). This is a useful <em>numerical drift</em> check, but it does <strong>not</strong> detect missing blocks or double-counting. To validate tiling, you need index-coverage tests (bounds and non-overlap) or an oracle comparison for small N.</p>
         <p><b>Normalization caveat:</b> Min-max scaling preserves order (monotonic) but hides absolute gaps and is sensitive to outliers. This project ranks by raw net flow; <code>normalize()</code> is for optional presentation.</p>
       </div>
     </details>
@@ -522,7 +522,7 @@ footer{margin-top:var(--s6); padding-top:var(--s3); border-top:1px solid var(--b
             <h4>Net flow is the ranking score</h4>
             <p>In this codebase, the final ranking is by <strong>raw</strong> <code>net_flow()</code> in descending order. Do not normalize before ranking unless your ranking contract explicitly says so.</p>
             <h4>Normalization is monotonic</h4>
-            <p>Min-max scaling is strictly monotonic when <code>max_val ne min_val</code>. It preserves ordering but changes absolute gaps and compresses extremes.</p>
+            <p>Min-max scaling is strictly monotonic when <code>max_val != min_val</code> and all values are finite. It preserves ordering but changes absolute gaps and compresses extremes.</p>
             <h4>All-equal case</h4>
             <p>If every net flow is equal, the min-max denominator is zero. Returning 0.5 is a deterministic convention: it signals no discrimination without preferring endpoints.</p>
           </div>
@@ -565,7 +565,7 @@ footer{margin-top:var(--s6); padding-top:var(--s3); border-top:1px solid var(--b
             <h4>Diagonal exclusion</h4>
             <p>Diagonal entries S(i,i) must not contribute to either flow. This is handled upstream by passing <code>is_diagonal=True</code> to the block computation and zeroing the local diagonal before calling <code>update()</code>.</p>
             <h4>Conservation check</h4>
-            <p>When tiling is correct, <code>outflow.sum()</code> and <code>inflow.sum()</code> match within tolerance. This is a strong global check for missing or duplicated blocks.</p>
+            <p><code>outflow.sum()</code> and <code>inflow.sum()</code> match within tolerance even for an incorrect tiling (missing or duplicated blocks), because each <code>update()</code> adds the same block total to both sums. Treat this equality as a numerical sanity check only, not a coverage proof.</p>
           </div>
         </div>
       </section>

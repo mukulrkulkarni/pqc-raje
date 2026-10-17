@@ -71,26 +71,14 @@ def test_accumulating_blocks_matches_full_matrix_row_col_sums() -> None:
     assert np.allclose(acc.inflow, expected_inflow)
 
 
-def test_conservation_outflow_sum_equals_inflow_sum_for_complete_offdiagonal_tiling() -> None:
-    """If tiling covers all off-diagonal pairs once, sums must match."""
-    N = 5
-    rng = np.random.default_rng(0)
+def test_outflow_sum_equals_inflow_sum_for_any_updates() -> None:
+    """Mass conservation holds per update, independent of tiling correctness."""
+    acc = NetFlowAccumulator(5)
 
-    S = rng.random((N, N))
-    np.fill_diagonal(S, 0.0)
+    # Two arbitrary blocks; conservation should still hold.
+    acc.update(np.array([[1.0, 2.0], [3.0, 4.0]]), row_start=0, col_start=0)
+    acc.update(np.array([[5.0]]), row_start=4, col_start=2)
 
-    acc = NetFlowAccumulator(N)
-
-    # Tile with block size 2 (last block smaller). Include diagonal blocks with diagonal already zeroed.
-    B = 2
-    for rs in range(0, N, B):
-        for cs in range(0, N, B):
-            blk = S[rs : min(rs + B, N), cs : min(cs + B, N)]
-            acc.update(blk, row_start=rs, col_start=cs)
-
-    assert np.isfinite(acc.outflow).all()
-    assert np.isfinite(acc.inflow).all()
-    assert acc.blocks_done == ((N + B - 1) // B) ** 2
     assert np.allclose(acc.outflow.sum(), acc.inflow.sum())
 
 

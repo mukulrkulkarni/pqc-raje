@@ -3,7 +3,7 @@
 This test suite verifies the *composition contract* of NetFlowAccumulator:
 - update() maps block entries to the correct global indices via row_start/col_start
 - accumulating blocks equals accumulating the full matrix when tiling is correct
-- outflow.sum() == inflow.sum() when diagonal is excluded and tiling is complete
+- outflow.sum() == inflow.sum() holds for any updates (per-block invariance)
 - normalize() contract for all-equal and non-degenerate cases
 
 The accumulator deliberately does not validate bounds; a bad caller can trigger
@@ -39,8 +39,8 @@ def test_update_maps_row_and_col_sums_to_global_indices() -> None:
     assert acc.blocks_done == 1
 
 
-def test_accumulating_blocks_matches_full_matrix_row_col_sums() -> None:
-    """Two-block tiling of a 4x4 credibility matrix (diagonal excluded)."""
+def test_accumulating_selected_blocks_matches_manual_row_col_sums() -> None:
+    """Accumulate two off-diagonal quadrants and compare with manual sums."""
     S = np.array(
         [
             [0.0, 0.1, 0.2, 0.3],

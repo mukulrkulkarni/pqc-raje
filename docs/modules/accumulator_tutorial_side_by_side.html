@@ -454,7 +454,7 @@ footer{margin-top:var(--s6); padding-top:var(--s3); border-top:1px solid var(--b
             <h4>Why float64</h4>
             <p>Even when each S(i,j) is in [0,1], you can add O(N) terms per alternative. <code>float64</code> reduces rounding drift in large runs.</p>
             <h4>Contract note</h4>
-            <p>The constructor does not reject N&lt;1. For N=1, every flow stays zero because there are no comparisons.</p>
+            <p><code>n_alternatives</code> must be non-negative. For N=0, NumPy constructs empty arrays but <code>normalize()</code> will fail on <code>min()</code>/<code>max()</code>. For N=1, every flow stays zero because there are no comparisons.</p>
           </div>
         </div>
       </section>
@@ -487,7 +487,7 @@ footer{margin-top:var(--s6); padding-top:var(--s3); border-top:1px solid var(--b
             <h4>Tiling invariants (caller-owned)</h4>
             <ul>
               <li><code>0 &le; row_start</code>, <code>0 &le; col_start</code></li>
-              <li><code>row_start + B1  le; N</code>, <code>col_start + B2  le; N</code></li>
+              <li><code>row_start + B1 &lt;= N</code>, <code>col_start + B2 &lt;= N</code></li>
               <li>Each off-diagonal pair (i,j) appears in exactly one block update.</li>
             </ul>
             <h4>Common failure mode</h4>
@@ -524,7 +524,7 @@ footer{margin-top:var(--s6); padding-top:var(--s3); border-top:1px solid var(--b
             <h4>Normalization is monotonic</h4>
             <p>Min-max scaling is strictly monotonic when <code>max_val != min_val</code> and all values are finite. It preserves ordering but changes absolute gaps and compresses extremes.</p>
             <h4>All-equal case</h4>
-            <p>If every net flow is equal, the min-max denominator is zero. Returning 0.5 is a deterministic convention: it signals no discrimination without preferring endpoints.</p>
+            <p>If every net flow is equal, the min-max denominator is zero. Returning 0.5 is a deterministic convention: it signals “no discrimination” without preferring endpoints.</p>
           </div>
         </div>
       </section>

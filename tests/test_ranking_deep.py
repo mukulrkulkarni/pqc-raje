@@ -251,24 +251,39 @@ const dom = new JSDOM(html, { url: 'http://example.local/', runScripts: 'dangero
 
 dom.window.eval(highlight);
 
-const rowHead = dom.window.document.querySelector('.row-head[data-range="R2"]');
-if (!rowHead) fail('row-head R2 not found');
-const row = dom.window.document.getElementById('row-R2');
-if (!row) fail('row-R2 not found');
+function afterInit(cb) {
+  if (dom.window.document.readyState === 'loading') {
+    dom.window.document.addEventListener('DOMContentLoaded', () => cb(), { once: true });
+  } else {
+    dom.window.setTimeout(() => cb(), 0);
+  }
+}
 
-rowHead.focus();
-rowHead.dispatchEvent(new dom.window.KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
-if (!row.classList.contains('sel')) fail('Enter did not select row');
-if (rowHead.getAttribute('aria-pressed') !== 'true') fail('aria-pressed not true after Enter');
+afterInit(() => {
+  const rowHead = dom.window.document.querySelector('.row-head[data-range="R2"]');
+  if (!rowHead) fail('row-head R2 not found');
+  const row = dom.window.document.getElementById('row-R2');
+  if (!row) fail('row-R2 not found');
 
-rowHead.dispatchEvent(new dom.window.KeyboardEvent('keydown', { key: ' ', bubbles: true }));
-if (row.classList.contains('sel')) fail('Space did not clear selection');
-if (rowHead.getAttribute('aria-pressed') !== 'false') fail('aria-pressed not false after Space toggle-off');
+  // Enter selects.
+  rowHead.focus();
+  rowHead.dispatchEvent(new dom.window.KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+  if (!row.classList.contains('sel')) fail('Enter did not select row');
+  if (rowHead.getAttribute('aria-pressed') !== 'true') fail('aria-pressed not true after Enter');
+  if (dom.window.location.hash !== '#row-R2') fail('hash not set to #row-R2 after select');
 
-rowHead.dispatchEvent(new dom.window.KeyboardEvent('keydown', { key: ' ', bubbles: true }));
-if (!row.classList.contains('sel')) fail('Space did not re-select row');
+  // Space toggles off.
+  rowHead.dispatchEvent(new dom.window.KeyboardEvent('keydown', { key: ' ', bubbles: true }));
+  if (row.classList.contains('sel')) fail('Space did not clear selection');
+  if (rowHead.getAttribute('aria-pressed') !== 'false') fail('aria-pressed not false after Space toggle-off');
+  if (dom.window.location.hash) fail('hash not cleared after toggle-off');
 
-process.exit(0);
+  // Space selects again.
+  rowHead.dispatchEvent(new dom.window.KeyboardEvent('keydown', { key: ' ', bubbles: true }));
+  if (!row.classList.contains('sel')) fail('Space did not re-select row');
+
+  process.exit(0);
+});
 """,
         encoding='utf-8',
     )
@@ -298,11 +313,20 @@ const dom = new JSDOM('<!doctype html><html><body><div class="jump"><a data-rang
 
 dom.window.eval(highlight);
 
-// Should not throw even if row-R9 and prog-txt are missing.
-const jump = dom.window.document.getElementById('jump-R9');
-jump.dispatchEvent(new dom.window.MouseEvent('click', { bubbles: true }));
+function afterInit(cb) {
+  if (dom.window.document.readyState === 'loading') {
+    dom.window.document.addEventListener('DOMContentLoaded', () => cb(), { once: true });
+  } else {
+    dom.window.setTimeout(() => cb(), 0);
+  }
+}
 
-process.exit(0);
+afterInit(() => {
+  // Should not throw even if row-R9 and prog-txt are missing.
+  const jump = dom.window.document.getElementById('jump-R9');
+  jump.dispatchEvent(new dom.window.MouseEvent('click', { bubbles: true }));
+  process.exit(0);
+});
 """,
         encoding='utf-8',
     )

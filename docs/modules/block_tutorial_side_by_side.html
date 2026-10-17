@@ -421,7 +421,7 @@ footer{margin-top:var(--s6); padding-top:var(--s3); border-top:1px solid var(--b
           </div>
           <div class="note-col">
             <h4>Purpose</h4>
-            <p>[Placeholder] Entry point for computing one block of the credibility matrix. Integrates concordance, discordance, and credibility modules into a single orchestration function.</p>
+            <p>Computes one B1×B2 block of the credibility matrix S(a,b). It composes concordance, discordance, and credibility for that block.</p>
             <h4>I/O</h4>
             <ul>
               <li><code>G_rows</code> &mdash; performance matrix rows for alternatives a (shape B1&times;C)</li>
@@ -431,9 +431,9 @@ footer{margin-top:var(--s6); padding-top:var(--s3); border-top:1px solid var(--b
               <li><code>is_diagonal</code> &mdash; True if same alternatives in rows and cols</li>
             </ul>
             <h4>Why</h4>
-            <p>[Placeholder] Encapsulates the full ELECTRE III pairwise computation, enabling blockwise iteration in the ranking pipeline without exposing internal module calls.</p>
+            <p>This single call is what the ranking loop repeats blockwise. It keeps the ranking pipeline small and avoids exposing intermediate arrays.</p>
             <h4>Pitfalls</h4>
-            <p>[Placeholder] Caller must ensure G_rows and G_cols have matching column count C. is_diagonal should only be True when rows and cols reference the same alternatives.</p>
+            <p><code>compute_block</code> does not validate shapes. Callers must ensure column count C matches q/p/v/weights length. Set <code>is_diagonal=True</code> only for diagonal blocks where rows and cols reference the same alternatives (so self-comparisons exist).</p>
           </div>
         </div>
       </section>
@@ -455,7 +455,7 @@ footer{margin-top:var(--s6); padding-top:var(--s3); border-top:1px solid var(--b
           </div>
           <div class="note-col">
             <h4>Purpose</h4>
-            <p>[Placeholder] Computes pairwise differences for all (a,b) pairs across all criteria. Broadcasting produces a 3D array of shape (B1, B2, C).</p>
+            <p>Computes pairwise differences for all (a,b) pairs across all criteria. Broadcasting produces <code>diff</code> with shape <code>(B1,B2,C)</code>.</p>
             <h4>I/O</h4>
             <ul>
               <li><code>G_rows[:, np.newaxis, :]</code> &mdash; shape (B1, 1, C)</li>
@@ -463,9 +463,9 @@ footer{margin-top:var(--s6); padding-top:var(--s3); border-top:1px solid var(--b
               <li><code>diff</code> &mdash; shape (B1, B2, C)</li>
             </ul>
             <h4>Why</h4>
-            <p>[Placeholder] Vectorized broadcasting computes all B1&times;B2&times;C differences in one operation, avoiding nested loops.</p>
+            <p>Broadcasting computes all B1×B2×C differences in one vectorised operation. This is the main O(B1·B2·C) working array.</p>
             <h4>Pitfalls</h4>
-            <p>[Placeholder] If G_rows and G_cols have different column counts, broadcasting may fail or produce incorrect shapes.</p>
+            <p>If <code>G_rows</code> and <code>G_cols</code> do not share the same C, broadcasting fails (or yields an incorrect shape if a dimension is 1). Validate upstream.</p>
           </div>
         </div>
       </section>
@@ -491,7 +491,7 @@ footer{margin-top:var(--s6); padding-top:var(--s3); border-top:1px solid var(--b
           </div>
           <div class="note-col">
             <h4>Purpose</h4>
-            <p>[Placeholder] Calls concordance and discordance modules on the diff array. c_j gives partial concordance per criterion; C_ab aggregates with weights. d_j gives discordance per criterion.</p>
+            <p>Runs the two comparisons: concordance (support) and discordance (veto pressure). It produces <code>c_j</code>, <code>C_ab</code>, and <code>d_j</code> for this block.</p>
             <h4>I/O</h4>
             <ul>
               <li><code>c_j</code> &mdash; shape (B1, B2, C), values in [0,1]</li>
@@ -499,7 +499,7 @@ footer{margin-top:var(--s6); padding-top:var(--s3); border-top:1px solid var(--b
               <li><code>d_j</code> &mdash; shape (B1, B2, C), discordance in [0,1]</li>
             </ul>
             <h4>Why</h4>
-            <p>[Placeholder] Separating concordance and discordance into modules allows independent testing and reuse. This function composes them for block-level computation.</p>
+            <p>Keeping concordance/discordance in separate modules enables focused unit tests. <code>compute_block</code> is the composition point tested end-to-end.</p>
             <h4>Pitfalls</h4>
             <p>[Placeholder] Ensure q &le; p &le; v (validated upstream). Ensure weights are normalized (sum = 1).</p>
           </div>

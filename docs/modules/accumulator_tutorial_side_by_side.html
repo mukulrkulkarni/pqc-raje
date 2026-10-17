@@ -354,7 +354,7 @@ footer{margin-top:var(--s6); padding-top:var(--s3); border-top:1px solid var(--b
       <div class="io-item">
         <b>update(S_block, row_start, col_start)</b>
         <span class="type">Input:</span> <code>S_block: ndarray(B1,B2)</code>, row/col offsets<br>
-        <span class="type">Effect:</span> Adds S_block.sum(axis=1) to outflow[row_start:], S_block.sum(axis=0) to inflow[col_start:]<br>
+        <span class="type">Effect:</span> Adds S_block.sum(axis=1) to outflow[row_start:row_start+B1] and S_block.sum(axis=0) to inflow[col_start:col_start+B2]<br>
         <span class="type">Increments:</span> blocks_done counter
       </div>
       <div class="io-item">
@@ -384,7 +384,7 @@ footer{margin-top:var(--s6); padding-top:var(--s3); border-top:1px solid var(--b
     <details class="gnd-details">
       <summary>Scientific grounding &amp; calibration notes</summary>
       <div class="gnd-content">
-        <p><b>What is being accumulated:</b> In ELECTRE net-flow ranking, each alternative i has an outgoing flow φ⁺(i)=∑ⱼ S(i,j) and an incoming flow φ⁻(i)=∑ⱼ S(j,i), where S is the credibility matrix (diagonal excluded). Net flow is φ(i)=φ⁺(i)−φ⁻(i).</p>
+        <p><b>Notation:</b> Let <strong>a</strong> and <strong>b</strong> be alternative objects. The credibility matrix entry S(a,b) measures the credibility of “a outranks b”. Net-flow ranking uses φ⁺(a)=∑ᵦ S(a,b) and φ⁻(a)=∑ᵦ S(b,a) (diagonal excluded). Net flow is φ(a)=φ⁺(a)−φ⁻(a).</p>
         <p><b>Block mapping:</b> A block <code>S_block</code> corresponds to global indices (row_start+i, col_start+j). The accumulator updates <code>outflow[row_start+i]</code> by the row sum and <code>inflow[col_start+j]</code> by the column sum.</p>
         <p><b>Why this is correct:</b> Summing all blocks (with no overlap and no gaps) is equivalent to summing the full matrix, but you never store N×N. This equivalence assumes the same weights and thresholds are used for all blocks (i.e., block partitioning is only a performance strategy).</p>
         <p><b>If tiling is correct:</b> If tiling covers each off-diagonal pair exactly once (no overlap, no gaps), and you use the same weights for all blocks, then the accumulated outflow/inflow correspond to the full-matrix row/column sums. In that case, <code>outflow.sum()</code> equals <code>inflow.sum()</code> within floating-point tolerance because both equal the total mass ∑ᵢ∑ⱼ S(i,j) over the covered pairs.</p>
@@ -462,7 +462,7 @@ footer{margin-top:var(--s6); padding-top:var(--s3); border-top:1px solid var(--b
             <h4>Why</h4>
             <p>Even when each S(i,j) is in [0,1], you can add O(N) terms per alternative. Using <code>float64</code> reduces rounding drift in large runs.</p>
             <h4>Pitfalls</h4>
-            <p><code>n_alternatives</code> must be non-negative. For N=0, NumPy constructs empty arrays but <code>normalize()</code> fails on <code>min()</code>/<code>max()</code>. For N=1, every flow stays zero because there are no comparisons.</p>
+            <p><code>n_alternatives</code> must be non-negative. For N=0, NumPy constructs empty arrays but <code>normalize()</code> fails on <code>min()</code>/<code>max()</code>. For N=1, <code>net_flow()</code> is always zero when diagonal entries are excluded (there are no distinct pairs), but arbitrary <code>update()</code> calls can still change <code>outflow</code>/<code>inflow</code> numerically.</p>
           </div>
         </div>
       </section>

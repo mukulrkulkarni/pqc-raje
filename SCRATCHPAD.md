@@ -48,3 +48,10 @@ Report each completed subtask, expand active task only. No repeated blind agent 
 
 ## User-directed checkpoint and correction approval
 User requested commit FIRST, then proceed with the proposed docstring/negative-test batch and Scientific/Engineering delta reviews. This commit is a preservation checkpoint, NOT all-gates approval: Scientific remains NEEDS WORK; Engineering, Security and UI/UX approved the pinned N1 scope. Phase 5 stays active; all ten phases unchanged. Follow-up will correct documentation only, add targeted tests, and seek delta verdicts before a final gated commit.
+
+
+Follow-up status: checkpoint d8397ba created first; tree verified clean. Approved correction now implemented: two credibility docstring lines only, plus seven targeted test cases. Computation AST unchanged. Full suite 659 passed in 4.34s; preflight passed with existing CSS-position warning. Scientific/Engineering delta reviews COMPLETE: both APPROVED. Snapshot/live hashes verified; reviewer missing-snapshot observation corrected by direct verification in followup/PI_VERIFICATION.md. Phase 5 remains active; all ten phases unchanged.
+
+
+## Current authoritative status — N1 gate closure
+Concordance N1 pilot and corrective batch have all four scoped gate approvals. Checkpoint d8397ba preceded corrections as requested. This record accompanies final corrective commit; working-tree cleanliness checked after commit. Prior pending/blocked entries are historical evidence, superseded by this status. UI browser limitations remain explicit. Phase 5 stays ACTIVE: discordance deep content, remaining cross-links and relevant gates still pending; phases 6–10 unchanged. No cross-page style rollout performed. Scratchpad and milestone tracker synchronized.

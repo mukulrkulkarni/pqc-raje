@@ -14,8 +14,8 @@ def credibility(C_ab: np.ndarray, d_j: np.ndarray) -> np.ndarray:
         F_j(a,b) = (1 - d_j(a,b))/(1 - C(a,b))  otherwise
 
     Edge cases:
-        - If C(a,b) = 1 and d_j > 1: S = 0 (veto overrides perfect concordance)
-        - If C(a,b) = 1 and all d_j <= 1: S = 1
+        - If any d_j >= 1: S = 0 (full veto, including when C(a,b) = 1)
+        - If C(a,b) = 1 and all finite d_j < 1: S = 1
 
     Args:
         C_ab: Global concordance values, shape (B1, B2).

@@ -1,0 +1,9 @@
+{
+  "base": "d8397ba",
+  "files": {
+    "electre3/credibility.py": "4f3ba731acd71532cb3f70f8680b23f7757e9aea72f740db3864053150c04670",
+    "tests/test_n1_scientific_followup.py": "587bd2024da63935d25e56d4d28371d6c73ff788af5a455923432e3422ff4e07"
+  },
+  "computation_AST_unchanged": true,
+  "verification": "659 tests passed in 4.34s; preflight passed; diff check passed"
+}

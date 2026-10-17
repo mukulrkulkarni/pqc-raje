@@ -95,6 +95,10 @@ def test_normalize_weights_outputs_sum_one_and_preserves_ratios() -> None:
     np.testing.assert_allclose(w, [0.4, 0.6])
 
 
+def test_validate_arrays_match_accepts_equal_lengths() -> None:
+    validate_arrays_match(np.ones(2), np.ones(2), np.ones(2), np.ones(2))
+
+
 def test_validate_arrays_match_rejects_length_mismatch() -> None:
     with pytest.raises(ValueError, match=r"Array length mismatch"):
         validate_arrays_match(np.ones(1), np.ones(2), np.ones(1), np.ones(1))

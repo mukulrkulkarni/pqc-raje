@@ -438,7 +438,7 @@ footer{margin-top:var(--s6); padding-top:var(--s3); border-top:1px solid var(--b
             <h4>Why</h4>
             <p>Centralized validation produces consistent error messages and prevents silent corruption (NaN/Inf, shape mismatches, inconsistent thresholds).</p>
             <h4>Pitfalls</h4>
-            <p>All checks raise <code>ValueError</code> on failure. High-level entry points (for example <code>compute_ranking</code>) call these helpers so failures surface early and consistently.</p>
+            <p>These helpers raise <code>ValueError</code> when they detect invalid values or shapes. Note: passing non-array types or objects without <code>.ndim</code>/<code>.shape</code> can raise <code>TypeError</code> before validation runs.</p>
           </div>
         </div>
       </section>
@@ -509,7 +509,7 @@ footer{margin-top:var(--s6); padding-top:var(--s3); border-top:1px solid var(--b
           </div>
           <div class="note-col">
             <h4>Purpose</h4>
-            <p>Extracts weights from <code>criteria</code>, rejects NaN/Inf, and returns a float64 array with <code>w.sum() == 1</code>. Relative ratios are preserved.</p>
+            <p>Extracts weights from <code>criteria</code>, rejects NaN/Inf, and returns a float64 array with <code>w.sum() &asymp; 1</code> (use <code>np.isclose</code>). Relative ratios are preserved.</p>
             <h4>I/O</h4>
             <ul>
               <li><code>criteria</code> &mdash; list of CriterionConfig with weight attribute</li>
@@ -628,7 +628,7 @@ print(<span class="str">f"Sum: {weights.sum()}"</span>)</code></pre>
           <pre><code>Normalized weights: [0.4 0.6]
 Sum: 1.0</code></pre>
           <div class="out-note">
-            <span>[Placeholder] Output depends on input weights</span>
+            <span>Deterministic for fixed weights</span>
           </div>
         </div>
       </div>
@@ -639,7 +639,7 @@ Sum: 1.0</code></pre>
 
     <footer>
       <span>validate.py &middot; ELECTRE III</span>
-      <span class="badge">scaffold</span>
+      <span class="badge">deep</span>
     </footer>
   </main>
 </div>

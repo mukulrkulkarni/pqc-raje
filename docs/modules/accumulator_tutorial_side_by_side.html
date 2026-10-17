@@ -9,7 +9,7 @@
 <style>
 /* ==========================================================================
    ACCUMULATOR MODULE TUTORIAL - Layout 2 Parity (matches layout2.html mock)
-   ========================================================================== */
+   ========================================================================= */
 
 :root{
   --bg:#ffffff; --surface:#f8fafc; --surface-2:#f1f5f9; --border:#e2e8f0;
@@ -291,14 +291,14 @@ footer{margin-top:var(--s6); padding-top:var(--s3); border-top:1px solid var(--b
           <span class="j-badge">R4</span>
           <span>
             <span class="j-title">Net Flow</span>
-            <span class="j-desc">Computation &amp; normalize</span>
+            <span class="j-desc">raw vs normalize()</span>
           </span>
         </a>
         <a href="#row-R5" data-range="R5" id="jump-R5">
           <span class="j-badge">R5</span>
           <span>
-            <span class="j-title">Edge Cases</span>
-            <span class="j-desc">Validations</span>
+            <span class="j-title">Tiling invariants</span>
+            <span class="j-desc">bounds + conservation</span>
           </span>
         </a>
         <a href="#usage" data-range="EX" id="jump-EX">
@@ -373,36 +373,28 @@ footer{margin-top:var(--s6); padding-top:var(--s3); border-top:1px solid var(--b
     <div class="gnd-facts">
       <dl>
         <dt>Memory</dt><dd>O(N) for accumulator arrays; S_block is O(B1&times;B2) per call</dd>
-        <dt>Preconditions</dt><dd>row_start,col_start &ge; 0 and &lt; N; row_start+B1 &le; N, col_start+B2 &le; N; tiling covers all off-diagonal pairs exactly once (no overlap, no gaps); not enforced here</dd>
-        <dt>Diagonal</dt><dd>excluded upstream in compute_block</dd>
-        <dt>normalize()</dt><dd>optional min-max scaling; hides absolute scale; sensitive to outliers; 0.5 for all-equal is a convention</dd>
+        <dt>update()</dt><dd>outflow adds row sums; inflow adds column sums; blocks_done counts calls</dd>
+        <dt>Tiling</dt><dd>caller ensures block grid covers all off-diagonal pairs exactly once; not enforced here</dd>
+        <dt>Diagonal</dt><dd>excluded upstream by compute_block(is_diagonal=True)</dd>
+        <dt>Ranking</dt><dd>project ranks by raw net flow (descending); normalize() is optional</dd>
       </dl>
     </div>
 
     <details class="gnd-details">
       <summary>Scientific grounding &amp; calibration notes</summary>
       <div class="gnd-content">
-        <p><b>Block tiling and index mapping:</b> The ranking pipeline iterates over blocks. Each block S_block[i,j] represents S(row_start+i, col_start+j). The accumulator maps these back to global indices: outflow[row_start+i] accumulates how much alternative (row_start+i) dominates others; inflow[col_start+j] accumulates how much (col_start+j) is dominated.</p>
-        <p><b>Memory efficiency:</b> Storing the full N&times;N credibility matrix requires O(N&sup2;) memory. The accumulator only stores two O(N) arrays (inflow/outflow), enabling processing of arbitrarily large alternative sets by iterating blocks.</p>
-        <p><b>Sanity checks:</b></p>
-        <ul>
-          <li>If tiling covers every off-diagonal pair exactly once (no overlap, no gaps), diagonal exclusion is applied upstream, and the same weights/normalization are used for all blocks, then sum(outflow) equals sum(inflow) within floating-point tolerance (flow conserved minus diagonal).</li>
-          <li>Verify blocks_done equals expected count (ceil(N/B)&sup2;).</li>
-          <li>Verify no NaN/Inf in outflow/inflow arrays.</li>
-        </ul>
-        <p><b>Common bugs:</b></p>
-        <ul>
-          <li><b>Off-by-one:</b> Ensure row_start/col_start are 0-indexed and match the block's position in the iteration.</li>
-          <li><b>Bounds overflow:</b> Ensure row_start + B1 &le; N and col_start + B2 &le; N.</li>
-          <li><b>Double-counting:</b> Each block should be passed to update() exactly once.</li>
-        </ul>
+        <p><b>What is being accumulated:</b> In ELECTRE net-flow ranking, each alternative i has an outgoing flow φ⁺(i)=∑ⱼ S(i,j) and an incoming flow φ⁻(i)=∑ⱼ S(j,i), where S is the credibility matrix (diagonal excluded). Net flow is φ(i)=φ⁺(i)−φ⁻(i).</p>
+        <p><b>Block mapping:</b> A block <code>S_block</code> corresponds to global indices (row_start+i, col_start+j). The accumulator updates <code>outflow[row_start+i]</code> by the row sum and <code>inflow[col_start+j]</code> by the column sum.</p>
+        <p><b>Why this is correct:</b> Summing all blocks (with no overlap and no gaps) is equivalent to summing the full matrix, but you never store N×N.</p>
+        <p><b>Conservation sanity check:</b> For a fully covered tiling, ∑ᵢ outflow[i] equals ∑ᵢ inflow[i] within floating-point tolerance, because both equal ∑ᵢ∑ⱼ S(i,j) over the same set of pairs.</p>
+        <p><b>Normalization caveat:</b> Min-max scaling preserves order (monotonic) but hides absolute gaps and is sensitive to outliers. This project ranks by raw net flow; <code>normalize()</code> is for optional presentation.</p>
       </div>
     </details>
 
     <div class="rows">
       <!-- R1: Overview -->
       <section class="row" id="row-R1">
-        <div class="row-head" role="button" tabindex="0" aria-expanded="true" data-range="R1" aria-label="Toggle R1: Overview">
+        <div class="row-head" role="button" tabindex="0" aria-pressed="false" data-range="R1" aria-label="Toggle R1: Overview">
           <span class="rk">R1</span>
           <span class="row-title">Overview</span>
           <span class="row-lines">L1–L6</span>
@@ -421,25 +413,25 @@ footer{margin-top:var(--s6); padding-top:var(--s3); border-top:1px solid var(--b
           </div>
           <div class="note-col">
             <h4>Purpose</h4>
-            <p>[Placeholder] Dataclass that accumulates inflow and outflow for each alternative without storing the full N&times;N credibility matrix. Enables O(N) memory usage.</p>
+            <p><strong>Accumulate</strong> net-flow ingredients using only two length-N arrays, not an N×N matrix.</p>
             <h4>I/O</h4>
             <ul>
-              <li><code>n_alternatives</code> &mdash; number of alternatives N</li>
-              <li>Creates <code>outflow</code> and <code>inflow</code> arrays of length N</li>
+              <li><code>n_alternatives</code> is N, the number of alternatives.</li>
+              <li>Creates <code>outflow</code> and <code>inflow</code> as <code>float64</code> arrays.</li>
             </ul>
-            <h4>Why</h4>
-            <p>[Placeholder] For large N, storing N&times;N is infeasible. Net flow only needs row sums (outflow) and column sums (inflow), which can be accumulated incrementally.</p>
+            <h4>Why this exists</h4>
+            <p>Net flow needs only <strong>row sums</strong> and <strong>column sums</strong> of the credibility matrix S. Computing S block-by-block lets you scale to large N without O(N²) storage.</p>
             <h4>Pitfalls</h4>
-            <p>[Placeholder] n_alternatives must match the actual number of alternatives in the performance matrix.</p>
+            <p>The class is intentionally small. It does <strong>not</strong> validate tiling coverage or index bounds; the caller owns those invariants.</p>
           </div>
         </div>
       </section>
 
       <!-- R2: Data Structures -->
       <section class="row" id="row-R2">
-        <div class="row-head" role="button" tabindex="0" aria-expanded="true" data-range="R2" aria-label="Toggle R2: Data Structures">
+        <div class="row-head" role="button" tabindex="0" aria-pressed="false" data-range="R2" aria-label="Toggle R2: Data Structures">
           <span class="rk">R2</span>
-          <span class="row-title">Data Structures</span>
+          <span class="row-title">Data structures: two flows + a counter</span>
           <span class="row-lines">L7–L14</span>
           <span class="tag ok">core</span>
           <span class="rule" aria-hidden="true"></span>
@@ -457,27 +449,21 @@ footer{margin-top:var(--s6); padding-top:var(--s3); border-top:1px solid var(--b
 <span class="ln">14</span>        <span class="kw">self</span>.inflow = np.zeros(<span class="kw">self</span>.n_alternatives, dtype=np.float64)</code></pre>
           </div>
           <div class="note-col">
-            <h4>Purpose</h4>
-            <p>[Placeholder] Initializes outflow and inflow arrays to zero. outflow[i] will accumulate how much alternative i dominates others; inflow[i] will accumulate how much i is dominated.</p>
-            <h4>I/O</h4>
-            <ul>
-              <li><code>outflow</code> &mdash; ndarray(N,) initialized to zeros</li>
-              <li><code>inflow</code> &mdash; ndarray(N,) initialized to zeros</li>
-              <li><code>blocks_done</code> &mdash; counter for processed blocks</li>
-            </ul>
-            <h4>Why</h4>
-            <p>[Placeholder] Using float64 ensures precision for accumulating many small S values. Zero initialization allows incremental addition.</p>
-            <h4>Pitfalls</h4>
-            <p>[Placeholder] Arrays are created in __post_init__, not constructor args. Don't pass outflow/inflow to the dataclass directly.</p>
+            <h4>Meaning of fields</h4>
+            <p><code>outflow[i]</code> accumulates ∑ⱼ S(i,j). <code>inflow[i]</code> accumulates ∑ⱼ S(j,i). The counter <code>blocks_done</code> is a cheap sanity check that your loop is calling <code>update()</code> the expected number of times.</p>
+            <h4>Why float64</h4>
+            <p>Even when each S(i,j) is in [0,1], you can add O(N) terms per alternative. <code>float64</code> reduces rounding drift in large runs.</p>
+            <h4>Contract note</h4>
+            <p>The constructor does not reject N&lt;1. For N=1, every flow stays zero because there are no comparisons.</p>
           </div>
         </div>
       </section>
 
       <!-- R3: update() Method -->
       <section class="row" id="row-R3">
-        <div class="row-head" role="button" tabindex="0" aria-expanded="true" data-range="R3" aria-label="Toggle R3: update() Method">
+        <div class="row-head" role="button" tabindex="0" aria-pressed="false" data-range="R3" aria-label="Toggle R3: update() Method">
           <span class="rk">R3</span>
-          <span class="row-title">update() Method</span>
+          <span class="row-title">update(): block-to-global accumulation</span>
           <span class="row-lines">L16–L20</span>
           <span class="tag ok">core</span>
           <span class="rule" aria-hidden="true"></span>
@@ -492,27 +478,29 @@ footer{margin-top:var(--s6); padding-top:var(--s3); border-top:1px solid var(--b
 <span class="ln">20</span>        <span class="kw">self</span>.blocks_done += <span class="num">1</span></code></pre>
           </div>
           <div class="note-col">
-            <h4>Purpose</h4>
-            <p>[Placeholder] Accumulates one block's contribution to inflow/outflow. Row sums go to outflow (dominance); column sums go to inflow (dominated by).</p>
-            <h4>I/O</h4>
+            <h4>Index mapping</h4>
+            <p>By construction, <code>S_block[i,j]</code> represents <code>S[row_start+i, col_start+j]</code>. Therefore:</p>
             <ul>
-              <li><code>S_block</code> &mdash; credibility submatrix (B1, B2)</li>
-              <li><code>row_start, col_start</code> &mdash; global indices for this block</li>
-              <li>Mutates <code>outflow</code> and <code>inflow</code> in place</li>
+              <li><strong>Row sum</strong> of the block contributes to φ⁺ for those global rows.</li>
+              <li><strong>Column sum</strong> of the block contributes to φ⁻ for those global columns.</li>
             </ul>
-            <h4>Why</h4>
-            <p>[Placeholder] S_block[i,j] is S(row_start+i, col_start+j). Summing axis=1 gives total dominance by row; summing axis=0 gives total dominated for column.</p>
-            <h4>Pitfalls</h4>
-            <p>[Placeholder] Caller must ensure row_start + B1 &le; N and col_start + B2 &le; N. Index overflow causes silent wrong results or IndexError.</p>
+            <h4>Tiling invariants (caller-owned)</h4>
+            <ul>
+              <li><code>0 &le; row_start</code>, <code>0 &le; col_start</code></li>
+              <li><code>row_start + B1  le; N</code>, <code>col_start + B2  le; N</code></li>
+              <li>Each off-diagonal pair (i,j) appears in exactly one block update.</li>
+            </ul>
+            <h4>Common failure mode</h4>
+            <p>If you accidentally swap <code>row_start</code> and <code>col_start</code>, net flows become wrong but may still look plausible. The tests include an asymmetric oracle to detect that class of bug.</p>
           </div>
         </div>
       </section>
 
       <!-- R4: Net Flow -->
       <section class="row" id="row-R4">
-        <div class="row-head" role="button" tabindex="0" aria-expanded="true" data-range="R4" aria-label="Toggle R4: Net Flow">
+        <div class="row-head" role="button" tabindex="0" aria-pressed="false" data-range="R4" aria-label="Toggle R4: Net Flow">
           <span class="rk">R4</span>
-          <span class="row-title">Net Flow</span>
+          <span class="row-title">net_flow() and normalize(): ranking vs presentation</span>
           <span class="row-lines">L22–L30</span>
           <span class="tag ok">output</span>
           <span class="rule" aria-hidden="true"></span>
@@ -531,56 +519,53 @@ footer{margin-top:var(--s6); padding-top:var(--s3); border-top:1px solid var(--b
 <span class="ln">30</span>        <span class="kw">return</span> (flow - min_val) / (max_val - min_val)</code></pre>
           </div>
           <div class="note-col">
-            <h4>Purpose</h4>
-            <p>[Placeholder] net_flow() returns outflow - inflow for each alternative. normalize() applies min-max scaling to [0,1]; this is optional and hides absolute scale differences.</p>
-            <h4>I/O</h4>
-            <ul>
-              <li><code>net_flow()</code> &mdash; returns ndarray(N,), may be negative</li>
-              <li><code>normalize()</code> &mdash; returns ndarray(N,) in [0,1] via min-max scaling</li>
-            </ul>
-            <h4>Why</h4>
-            <p>[Placeholder] Net flow &phi; = &phi;<sup>+</sup> - &phi;<sup>-</sup> is the standard ELECTRE III ranking score. Normalization is optional; use raw net_flow() if absolute scale matters.</p>
-            <h4>Pitfalls</h4>
-            <p>[Placeholder] normalize() returns 0.5 array if all net flows are equal (avoids division by zero; 0.5 is a convention, not a mathematical necessity). Min-max scaling hides absolute differences and is sensitive to outliers; consider whether raw net_flow() is more appropriate.</p>
+            <h4>Net flow is the ranking score</h4>
+            <p>In this codebase, the final ranking is by <strong>raw</strong> <code>net_flow()</code> in descending order. Do not normalize before ranking unless your ranking contract explicitly says so.</p>
+            <h4>Normalization is monotonic</h4>
+            <p>Min-max scaling is strictly monotonic when <code>max_val ne min_val</code>. It preserves ordering but changes absolute gaps and compresses extremes.</p>
+            <h4>All-equal case</h4>
+            <p>If every net flow is equal, the min-max denominator is zero. Returning 0.5 is a deterministic convention: it signals no discrimination without preferring endpoints.</p>
           </div>
         </div>
       </section>
 
-      <!-- R5: Edge Cases -->
+      <!-- R5: Tiling invariants -->
       <section class="row" id="row-R5">
-        <div class="row-head" role="button" tabindex="0" aria-expanded="true" data-range="R5" aria-label="Toggle R5: Edge Cases">
+        <div class="row-head" role="button" tabindex="0" aria-pressed="false" data-range="R5" aria-label="Toggle R5: Tiling invariants">
           <span class="rk">R5</span>
-          <span class="row-title">Edge Cases</span>
-          <span class="row-lines">L16–L30</span>
-          <span class="tag warn">edge</span>
+          <span class="row-title">Tiling invariants: bounds, conservation, diagonal exclusion</span>
+          <span class="row-lines">update()+net_flow()</span>
+          <span class="tag warn">contracts</span>
           <span class="rule" aria-hidden="true"></span>
         </div>
         <div class="split">
           <div class="code-col">
-            <div class="code-bar">accumulator.py<span class="sp">edge cases</span></div>
-            <pre><code><span class="com"># Edge case 1: Empty blocks</span>
-<span class="com"># S_block with shape (0,B2) or (B1,0) adds nothing</span>
-
-<span class="com"># Edge case 2: Single alternative</span>
-<span class="com"># N=1 means outflow[0]=inflow[0]=0 (no comparisons)</span>
-
-<span class="com"># Edge case 3: All equal net flow</span>
-<span class="hl"><span class="kw">if</span> max_val == min_val:</span>
-<span class="hl">    <span class="kw">return</span> np.ones_like(flow) * <span class="num">0.5</span></span></code></pre>
+            <div class="code-bar">contracts<span class="sp">caller-owned</span></div>
+            <pre><code><span class="com"># The accumulator is deliberately minimal. It does not validate these:</span>
+<span class="com">#</span>
+<span class="com"># 1) Bounds:</span>
+<span class="com">#    0 <= row_start, col_start</span>
+<span class="com">#    row_start + B1 <= N</span>
+<span class="com">#    col_start + B2 <= N</span>
+<span class="com">#</span>
+<span class="com"># 2) Tiling (no overlap, no gaps):</span>
+<span class="com">#    Every off-diagonal pair (i,j), i!=j, appears in exactly one S_block.</span>
+<span class="com">#</span>
+<span class="com"># 3) Diagonal handling:</span>
+<span class="com">#    compute_block must zero the diagonal when row_start==col_start block.</span>
+<span class="com">#</span>
+<span class="com"># 4) Value sanity:</span>
+<span class="com">#    S_block should be finite; typical credibility values are in [0,1].</span></code></pre>
           </div>
           <div class="note-col">
-            <h4>Purpose</h4>
-            <p>[Placeholder] Documents edge cases: empty blocks, single alternative, and all-equal net flow. These require special handling or produce degenerate results.</p>
-            <h4>I/O</h4>
-            <ul>
-              <li>Empty block: no effect on accumulator</li>
-              <li>N=1: net_flow() returns [0.0]</li>
-              <li>Equal flows: normalize() returns [0.5, 0.5, ...] (0.5 is a convention)</li>
-            </ul>
-            <h4>Why</h4>
-            <p>[Placeholder] Edge cases are mathematically valid but may indicate upstream issues. Caller should validate N &ge; 2 before using accumulator.</p>
-            <h4>Pitfalls</h4>
-            <p>[Placeholder] Accumulator does not validate inputs. Invalid row_start/col_start may cause IndexError or silent corruption.</p>
+            <h4>Bounds</h4>
+            <p><strong>Bounds are critical</strong> because the update uses slices. If the slice length and the sum length differ, NumPy raises a broadcasting error; if they match by accident, you get silent corruption.</p>
+            <h4>No overlap, no gaps</h4>
+            <p>The accumulator assumes the calling loop enumerates a block grid that covers every required pair once. If you skip a block you undercount; if you repeat a block you double-count.</p>
+            <h4>Diagonal exclusion</h4>
+            <p>Diagonal entries S(i,i) must not contribute to either flow. This is handled upstream by passing <code>is_diagonal=True</code> to the block computation and zeroing the local diagonal before calling <code>update()</code>.</p>
+            <h4>Conservation check</h4>
+            <p>When tiling is correct, <code>outflow.sum()</code> and <code>inflow.sum()</code> match within tolerance. This is a strong global check for missing or duplicated blocks.</p>
           </div>
         </div>
       </section>
@@ -595,13 +580,12 @@ footer{margin-top:var(--s6); padding-top:var(--s3); border-top:1px solid var(--b
           <pre><code><span class="kw">from</span> electre3.accumulator <span class="kw">import</span> NetFlowAccumulator
 <span class="kw">import</span> numpy <span class="kw">as</span> np
 
-<span class="com"># Create accumulator for 3 alternatives</span>
 acc = NetFlowAccumulator(<span class="num">3</span>)
 
-<span class="com"># Simulate a single block (full 3x3 matrix)</span>
-S = np.array([[<span class="num">0</span>, <span class="num">0.8</span>, <span class="num">0.6</span>],
-              [<span class="num">0.2</span>, <span class="num">0</span>, <span class="num">0.7</span>],
-              [<span class="num">0.4</span>, <span class="num">0.3</span>, <span class="num">0</span>]])
+<span class="com"># S is a credibility matrix sample (diagonal already zeroed).</span>
+S = np.array([[<span class="num">0.0</span>, <span class="num">0.8</span>, <span class="num">0.6</span>],
+              [<span class="num">0.2</span>, <span class="num">0.0</span>, <span class="num">0.7</span>],
+              [<span class="num">0.4</span>, <span class="num">0.3</span>, <span class="num">0.0</span>]])
 acc.update(S, row_start=<span class="num">0</span>, col_start=<span class="num">0</span>)
 
 print(<span class="str">f"Outflow: {acc.outflow}"</span>)
@@ -614,18 +598,18 @@ print(<span class="str">f"Net flow: {acc.net_flow()}"</span>)</code></pre>
 Inflow: [0.6 1.1 1.3]
 Net flow: [ 0.8 -0.2 -0.6]</code></pre>
           <div class="out-note">
-            <span>[Placeholder] Output depends on S values</span>
+            <span>Values depend on S; ordering for this example is 0 &gt; 1 &gt; 2.</span>
           </div>
         </div>
       </div>
       <p class="usage-disclaimer" style="font-size:11px;color:var(--text-dim);margin-top:var(--s2);background:var(--surface-2);padding:var(--s2);border-radius:var(--radius-sm);">
-        <strong>Note:</strong> Illustrative example inputs only. Do not treat values as recommended defaults or expected outputs. Actual outputs depend on your dataset and credibility matrix.
+        <strong>Note:</strong> This shows the accumulator interface only. In the real pipeline, S comes from <code>compute_block</code> iterated over a block grid.
       </p>
     </section>
 
     <footer>
       <span>accumulator.py &middot; ELECTRE III</span>
-      <span class="badge">scaffold</span>
+      <span class="badge">deep</span>
     </footer>
   </main>
 </div>

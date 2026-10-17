@@ -1,0 +1,8 @@
+{
+  "head": "b88f7c13996f61712b04549d40fd004e8a3c5806",
+  "files": {
+    "docs/modules/discordance_tutorial_side_by_side.html": "0a30dc9bba6e7949852724d66b5ae2ee0d9658511a4fc2b88f96058df8af6900",
+    "tests/test_module_docs.py": "2c14ab34b16ec3ef9cf224c9aeba169a068c96dd36173e407312f34ca1a88798",
+    "tests/test_discordance_deep.py": "d33679557009799b0990b07e3f61ec6cfb2ca2f569b0dd01dab4b680b2e3545b"
+  }
+}

@@ -428,8 +428,8 @@ class TestConcordanceTutorialScaffold:
         assert "B1=" in concordance_html or "B1=1" in concordance_html, "Should show B1 dimension in example"
 
 
-class TestDiscordanceTutorialScaffold:
-    """Tests for discordance_tutorial_side_by_side.html scaffold."""
+class TestDiscordanceDeepTutorial:
+    """Structure and content checks for the deep discordance tutorial."""
 
     @pytest.fixture
     def discordance_html(self) -> str:
@@ -509,25 +509,14 @@ class TestDiscordanceTutorialScaffold:
         assert "veto" in discordance_html.lower()
         assert "d_j" in discordance_html or "d_interp" in discordance_html
 
-    def test_no_deterministic_output_assertions(self, discordance_html):
-        """Tutorial must not have deterministic output assertions like '= 1.0 (veto triggered)'."""
-        assert "= 1.0 (veto triggered)" not in discordance_html
-        assert "= 0.0 (no discordance)" not in discordance_html
-        # No exact array index output predictions
-        assert "d_j[0,0,1] = 1.0" not in discordance_html
-        assert "d_j[0,0,1] = 0.0" not in discordance_html
-
-    def test_no_absolute_causal_language(self, discordance_html):
-        """Tutorial must not use absolute causal language about veto/credibility effects."""
-        content_lower = discordance_html.lower()
-        # No 'regardless' absolute phrasing
-        assert "regardless of concordance" not in content_lower
-        assert "regardless of interpolation" not in content_lower
-        # No strong causal language about d=1 effects
-        assert "kills credibility" not in content_lower
-        assert "drive s(a,b) toward 0" not in content_lower
-        assert "attenuates concordance" not in content_lower
-        # Should use conditional language instead (may, can, depends)
+    def test_verified_example_and_precise_veto_contract(self, discordance_html):
+        """Verified numeric examples are allowed; faux stdout claims are not."""
+        assert 'id="scenario-results"' in discordance_html
+        assert 'id="example"' in discordance_html
+        assert 'stdout' not in discordance_html and '~0.1 ms' not in discordance_html
+        assert '[Placeholder]' not in discordance_html
+        assert 'full-veto rule in credibility() sets S=0' in discordance_html
+        assert 'p=v' in discordance_html and 'veto-first' in discordance_html
 
     def test_has_usage_disclaimer(self, discordance_html):
         """Tutorial must have usage disclaimer about illustrative examples."""
@@ -535,10 +524,12 @@ class TestDiscordanceTutorialScaffold:
         assert "illustrative" in discordance_html.lower()
         assert "do not treat" in discordance_html.lower()
 
-    def test_output_card_marked_illustrative(self, discordance_html):
-        """Output card must be marked as illustrative, not stdout."""
-        # Should not have definitive stdout block without illustrative marker
-        assert 'illustrative' in discordance_html
+    def test_example_inputs_marked_illustrative(self, discordance_html):
+        """The actual worked example contains an adjacent input disclaimer."""
+        example = discordance_html.split('id="example"', 1)[1].split('</details>', 1)[0]
+        assert 'class="usage-disclaimer"' in example
+        assert 'illustrative example inputs only' in example.lower()
+        assert 'specified inputs' in example
 
     def test_has_option3_grounding_facts_line(self, discordance_html):
         """Tutorial must have Option 3 compact facts line with dl."""

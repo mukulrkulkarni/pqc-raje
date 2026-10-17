@@ -1,0 +1,39 @@
+UI/UX static evidence — discordance N1 (computed 2026-10-17, Python; no browser)
+
+HASHES: all three manifest files: manifest==live True; manifest==snapshot True.
+CSS: <style> block diff vs live concordance = 1 line (header comment CONCORDANCE->DISCORDANCE). Notation <section id="notation"> byte-identical.
+CSP/viewport meta identical. Inline style attrs: 0.
+
+CONTRAST (WCAG ratio, light / dark), from CSS tokens:
+  note text / bg 7.58 / 12.78 | note text / surface 7.24 / 12.12
+  text-dim / bg 4.76 / 7.42 | gnd-facts dd dim / surface 4.55 / 7.03
+  link accent / bg 5.17 / 7.41 | link accent / surface 4.94 / 7.02
+  h3/h4 heading / surface 4.94 / 16.22
+  sel-fg on sel-accent (selected .rk, active .j-badge) 5.02 / 10.62
+  "selected" pill sel-accent on sel-soft 4.79 / 10.62
+  tag.ok 4.79 / 10.62 | tag.warn "edge" (new on R5) 4.84 / 11.23
+  unselected .rk muted on border-strong 5.10 / 7.03
+
+STRUCTURE (regex on live file):
+  [OK] 5x .row-head role=button tabindex=0 aria-pressed=false data-range
+  [OK] jump-R1..R5 + row-R1..R5 ids; #main-scroll #prog-txt #prog-fill present
+  [OK] #usage jump link has no data-range (not intercepted by highlight.js)
+  [OK] order: #notation < #io < #example < #row-R1
+  [OK] scenario table: <caption>, 5x th scope=col, 3x th scope=row; inside collapsed <details class="ex"> (no open attr)
+  [OK] <details id="backlinks"> + "Return to notation" #notation link
+  [OK] html[data-theme=system] dark block includes --sel-fg/--accent-fg
+  [OK] theme.js + highlight.js defer, same relative paths
+  [OK] all local #hrefs resolve to ids in file
+  [OK] sibling links resolve (file + fragment id present in target):
+       concordance#row-R3, concordance#example, credibility#row-R4, validate#row-R4, block#row-R3, ranking#row-R2
+  [NO] .hl highlighted lines: concordance=5, discordance=0
+  [NO] h2 rule (pre-existing, also absent in concordance)
+  [NO] usage <pre> syntax spans (pre-existing, also absent in concordance)
+  [NO] #io uses .io-summary not .card (pre-existing, same in concordance)
+  [NO] .jump a.active uses blue accent tokens (pre-existing, same in concordance)
+  [NO] .usage-disclaimer has no CSS rule (pre-existing, same in concordance)
+  Worked-example <summary>: concordance carries .lbl "illustrative inputs"/"calculated example" pills; discordance has none.
+  .steps emphasis: concordance <strong>, discordance <b>.
+  Longest code line: concordance 77 chars; discordance 83 chars (L32 comment, appears in R4 and R5).
+  R5 excerpt L28–L34 repeats L28–L30 (R3) and L32–L34 (R4) verbatim.
+  Sidebar jump titles: Module Overview, Discordance Function, Interpolation, Piecewise Conditions, Veto Semantics, Usage.

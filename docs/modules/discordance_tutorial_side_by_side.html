@@ -187,28 +187,6 @@ pre code{display:block; white-space:pre;}
   background:var(--surface-2); padding:1px 3px; border-radius:2px;}
 .io-item .type{color:var(--text-dim);}
 
-/* Option 3: Grounding facts line + expandable rationale */
-.gnd-facts{display:flex; flex-wrap:wrap; gap:var(--s2) var(--s4);
-  margin-bottom:var(--s3); padding:var(--s2) var(--s3);
-  background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
-  font-size:11px; color:var(--text-muted);}
-.gnd-facts dl{display:flex; flex-wrap:wrap; gap:var(--s1) var(--s4); margin:0;}
-.gnd-facts dt{font-weight:600; color:var(--text); white-space:nowrap;}
-.gnd-facts dt::after{content:":";}
-.gnd-facts dd{margin:0; margin-right:var(--s3);}
-.gnd-details{margin-bottom:var(--s4);}
-.gnd-details summary{font-size:11px; color:var(--accent); cursor:pointer;
-  font-weight:600; padding:var(--s1) 0; list-style:none;}
-.gnd-details summary::before{content:"▸ "; font-size:10px;}
-.gnd-details[open] summary::before{content:"▾ ";}
-.gnd-details summary:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
-.gnd-content{font-size:11.5px; color:var(--text-muted); line-height:1.45;
-  padding:var(--s2) 0 0 var(--s3); border-left:2px solid var(--border);}
-.gnd-content p{margin:0 0 var(--s2);}
-.gnd-content ul{margin:0 0 var(--s2); padding-left:var(--s4);}
-.gnd-content li{margin-bottom:2px;}
-.gnd-content b{color:var(--text); font-weight:600;}
-
 /* usage: code + output side by side */
 .usage{margin-top:var(--s6);}
 .usage .split{grid-template-columns:var(--code-frac) 1fr;}
@@ -250,6 +228,72 @@ footer{margin-top:var(--s6); padding-top:var(--s3); border-top:1px solid var(--b
   .shell{grid-template-columns:1fr;}
   .sidebar{display:none;}
 }
+/* compact cards: I/O Summary and Notation share this grid */
+.card{display:grid; grid-template-columns:repeat(auto-fit, minmax(230px, 1fr)); gap:var(--s2) var(--s4);
+  margin-bottom:var(--s3); padding:var(--s3); background:var(--surface);
+  border:1px solid var(--border); border-radius:var(--radius); scroll-margin-top:64px;}
+.card h3{font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:var(--accent);
+  margin:0 0 var(--s1); font-weight:650; grid-column:1/-1; display:flex; gap:var(--s2); align-items:center;}
+.card h3 .blk{font-family:var(--mono); font-size:9.5px; font-weight:700; background:var(--surface-2);
+  color:var(--text-dim); border-radius:3px; padding:1px 4px; text-transform:none; letter-spacing:0;}
+.item{font-size:12px; line-height:1.45; color:var(--note-text);}
+.item b{color:var(--text); font-weight:600; display:block; margin-bottom:2px;}
+.item code, .note-col code, .gnd-facts code, .ex code{font-family:var(--mono); font-size:11px;
+  background:var(--surface-2); padding:1px 4px; border-radius:3px; color:var(--text);}
+.item ul{margin:0; padding-left:var(--s4);} .item li{margin-bottom:2px;}
+.item .type{color:var(--text-dim);}
+.math{font-family:"Times New Roman",Georgia,serif; font-size:13.5px; color:var(--text); white-space:nowrap;}
+.math var{font-style:italic;}
+.micro{grid-column:1/-1; font-size:11.5px; color:var(--text); background:var(--sel-soft);
+  border-left:3px solid var(--sel-accent); padding:3px var(--s2); border-radius:3px;}
+.micro a{color:var(--sel-accent);}
+/* Option 3 facts (compact dl) + borderless details */
+.gnd-facts{margin-bottom:var(--s3); padding:var(--s2); background:var(--surface); border-radius:var(--radius-sm);}
+.gnd-facts dl{display:flex; flex-wrap:wrap; gap:var(--s1) var(--s4); margin:0; font-size:11.5px;}
+.gnd-facts dt{font-weight:600; color:var(--text-muted);} .gnd-facts dd{margin:0; color:var(--text-dim);}
+details{margin-bottom:var(--s3); font-size:12px;}
+details summary{cursor:pointer; font-weight:600; color:var(--accent); padding:var(--s2);
+  list-style-position:inside;}
+details summary:focus-visible{outline:2px solid var(--accent); outline-offset:1px;}
+details > div{padding:var(--s2) var(--s3); background:var(--surface); border-radius:var(--radius-sm);
+  color:var(--note-text); line-height:1.55;}
+details p{margin:0 0 var(--s2);} details p:last-child{margin-bottom:0;}
+.ex table{border-collapse:collapse; font-size:11.5px; margin:var(--s1) 0 var(--s2);}
+.ex th,.ex td{padding:2px 8px; text-align:left; border-bottom:1px solid var(--border); color:var(--note-text);}
+.ex th{color:var(--text); font-weight:600;}
+.ex .lbl{font-size:10.5px; padding:1px 6px; border-radius:3px; background:var(--warn-soft); color:var(--warn);
+  font-weight:600; margin-left:var(--s1);}
+.ex .lbl.ok{background:var(--ok-soft); color:var(--ok);}
+.ex .steps{columns:2; column-gap:var(--s5);} .ex .steps p{break-inside:avoid;}
+@media (max-width:1100px){.ex .steps{columns:1;}}
+
+/* N1 pilot: accessible links and selected badges; Python syntax tokens unchanged. */
+a{color:var(--accent);} a:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+:root{--sel-fg:#ffffff;--accent-fg:#ffffff;}
+html[data-theme="dark"]{--sel-fg:#052e16;--accent-fg:#0b1120;}
+.row.sel .rk,.row:target .rk{color:var(--sel-fg);}
+.jump a.active .j-badge{background:var(--sel-accent);color:var(--sel-fg);}
+.brand-mark{color:var(--accent-fg);}
+.card h3,.io-summary h3{color:var(--h4-color);}
+.card strong{display:inline;} .math{white-space:normal;}
+.prog-fill{width:0%;}
+.concept-nav{display:flex;flex-wrap:wrap;gap:8px 16px;margin:0 0 12px;font-size:12px;}
+#notation,#io,#example,#backlinks{scroll-margin-top:80px;}
+@media(max-width:768px){.sidebar{display:flex;position:static;height:auto;}.theme{margin-top:12px;}.jump{display:grid;grid-template-columns:1fr 1fr;}.topbar{position:static;}}
+
+@media(prefers-color-scheme:dark){html[data-theme="system"]{
+  --bg:#0b1120; --surface:#0f172a; --surface-2:#1e293b; --border:#1e293b;
+  --border-strong:#334155; --text:#e2e8f0; --text-muted:#d1d5db; --text-dim:#9ca3af;
+  --accent:#60a5fa; --accent-soft:#172554; --accent-border:#1e40af;
+  --code-bg:#0f172a; --code-text:#e2e8f0; --kw:#c4b5fd; --str:#86efac;
+  --com:#9ca3af; --num:#fcd34d; --fn:#93c5fd;
+  --ok:#86efac; --ok-soft:#052e16; --warn:#fcd34d; --warn-soft:#2a1f05;
+  /* Dark mode: neutral near-white text, green accents for headers/selection */
+  --note-text:#d1d5db; --note-size:13.5px;
+  --h4-color:#f3f4f6; --h4-border:#86efac;
+  --sel-accent:#86efac; --sel-soft:#052e16; --sel-border:#22c55e;
+--sel-fg:#052e16;--accent-fg:#0b1120;}}
+
 </style>
 </head>
 <body>
@@ -301,7 +345,7 @@ footer{margin-top:var(--s6); padding-top:var(--s3); border-top:1px solid var(--b
             <span class="j-desc">Edge cases & guards</span>
           </span>
         </a>
-        <a href="#usage" data-range="EX" id="jump-EX">
+        <a href="#usage" id="jump-EX">
           <span class="j-badge">EX</span>
           <span>
             <span class="j-title">Usage</span>
@@ -336,69 +380,82 @@ footer{margin-top:var(--s6); padding-top:var(--s3); border-top:1px solid var(--b
         </div>
         <div class="meta-inline">
           <span>pure function</span>
-          <span>34 lines</span>
+          <span>source excerpts</span>
           <span>5 ranges</span>
         </div>
       </div>
     </div>
 
-    <!-- I/O Summary - compact overview -->
-    <div class="io-summary">
-      <h3>I/O Summary</h3>
-      <div class="io-item">
-        <b>discordance</b>
-        <span class="type">Input:</span> <code>diff: ndarray(B1,B2,C)</code>, <code>p: ndarray(C)</code>, <code>v: ndarray(C)</code><br>
-        <span class="type">Output:</span> <code>ndarray(B1,B2,C)</code> in [0,1]<br>
-        <span class="type">Constraint:</span> <code>p &le; v</code> (validated upstream)
-      </div>
-      <div class="io-item">
-        <b>Formula</b>
-        <span class="type">d_j:</span> piecewise linear in [-v, -p] range<br>
-        <span class="type">Veto:</span> <code>d_j = 1</code> when diff &le; -v<br>
-        <span class="type">None:</span> <code>d_j = 0</code> when diff &ge; -p
-      </div>
-      <div class="io-item">
-        <b>Role in Pipeline</b>
-        <span class="type">Used by:</span> credibility module<br>
-        <span class="type">Effect:</span> May reduce credibility via veto
-      </div>
-    </div>
-
-    <!-- Option 3: Compact facts line + expandable rationale -->
-    <div class="gnd-facts">
-      <dl>
-        <dt>Range</dt><dd>d_j &isin; [0,1]</dd>
-        <dt>Veto</dt><dd>d_j = 1 may reduce credibility</dd>
-        <dt>Constraint</dt><dd>p &le; v (validated upstream)</dd>
-        <dt>Scale</dt><dd>higher-is-better after transformation</dd>
-      </dl>
-    </div>
-
-    <details class="gnd-details">
-      <summary>Scientific grounding &amp; calibration notes</summary>
+    <nav class="concept-nav" aria-label="Concepts"><a href="#notation">Notation</a><a href="#io">I/O Summary</a><a href="#example">Worked example</a><a href="#backlinks">Related concepts</a></nav>
+    <section class="card" id="notation" aria-labelledby="h-nt">
+      <h3 id="h-nt">Notation &mdash; read this first</h3>
+      <div class="item"><b>a and b are objects</b>
+        Both are alternatives: things being ranked (IP addresses, items, projects). They are <strong>not</strong> criteria. A criterion is a property we measure on every object.</div>
+      <div class="item"><b>a &rarr; b is an assertion under assessment</b>
+        <span class="math"><var>a</var> &rarr; <var>b</var></span> reads &ldquo;<var>a</var> is at least as good as <var>b</var>&rdquo;. We are <em>testing</em> this claim, not stating it is already established. <span class="math"><var>b</var> &rarr; <var>a</var></span> is a different claim with its own numbers.</div>
+      <div class="item"><b>Counts (no symbol collisions)</b>
+        <ul><li><strong>N</strong> &mdash; number of objects in the whole dataset</li>
+            <li><strong>C</strong> &mdash; number of criteria (a count only)</li>
+            <li><strong>C(a,b)</strong> &mdash; global concordance of the pair; in [0,1] under the weight contract below; never plain C</li></ul></div>
+      <div class="item"><b>B1 and B2 count objects in comparison groups</b>
+        One block compares a group of <strong>B1 row objects</strong> (playing <var>a</var>) against a group of <strong>B2 column objects</strong> (playing <var>b</var>). Both groups contain object rows from the same performance matrix, not groups of data fields. Row/column names describe their positions in the pairwise result. Groups may overlap, and B1 need not equal B2.</div>
+      <div class="item"><b>Why diff has three axes (B1, B2, C)</b>
+        <code>diff[i,j,k] = g(row i, crit k) &minus; g(col j, crit k)</code>. Here g(a,j) is the oriented performance of object a on criterion j. Axis 1 picks the row object, axis 2 the column object, axis 3 the criterion. Every <var>a</var>,<var>b</var> pair gets one number per criterion.</div>
+      <div class="item"><b>Triple brackets</b>
+        <code>[[[d1, d2, d3]]]</code> = B1&nbsp;=&nbsp;1 (outer), B2&nbsp;=&nbsp;1 (middle), C&nbsp;=&nbsp;3 (inner). Two objects {A,&nbsp;B} give two non-self directed comparisons: A&rarr;B uses <code>g(A)&minus;g(B)</code>, B&rarr;A uses <code>g(B)&minus;g(A)</code>; same magnitudes, flipped signs.</div>
+    </section>
+    <section class="io-summary" id="io" aria-labelledby="h-io">
+      <h3 id="h-io">I/O Summary</h3>
+      <div class="item"><b>discordance(diff, p, v)</b>
+        <span class="type">Input:</span> already-oriented <code>diff: ndarray(B1,B2,C)</code>; <code>p, v: ndarray(C)</code> in each criterion's units.<br>
+        <span class="type">Output:</span> <code>d_j: ndarray(B1,B2,C)</code>. Each entry measures opposition to the assertion a &rarr; b, not a probability.<br>
+        <span class="type">Preconditions:</span> finite values, exact criterion-axis lengths, 0 &le; p &le; v. These are caller responsibilities, not validated here.</div>
+      <div class="item"><b>Piecewise formula (p &lt; v)</b>
+        <span class="math">d<sub>j</sub>(a,b) = 0</span> if diff &ge; &minus;p<sub>j</sub>;<br>
+        <span class="math">d<sub>j</sub>(a,b) = 1</span> if diff &le; &minus;v<sub>j</sub>;<br>
+        otherwise <span class="math">d<sub>j</sub>(a,b) = (&minus;diff &minus; p<sub>j</sub>) / (v<sub>j</sub> &minus; p<sub>j</sub>)</span>.<br>
+        At <b>p=v</b>, the veto-first branch wins at equality: diff=&minus;p=&minus;v gives 1.</div>
+      <div class="item"><b>Pipeline boundary</b>
+        <code>ranking.compute_ranking</code> negates minimize criteria before forming differences. Direct callers must orient data once.<br>
+        This function neither weights criteria nor computes credibility. <a href="credibility_tutorial_side_by_side.html#row-R4">credibility()</a> combines d with C(a,b); full veto sets S(a,b)=0 in this implementation.</div>
+    </section>
+    <div class="gnd-facts"><dl>
+      <dt>Range</dt><dd>d<sub>j</sub> &isin; [0,1] for finite valid inputs</dd>
+      <dt>Direction</dt><dd>larger diff means less opposition</dd>
+      <dt>Boundary</dt><dd>p=v: equality gives 1, not 0</dd>
+      <dt>Weights</dt><dd>not used by discordance()</dd>
+    </dl></div>
+    <details class="gnd-details"><summary>Scientific grounding, calibration and sanity checks</summary>
       <div class="gnd-content">
-        <p><b>Definition:</b> Discordance d_j(a,b) measures opposition from criterion j to the assertion "a outranks b." Values typically fall in [0,1]: 0 indicates no opposition, 1 indicates strong opposition (veto).</p>
-        <p><b>Assumptions:</b> This implementation assumes performance scales are oriented so higher values indicate better performance (after any maximize/minimize transformation). Thresholds p and v are in the same units as criterion scales.</p>
-        <p><b>Threshold calibration:</b></p>
-        <ul>
-          <li><b>Source:</b> Thresholds typically elicited from domain experts or derived from data variability.</li>
-          <li><b>Units:</b> p and v should match the criterion performance scale.</li>
-          <li><b>Ordering:</b> Must satisfy p &le; v; validated upstream in config module.</li>
-        </ul>
-        <p><b>Sanity checks:</b></p>
-        <ul>
-          <li>Verify d_j values fall in [0,1]; values outside suggest errors.</li>
-          <li>Spot-check formula behavior for a few criterion pairs.</li>
-          <li>Consider sensitivity testing with threshold perturbations.</li>
-          <li>NaN/Inf values should be handled upstream; this module assumes complete data.</li>
-        </ul>
+        <p><b>Definition:</b> Discordance measures how strongly one criterion opposes the claim that object a is at least as good as object b. It is not 1 minus concordance: q/p describe support, while p/v describe opposition. Between &minus;v and &minus;p, partial concordance is already zero while discordance increases.</p>
+        <p><b>Calibration:</b> p is a meaningful preference gap; v is a gap large enough to veto the claim. Elicit these from domain judgments and measurement uncertainty. They are distances in the same units as the corresponding criterion, not learned automatically by this function. If a scale changes, transform its thresholds consistently. Check 0 &le; q &le; p &le; v upstream.</p>
+        <p><b>Sanity checks:</b> Inspect diff near &minus;p and &minus;v, then test p=v separately. Increase a's performance with b fixed: opposition must not increase. Reverse objects and recompute; do not assume symmetry. Check missing data before calling; clipping does not repair NaN.</p>
+        <p><b>Validation ownership:</b> CriterionConfig checks finite thresholds at construction. The ranking entry point validates the performance matrix. The low-level discordance function assumes valid inputs; NumPy broadcasting can conceal a length-one vector mismatch. Mutating a configuration after construction can bypass constructor checks.</p>
       </div>
     </details>
+    <details class="ex" id="example"><summary>Worked example: no opposition, partial opposition, then full veto</summary><div>
+      <p class="usage-disclaimer">Illustrative example inputs only. Do not treat these values as recommended defaults. Calculated results below apply only to the specified inputs.</p>
+      <p>Start with the same objects and inputs as the <a href="concordance_tutorial_side_by_side.html#example">concordance example</a>: A=[10,5,7], B=[8,7,6], q=[1,1,1], p=[3,3,3], v=[6,6,6], weights=[0.5,0.3,0.2]. All criteria are higher-is-better. N=2, B1=1, B2=1, C=3. The first row preserves that example; later rows are sensitivity scenarios, not extra objects.</p>
+      <table id="scenario-results"><caption>A &rarr; B: change only B's second performance value</caption>
+        <thead><tr><th scope="col">B second value</th><th scope="col">diff</th><th scope="col">d second criterion</th><th scope="col">C(A,B)</th><th scope="col">S(A,B)</th></tr></thead>
+        <tbody>
+        <tr><th scope="row">7</th><td>[2, &minus;2, 1]</td><td>0</td><td>0.85</td><td>0.85</td></tr>
+        <tr><th scope="row">10.5</th><td>[2, &minus;5.5, 1]</td><td>5/6</td><td>0.7</td><td>7/18 &asymp; 0.388889</td></tr>
+        <tr><th scope="row">11</th><td>[2, &minus;6, 1]</td><td>1</td><td>0.7</td><td>0</td></tr>
+        </tbody></table>
+      <div class="steps">
+        <p><b>Array shape:</b> for the middle scenario, <code>diff = [[[2, -5.5, 1]]]</code>. The outer and middle lists each select one object; the inner list holds three criteria.</p>
+        <p><b>Interpolation:</b> <span class="math">d<sub>2</sub> = (5.5 &minus; 3)/(6 &minus; 3) = 5/6</span>. The other two criteria give zero opposition.</p>
+        <p><b>Reduction:</b> here <span class="math">C(A,B)=0.7 &lt; 5/6 &lt; 1</span>, so credibility multiplies by <span class="math">(1 &minus; 5/6)/(1 &minus; 0.7)</span>. Thus <span class="math">S(A,B)=7/18</span>. Partial opposition need not reduce S when d &le; C.</p>
+        <p><b>Full veto:</b> at diff=&minus;6 on criterion 2, d=1. The separate full-veto rule in credibility() sets S=0. Discordance itself only returns d.</p>
+        <p><b>Reverse claim:</b> the middle scenario B &rarr; A has diff=[&minus;2,5.5,&minus;1], d=[0,0,0], and C=S=0.75. Direction matters; neither score alone proves a final ranking.</p>
+      </div>
+    </div></details>
 
     <div class="rows">
       <!-- R1: Module Overview -->
       <section class="row" id="row-R1">
-        <div class="row-head" role="button" tabindex="0" aria-expanded="true" data-range="R1" aria-label="Toggle R1: Module Overview">
+        <div class="row-head" role="button" tabindex="0" aria-pressed="false" data-range="R1" aria-label="Toggle R1: Module Overview">
           <span class="rk">R1</span>
           <span class="row-title">Module Overview</span>
           <span class="row-lines">L1–L4</span>
@@ -408,67 +465,58 @@ footer{margin-top:var(--s6); padding-top:var(--s3); border-top:1px solid var(--b
         <div class="split">
           <div class="code-col">
             <div class="code-bar">discordance.py<span class="sp">L1–L4</span></div>
-            <pre><code><span class="ln">1</span><span class="str">"""Discordance computation for ELECTRE III."""</span>
+            <pre><code><span class="ln">1</span><span class="str">&quot;&quot;&quot;Discordance computation for ELECTRE III.&quot;&quot;&quot;</span>
 <span class="ln">2</span>
 <span class="ln">3</span><span class="kw">import</span> numpy <span class="kw">as</span> np
 <span class="ln">4</span></code></pre>
           </div>
           <div class="note-col">
             <h4>Purpose</h4>
-            <p>[Placeholder] Module provides discordance index d_j(a,b) measuring opposition to outranking.</p>
+            <p>This module computes per-criterion opposition, not an overall ranking. In ELECTRE III credibility, strong opposition can block an assertion supported by other criteria. This repository then uses net-flow ranking, not ELECTRE III distillation.</p>
             <h4>I/O</h4>
-            <p>[Placeholder] No direct I/O at module level. Single function operates on NumPy arrays.</p>
+            <p>The module imports NumPy and exports discordance(diff, p, v). Every pair of objects has one result per criterion; there is no weighting or summation in this module.</p>
             <h4>Why</h4>
-            <p>[Placeholder] Discordance captures veto power: criterion strongly opposing "a outranks b".</p>
+            <p>Concordance collects support from a coalition of criteria. Discordance retains individual objections instead of averaging them away. A low-weight criterion can therefore trigger a full veto in the later credibility stage.</p>
             <h4>Pitfalls</h4>
-            <p>[Placeholder] Assumes p &le; v validated upstream. Invalid ordering causes undefined results.</p>
+            <p>Do not interpret d as a probability or as 1 minus concordance. An assertion a → b is being assessed, not declared true. See <a href="#notation">notation</a> and the <a href="#example">worked example</a>.</p>
+
           </div>
         </div>
       </section>
 
       <!-- R2: Discordance Function Signature -->
       <section class="row" id="row-R2">
-        <div class="row-head" role="button" tabindex="0" aria-expanded="true" data-range="R2" aria-label="Toggle R2: Discordance Function">
+        <div class="row-head" role="button" tabindex="0" aria-pressed="false" data-range="R2" aria-label="Toggle R2: Discordance Function">
           <span class="rk">R2</span>
           <span class="row-title">Discordance Function</span>
-          <span class="row-lines">L6–L26</span>
+          <span class="row-lines">L6–L8</span>
           <span class="tag ok">pure</span>
           <span class="rule" aria-hidden="true"></span>
         </div>
         <div class="split">
           <div class="code-col">
-            <div class="code-bar">discordance.py<span class="sp">L6–L26</span></div>
-            <pre><code><span class="ln">6</span><span class="kw">def</span> <span class="fn">discordance</span>(
+            <div class="code-bar">discordance.py<span class="sp">L6–L8</span></div>
+            <pre><code><span class="ln">6</span><span class="kw">def</span> discordance(
 <span class="ln">7</span>    diff: np.ndarray, p: np.ndarray, v: np.ndarray
-<span class="ln">8</span>) -&gt; np.ndarray:
-<span class="ln">9</span>    <span class="str">"""Compute discordance d_j(a,b).</span>
-<span class="ln">10</span>
-<span class="ln">11</span><span class="str">    Formula:</span>
-<span class="ln">12</span><span class="str">        d_j = 0  if diff &gt;= -p</span>
-<span class="ln">13</span><span class="str">        d_j = 1  if diff &lt;= -v</span>
-<span class="ln">14</span><span class="str">        d_j = linear otherwise</span>
-<span class="ln">15</span><span class="str">    """</span></code></pre>
+<span class="ln">8</span>) -&gt; np.ndarray:</code></pre>
           </div>
           <div class="note-col">
             <h4>Purpose</h4>
-            <p>[Placeholder] Computes per-criterion discordance d_j(a,b) measuring opposition to "a outranks b".</p>
+            <p>The function maps each oriented performance difference to a measure of opposition. A negative diff means a is worse than b on that criterion.</p>
             <h4>I/O</h4>
-            <ul>
-              <li><code>diff</code> &mdash; [Placeholder] performance differences g(a)-g(b)</li>
-              <li><code>p</code> &mdash; [Placeholder] preference thresholds</li>
-              <li><code>v</code> &mdash; [Placeholder] veto thresholds</li>
-            </ul>
+            <p>diff has shape (B1,B2,C); p and v must each have shape (C,). NumPy aligns these threshold vectors with the last axis. The result has the same shape as diff for these valid shapes and does not modify the input arrays.</p>
             <h4>Why</h4>
-            <p>[Placeholder] Discordance provides veto mechanism absent in pure concordance models.</p>
+            <p>Broadcasting applies criterion k’s thresholds to every object pair, without allocating a separate threshold tensor. Row and column object groups can have different sizes; criteria remain the shared final axis.</p>
             <h4>Pitfalls</h4>
-            <p>[Placeholder] Shape broadcasting requirements. Must have p &le; v validated.</p>
+            <p>The signature does not check dimensions or lengths. A length-one threshold can silently broadcast to all criteria; other mismatches can raise ValueError. Check finite values and exact shapes upstream. The docstring lists the usual p&lt;v branches; for p=v, use the actual veto-first precedence in <a href="#row-R4">R4</a>.</p>
+
           </div>
         </div>
       </section>
 
       <!-- R3: Interpolation Formula -->
       <section class="row" id="row-R3">
-        <div class="row-head" role="button" tabindex="0" aria-expanded="true" data-range="R3" aria-label="Toggle R3: Interpolation">
+        <div class="row-head" role="button" tabindex="0" aria-pressed="false" data-range="R3" aria-label="Toggle R3: Interpolation">
           <span class="rk">R3</span>
           <span class="row-title">Interpolation</span>
           <span class="row-lines">L27–L30</span>
@@ -478,27 +526,28 @@ footer{margin-top:var(--s6); padding-top:var(--s3); border-top:1px solid var(--b
         <div class="split">
           <div class="code-col">
             <div class="code-bar">discordance.py<span class="sp">L27–L30</span></div>
-            <pre><code><span class="ln">27</span>    <span class="com"># Compute interpolated values</span>
+            <pre><code><span class="ln">27</span>    <span class="com"># Compute full interpolated values first for correct broadcasting</span>
 <span class="ln">28</span>    denom = v - p
-<span class="hl"><span class="ln">29</span>    denom = np.where(denom == <span class="num">0</span>, <span class="num">1.0</span>, denom)</span>
+<span class="ln">29</span>    denom = np.where(denom == <span class="num">0</span>, <span class="num">1.0</span>, denom)
 <span class="ln">30</span>    d_interp = (-diff - p) / denom</code></pre>
           </div>
           <div class="note-col">
             <h4>Purpose</h4>
-            <p>[Placeholder] Computes linear interpolation for discordance in transition zone between p and v.</p>
+            <p>For p&lt;v and &minus;v&lt;diff&lt;&minus;p, compute <span class="math">d = (&minus;diff &minus; p)/(v &minus; p)</span>. The numerator is the disadvantage beyond p; the denominator is the width of the transition interval.</p>
             <h4>I/O</h4>
-            <p>[Placeholder] Internal computation. Produces raw interpolated values before piecewise clamping.</p>
+            <p>denom is a (C,) vector; d_interp broadcasts to (B1,B2,C). Intermediate values can fall outside [0,1] because interpolation is computed for every element before the piecewise branches select the final values.</p>
             <h4>Why</h4>
-            <p>[Placeholder] Linear transition models gradual increase in opposition as performance gap widens.</p>
+            <p>At diff=&minus;p the numerator is zero; at diff=&minus;v it equals v&minus;p. This gives the desired endpoints. The interior slope with respect to diff is &minus;1/(v&minus;p): narrower intervals make opposition more sensitive to small changes.</p>
             <h4>Pitfalls</h4>
-            <p>[Placeholder] Division by (v-p) guarded against zero for binary veto case (p=v).</p>
+            <p>When p=v, the denominator guard substitutes 1 to avoid division by zero. This does not approximate the interval: the later branches mask interpolation completely. Invalid v&lt;p cannot be repaired by clipping. Large blocks also allocate intermediate arrays, so memory cost scales with B1×B2×C.</p>
+
           </div>
         </div>
       </section>
 
       <!-- R4: Piecewise Conditions -->
       <section class="row" id="row-R4">
-        <div class="row-head" role="button" tabindex="0" aria-expanded="true" data-range="R4" aria-label="Toggle R4: Piecewise Conditions">
+        <div class="row-head" role="button" tabindex="0" aria-pressed="false" data-range="R4" aria-label="Toggle R4: Piecewise Conditions">
           <span class="rk">R4</span>
           <span class="row-title">Piecewise Conditions</span>
           <span class="row-lines">L32–L34</span>
@@ -508,26 +557,27 @@ footer{margin-top:var(--s6); padding-top:var(--s3); border-top:1px solid var(--b
         <div class="split">
           <div class="code-col">
             <div class="code-bar">discordance.py<span class="sp">L32–L34</span></div>
-            <pre><code><span class="ln">32</span>    <span class="com"># Apply conditions: veto first, then no-discordance</span>
-<span class="hl"><span class="ln">33</span>    d = np.where(diff &lt;= -v, <span class="num">1.0</span>, np.where(diff &gt;= -p, <span class="num">0.0</span>, d_interp))</span>
+            <pre><code><span class="ln">32</span>    <span class="com"># Apply conditions: veto checked first, then no-discordance, then interpolate</span>
+<span class="ln">33</span>    d = np.where(diff &lt;= -v, <span class="num">1.0</span>, np.where(diff &gt;= -p, <span class="num">0.0</span>, d_interp))
 <span class="ln">34</span>    <span class="kw">return</span> np.clip(d, <span class="num">0.0</span>, <span class="num">1.0</span>)</code></pre>
           </div>
           <div class="note-col">
             <h4>Purpose</h4>
-            <p>[Placeholder] Applies three-region piecewise formula: full veto, no discordance, or interpolated.</p>
+            <p>Apply the veto branch first: diff &le; &minus;v gives d=1. Otherwise diff &ge; &minus;p gives d=0. All remaining elements use interpolation. The final clip bounds valid finite results to [0,1].</p>
             <h4>I/O</h4>
-            <p>[Placeholder] Returns clipped array in [0,1] range.</p>
+            <p>The outer np.where defines priority. With p=v, both inequalities hold at equality; the outer branch returns 1. Below the shared threshold d=1; above it d=0. This is a discontinuous binary veto.</p>
             <h4>Why</h4>
-            <p>[Placeholder] Veto checked first ensures d=1 when threshold exceeded, taking precedence over interpolation.</p>
+            <p>Branch order expresses a model convention, not just an implementation detail. Reversing the branches would change d at p=v equality. <a href="concordance_tutorial_side_by_side.html#row-R3">Concordance</a> instead gives c=1 at q=p equality because its support branch is outermost.</p>
             <h4>Pitfalls</h4>
-            <p>[Placeholder] Order of np.where conditions matters. Veto must be outermost check.</p>
+            <p>Do not describe p=v equality as no opposition. NaN survives comparisons and clipping; positive and negative infinity may saturate to 0 and 1. Those finite-looking results do not validate the inputs. Threshold-edge and non-finite tests must distinguish these cases.</p>
+
           </div>
         </div>
       </section>
 
       <!-- R5: Veto Semantics -->
       <section class="row" id="row-R5">
-        <div class="row-head" role="button" tabindex="0" aria-expanded="true" data-range="R5" aria-label="Toggle R5: Veto Semantics">
+        <div class="row-head" role="button" tabindex="0" aria-pressed="false" data-range="R5" aria-label="Toggle R5: Veto Semantics">
           <span class="rk">R5</span>
           <span class="row-title">Veto Semantics</span>
           <span class="row-lines">L28–L34</span>
@@ -538,63 +588,68 @@ footer{margin-top:var(--s6); padding-top:var(--s3); border-top:1px solid var(--b
           <div class="code-col">
             <div class="code-bar">discordance.py<span class="sp">L28–L34</span></div>
             <pre><code><span class="ln">28</span>    denom = v - p
-<span class="hl"><span class="ln">29</span>    denom = np.where(denom == <span class="num">0</span>, <span class="num">1.0</span>, denom)</span>
+<span class="ln">29</span>    denom = np.where(denom == <span class="num">0</span>, <span class="num">1.0</span>, denom)
 <span class="ln">30</span>    d_interp = (-diff - p) / denom
 <span class="ln">31</span>
-<span class="ln">32</span>    <span class="com"># Veto: d=1 may reduce credibility</span>
-<span class="ln">33</span>    d = np.where(diff &lt;= -v, <span class="num">1.0</span>, ...)
+<span class="ln">32</span>    <span class="com"># Apply conditions: veto checked first, then no-discordance, then interpolate</span>
+<span class="ln">33</span>    d = np.where(diff &lt;= -v, <span class="num">1.0</span>, np.where(diff &gt;= -p, <span class="num">0.0</span>, d_interp))
 <span class="ln">34</span>    <span class="kw">return</span> np.clip(d, <span class="num">0.0</span>, <span class="num">1.0</span>)</code></pre>
           </div>
           <div class="note-col">
             <h4>Purpose</h4>
-            <p>[Placeholder] Guards against division by zero when p equals v (binary veto model).</p>
+            <p>Connect d to credibility without assigning that responsibility to this function. In this implementation any d≥1 sets S(a,b)=0, including when C(a,b)=1. For 0≤d&lt;1, only criteria with d&gt;C(a,b) reduce S.</p>
             <h4>I/O</h4>
-            <p>[Placeholder] Internal safeguards. No user-facing I/O changes.</p>
+            <p>credibility() receives C_ab with shape (B1,B2) and d_j with shape (B1,B2,C). It starts from C_ab and applies factors <span class="math">(1&minus;d)/(1&minus;C)</span> where C&lt;d&lt;1. Discordance returns only d_j.</p>
             <h4>Why</h4>
-            <p>[Placeholder] When p=v, discordance is binary (0 or 1). Guard prevents NaN propagation.</p>
+            <p>No opposition (d=0) does not mean full support (c=1). A partial objection below C causes no reduction. A full veto is a separate rule and must not be replaced by a vague “may reduce” statement. The <a href="#example">sensitivity example</a> separates these outcomes.</p>
             <h4>Pitfalls</h4>
-            <p>[Placeholder] d=1 in credibility formula may reduce S(a,b); exact effect depends on aggregation method.</p>
+            <p>Diagonal clearing belongs to compute_block for corresponding self-comparisons, not discordance(). When p=v=0, even diff=0 gives d=1 before any diagonal clearing. Verify this convention against your application. Performance depends on block size, criterion count and hardware; no universal timing or speedup is claimed.</p>
+
           </div>
         </div>
       </section>
     </div>
 
-    <!-- Usage example -->
-    <section class="usage" id="usage">
-      <div class="row-head" style="cursor:default">
-        <span class="rk">EX</span>
-        <span class="row-title">Usage example</span>
-        <span class="rule" aria-hidden="true"></span>
-      </div>
-      <div class="split">
-        <div class="code-col">
-          <div class="code-bar">python<span class="sp">illustrative</span></div>
-          <pre><code><span class="kw">from</span> electre3.discordance <span class="kw">import</span> discordance
-<span class="kw">import</span> numpy <span class="kw">as</span> np
+    <section class="usage" id="usage" aria-labelledby="usage-title">
+      <h2 id="usage-title">Run the sensitivity example</h2>
+      <p class="usage-disclaimer">Illustrative inputs only. Do not treat these thresholds as recommended defaults. This code computes the table above, rather than printing a prewritten result.</p>
+      <div class="split"><div class="code-col"><div class="code-bar">Python — same A, B and three scenarios as above</div>
+<pre><code>import numpy as np
+from electre3.concordance import (
+    partial_concordance, global_concordance,
+)
+from electre3.discordance import discordance
+from electre3.credibility import credibility
 
-<span class="com"># Performance differences (2 alts, 3 criteria)</span>
-diff = np.array([[[ <span class="num">0.5</span>, -<span class="num">0.8</span>, <span class="num">0.1</span>]]])
-p = np.array([<span class="num">0.3</span>, <span class="num">0.3</span>, <span class="num">0.3</span>])
-v = np.array([<span class="num">0.6</span>, <span class="num">0.6</span>, <span class="num">0.6</span>])
-
-d_j = discordance(diff, p, v)
-<span class="com"># d_j shape: (1, 1, 3) - one value per criterion</span></code></pre>
-        </div>
-        <div class="out-card">
-          <div class="code-bar">result<span class="sp">illustrative</span></div>
-          <pre><code>d_j computed, shape matches input
-(actual values depend on thresholds)</code></pre>
-          <div class="out-note"><span>~0.1 ms</span><span>no I/O</span></div>
-        </div>
-      </div>
-      <p class="usage-disclaimer" style="font-size:11px;color:var(--text-dim);margin-top:var(--s2);background:var(--surface-2);padding:var(--s2);border-radius:var(--radius-sm);">
-        <strong>Note:</strong> Illustrative example inputs only. Do not treat values as recommended defaults or expected outputs. Actual outputs depend on your dataset and algorithm settings.
-      </p>
+A = np.array([10., 5., 7.])
+B = np.array([8., 7., 6.])
+q = np.array([1., 1., 1.])
+p = np.array([3., 3., 3.])
+v = np.array([6., 6., 6.])
+weights = np.array([0.5, 0.3, 0.2])
+results = []
+for second_value in (7., 10.5, 11.):
+    scenario_B = B.copy()
+    scenario_B[1] = second_value
+    diff = (A - scenario_B)[None, None, :]
+    c = partial_concordance(diff, q, p)
+    C_ab = global_concordance(c, weights)
+    d = discordance(diff, p, v)
+    S = credibility(C_ab, d)
+    results.append((second_value, d.copy(), C_ab, S))
+    print(second_value, d, C_ab, S)</code></pre></div>
+      <div class="note-col"><h4>Interpretation</h4><p>Each scenario still compares two objects. Only B's second measured performance changes. The criterion count and all thresholds and weights remain fixed.</p><p>For the reverse direction, swap A and scenario_B when forming diff. Do not negate the returned discordance scores.</p></div></div>
     </section>
-
+    <p class="concept-nav">Related: <a href="concordance_tutorial_side_by_side.html#row-R3">Support boundaries</a><a href="credibility_tutorial_side_by_side.html#row-R4">Credibility aggregation</a><a href="validate_tutorial_side_by_side.html#row-R4">Array validation</a></p>
+    <details id="backlinks"><summary>Backlinks and related concepts: where discordance is used</summary><div>
+      <p><a href="block_tutorial_side_by_side.html#row-R3">Block integration</a> calls concordance and discordance before credibility.</p>
+      <p><a href="concordance_tutorial_side_by_side.html#example">Concordance worked example</a> supplies the shared starting inputs and links to this tutorial.</p>
+      <p><a href="ranking_tutorial_side_by_side.html#row-R2">Ranking pipeline</a> orients criteria and processes blocks.</p>
+      <p><a href="#notation">Return to notation</a>. Curated concept links; automatic backlink indexing is not yet implemented.</p>
+    </div></details>
     <footer>
       <span>Layout 2 &mdash; code-dominant split</span>
-      <span class="badge">~70 mono chars @ 1366px</span>
+      <span class="badge">60+ columns: width budget, browser check pending</span>
     </footer>
   </main>
 </div>

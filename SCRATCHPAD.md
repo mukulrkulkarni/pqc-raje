@@ -55,3 +55,25 @@ Follow-up status: checkpoint d8397ba created first; tree verified clean. Approve
 
 ## Current authoritative status — N1 gate closure
 Concordance N1 pilot and corrective batch have all four scoped gate approvals. Checkpoint d8397ba preceded corrections as requested. This record accompanies final corrective commit; working-tree cleanliness checked after commit. Prior pending/blocked entries are historical evidence, superseded by this status. UI browser limitations remain explicit. Phase 5 stays ACTIVE: discordance deep content, remaining cross-links and relevant gates still pending; phases 6–10 unchanged. No cross-page style rollout performed. Scratchpad and milestone tracker synchronized.
+
+
+## Discordance deep pilot — approved and active
+User approved PI-only discordance N1 pilot: 8,000–15,000 tokens, provisional USD 1–3, 10–20 minutes. Deep explanations, calculated veto example, p=v equality, links and positive/negative tests; no algorithm edits, delegated agents, gates or commit. Reuse N1 style and live JS. Ten-phase plan unchanged: 1–4 complete historically, 5 active, 6–10 pending. Show integrated page for user review after verification.
+
+
+## Current authoritative status — discordance pilot awaiting visual review
+PI-only approved chunk complete. Discordance now has deep R1–R5 explanations, compact N1 notation/I-O, calculated collapsed veto example, exact source excerpts and local cross-links. Shared JS, algorithms, routes and other production pages unchanged. Full suite: 679 passed in 4.31s; preflight PASS (existing CSS-position warning); diff check PASS. New tests execute the HTML example against its visible table and exercise p=v priority, shapes, negative cases and file/served links. Stale scaffold assertions retargeted without dropping security checks.
+Evidence: docs/design/committee_phase5/DISCORDANCE_PILOT_STATUS.md. Actual browser/keyboard/width/alignment not verified. User APPROVED discordance pilot for review gates. Independent gates and commit remain pending; no review execution yet. Testing policy revised after user feedback: targeted affected tests per edit; add dependent route/link checks when relevant; run full suite once at final phase checkpoint or for cross-cutting changes, not repeatedly for local edits. Approved page review does not imply full gate completion. Working tree dirty with scoped pilot, tests, evidence and synchronized records. Phase 5 remains ACTIVE: concordance committed, discordance pilot ready but NOT gated or committed. Phases 1–4 historically complete; 6–10 pending, unchanged.
+
+
+## Discordance review gates — approved and ACTIVE
+User reaffirmed ten-phase plan and approved four bounded gates (12,000–20,000 tokens, provisional USD 2–4, 8–12 minutes). Pinned snapshot at docs/design/committee_phase5/discordance_review/manifest.json. Reuse prior 679-test/preflight evidence; targeted checks only as necessary. No automatic retries. Commit after successful gates and assess phase 5 completion; no premature milestone closure.
+
+
+## Discordance gates — partial result, review access blocker
+Engineering APPROVED (21 targeted tests executed), Security APPROVED, UI/UX APPROVED (static/calculated evidence only). Scientific returned NEEDS WORK because snapshot directory listing appeared empty; content review incomplete, not proof of content defects. PI direct verification confirms all three exact snapshot files exist and SHA-256 matches live/manifest; UI/UX independently confirmed hashes. Evidence: discordance_review/snapshot_verification.json. No automatic retry: ask user approval for one exact-path Scientific completion, no new files or tests needed. No commit; phase 5 remains active. All ten phases unchanged.
+
+
+## Current authoritative status — Phase 5 completion (2026-10-17)
+User-approved exact-path Scientific retry succeeded, APPROVED in discordance_review/SCIENTIFIC_COMPLETION.md; no code changes. All four discordance gates approved, pinned hashes unchanged. Phase-final checkpoint verification: 679 passed in 3.73s, preflight PASS (existing warning), diff check PASS. One final full-suite run at phase closure, not repeated local edit testing.
+Phase 5 defined tasks complete: concordance and discordance deep content, examples, negatives, reciprocal links/file+HTTP integrity and gates; final discordance commit accompanies this record. Historical ACTIVE/BLOCKED entries above are superseded. Phase 6 is NEXT but remains PENDING, no implementation authorized/started. Ten-phase order unchanged; phases 7–10 pending. MILESTONE_TRACKER.md condensed to truthful current status; completion evidence docs/design/committee_phase5/COMPLETION.md. Browser interaction/width/alignment and renderer/backlink automation limitations remain explicitly deferred, not passed. Platform milestone API unavailable; workspace records synchronized. Post-commit clean status checked separately.

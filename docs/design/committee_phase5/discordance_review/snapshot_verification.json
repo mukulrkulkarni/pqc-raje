@@ -1,0 +1,20 @@
+[
+  {
+    "source": "docs/modules/discordance_tutorial_side_by_side.html",
+    "snapshot": "docs/design/committee_phase5/discordance_review/snapshot/docs/modules/discordance_tutorial_side_by_side.html",
+    "bytes": 42913,
+    "hash_matches": true
+  },
+  {
+    "source": "tests/test_module_docs.py",
+    "snapshot": "docs/design/committee_phase5/discordance_review/snapshot/tests/test_module_docs.py",
+    "bytes": 68722,
+    "hash_matches": true
+  },
+  {
+    "source": "tests/test_discordance_deep.py",
+    "snapshot": "docs/design/committee_phase5/discordance_review/snapshot/tests/test_discordance_deep.py",
+    "bytes": 8619,
+    "hash_matches": true
+  }
+]

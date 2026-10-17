@@ -134,12 +134,18 @@ def test_bad_bounds_can_raise_from_numpy_broadcasting() -> None:
 
 def test_negative_start_indices_can_silently_do_nothing_or_wrong_thing() -> None:
     """Negative starts rely on NumPy slicing semantics; caller must forbid them."""
-    acc = NetFlowAccumulator(3)
     S_block = np.ones((1, 1))
 
+    acc = NetFlowAccumulator(3)
     acc.update(S_block, row_start=-1, col_start=0)
 
     # For this shape, row slice [-1:0] is empty, so outflow is unchanged.
-    # This kind of behaviour is a caller bug, not an accumulator guarantee.
     assert np.allclose(acc.outflow, np.zeros(3))
     assert np.allclose(acc.inflow, np.array([1.0, 0.0, 0.0]))
+
+    acc = NetFlowAccumulator(3)
+    acc.update(S_block, row_start=0, col_start=-1)
+
+    # For this shape, col slice [-1:0] is empty, so inflow is unchanged.
+    assert np.allclose(acc.inflow, np.zeros(3))
+    assert np.allclose(acc.outflow, np.array([1.0, 0.0, 0.0]))

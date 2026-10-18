@@ -1,0 +1,29 @@
+{
+  "name": "MK-TII-brand-template",
+  "version": "1.0.0",
+  "status": "mutable-source-of-truth",
+  "typography": {
+    "preferredFont": "Arial",
+    "fallbackFonts": ["Arial", "sans-serif"]
+  },
+  "colors": {
+    "primary": {
+      "purple": {"rgb": [100, 0, 255], "hex": "#6400FF"},
+      "navy": {"rgb": [37, 55, 70], "hex": "#253746"},
+      "gray": {"rgb": [117, 120, 123], "hex": "#75787B"},
+      "aqua": {"rgb": [126, 221, 211], "hex": "#7EDDD3"}
+    },
+    "secondary": {
+      "green": {"rgb": [0, 195, 137], "hex": "#00C389"},
+      "lavender": {"rgb": [150, 120, 211], "hex": "#9678D3"},
+      "pink": {"rgb": [246, 117, 153], "hex": "#F67599"},
+      "blueGray": {"rgb": [164, 188, 194], "hex": "#A4BCC2"}
+    }
+  },
+  "usage": {
+    "primary": "Use for headings, key actions, structure, and emphasis.",
+    "secondary": "Use for accents, categories, highlights, and data series.",
+    "contrast": "Check text and graphical-object contrast before delivery.",
+    "updates": "Modify this template file for future brand updates; keep the skill instructions stable."
+  }
+}

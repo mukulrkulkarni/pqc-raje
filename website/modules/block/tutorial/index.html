@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; font-src 'self'; script-src 'self'; style-src 'unsafe-inline';">
+<meta name="color-scheme" content="light dark">
+<title>block.py - Module Tutorial</title>
+<style>
+/* ==========================================================================
+   BLOCK MODULE TUTORIAL - Layout 2 Parity (matches layout2.html mock)
+   ========================================================================== */
+
+:root{
+  --bg:#ffffff; --surface:#f8fafc; --surface-2:#f1f5f9; --border:#e2e8f0;
+  --border-strong:#cbd5e1; --text:#0f172a; --text-muted:#475569; --text-dim:#64748b;
+  --accent:#2563eb; --accent-soft:#eff6ff; --accent-border:#bfdbfe;
+  --code-bg:#f8fafc; --code-text:#0f172a; --kw:#7c3aed; --str:#15803d;
+  --com:#64748b; --num:#b45309; --fn:#2563eb;
+  --ok:#15803d; --ok-soft:#f0fdf4; --warn:#b45309; --warn-soft:#fffbeb;
+  --radius:8px; --radius-sm:5px;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --sidebar-w:200px; --code-frac:62%;
+  /* Dark mode readability + Variant B selection tokens */
+  --note-text:#475569; --note-size:12.5px;
+  --h4-color:#2563eb; --h4-border:transparent;
+  --sel-accent:#15803d; --sel-soft:#f0fdf4; --sel-border:#86efac;
+}
+html[data-theme="dark"]{
+  --bg:#0b1120; --surface:#0f172a; --surface-2:#1e293b; --border:#1e293b;
+  --border-strong:#334155; --text:#e2e8f0; --text-muted:#d1d5db; --text-dim:#9ca3af;
+  --accent:#60a5fa; --accent-soft:#172554; --accent-border:#1e40af;
+  --code-bg:#0f172a; --code-text:#e2e8f0; --kw:#c4b5fd; --str:#86efac;
+  --com:#9ca3af; --num:#fcd34d; --fn:#93c5fd;
+  --ok:#86efac; --ok-soft:#052e16; --warn:#fcd34d; --warn-soft:#2a1f05;
+  /* Dark mode: neutral near-white text, green accents for headers/selection */
+  --note-text:#d1d5db; --note-size:13.5px;
+  --h4-color:#f3f4f6; --h4-border:#86efac;
+  --sel-accent:#86efac; --sel-soft:#052e16; --sel-border:#22c55e;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{background:var(--bg); color:var(--text); font-family:var(--sans);
+  font-size:14px; line-height:1.55;}
+.shell{display:grid; grid-template-columns:var(--sidebar-w) 1fr; min-height:100vh;}
+
+/* sidebar */
+.sidebar{
+  background:var(--surface); border-right:1px solid var(--border);
+  padding:var(--s4) var(--s3); position:sticky; top:0; height:100vh;
+  overflow-y:auto; display:flex; flex-direction:column;
+}
+.brand{display:flex; align-items:center; gap:var(--s2); margin-bottom:var(--s5);
+  padding:0 var(--s1);}
+.brand-mark{width:24px;height:24px;border-radius:var(--radius-sm);
+  background:var(--accent);color:#fff;display:grid;place-items:center;
+  font-weight:700;font-size:11px;flex:none;}
+.brand-text{font-weight:650;font-size:13px;}
+.brand-sub{font-size:10.5px;color:var(--text-dim);}
+.nav-label{font-size:10px; text-transform:uppercase; letter-spacing:.07em;
+  color:var(--text-dim); font-weight:650; margin:0 var(--s1) var(--s2);}
+.jump{display:flex; flex-direction:column; gap:1px; margin-bottom:var(--s5);}
+.jump a{display:grid; grid-template-columns:auto 1fr; gap:var(--s2);
+  align-items:start; padding:6px var(--s2); border-radius:var(--radius-sm);
+  text-decoration:none; color:var(--text-muted);}
+.jump a:hover{background:var(--surface-2); color:var(--text);}
+.jump a:focus-visible{outline:2px solid var(--accent); outline-offset:1px;}
+.jump a.active{background:var(--accent-soft); color:var(--accent);}
+.j-badge{font-family:var(--mono); font-size:9.5px; font-weight:700;
+  background:var(--surface-2); color:var(--text-muted); border-radius:3px;
+  padding:2px 4px; margin-top:1px;}
+.jump a.active .j-badge{background:var(--accent); color:#fff;}
+.j-title{font-size:12.5px; font-weight:600; line-height:1.3;}
+.j-desc{font-size:10.5px; color:var(--text-dim); line-height:1.35;
+  display:block; margin-top:1px;}
+.jump a.active .j-desc{color:var(--accent); opacity:.85;}
+.prog{margin-bottom:var(--s4); padding:0 var(--s2);}
+.prog-bar{height:3px; background:var(--surface-2); border-radius:2px; overflow:hidden;}
+.prog-fill{height:100%; width:20%; background:var(--accent);}
+.prog-txt{font-size:10px; color:var(--text-dim); margin-top:var(--s1);}
+.theme{margin-top:auto; border-top:1px solid var(--border); padding-top:var(--s3);}
+.seg{display:grid; grid-template-columns:repeat(3,1fr); gap:2px;
+  background:var(--surface-2); padding:3px; border-radius:var(--radius-sm);}
+.seg button{font:inherit; font-size:10.5px; font-weight:600; padding:5px 0;
+  border:0; cursor:pointer; background:transparent; color:var(--text-muted);
+  border-radius:4px;}
+.seg button[aria-pressed="true"]{background:var(--bg); color:var(--text);
+  box-shadow:0 1px 2px rgba(0,0,0,.08);}
+.seg button:focus-visible{outline:2px solid var(--accent); outline-offset:1px;}
+
+.main{padding:var(--s4) var(--s5) var(--s6); min-width:0;}
+
+/* sticky compact header merges title + I/O into one band */
+.topbar{
+  position:sticky; top:0; z-index:5; background:var(--bg);
+  border-bottom:1px solid var(--border); margin:0 calc(-1*var(--s5));
+  padding:var(--s3) var(--s5); margin-bottom:var(--s4);
+}
+.topbar-row{display:flex; align-items:center; gap:var(--s4); flex-wrap:wrap;}
+h1{font-size:18px; margin:0; letter-spacing:-.02em; white-space:nowrap;}
+.sig{
+  font-family:var(--mono); font-size:12px; color:var(--text-muted);
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--radius-sm); padding:4px var(--s2); flex:1 1 auto;
+  min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+.sig .fn{color:var(--fn); font-weight:600;}
+.sig .kw{color:var(--kw);}
+.meta-inline{display:flex; gap:var(--s3); font-size:11.5px; color:var(--text-dim);
+  white-space:nowrap;}
+.meta-inline b{color:var(--text); font-weight:600; font-family:var(--mono);
+  font-size:11px;}
+.raise{color:var(--warn); font-family:var(--mono); font-size:11px;}
+
+.rows{display:flex; flex-direction:column; gap:var(--s4);}
+.row{scroll-margin-top:64px;}
+.row-head{display:flex; align-items:center; gap:var(--s2); margin-bottom:var(--s2);
+  cursor:pointer; padding:2px 0;}
+.row-head:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+.rk{font-family:var(--mono); font-size:11px; font-weight:700; color:#fff;
+  background:var(--accent); padding:2px 7px; border-radius:4px; flex:none;}
+.row:not(.sel) .rk{background:var(--border-strong); color:var(--text-muted);}
+.row-title{font-weight:650; font-size:14px; letter-spacing:-.01em;}
+.row-lines{font-family:var(--mono); font-size:11px; color:var(--text-dim);}
+.rule{flex:1; height:1px; background:var(--border);}
+.tag{font-size:10.5px; padding:1px 6px; border-radius:3px;
+  background:var(--surface-2); color:var(--text-muted);}
+.tag.ok{background:var(--ok-soft); color:var(--ok);}
+.tag.warn{background:var(--warn-soft); color:var(--warn);}
+
+/* asymmetric split favouring code */
+.split{display:grid; grid-template-columns:var(--code-frac) 1fr; gap:18px;
+  align-items:start;}
+.code-col{border:1px solid var(--border); border-radius:var(--radius);
+  background:var(--code-bg); overflow:hidden; min-width:0;}
+.row.sel .code-col{border-color:var(--sel-border);
+  box-shadow:0 0 0 2px var(--sel-border);}
+.code-bar{display:flex; align-items:center; gap:var(--s2); padding:4px var(--s3);
+  border-bottom:1px solid var(--border); font-size:10.5px; color:var(--text-dim);
+  font-family:var(--mono); background:var(--surface);}
+.code-bar .sp{margin-left:auto;}
+pre{margin:0; padding:10px 13px; font-family:var(--mono); font-size:13px;
+  line-height:1.5; color:var(--code-text); overflow-x:auto;}
+pre code{display:block; white-space:pre;}
+.ln{color:var(--text-dim); user-select:none; display:inline-block;
+  width:2.2ch; text-align:right; margin-right:1.4ch; opacity:.6;}
+.hl{background:var(--sel-soft); display:block; margin:0 -13px; padding:0 13px;
+  border-left:3px solid var(--sel-accent);}
+.row.sel .hl{border-left-width:4px;}
+.kw{color:var(--kw);} .str{color:var(--str);} .com{color:var(--com);}
+.num{color:var(--num);} .fn{color:var(--fn);}
+
+/* explanation as a borderless margin note - dark mode readability */
+.note-col{min-width:0; padding-top:2px;}
+.note-col h4{font-size:10px; text-transform:uppercase; letter-spacing:.05em;
+  color:var(--h4-color); margin:var(--s2) 0 var(--s1); font-weight:650;
+  padding-left:var(--s2); border-left:2px solid var(--h4-border);}
+.note-col h4:first-child{margin-top:0;}
+.note-col p{margin:0 0 var(--s2); font-size:var(--note-size); color:var(--note-text);
+  line-height:1.55;}
+.note-col p:last-child{margin-bottom:0;}
+.note-col ul{margin:0 0 var(--s2); padding-left:var(--s4); font-size:var(--note-size);
+  color:var(--note-text); line-height:1.5;}
+.note-col li{margin-bottom:2px;}
+.note-col strong{color:var(--text); font-weight:650;}
+.note-col code{font-family:var(--mono); font-size:11px;
+  background:var(--surface-2); padding:1px 4px; border-radius:3px;}
+.callout{border-left:2px solid var(--accent-border); padding-left:var(--s3);}
+.callout.warn{border-left-color:var(--warn);}
+.facts{display:flex; flex-wrap:wrap; gap:var(--s1) var(--s3); margin-top:var(--s2);
+  font-size:11px; color:var(--text-dim);}
+.facts span{font-family:var(--mono);}
+.facts b{color:var(--text-muted); font-weight:600;}
+
+/* I/O Summary - compact dense grid */
+.io-summary{display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));
+  gap:var(--s2); margin-bottom:var(--s4); padding:var(--s3);
+  background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);}
+.io-summary h3{font-size:11px; text-transform:uppercase; letter-spacing:.05em;
+  color:var(--accent); margin:0 0 var(--s1); font-weight:650;
+  grid-column:1/-1;}
+.io-item{font-size:11.5px; line-height:1.4;}
+.io-item b{color:var(--text); font-weight:600; display:block; margin-bottom:2px;}
+.io-item code{font-family:var(--mono); font-size:10.5px;
+  background:var(--surface-2); padding:1px 3px; border-radius:2px;}
+.io-item .type{color:var(--text-dim);}
+
+/* Option 3: Grounding facts line + expandable rationale */
+.gnd-facts{display:flex; flex-wrap:wrap; gap:var(--s2) var(--s4);
+  margin-bottom:var(--s3); padding:var(--s2) var(--s3);
+  background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+  font-size:11px; color:var(--text-muted);}
+.gnd-facts dl{display:flex; flex-wrap:wrap; gap:var(--s1) var(--s4); margin:0;}
+.gnd-facts dt{font-weight:600; color:var(--text); white-space:nowrap;}
+.gnd-facts dt::after{content:":";}
+.gnd-facts dd{margin:0; margin-right:var(--s3);}
+.gnd-details{margin-bottom:var(--s4);}
+.gnd-details summary{font-size:11px; color:var(--accent); cursor:pointer;
+  font-weight:600; padding:var(--s1) 0; list-style:none;}
+.gnd-details summary::before{content:"▸ "; font-size:10px;}
+.gnd-details[open] summary::before{content:"▾ ";}
+.gnd-details summary:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+.gnd-content{font-size:11.5px; color:var(--text-muted); line-height:1.45;
+  padding:var(--s2) 0 0 var(--s3); border-left:2px solid var(--border);}
+.gnd-content p{margin:0 0 var(--s2);}
+.gnd-content ul{margin:0 0 var(--s2); padding-left:var(--s4);}
+.gnd-content li{margin-bottom:2px;}
+.gnd-content b{color:var(--text); font-weight:600;}
+
+/* usage: code + output side by side */
+.usage{margin-top:var(--s6);}
+.usage .split{grid-template-columns:var(--code-frac) 1fr;}
+.out-card{border:1px solid var(--border); border-radius:var(--radius);
+  background:var(--surface); overflow:hidden;}
+.out-card .code-bar{background:var(--surface-2);}
+.out-card pre{font-size:12px; background:transparent;}
+.out-note{padding:var(--s2) var(--s3); border-top:1px solid var(--border);
+  font-size:11.5px; color:var(--text-dim); display:flex; gap:var(--s3);}
+footer{margin-top:var(--s6); padding-top:var(--s3); border-top:1px solid var(--border);
+  font-size:11.5px; color:var(--text-dim); display:flex; justify-content:space-between;}
+.badge{font-family:var(--mono); font-size:10.5px; padding:1px 6px;
+  background:var(--ok-soft); color:var(--ok); border-radius:3px;}
+
+/* Selection highlight - Variant B (green) with non-color cue */
+.row.sel .rk{background:var(--sel-accent); color:#fff;}
+.row.sel .row-head::after{content:"selected"; font-size:9px; font-weight:600;
+  color:var(--sel-accent); background:var(--sel-soft); padding:2px 6px;
+  border-radius:3px; margin-left:var(--s2); text-transform:uppercase;
+  letter-spacing:.03em;}
+
+/* :target fallback for no-JS */
+.row:target{scroll-margin-top:64px;}
+.row:target .rk{background:var(--sel-accent); color:#fff;}
+.row:target .code-col{border-color:var(--sel-border);
+  box-shadow:0 0 0 2px var(--sel-border);}
+
+@media (prefers-reduced-motion:no-preference){
+  .jump a,.code-col,.rk{transition:background-color .12s ease,border-color .12s ease;}
+}
+@media (max-width:1100px){
+  .split{grid-template-columns:1fr;}
+}
+@media (max-width:900px){
+  :root{--sidebar-w:160px;}
+  .j-desc{display:none;}
+}
+@media (max-width:768px){
+  .shell{grid-template-columns:1fr;}
+  .sidebar{display:none;}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">E3</div>
+      <div>
+        <div class="brand-text">block.py</div>
+        <div class="brand-sub">Module tutorial</div>
+      </div>
+    </div>
+
+    <nav aria-label="Jump to section">
+      <div class="nav-label">Jump to</div>
+      <div class="jump" id="jump-nav">
+        <a href="#row-R1" data-range="R1" id="jump-R1">
+          <span class="j-badge">R1</span>
+          <span>
+            <span class="j-title">Overview</span>
+            <span class="j-desc">Contract &amp; signature</span>
+          </span>
+        </a>
+        <a href="#row-R2" data-range="R2" id="jump-R2">
+          <span class="j-badge">R2</span>
+          <span>
+            <span class="j-title">Diff Computation</span>
+            <span class="j-desc">Shape validation</span>
+          </span>
+        </a>
+        <a href="#row-R3" data-range="R3" id="jump-R3">
+          <span class="j-badge">R3</span>
+          <span>
+            <span class="j-title">Concordance + Discordance</span>
+            <span class="j-desc">Module integration</span>
+          </span>
+        </a>
+        <a href="#row-R4" data-range="R4" id="jump-R4">
+          <span class="j-badge">R4</span>
+          <span>
+            <span class="j-title">Credibility</span>
+            <span class="j-desc">Veto aggregation</span>
+          </span>
+        </a>
+        <a href="#row-R5" data-range="R5" id="jump-R5">
+          <span class="j-badge">R5</span>
+          <span>
+            <span class="j-title">Diagonal Handling</span>
+            <span class="j-desc">Edge cases</span>
+          </span>
+        </a>
+        <a href="#usage" data-range="EX" id="jump-EX">
+          <span class="j-badge">EX</span>
+          <span>
+            <span class="j-title">Usage</span>
+            <span class="j-desc">Runnable example</span>
+          </span>
+        </a>
+      </div>
+    </nav>
+
+    <div class="prog" id="prog-indicator">
+      <div class="prog-bar"><div class="prog-fill" id="prog-fill"></div></div>
+      <div class="prog-txt" id="prog-txt">No selection</div>
+    </div>
+
+    <div class="theme">
+      <div class="nav-label">Theme</div>
+      <div class="seg" role="group" aria-label="Theme">
+        <button type="button" data-theme-value="light" aria-pressed="true">Light</button>
+        <button type="button" data-theme-value="dark" aria-pressed="false">Dark</button>
+        <button type="button" data-theme-value="system" aria-pressed="false">Sys</button>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main" id="main-scroll">
+    <!-- I/O summary folded into sticky topbar -->
+    <div class="topbar">
+      <div class="topbar-row">
+        <h1>Block computation</h1>
+        <div class="sig">
+          <span class="fn">compute_block</span>(G_rows, G_cols, q, p, v, weights, is_diagonal) &rarr; ndarray
+        </div>
+        <div class="meta-inline">
+          <span>pure function</span>
+          <span>51 lines</span>
+          <span>5 ranges</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- I/O Summary - compact overview -->
+    <div class="io-summary">
+      <h3>I/O Summary</h3>
+      <div class="io-item">
+        <b>compute_block</b>
+        <span class="type">Input:</span> <code>G_rows: ndarray(B1,C)</code>, <code>G_cols: ndarray(B2,C)</code>, <code>q,p,v,weights: ndarray(C,)</code>, <code>is_diagonal: bool</code><br>
+        <span class="type">Output:</span> <code>S: ndarray(B1,B2)</code> credibility values in [0,1]<br>
+        <span class="type">Contract:</span> Computes S(a,b) for block; clears diagonal if is_diagonal=True
+      </div>
+      <div class="io-item">
+        <b>Intermediate shapes</b>
+        <span class="type">diff:</span> <code>(B1, B2, C)</code> pairwise differences<br>
+        <span class="type">c_j:</span> <code>(B1, B2, C)</code> partial concordance<br>
+        <span class="type">d_j:</span> <code>(B1, B2, C)</code> discordance per criterion
+      </div>
+      <div class="io-item">
+        <b>Integrates</b>
+        <span class="type">Modules:</span> concordance, discordance, credibility<br>
+        <span class="type">Flow:</span> diff &rarr; c_j &rarr; C_ab &rarr; d_j &rarr; S
+      </div>
+    </div>
+
+    <!-- Option 3: Compact facts line + expandable rationale -->
+    <div class="gnd-facts">
+      <dl>
+        <dt>Output</dt><dd>S &isin; [0,1] (clipped in credibility stage)</dd>
+        <dt>Diagonal</dt><dd>when is_diagonal=True, zeros first min(B1,B2) diagonal elements</dd>
+        <dt>Preconditions</dt><dd>G_rows(B1,C), G_cols(B2,C) with matching C; not enforced here</dd>
+        <dt>Mismatch</dt><dd>C must match; otherwise NumPy may error or silently mis-compute</dd>
+      </dl>
+    </div>
+
+    <details class="gnd-details">
+      <summary>Scientific grounding &amp; calibration notes</summary>
+      <div class="gnd-content">
+        <p><b>Blockwise computation:</b> For large N, storing the full N&times;N credibility matrix is infeasible. compute_block processes B1&times;B2 submatrices at a time, enabling O(B&sup2;) memory per iteration instead of O(N&sup2;) total.</p>
+        <p><b>Diagonal clearing:</b> When is_diagonal=True, np.fill_diagonal zeros the first min(B1,B2) diagonal elements. Full self-comparison diagonal (all S(a,a)=0) only occurs when the block is square and G_rows/G_cols correspond to the same alternatives. For non-diagonal blocks, all S(a,b) values are meaningful comparisons.</p>
+        <p><b>Module integration:</b> This function orchestrates the ELECTRE III pipeline for one block: compute pairwise differences, pass through concordance, discordance, and credibility modules. Each module is tested independently; this function composes them.</p>
+        <p><b>Sanity checks:</b></p>
+        <ul>
+          <li>Verify output shape matches (B1, B2).</li>
+          <li>Verify all S values are in [0,1] (clipped by credibility module).</li>
+          <li>For diagonal blocks, verify S[i,i] == 0 for all i.</li>
+          <li>Verify threshold arrays q/p/v/weights have length C matching matrix columns.</li>
+        </ul>
+      </div>
+    </details>
+
+    <div class="rows">
+      <!-- R1: Overview -->
+      <section class="row" id="row-R1">
+        <div class="row-head" role="button" tabindex="0" aria-pressed="false" data-range="R1" aria-label="Toggle R1: Overview">
+          <span class="rk">R1</span>
+          <span class="row-title">Overview</span>
+          <span class="row-lines">L1–L18</span>
+          <span class="tag ok">entry</span>
+          <span class="rule" aria-hidden="true"></span>
+        </div>
+        <div class="split">
+          <div class="code-col">
+            <div class="code-bar">block.py<span class="sp">L1–L18</span></div>
+            <pre><code><span class="ln">1</span><span class="str">"""Block computation for ELECTRE III credibility matrix."""</span>
+<span class="ln">2</span>
+<span class="ln">3</span><span class="kw">import</span> numpy <span class="kw">as</span> np
+<span class="ln">4</span>
+<span class="ln">5</span><span class="kw">from</span> .concordance <span class="kw">import</span> partial_concordance, global_concordance
+<span class="ln">6</span><span class="kw">from</span> .discordance <span class="kw">import</span> discordance
+<span class="ln">7</span><span class="kw">from</span> .credibility <span class="kw">import</span> credibility
+<span class="ln">8</span>
+<span class="hl"><span class="ln">10</span><span class="kw">def</span> <span class="fn">compute_block</span>(</span>
+<span class="ln">11</span>    G_rows: np.ndarray,
+<span class="ln">12</span>    G_cols: np.ndarray,
+<span class="ln">13</span>    q: np.ndarray, p: np.ndarray, v: np.ndarray,
+<span class="ln">14</span>    weights: np.ndarray,
+<span class="ln">15</span>    is_diagonal: <span class="kw">bool</span> = <span class="kw">False</span>,
+<span class="ln">16</span>) -&gt; np.ndarray:</code></pre>
+          </div>
+          <div class="note-col">
+            <h4>Purpose</h4>
+            <p>Computes one B1×B2 block of the credibility matrix S(a,b). It composes concordance, discordance, and credibility for that block.</p>
+            <h4>I/O</h4>
+            <ul>
+              <li><code>G_rows</code> &mdash; performance matrix rows for alternatives a (shape B1&times;C)</li>
+              <li><code>G_cols</code> &mdash; performance matrix rows for alternatives b (shape B2&times;C)</li>
+              <li><code>q, p, v</code> &mdash; threshold arrays (length C)</li>
+              <li><code>weights</code> &mdash; normalized criterion weights (length C)</li>
+              <li><code>is_diagonal</code> &mdash; True if same alternatives in rows and cols</li>
+            </ul>
+            <h4>Why</h4>
+            <p>This single call is what the ranking loop repeats blockwise. It keeps the ranking pipeline small and avoids exposing intermediate arrays.</p>
+            <h4>Pitfalls</h4>
+            <p><code>compute_block</code> does not validate shapes. Callers must ensure column count C matches q/p/v/weights length. Set <code>is_diagonal=True</code> only for diagonal blocks where rows and cols reference the same alternatives (so self-comparisons exist).</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- R2: Diff Computation -->
+      <section class="row" id="row-R2">
+        <div class="row-head" role="button" tabindex="0" aria-pressed="false" data-range="R2" aria-label="Toggle R2: Diff Computation">
+          <span class="rk">R2</span>
+          <span class="row-title">Diff Computation</span>
+          <span class="row-lines">L33–L34</span>
+          <span class="tag ok">core</span>
+          <span class="rule" aria-hidden="true"></span>
+        </div>
+        <div class="split">
+          <div class="code-col">
+            <div class="code-bar">block.py<span class="sp">L33–L34</span></div>
+            <pre><code><span class="ln">33</span>    <span class="com"># Compute differences: diff[i,j,k] = G_rows[i,k] - G_cols[j,k]</span>
+<span class="hl"><span class="ln">34</span>    diff = G_rows[:, np.newaxis, :] - G_cols[np.newaxis, :, :]</span></code></pre>
+          </div>
+          <div class="note-col">
+            <h4>Purpose</h4>
+            <p>Computes pairwise differences for all (a,b) pairs across all criteria. By definition <code>diff[i,j,k] = g_k(a_i) - g_k(b_j)</code>, so positive values mean the row alternative performs better on criterion k (after any minimise-column negation done upstream).</p>
+            <h4>I/O</h4>
+            <ul>
+              <li><code>G_rows[:, np.newaxis, :]</code> &mdash; shape (B1, 1, C)</li>
+              <li><code>G_cols[np.newaxis, :, :]</code> &mdash; shape (1, B2, C)</li>
+              <li><code>diff</code> &mdash; shape (B1, B2, C)</li>
+            </ul>
+            <h4>Why</h4>
+            <p>Broadcasting computes all B1×B2×C differences in one vectorised operation. This is the main O(B1·B2·C) working array.</p>
+            <h4>Pitfalls</h4>
+            <p>If <code>G_rows</code> and <code>G_cols</code> do not share the same C, broadcasting fails (or yields an incorrect shape if a dimension is 1). Validate upstream.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- R3: Concordance + Discordance -->
+      <section class="row" id="row-R3">
+        <div class="row-head" role="button" tabindex="0" aria-pressed="false" data-range="R3" aria-label="Toggle R3: Concordance + Discordance">
+          <span class="rk">R3</span>
+          <span class="row-title">Concordance + Discordance</span>
+          <span class="row-lines">L36–L41</span>
+          <span class="tag ok">integration</span>
+          <span class="rule" aria-hidden="true"></span>
+        </div>
+        <div class="split">
+          <div class="code-col">
+            <div class="code-bar">block.py<span class="sp">L36–L41</span></div>
+            <pre><code><span class="ln">36</span>    <span class="com"># Concordance</span>
+<span class="hl"><span class="ln">37</span>    c_j = partial_concordance(diff, q, p)</span>
+<span class="hl"><span class="ln">38</span>    C_ab = global_concordance(c_j, weights)</span>
+<span class="ln">39</span>
+<span class="ln">40</span>    <span class="com"># Discordance</span>
+<span class="hl"><span class="ln">41</span>    d_j = discordance(diff, p, v)</span></code></pre>
+          </div>
+          <div class="note-col">
+            <h4>Purpose</h4>
+            <p>Runs the two comparisons: concordance (support) and discordance (veto pressure). It produces <code>c_j</code>, <code>C_ab</code>, and <code>d_j</code> for this block.</p>
+            <h4>I/O</h4>
+            <ul>
+              <li><code>c_j</code> &mdash; shape (B1, B2, C), values in [0,1]</li>
+              <li><code>C_ab</code> &mdash; shape (B1, B2), global concordance in [0,1]</li>
+              <li><code>d_j</code> &mdash; shape (B1, B2, C), discordance in [0,1]</li>
+            </ul>
+            <h4>Why</h4>
+            <p>Keeping concordance/discordance in separate modules enables focused unit tests. <code>compute_block</code> is the composition point tested end-to-end.</p>
+            <h4>Pitfalls</h4>
+            <p>Ensure structural constraints hold: <code>0 ≤ q ≤ p ≤ v</code> and <code>w.sum() ≈ 1</code> (use <code>np.isclose</code>). Equality is allowed and has defined boundary behavior: at <code>q=p</code>, concordance returns 1 at <code>diff=-q</code>; at <code>p=v</code>, discordance returns 1 at <code>diff=-v</code>. In this codebase, high-level entry points validate shapes and basic consistency; note: validate.py enforces ordering of q/p/v but does not check q/p/v finiteness if you bypass CriterionConfig; <code>compute_block</code> assumes inputs are consistent.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- R4: Credibility -->
+      <section class="row" id="row-R4">
+        <div class="row-head" role="button" tabindex="0" aria-pressed="false" data-range="R4" aria-label="Toggle R4: Credibility">
+          <span class="rk">R4</span>
+          <span class="row-title">Credibility</span>
+          <span class="row-lines">L43–L44</span>
+          <span class="tag ok">aggregation</span>
+          <span class="rule" aria-hidden="true"></span>
+        </div>
+        <div class="split">
+          <div class="code-col">
+            <div class="code-bar">block.py<span class="sp">L43–L44</span></div>
+            <pre><code><span class="ln">43</span>    <span class="com"># Credibility</span>
+<span class="hl"><span class="ln">44</span>    S = credibility(C_ab, d_j)</span></code></pre>
+          </div>
+          <div class="note-col">
+            <h4>Purpose</h4>
+            <p>Combines global concordance <code>C_ab</code> and per-criterion discordance <code>d_j</code> into final credibility <code>S(a,b)</code>. Only criteria with <code>d_j &gt; C_ab</code> attenuate credibility (veto pressure).</p>
+            <h4>I/O</h4>
+            <ul>
+              <li><code>C_ab</code> &mdash; global concordance (B1, B2)</li>
+              <li><code>d_j</code> &mdash; discordance per criterion (B1, B2, C)</li>
+              <li><code>S</code> &mdash; credibility matrix (B1, B2), values in [0,1]</li>
+            </ul>
+            <h4>Why</h4>
+            <p>The credibility module implements the ELECTRE III veto aggregation. It clips the final <code>S</code> into [0,1] for finite numeric inputs. This is not input validation: NaN remains NaN; direct callers must validate.</p>
+            <h4>Pitfalls</h4>
+            <p>If inputs are inconsistent (wrong shapes, NaN/Inf, non-normalised weights), downstream modules can return NaN or misleading values. High-level entry points validate; <code>compute_block</code> does not.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- R5: Diagonal Handling -->
+      <section class="row" id="row-R5">
+        <div class="row-head" role="button" tabindex="0" aria-pressed="false" data-range="R5" aria-label="Toggle R5: Diagonal Handling">
+          <span class="rk">R5</span>
+          <span class="row-title">Diagonal Handling</span>
+          <span class="row-lines">L46–L50</span>
+          <span class="tag warn">edge</span>
+          <span class="rule" aria-hidden="true"></span>
+        </div>
+        <div class="split">
+          <div class="code-col">
+            <div class="code-bar">block.py<span class="sp">L46–L50</span></div>
+            <pre><code><span class="ln">46</span>    <span class="com"># Diagonal: S(a,a) = 0</span>
+<span class="hl"><span class="ln">47</span>    <span class="kw">if</span> is_diagonal:</span>
+<span class="hl"><span class="ln">48</span>        np.fill_diagonal(S, <span class="num">0.0</span>)</span>
+<span class="ln">49</span>
+<span class="ln">50</span>    <span class="kw">return</span> S</code></pre>
+          </div>
+          <div class="note-col">
+            <h4>Purpose</h4>
+            <p>When <code>is_diagonal=True</code>, NumPy clears the first <code>min(B1,B2)</code> diagonal entries of S. In the ranking pipeline, <code>is_diagonal</code> is only true for diagonal blocks (same alternative group in rows and cols), so these entries correspond to self-comparisons <code>S(a,a)</code>.</p>
+            <h4>I/O</h4>
+            <ul>
+              <li><code>is_diagonal</code> &mdash; True when G_rows and G_cols reference the same alternatives</li>
+              <li><code>S</code> &mdash; modified in place; first min(B1,B2) diagonal elements set to 0.0</li>
+            </ul>
+            <h4>Why</h4>
+            <p>Self-comparison is undefined, so the project uses the convention <code>S(a,a)=0</code>. In net-flow ranking, diagonal entries cancel in <code>outflow(a) - inflow(a)</code>, but clearing them keeps the matrix convention explicit and keeps the separate components (outflow and inflow) free of self-terms.</p>
+            <h4>Pitfalls</h4>
+            <p><code>np.fill_diagonal</code> always zeros <code>min(B1,B2)</code> entries, even for rectangular blocks. The ranking pipeline only sets <code>is_diagonal=True</code> when the block is truly diagonal (same alternatives in rows and cols), so self-terms exist at matching local indices.</p>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Usage example -->
+    <section class="usage" id="usage">
+      <h2 style="font-size:15px; margin:0 0 var(--s3); font-weight:650;">Usage example</h2>
+      <div class="split">
+        <div class="code-col">
+          <div class="code-bar">example.py<span class="sp">snippet</span></div>
+          <pre><code><span class="kw">from</span> electre3.block <span class="kw">import</span> compute_block
+<span class="kw">import</span> numpy <span class="kw">as</span> np
+
+<span class="com"># Example: 3 alternatives, 2 criteria</span>
+G = np.array([[<span class="num">100</span>, <span class="num">8</span>], [<span class="num">120</span>, <span class="num">7</span>], [<span class="num">90</span>, <span class="num">9</span>]])
+q = np.array([<span class="num">5</span>, <span class="num">1</span>])
+p = np.array([<span class="num">10</span>, <span class="num">3</span>])
+v = np.array([<span class="num">20</span>, <span class="num">5</span>])
+w = np.array([<span class="num">0.4</span>, <span class="num">0.6</span>])
+
+<span class="com"># Full matrix as single block (diagonal)</span>
+S = compute_block(G, G, q, p, v, w, is_diagonal=<span class="kw">True</span>)
+print(<span class="str">f"S shape: {S.shape}"</span>)
+print(<span class="str">f"S diagonal: {np.diag(S)}"</span>)</code></pre>
+        </div>
+        <div class="out-card">
+          <div class="code-bar">Output<span class="sp">stdout</span></div>
+          <pre><code>S shape: (3, 3)
+S diagonal: [0. 0. 0.]</code></pre>
+          <div class="out-note">
+            <span>Diagonal is cleared only when is_diagonal=True</span>
+          </div>
+        </div>
+      </div>
+      <p class="usage-disclaimer" style="font-size:11px;color:var(--text-muted);margin-top:var(--s2);background:var(--surface-2);padding:var(--s2);border-radius:var(--radius-sm);">
+        <strong>Note:</strong> Illustrative example inputs only. Do not treat values as recommended defaults or expected outputs. Actual outputs depend on your dataset and threshold calibration.
+      </p>
+    </section>
+
+    <footer>
+      <span>block.py &middot; ELECTRE III</span>
+      <span class="badge">deep</span>
+    </footer>
+  </main>
+</div>
+
+<script src="../assets/theme.js"></script>
+<script src="../assets/highlight.js"></script>
+</body>
+</html>

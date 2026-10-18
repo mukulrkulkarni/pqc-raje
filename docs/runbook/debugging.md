@@ -82,6 +82,17 @@ Checks:
 
 - Main suite:
   - `python -m pytest -q tests/`
+
+## CSV input: common failure and fix
+
+If your CSV has headers or an ID column, `np.loadtxt` will fail.
+
+Use the converter:
+
+```bash
+python scripts/convert_matrix_csv.py in.csv out/matrix.npy --has-header --id-col id
+python -m electre3.cli out/matrix.npy criteria.json -y
+```
 - Focused suites:
   - `python -m pytest -q tests/test_block_deep.py`
   - `python -m pytest -q tests/test_accumulator_deep.py`

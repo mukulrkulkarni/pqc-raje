@@ -39,6 +39,15 @@ def app_ui():
 <p><a href="/">Back to docs</a></p></body></html>''')
 
 
+@bp.route("/docs/modules")
+def modules_index():
+    """Serve a stable modules index page."""
+    index_path = DOCS_DIR / "modules" / "index.html"
+    if not index_path.exists():
+        abort(404)
+    return send_file(index_path, mimetype="text/html")
+
+
 @bp.route("/docs/modules/<name>")
 def module_doc(name: str):
     if not _validate_doc_name(name):

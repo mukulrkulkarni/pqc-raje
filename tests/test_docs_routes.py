@@ -66,9 +66,14 @@ class TestAppRoute:
 class TestModuleDocs:
     """Tests for module documentation routes."""
 
+    def test_modules_index_returns_html(self, client):
+        """Modules index should return 200."""
+        response = client.get("/docs/modules")
+        assert response.status_code == 200
+
     def test_valid_module_doc(self, client):
         """Valid module doc should return 200."""
-        for name in ["config", "block", "accumulator"]:
+        for name in ["config", "validate", "block", "accumulator", "ranking"]:
             response = client.get(f"/docs/modules/{name}")
             assert response.status_code == 200
 
@@ -136,6 +141,10 @@ class TestAllowListEnforcement:
         for name in allowed:
             response = client.get(f"/docs/modules/{name}")
             assert response.status_code == 200, f"{name} should be allowed"
+
+        # Index route is stable and should not be blocked by allow-list rules.
+        response = client.get("/docs/modules")
+        assert response.status_code == 200
 
     def test_random_names_blocked(self, client):
         """Random names not in allow-list should be blocked."""

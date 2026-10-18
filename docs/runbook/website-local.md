@@ -10,17 +10,20 @@ The static companion website uses root-absolute links like `/modules/index.html`
 
 Using a local HTTP server makes `/modules/...` resolve under the website root.
 
-## Recommended (script)
+## Recommended (single entrypoint)
 
 From the repository root:
 
 ```bash
-python scripts/serve_website.py
+python scripts/dev_local.py
 ```
 
 Then open:
 
-- http://localhost:8000/
+- Website: http://localhost:8000/
+- App: http://localhost:5000/
+
+(You can still run `scripts/serve_website.py` if you only need docs.)
 
 To change port:
 

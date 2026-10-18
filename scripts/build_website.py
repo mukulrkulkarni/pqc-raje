@@ -62,13 +62,17 @@ def inject_primary_nav(html: str, active_href: str) -> str:
     Requirements (user):
     - Must provide a way back to Getting Started from tutorial pages.
     - Must include both local website and Flask home links.
+
+    Design choice:
+    - Keep this nav *non-sticky* to avoid overlapping the tutorial's own sticky
+      sidebar and sticky topbar.
     """
-    if 'aria-label="Primary"' in html:
-        return html
+    if not re.search(r"<body(?:\s|>)", html, flags=re.IGNORECASE):
+        raise ValueError('Tutorial HTML missing <body> tag')
 
     nav = (
-        '<nav aria-label="Primary" style="position:sticky;top:0;z-index:10;'
-        'background:var(--bg,#fff);border-bottom:1px solid var(--border,#e2e8f0);'
+        '<nav aria-label="Primary" style="background:var(--bg,#fff);'
+        'border-bottom:1px solid var(--border,#e2e8f0);'
         'padding:10px 16px;font-family:var(--sans,system-ui);font-size:13px;">'
         '<a href="/index.html" style="margin-right:12px;text-decoration:none;">Getting Started</a>'
         '<a href="/app/index.html" style="margin-right:12px;text-decoration:none;">App</a>'
@@ -79,7 +83,18 @@ def inject_primary_nav(html: str, active_href: str) -> str:
         '</nav>'
     )
 
-    return re.sub(r"(<body[^>]*>)", r"\1\n" + nav, html, count=1, flags=re.IGNORECASE)
+    if 'aria-label="Primary"' in html:
+        # Ensure required Flask back-links are present even if a nav exists.
+        if 'http://localhost:5000/' in html and 'http://localhost:5000/docs/modules' in html:
+            return html
+        # If an existing nav is present but lacks required links, fail fast.
+        raise ValueError('Tutorial HTML has Primary nav but lacks required links')
+
+    # Inject after the first real <body ...> tag.
+    new_html, n = re.subn(r"(<body(?:\s|>)[^>]*>)", r"\1\n" + nav, html, count=1, flags=re.IGNORECASE)
+    if n != 1:
+        raise ValueError(f"Expected exactly one <body> injection, got {n}")
+    return new_html
 
 
 def copy_assets() -> None:

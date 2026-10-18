@@ -52,21 +52,33 @@ def normalize_tutorial_assets(html: str) -> str:
     # Tutorials copied under /modules/<name>/tutorial/index.html need ../assets/
     html = html.replace('src="assets/theme.js"', 'src="../assets/theme.js"')
     html = html.replace('src="assets/highlight.js"', 'src="../assets/highlight.js"')
+    # Some tutorials already use ../assets; keep stable.
     return html
 
 
-def ensure_primary_nav(html: str, active: str) -> str:
-    # Minimal approach: if page already has <nav aria-label="Primary">, do nothing.
+def inject_primary_nav(html: str, active_href: str) -> str:
+    """Inject a simple primary nav after <body>.
+
+    Requirements (user):
+    - Must provide a way back to Getting Started from tutorial pages.
+    - Must include both local website and Flask home links.
+    """
     if 'aria-label="Primary"' in html:
         return html
 
-    nav = read_text(WEBSITE / "_includes" / "primary-nav.html")
-    # Mark active with aria-current where possible.
-    nav = nav.replace(f'href="/{active}/index.html"', f'href="/{active}/index.html" aria-current="page"')
-    if active == "index":
-        nav = nav.replace('href="/index.html"', 'href="/index.html" aria-current="page"')
+    nav = (
+        '<nav aria-label="Primary" style="position:sticky;top:0;z-index:10;'
+        'background:var(--bg,#fff);border-bottom:1px solid var(--border,#e2e8f0);'
+        'padding:10px 16px;font-family:var(--sans,system-ui);font-size:13px;">'
+        '<a href="/index.html" style="margin-right:12px;text-decoration:none;">Getting Started</a>'
+        '<a href="/app/index.html" style="margin-right:12px;text-decoration:none;">App</a>'
+        '<a href="/modules/index.html" style="margin-right:12px;text-decoration:none;">Tutorials</a>'
+        '<span style="color:var(--text-dim,#64748b);margin:0 8px;">|</span>'
+        '<a href="http://localhost:5000/" style="margin-right:12px;text-decoration:none;">Flask home</a>'
+        '<a href="http://localhost:5000/docs/modules" style="text-decoration:none;">Flask modules</a>'
+        '</nav>'
+    )
 
-    # Insert after <body> if found.
     return re.sub(r"(<body[^>]*>)", r"\1\n" + nav, html, count=1, flags=re.IGNORECASE)
 
 
@@ -111,6 +123,7 @@ def build_module(name: str, cfg: dict) -> None:
     tut = read_text(src_tut)
     tut = normalize_tutorial_assets(tut)
     tut = apply_domains(tut, docs_base, app_base)
+    tut = inject_primary_nav(tut, active_href=f"/modules/{name}/tutorial/")
     dst_tut = WEBSITE / "modules" / name / "tutorial" / "index.html"
     write_text(dst_tut, tut)
 

@@ -53,6 +53,7 @@ footer { text-align: center; padding: var(--space-xl); border-top: 1px solid var
 <h1>ELECTRE III</h1>
 <p>Scalable multi-criteria decision analysis with blocked computation for large-scale ranking problems.</p>
 <div class="nav">
+<a href="/" class="btn btn-secondary" aria-current="page">Getting Started</a>
 <a href="/app" class="btn btn-primary">Launch App</a>
 <a href="/docs/modules" class="btn btn-secondary">Tutorial Docs</a>
 </div>
@@ -91,14 +92,14 @@ ranking, acc = compute_ranking(G, criteria)
 print("Best alternative:", ranking[0])</pre>
 
 <h2>ELECTRE III Method</h2>
-<p>This implementation uses ELECTRE III credibility computation with net flow ranking (a simplified approach). Alternatives are compared pairwise using:</p>
+<p>This implementation uses ELECTRE III credibility computation with <strong>net flow ranking</strong> (a complete ranking via scalar scores). Alternatives are compared pairwise using:</p>
 <ul>
 <li><strong>Concordance</strong>: How much criteria support "a outranks b"</li>
 <li><strong>Discordance</strong>: How strongly any criterion vetoes the assertion</li>
 <li><strong>Credibility</strong>: Combined outranking strength S(a,b)</li>
 <li><strong>Net Flow</strong>: Final score φ(a) = Σ S(a,b) - Σ S(b,a) (replaces traditional distillation)</li>
 </ul>
-<p><em>Note: Traditional ELECTRE III uses ascending/descending distillation for partial preorders. This implementation uses net flow scoring for a complete ranking.</em></p>
+<p><em>Note:</em> Traditional ELECTRE III uses ascending/descending distillation for partial preorders. This project ranks alternatives by <strong>raw net flow</strong> (descending) for a complete ordering.</p>
 
 <h2>Threshold Parameters</h2>
 <table>

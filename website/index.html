@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; font-src 'self'; script-src 'self'; style-src 'unsafe-inline';">
+<title>ELECTRE III - Getting Started</title>
+<style>
+:root {
+  --color-bg: #ffffff;
+  --color-bg-alt: #f8f9fa;
+  --color-text: #1a1a2e;
+  --color-text-muted: #6c757d;
+  --color-primary: #2563eb;
+  --color-primary-hover: #1d4ed8;
+  --color-accent: #f59e0b;
+  --color-border: #e5e7eb;
+  --font-sans: Arial, sans-serif;
+  --font-mono: 'Consolas', 'Monaco', monospace;
+  --space-xs: 0.25rem; --space-sm: 0.5rem; --space-md: 1rem;
+  --space-lg: 1.5rem; --space-xl: 2rem; --space-2xl: 3rem;
+  --radius-sm: 4px; --radius-md: 8px; --radius-lg: 12px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-sans); font-size: 16px; line-height: 1.6; color: var(--color-text); background: var(--color-bg); }
+.container { max-width: 1100px; margin: 0 auto; padding: var(--space-xl); }
+.hero { text-align: center; padding: var(--space-2xl) 0; border-bottom: 1px solid var(--color-border); margin-bottom: var(--space-2xl); }
+.hero h1 { font-size: 2.5rem; margin-bottom: var(--space-md); color: var(--color-primary); }
+.hero p { font-size: 1.25rem; color: var(--color-text-muted); max-width: 600px; margin: 0 auto var(--space-lg); }
+.btn { display: inline-block; padding: var(--space-sm) var(--space-lg); font-size: 1rem; font-weight: 500; text-decoration: none; border-radius: var(--radius-sm); transition: background 0.2s; }
+.btn-primary { background: var(--color-primary); color: white; }
+.btn-primary:hover { background: var(--color-primary-hover); }
+.btn-secondary { background: var(--color-bg-alt); color: var(--color-text); border: 1px solid var(--color-border); }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--space-lg); margin-bottom: var(--space-2xl); }
+.card { background: var(--color-bg-alt); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-lg); }
+.card h3 { color: var(--color-primary); margin-bottom: var(--space-sm); }
+.card p { color: var(--color-text-muted); margin-bottom: var(--space-md); }
+h2 { font-size: 1.75rem; margin: var(--space-2xl) 0 var(--space-lg); color: var(--color-text); border-bottom: 2px solid var(--color-primary); padding-bottom: var(--space-sm); }
+pre { background: var(--color-bg-alt); padding: var(--space-md); border-radius: var(--radius-sm); overflow-x: auto; font-family: var(--font-mono); font-size: 0.9rem; margin: var(--space-md) 0; }
+code { font-family: var(--font-mono); background: var(--color-bg-alt); padding: 2px 6px; border-radius: 3px; }
+ul, ol { margin: var(--space-md) 0; padding-left: var(--space-xl); }
+li { margin-bottom: var(--space-xs); }
+.nav { display: flex; gap: var(--space-md); justify-content: center; margin-top: var(--space-lg); }
+table { width: 100%; border-collapse: collapse; margin: var(--space-md) 0; }
+th, td { border: 1px solid var(--color-border); padding: var(--space-sm) var(--space-md); text-align: left; }
+th { background: var(--color-bg-alt); }
+footer { text-align: center; padding: var(--space-xl); border-top: 1px solid var(--color-border); color: var(--color-text-muted); margin-top: var(--space-2xl); }
+</style>
+</head>
+<body>
+<div class="container">
+<header class="hero">
+<h1>ELECTRE III</h1>
+<p>Scalable multi-criteria decision analysis with blocked computation for large-scale ranking problems.</p>
+<div class="nav">
+<a href="https://app.pqcmig.scoring.draft/" class="btn btn-primary">Launch App</a>
+<a href="/modules/index.html" class="btn btn-secondary">Tutorial Docs</a>
+</div>
+</header>
+
+<section class="cards">
+<div class="card">
+<h3>Scalable</h3>
+<p>O(N) memory via blocked computation. Rank 100,000+ alternatives without memory overflow.</p>
+</div>
+<div class="card">
+<h3>Accurate</h3>
+<p>Full ELECTRE III implementation with concordance, discordance, and credibility indices.</p>
+</div>
+<div class="card">
+<h3>Fast</h3>
+<p>Optional Numba acceleration for ~4x speedup on large matrices.</p>
+</div>
+</section>
+
+<h2>Quick Start</h2>
+<p>Install the package:</p>
+<pre>pip install electre3</pre>
+
+<p>Run a ranking:</p>
+<pre>from electre3.config import CriterionConfig
+from electre3.ranking import compute_ranking
+import numpy as np
+
+G = np.array([[80, 70], [75, 85], [90, 60]])
+criteria = [
+    CriterionConfig("Price", weight=0.6, q=5, p=10, v=20),
+    CriterionConfig("Quality", weight=0.4, q=3, p=8, v=15),
+]
+ranking, acc = compute_ranking(G, criteria)
+print("Best alternative:", ranking[0])</pre>
+
+<h2>ELECTRE III Method</h2>
+<p>This implementation uses ELECTRE III credibility computation with net flow ranking. Alternatives are compared pairwise using:</p>
+<ul>
+<li><strong>Concordance</strong>: How much criteria support "a outranks b"</li>
+<li><strong>Discordance</strong>: How strongly any criterion vetoes the assertion</li>
+<li><strong>Credibility</strong>: Combined outranking strength S(a,b)</li>
+<li><strong>Net Flow</strong>: Final score φ(a) = Σ S(a,b) - Σ S(b,a)</li>
+</ul>
+
+<h2>Module Documentation</h2>
+<p>Start with the deep tutorials:</p>
+<ul>
+<li><a href="/modules/config/">config</a></li>
+<li><a href="/modules/validate/">validate</a></li>
+<li><a href="/modules/block/">block</a></li>
+<li><a href="/modules/accumulator/">accumulator</a></li>
+<li><a href="/modules/ranking/">ranking</a></li>
+</ul>
+
+<footer>
+ELECTRE III Documentation &copy; 2026
+</footer>
+</div>
+</body>
+</html>

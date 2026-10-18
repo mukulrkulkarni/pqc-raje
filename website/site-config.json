@@ -1,0 +1,12 @@
+{
+  "docsBaseUrl": "https://docs.pqcmig.scoring.draft",
+  "appBaseUrl": "https://app.pqcmig.scoring.draft",
+  "landingOrder": ["getting-started", "app", "tutorials"],
+  "nav": {
+    "primary": [
+      {"id": "getting-started", "label": "Getting Started", "href": "/index.html"},
+      {"id": "app", "label": "App", "href": "/app/index.html"},
+      {"id": "tutorials", "label": "Tutorials", "href": "/modules/index.html"}
+    ]
+  }
+}

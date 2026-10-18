@@ -1,0 +1,4 @@
+Ranking (best first):
+1. B (Alt 1)
+2. A (Alt 0)
+3. C (Alt 2)

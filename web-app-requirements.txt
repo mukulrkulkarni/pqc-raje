@@ -29,9 +29,11 @@ This web app runs the same core data model as the CLI pipeline:
 
 The criteria file is a JSON **list** of length **C** (one entry per criterion). Each entry includes:
 - `name` (string)
-- `weight` (float, > 0)
+- `weight` (float, > 0; all weights sum to 1)
 - `q`, `p`, `v` (floats, 0 ≤ q ≤ p ≤ v)
-- `maximize` (bool)
+- `maximize` (strict JSON bool)
+
+The shared CLI and web contract requires complete finite matrix scores normalized to `[0, 1]`. The web workflow rejects inputs outside this range before computation.
 
 The **order** of criteria in this list defines the column order for the matrix.
 
@@ -122,18 +124,18 @@ Notes:
 |---|-----------|------|
 | 1 | **Determinism** | `compute_ranking(G, criteria, config) → (ranking, accumulator)` is pure with respect to validated inputs and configuration. The canonical score vector is `accumulator.net_flow()`. For identical inputs, `ranking` and scores must match element-by-element, including shape, dtype, and values. Tied alternatives have no guaranteed permutation unless a tie policy is specified. |
 | 2 | **Byte identity** | CLI and web use the same canonical serializers. Repeated outputs must be byte-for-byte identical, including encoding, newline style, field order, numeric formatting, JSON key order, and NumPy dtype/order. Verification uses a byte-level comparison (`cmp` or `filecmp.cmp(..., shallow=False)`). |
-| 3 | **Blockwise compute** | `config.block_size` is a documented positive integer with one shared default for CLI and web. For `B1, B2 ≤ block_size`, pairwise intermediates have shape `(B1, B2, C)` and credibility blocks have shape `(B1, B2)`. Retain only current-block intermediates plus O(N) accumulators; never materialize or persist an N×N result. |
+| 3 | **Blockwise compute** | `config.block_size` is a positive integer from 1 through 10,000, with shared default 1,000. For `B1, B2 ≤ block_size`, pairwise intermediates have shape `(B1, B2, C)` and credibility blocks have shape `(B1, B2)`. Retain only current-block intermediates plus O(N) accumulators; never materialize or persist an N×N result. |
 | 4 | **Block-size invariance** | For fixed valid inputs, changing `block_size` preserves scores, ranking, and canonical output bytes. The implementation must use a canonical accumulation/reduction order so floating-point summation does not create block-size-dependent bytes. |
-| 5 | **Input allow-list and bounds** | Accept only `.csv`, `.npy`, `.npz`, and criteria JSON. Enforce maximum upload bytes and maximum matrix rows before computation. Reject unknown formats and client-supplied filesystem paths. |
+| 5 | **Input allow-list and bounds** | Accept only `.csv`, `.npy`, `.npz`, and criteria JSON for the shared contract; `.parquet` is optional outside the web allow-list. Enforce a maximum upload size of 100 MiB and maximum matrix rows of 100,000 before computation. Reject unknown formats and client-supplied filesystem paths. |
 | 6 | **Value validation** | Reject malformed, missing, non-numeric, NaN, or Inf matrix values, invalid shapes, and invalid criteria values. For CSV only, a missing-cell policy may replace missing cells with a numeric value in `[0, 1]` only when the user checks an explicit approval checkbox. The default replacement is `0`; if the checkbox is not selected, reject the CSV. Missing values in criteria JSON always cause rejection. |
 | 7 | **Criteria contract** | Accept 1–8 criteria. Require `name`, `weight`, `q`, `p`, `v`, and `maximize`; enforce `weight > 0`, `0 ≤ q ≤ p ≤ v`, and boolean `maximize`. |
 | 8 | **Header contract** | Headerless CSV uses display-only labels `Asset ID` plus criteria names in JSON order. Headered CSV must contain an asset-ID column followed by criterion headers that match criteria names in order; reject misalignment before computation. |
 | 9 | **CSP and local-only execution** | Bind to `127.0.0.1`, make no external requests, use server-rendered HTML without JavaScript, and enforce `default-src 'none'; style-src 'self'; form-action 'self'; base-uri 'none'; object-src 'none'; frame-ancestors 'none'`. Omit `script-src`. |
 | 10 | **Upload containment** | Keep uploads in memory or an app-controlled temporary location. Enforce bounds, never trust client paths, and delete temporary data after processing or expiry. |
 | 11 | **Core isolation** | Ranking modules contain no Flask, filesystem/network I/O, clock, or randomness operations. |
-| 12 | **Bounded result cache** | Store only the latest result in a bounded process-memory cache, limited by entries and bytes. Do not store raw inputs in the cache or signed cookies. |
+| 12 | **Bounded result cache** | Store only the latest result in a process-memory cache. Limit total cached serialized data to 32 MiB and each artifact to 16 MiB. Split larger logical outputs into ordered artifacts with a manifest and SHA-256 checksums. Do not store raw inputs or results in signed cookies. |
 | 13 | **Token protection** | Generate cryptographically random opaque download tokens, bind them to the active local session, avoid logging/referrer leakage, and compare tokens safely. |
-| 14 | **TTL, eviction, and deployment scope** | Expire cached results after a short documented TTL, evict on replacement and under memory pressure, and define unknown/expired-token behavior. Support only one worker unless shared state is deliberately added; restarts invalidate cached downloads. |
+| 14 | **TTL, eviction, and deployment scope** | Expire cached results after 30 minutes, evict on replacement and memory pressure, and define unknown/expired-token behavior. Support only one worker unless shared state is deliberately added; restarts invalidate cached downloads. Successful downloads are limited to 30 per session per minute. |
 | 15 | **Download controls and tests** | Downloads are read-only, rate-limited, timeout-bounded, and return exact cached bytes with correct content types. Tests cover malformed/expired tokens, size limits, eviction, replacement, races, restart invalidation, exact bytes, deterministic scores, ranking, and block-size invariance. |
 
 ---
@@ -159,6 +161,8 @@ scores = accumulator.net_flow()
 - `scores`: canonical net-flow vector with shape `(N,)`.
 - `accumulator`: O(N) inflow/outflow state.
 - Web and CLI must not implement separate ELECTRE calculations.
+- Shared input validation requires weights summing to 1 and finite matrix scores in `[0, 1]`.
+- A feasibility gate rejects runs whose measured p95 estimate exceeds 300 seconds; the hard computation timeout is 330 seconds.
 
 ### Input and validation pipeline
 
@@ -171,7 +175,8 @@ scores = accumulator.net_flow()
 7. Apply the missing-CSV-value checkbox policy.
 8. Reject missing criteria values, non-numeric values, NaN, Inf, invalid shape, excessive rows, and oversized uploads.
 9. Show the validation report and require confirmation.
-10. Run `compute_ranking` only after successful validation.
+10. Estimate parsing, validation, computation, and serialization time using the measured p95 model; reject estimates above 300 seconds.
+11. Run `compute_ranking` only after successful validation and feasibility approval. Enforce the 330-second hard timeout and do not cache partial results.
 
 ### Shared compute configuration
 
@@ -181,6 +186,7 @@ scores = accumulator.net_flow()
 - The implementation computes `(B1, B2, C)` pairwise arrays and `(B1, B2)` credibility blocks.
 - It retains only current-block intermediates and O(N) accumulators.
 - It must preserve scores and canonical serialized bytes across supported block sizes.
+- Benchmark the adapter at `N = 100, 500, 1,000, 5,000, 10,000, 15,000`, with `C = 4, 8` and block sizes `1,000, 5,000, 10,000`; use measured p95 plus safety margin for the feasibility estimate.
 
 ### Result view and serialization
 
@@ -192,7 +198,7 @@ The result page shows the top 10 rows with:
 - raw net-flow score
 - tie indication when scores are equal
 
-The full result is serialized once using shared canonical serializers. The cache stores only the serialized result bytes and metadata. Supported downloads must have fixed encoding, newline, field order, numeric formatting, JSON key order, and NumPy dtype/order.
+The full result is serialized once using shared canonical serializers. The cache stores only the serialized result bytes and metadata. Supported downloads must have fixed encoding, newline, field order, numeric formatting, JSON key order, and NumPy dtype/order. Cache TTL is 30 minutes; total cache data is limited to 32 MiB and each artifact to 16 MiB. Larger logical outputs are split into ordered parts with a manifest and SHA-256 checksums.
 
 ### Bounded in-memory result cache
 
@@ -273,7 +279,7 @@ These example weights sum to `1.0`. The threshold and matrix values are illustra
 
 ### 2. CSV and identifier handling
 
-The current CLI accepts numeric-only CSV, `.npy`, `.npz`, and, when the optional dependency is installed, `.parquet`. A direct CLI CSV has no header or identifier column; numeric columns follow the JSON criterion order:
+The shared CLI/web contract accepts numeric-only CSV, `.npy`, and `.npz`; `.parquet` remains optional and is not part of the web upload allow-list. A direct CLI CSV has no header or identifier column; numeric columns follow the JSON criterion order:
 
 ```csv
 0.30,0.20,0.80,0.70
@@ -362,7 +368,7 @@ The accumulator computes raw net flow without dividing by `N−1`:
 
 The ranking sorts `Φ(a)` descending. Equal scores are ties; their relative order is not guaranteed.
 
-The current CLI performs blockwise computation and outputs ranking indices. The approved web target adds preview validation, the header display policy, normalized `[0,1]` scores, weights summing to `1`, top-10 display with scores, and downloads. CLI/web equivalence is a target contract only after both paths use the same validated inputs, configuration, and canonical serializers. The example values above are not computed ranking outputs.
+The shared CLI and web contract performs the same strict validation, blockwise computation, and canonical serialization. It outputs ranking indices and the raw net-flow vector. The web target adds preview validation, the header display policy, top-10 display with scores, and downloads. CLI/web equivalence requires the same validated inputs, configuration, and canonical serializers. The example values above are not computed ranking outputs.
 
 
 ---

@@ -1,0 +1,29 @@
+Comparing files DOCS\DESIGN\COMMITTEE_PHASE5\DISCORDANCE_REVIEW\SNAPSHOT\TESTS\test_module_docs.py and TESTS\TEST_MODULE_DOCS.PY
+***** DOCS\DESIGN\COMMITTEE_PHASE5\DISCORDANCE_REVIEW\SNAPSHOT\TESTS\test_module_docs.py
+  566:  
+  567:  class TestCredibilityTutorialScaffold:
+  568:      """Tests for credibility_tutorial_side_by_side.html scaffold with Option 3 layout."""
+***** TESTS\TEST_MODULE_DOCS.PY
+  566:  
+  567:  class TestCredibilityDeepTutorial:
+  568:      """Tests for credibility_tutorial_side_by_side.html scaffold with Option 3 layout."""
+*****
+
+***** DOCS\DESIGN\COMMITTEE_PHASE5\DISCORDANCE_REVIEW\SNAPSHOT\TESTS\test_module_docs.py
+  675:  
+  676:      def test_no_deterministic_output_assertions(self, credibility_html):
+  677:          """Tutorial must not have deterministic output assertions."""
+  678:          assert "= 0.8 (" not in credibility_html
+  679:          assert "= 1.0 (" not in credibility_html
+  680:          assert "S[0,0] =" not in credibility_html
+  681:  
+***** TESTS\TEST_MODULE_DOCS.PY
+  675:  
+  676:      def test_example_has_computed_table_not_faux_stdout(self, credibility_html):
+  677:          """Computed examples are allowed and verified by executable tests."""
+  678:          assert 'id="scenario-results"' in credibility_html
+  679:          assert '[Placeholder]' not in credibility_html
+  680:          assert 'stdout' not in credibility_html and '~0.1 ms' not in credibility_html
+  681:  
+*****
+

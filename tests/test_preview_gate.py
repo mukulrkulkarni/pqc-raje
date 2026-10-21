@@ -135,8 +135,8 @@ class TestComputeGate:
             json={
                 "upload_id": "confirmed",
                 "criteria": [
-                    {"weight": 1, "q": 1, "p": 2, "v": 3},
-                    {"weight": 1, "q": 1, "p": 2, "v": 3},
+                    {"name": "criterion-1", "weight": 0.5, "q": 1, "p": 2, "v": 3, "maximize": True},
+                    {"name": "criterion-2", "weight": 0.5, "q": 1, "p": 2, "v": 3, "maximize": True},
                 ],
             },
             content_type="application/json",

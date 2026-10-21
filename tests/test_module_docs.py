@@ -686,6 +686,13 @@ class TestCredibilityDeepTutorial:
         assert "do not treat" in credibility_html.lower()
 
 
+    def test_no_deterministic_output_assertions(self, credibility_html):
+        """Tutorial must not have deterministic output assertions."""
+        assert "= 0.8 (" not in credibility_html
+        assert "= 1.0 (" not in credibility_html
+        assert "S[0,0] =" not in credibility_html
+
+
 class TestRankingTutorialScaffold:
     """Tests for ranking_tutorial_side_by_side.html scaffold with Option 3 layout."""
 

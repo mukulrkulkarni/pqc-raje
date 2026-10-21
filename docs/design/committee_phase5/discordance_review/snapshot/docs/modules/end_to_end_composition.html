@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; font-src 'self'; script-src 'self'; style-src 'unsafe-inline';">
+<meta name="color-scheme" content="light dark">
+<title>End-to-end composition - ELECTRE III credibility + net-flow ranking</title>
+<style>
+:root{
+  --bg:#ffffff; --surface:#f8fafc; --surface-2:#f1f5f9; --border:#e2e8f0;
+  --border-strong:#cbd5e1; --text:#0f172a; --text-muted:#475569; --text-dim:#64748b;
+  --accent:#2563eb; --accent-soft:#eff6ff; --accent-border:#bfdbfe;
+  --ok:#15803d; --ok-soft:#f0fdf4; --warn:#b45309; --warn-soft:#fffbeb;
+  --radius:8px; --radius-sm:5px;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+html[data-theme="dark"]{
+  --bg:#0b1120; --surface:#0f172a; --surface-2:#1e293b; --border:#1e293b;
+  --border-strong:#334155; --text:#e2e8f0; --text-muted:#d1d5db; --text-dim:#9ca3af;
+  --accent:#60a5fa; --accent-soft:#172554; --accent-border:#1e40af;
+  --ok:#86efac; --ok-soft:#052e16; --warn:#fcd34d; --warn-soft:#2a1f05;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{background:var(--bg); color:var(--text); font-family:var(--sans);
+  font-size:14px; line-height:1.55;}
+.main{max-width:980px; margin:0 auto; padding:var(--s5) var(--s5) var(--s6);}
+.top{display:flex; align-items:flex-end; justify-content:space-between; gap:var(--s4);
+  border-bottom:1px solid var(--border); padding-bottom:var(--s3); margin-bottom:var(--s4);}
+h1{font-size:18px; margin:0; letter-spacing:-.02em;}
+.sub{font-size:12.5px; color:var(--text-dim); margin-top:2px;}
+.kit{display:flex; gap:var(--s2); align-items:center;}
+.seg{display:grid; grid-template-columns:repeat(3,1fr); gap:2px;
+  background:var(--surface-2); padding:3px; border-radius:var(--radius-sm);}
+.seg button{font:inherit; font-size:10.5px; font-weight:600; padding:5px 10px;
+  border:0; cursor:pointer; background:transparent; color:var(--text-muted);
+  border-radius:4px;}
+.seg button[aria-pressed="true"]{background:var(--bg); color:var(--text);
+  box-shadow:0 1px 2px rgba(0,0,0,.08);}
+.seg button:focus-visible{outline:2px solid var(--accent); outline-offset:1px;}
+
+.card{background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+  padding:var(--s4); margin:0 0 var(--s4);}
+.card h2{font-size:12px; text-transform:uppercase; letter-spacing:.06em;
+  color:var(--accent); margin:0 0 var(--s2); font-weight:650;}
+.p{margin:0 0 var(--s2); color:var(--text-muted);} 
+.p:last-child{margin-bottom:0;}
+
+.grid{display:grid; grid-template-columns:1fr 1fr; gap:var(--s3);}
+@media (max-width:900px){.grid{grid-template-columns:1fr;}}
+.kv{padding:var(--s3); border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--bg);}
+.kv b{display:block; font-size:11px; color:var(--text); font-family:var(--mono); margin-bottom:3px;}
+.kv p{margin:0; font-size:12.5px; color:var(--text-muted);}
+
+pre{margin:var(--s2) 0 0; padding:10px 12px; border-radius:var(--radius-sm);
+  background:var(--bg); border:1px solid var(--border); overflow-x:auto;
+  font-family:var(--mono); font-size:12.5px; line-height:1.5; color:var(--text);}
+code{font-family:var(--mono);}
+
+.badges{display:flex; gap:var(--s2); flex-wrap:wrap; margin-top:var(--s2);} 
+.badge{font-family:var(--mono); font-size:10.5px; padding:2px 6px; border-radius:3px;
+  background:var(--ok-soft); color:var(--ok);} 
+.badge.warn{background:var(--warn-soft); color:var(--warn);} 
+
+.a{color:var(--accent); text-decoration:none;}
+.a:hover{text-decoration:underline;}
+.a:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+
+footer{margin-top:var(--s5); padding-top:var(--s3); border-top:1px solid var(--border);
+  font-size:11.5px; color:var(--text-dim); display:flex; justify-content:space-between; gap:var(--s3); flex-wrap:wrap;}
+</style>
+</head>
+<body>
+<main class="main">
+  <div class="top">
+    <div>
+      <h1>End-to-end composition</h1>
+      <div class="sub">Credibility S(a,b) → net-flow φ(a) → ranking order (no distillation)</div>
+    </div>
+    <div class="kit" aria-label="Theme">
+      <div class="seg" role="group" aria-label="Theme">
+        <button type="button" data-theme-value="light" aria-pressed="true">Light</button>
+        <button type="button" data-theme-value="dark" aria-pressed="false">Dark</button>
+        <button type="button" data-theme-value="system" aria-pressed="false">Sys</button>
+      </div>
+    </div>
+  </div>
+
+  <section class="card" id="flow">
+    <h2>Composition flow (what calls what)</h2>
+    <p class="p"><b>Goal:</b> rank N alternatives without storing an N×N matrix, using ELECTRE III credibility and a net-flow aggregation.</p>
+    <div class="grid">
+      <div class="kv">
+        <b>Step 1 — Credibility block</b>
+        <p>Compute a B×B credibility submatrix S for rows rs.. and cols cs.. using concordance and discordance.</p>
+      </div>
+      <div class="kv">
+        <b>Step 2 — Accumulate flows</b>
+        <p>Update outflow φ⁺ and inflow φ⁻ incrementally. Storage is O(N) for accumulator.</p>
+      </div>
+      <div class="kv">
+        <b>Step 3 — Net flow</b>
+        <p>Compute raw φ = φ⁺ − φ⁻ for each alternative. This is not a probability and not transitive.</p>
+      </div>
+      <div class="kv">
+        <b>Step 4 — Ranking</b>
+        <p>Return indices sorted by descending raw net flow: <code>np.argsort(-acc.net_flow())</code>.</p>
+      </div>
+    </div>
+    <div class="badges">
+      <span class="badge">O(N) accumulator memory</span>
+      <span class="badge">O(B²) working block memory</span>
+      <span class="badge warn">Not ELECTRE III distillation</span>
+    </div>
+  </section>
+
+  <section class="card" id="contracts">
+    <h2>Key contracts (diagonal, validation, normalization)</h2>
+    <div class="grid">
+      <div class="kv">
+        <b>Diagonal exclusion</b>
+        <p>Self-comparisons must not contribute to flows. Diagonal is cleared only for diagonal blocks (<code>rs==cs</code>).</p>
+        <pre><code># In the block loop
+is_diagonal = (rs == cs)
+S = compute_block(..., is_diagonal=is_diagonal)
+# diagonal blocks: S(a,a)=0; off-diagonal blocks: local diagonal is NOT "self"</code></pre>
+      </div>
+      <div class="kv">
+        <b>Validation boundary</b>
+        <p>Entry points validate shapes, finiteness, and threshold consistency. Lower-level routines do not revalidate mutated state.</p>
+        <pre><code># High-level: rejects invalid input early
+compute_ranking(G, criteria, config)
+# Low-level block: assumes valid arrays and shapes
+compute_block(G_rows, G_cols, q, p, v, weights, is_diagonal)</code></pre>
+      </div>
+      <div class="kv">
+        <b>Normalization terminology</b>
+        <p><code>acc.net_flow()</code> is the ranking signal. <code>acc.normalize()</code> is min–max scaling for display only.</p>
+      </div>
+      <div class="kv">
+        <b>Ties</b>
+        <p>Equal net flows can occur. The returned order is deterministic, but tie-breaking is not a mathematical guarantee.</p>
+      </div>
+    </div>
+    <p class="p" style="margin-top:var(--s3)">See also: <a class="a" href="ranking_tutorial_side_by_side.html">ranking deep tutorial</a> and <a class="a" href="credibility_tutorial_side_by_side.html">credibility deep tutorial</a>.</p>
+  </section>
+
+  <section class="card" id="tests">
+    <h2>Executable checks (what the tests assert)</h2>
+    <p class="p">The end-to-end tests verify the composition, not just individual primitives:</p>
+    <div class="grid">
+      <div class="kv">
+        <b>Pipeline correctness</b>
+        <p>Blockwise accumulator matches an independently computed full S reference on a small matrix.</p>
+      </div>
+      <div class="kv">
+        <b>Diagonal behavior</b>
+        <p>Diagonal exclusion only happens for diagonal blocks; off-diagonal local diagonal entries are preserved.</p>
+      </div>
+      <div class="kv">
+        <b>Validation</b>
+        <p>Invalid G / invalid weights fail before any call to <code>compute_block</code>.</p>
+      </div>
+      <div class="kv">
+        <b>Ranking uses raw net flow</b>
+        <p>Sorting never depends on <code>acc.normalize()</code>.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span>Offline-safe: relative links only; CSP blocks external loads.</span>
+    <span>Theme toggle works in served and file mode (localStorage guarded).</span>
+  </footer>
+</main>
+
+<script src="assets/theme.js" defer></script>
+</body>
+</html>

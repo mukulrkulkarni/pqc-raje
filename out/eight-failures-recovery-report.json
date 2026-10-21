@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "chunk": "eight-failures-recovery",
+  "objective": "Resolve the eight documented post-consolidation full-suite failures using minimal fixture and stale-input corrections.",
+  "state_transitions": [
+    "planned",
+    "active",
+    "checkpointed: out/eight-failures-recovery-checkpoint.json created before changes",
+    "completed"
+  ],
+  "inventory": {
+    "total": 8,
+    "missing_fixture_path": 7,
+    "stale_test_input": 1,
+    "actual_regression": 0
+  },
+  "changes": [
+    "Restored required snapshot-relative docs/modules fixtures and linked assets for three snapshot roots.",
+    "Restored only required snapshot-relative electre3/discordance.py and electre3/credibility.py source fixtures.",
+    "Updated the confirmed preview-gate success fixture to the approved strict criteria contract."
+  ],
+  "tests": [
+    {
+      "command": "python -m pytest -q docs/design/committee_phase5/discordance_review/snapshot/tests/test_discordance_deep.py docs/design/committee_phase5/review/snapshot/tests/test_concordance_n1.py docs/design/phase6/credibility_review/snapshot/tests/test_credibility_deep.py tests/test_preview_gate.py",
+      "result": "75 passed in 1.30s"
+    },
+    {
+      "command": "python -m pytest -q",
+      "result": "868 passed in 6.20s"
+    },
+    {
+      "command": "python -m compileall -q electre3 app",
+      "result": "passed (exit code 0)"
+    },
+    {
+      "command": "git diff --check",
+      "result": "passed (no whitespace errors)"
+    }
+  ],
+  "retry": {
+    "count": 0,
+    "limit": 1,
+    "needed": false
+  },
+  "security_and_scope": {
+    "assertions_deleted_or_weakened": false,
+    "security_or_scientific_tests_weakened": false,
+    "application_behavior_changed": false,
+    "unrelated_application_files_changed_by_this_chunk": false
+  },
+  "manifest": "out/eight-failures-merge-fix-manifest.json",
+  "final_state": "completed",
+  "limitations": [
+    "The workspace contains pre-existing unrelated modifications and untracked files; this chunk preserved them.",
+    "Snapshot fixture trees are restored from current canonical docs/modules and source files, as required by their strict snapshot-relative tests."
+  ]
+}

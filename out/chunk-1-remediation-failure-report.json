@@ -1,0 +1,13 @@
+{
+  "state": "blocked",
+  "classification": "non_retryable within this sub-chunk",
+  "acceptance_failure": "The required full pytest suite cannot collect.",
+  "command": "python -m pytest -q",
+  "evidence": "pytest reports an import file mismatch between docs/design/committee_phase5/discordance_review/snapshot/tests/test_module_docs.py and docs/design/phase6/credibility_review/snapshot/tests/test_module_docs.py; both load as module test_module_docs.",
+  "scope_assessment": "This failure is unrelated to strict CLI/security policy remediation. Resolving it needs test-package or collection-layout changes in archived documentation snapshots, outside the authorized scope.",
+  "tests_that_passed": {
+    "command": "python -m pytest tests/test_cli_run.py tests/test_security.py tests/test_shared_contract.py -q && python -m compileall -q electre3 app",
+    "result": "55 passed in 0.61s; compileall succeeded."
+  },
+  "recovery_action": "None. The fallback requires preserving this report and stopping rather than changing unrelated snapshot test collection."
+}

@@ -1,8 +1,9 @@
 """CLI execution functions for ELECTRE III."""
 import numpy as np
 from typing import Any
-from .config import CriterionConfig, ComputeConfig
-from .ranking import compute_ranking
+
+from .shared import compute_validated_ranking
+
 
 def format_preview(matrix: np.ndarray, criteria: list[dict[str, Any]]) -> str:
     lines = ["=" * 60, "ELECTRE III Computation Preview", "=" * 60, "",
@@ -16,12 +17,17 @@ def format_preview(matrix: np.ndarray, criteria: list[dict[str, Any]]) -> str:
     lines.extend(["", f"Comparisons: {matrix.shape[0]**2:,}", "", "=" * 60])
     return "\n".join(lines)
 
+
 def run_ranking(matrix: np.ndarray, criteria_data: list[dict[str, Any]],
                 block_size: int = 1000, quiet: bool = False) -> np.ndarray:
-    configs = [CriterionConfig(c.get("name", "unnamed"), c.get("weight", 1.0),
-               c.get("q", 0), c.get("p", 0), c.get("v", 0), c.get("maximize", True))
-               for c in criteria_data]
-    if not quiet: print("Computing ranking...")
-    ranking, acc = compute_ranking(matrix, configs, ComputeConfig(block_size=block_size))
-    if not quiet: print(f"Done. {acc.blocks_done} blocks processed.")
-    return ranking
+    """Run the shared strict CLI/web contract and return ranking indices.
+
+    This compatibility function retains its historical return type. Use
+    ``compute_validated_ranking`` when the net-flow vector is required.
+    """
+    if not quiet:
+        print("Computing ranking...")
+    result = compute_validated_ranking(matrix, criteria_data, block_size)
+    if not quiet:
+        print("Done.")
+    return result.ranking

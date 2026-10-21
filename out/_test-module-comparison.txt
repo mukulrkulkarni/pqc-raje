@@ -1,0 +1,66 @@
+[
+  {
+    "path": "tests\\test_module_docs.py",
+    "bytes": 68786,
+    "sha256": "6330dd0f234fee94e6d1294dbb7f13e5033101b6c2661ba80771ed0267f03431",
+    "top_level_names": [
+      "assert_style_standard_v1",
+      "TestTutorialStaticFile",
+      "TestHTMLValidity",
+      "TestExternalAssetNegative",
+      "TestJSAssetFiles",
+      "TestConcordanceTutorialScaffold",
+      "TestDiscordanceDeepTutorial",
+      "TestCredibilityDeepTutorial",
+      "TestRankingTutorialScaffold",
+      "TestValidateTutorialScaffold",
+      "TestBlockTutorialScaffold",
+      "TestAccumulatorTutorialScaffold"
+    ],
+    "count": 208
+  },
+  {
+    "path": "docs\\design\\committee_phase5\\discordance_review\\snapshot\\tests\\test_module_docs.py",
+    "bytes": 68722,
+    "sha256": "2c14ab34b16ec3ef9cf224c9aeba169a068c96dd36173e407312f34ca1a88798",
+    "top_level_names": [
+      "assert_style_standard_v1",
+      "TestTutorialStaticFile",
+      "TestHTMLValidity",
+      "TestExternalAssetNegative",
+      "TestJSAssetFiles",
+      "TestConcordanceTutorialScaffold",
+      "TestDiscordanceDeepTutorial",
+      "TestCredibilityTutorialScaffold",
+      "TestRankingTutorialScaffold",
+      "TestValidateTutorialScaffold",
+      "TestBlockTutorialScaffold",
+      "TestAccumulatorTutorialScaffold"
+    ],
+    "count": 208
+  },
+  {
+    "path": "docs\\design\\phase6\\credibility_review\\snapshot\\tests\\test_module_docs.py",
+    "bytes": 68786,
+    "sha256": "6330dd0f234fee94e6d1294dbb7f13e5033101b6c2661ba80771ed0267f03431",
+    "top_level_names": [
+      "assert_style_standard_v1",
+      "TestTutorialStaticFile",
+      "TestHTMLValidity",
+      "TestExternalAssetNegative",
+      "TestJSAssetFiles",
+      "TestConcordanceTutorialScaffold",
+      "TestDiscordanceDeepTutorial",
+      "TestCredibilityDeepTutorial",
+      "TestRankingTutorialScaffold",
+      "TestValidateTutorialScaffold",
+      "TestBlockTutorialScaffold",
+      "TestAccumulatorTutorialScaffold"
+    ],
+    "count": 208
+  }
+]
+overlaps
+tests\test_module_docs.py docs\design\committee_phase5\discordance_review\snapshot\tests\test_module_docs.py top 11 tests 189
+tests\test_module_docs.py docs\design\phase6\credibility_review\snapshot\tests\test_module_docs.py top 12 tests 208
+docs\design\committee_phase5\discordance_review\snapshot\tests\test_module_docs.py docs\design\phase6\credibility_review\snapshot\tests\test_module_docs.py top 11 tests 189

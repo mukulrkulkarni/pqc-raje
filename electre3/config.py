@@ -3,9 +3,11 @@ from dataclasses import dataclass
 from typing import Optional
 import math
 
+
 def _check_finite(val: float, name: str) -> None:
     if math.isnan(val) or math.isinf(val):
         raise ValueError(f"{name} must be finite, got {val}")
+
 
 @dataclass
 class CriterionConfig:
@@ -30,6 +32,7 @@ class CriterionConfig:
         if self.weight <= 0:
             raise ValueError(f"weight must be > 0, got {self.weight}")
 
+
 @dataclass
 class ComputeConfig:
     block_size: int = 1000
@@ -37,8 +40,13 @@ class ComputeConfig:
     seed: Optional[int] = None
 
     def __post_init__(self) -> None:
+        if isinstance(self.block_size, bool) or not isinstance(self.block_size, int):
+            raise ValueError("block_size must be an integer")
         if self.block_size < 1:
             raise ValueError(f"block_size must be >= 1, got {self.block_size}")
+        if self.block_size > 10_000:
+            raise ValueError(f"block_size must be <= 10000, got {self.block_size}")
+
 
 def normalize_weights(criteria: list[CriterionConfig]) -> list[float]:
     total = sum(c.weight for c in criteria)

@@ -1,0 +1,82 @@
+
+
+{
+  "models": [
+    {
+      "model": "Claude Fable 5.1",
+      "provider": "Anthropic",
+      "context_window": "1M tokens",
+      "pricing_per_1M": {"input": "$10", "output": "$50"},
+      "best_for": ["long-horizon autonomous coding", "multi-file features & refactors", "code review", "knowledge work (docs, spreadsheets, slides)", "deep research", "computer use", "vision on dense PDFs"]
+    },
+    {
+      "model": "Claude Opus 5",
+      "provider": "Anthropic",
+      "context_window": "1M tokens",
+      "pricing_per_1M": {"input": "$5", "output": "$25"},
+      "best_for": ["premium coding", "code review", "long multi-step agent tasks"],
+      "note": "Superseded by Opus 5.5"
+    },
+    {
+      "model": "Claude Opus 5.5",
+      "provider": "Anthropic",
+      "context_window": "1M tokens",
+      "pricing_per_1M": {"input": "$4", "output": "$20"},
+      "best_for": ["agentic coding (89.9% SWE-bench Pro)", "knowledge work", "financial analysis", "computer use"],
+      "note": "40% cheaper per task than Opus 5, 30% faster output"
+    },
+    {
+      "model": "Claude Sonnet 5",
+      "provider": "Anthropic",
+      "context_window": "1M tokens",
+      "pricing_per_1M": {"input": "$2", "output": "$10"},
+      "best_for": ["cost-efficient agentic coding", "customer-facing agents", "browser/terminal automation", "content generation at scale", "real-time research"]
+    },
+    {
+      "model": "GPT-4o mini",
+      "provider": "OpenAI",
+      "context_window": "128K tokens",
+      "pricing_per_1M": {"input": "$0.15", "output": "$0.60"},
+      "best_for": ["high-volume automation", "summaries", "classification", "SEO metadata", "first drafts", "structured extraction", "prototyping"]
+    },
+    {
+      "model": "GPT-5.2",
+      "provider": "OpenAI",
+      "context_window": "400K tokens",
+      "pricing_per_1M": {"input": "$1.75", "output": "$14"},
+      "best_for": ["professional knowledge work (spreadsheets, slides, docs)", "coding", "long-context analysis", "agentic tool-calling", "math & science", "vision"]
+    },
+    {
+      "model": "GPT-5.6 Luna",
+      "provider": "OpenAI",
+      "context_window": "1.1M tokens",
+      "pricing_per_1M": {"input": "$0.20", "output": "$1.20"},
+      "best_for": ["summarization", "drafting", "classification", "high-volume automation", "routing", "sub-agents"],
+      "note": "Fastest GPT-5.6 tier (144 tok/s)"
+    },
+    {
+      "model": "GPT-5.6 Sol",
+      "provider": "OpenAI",
+      "context_window": "1.1M tokens",
+      "pricing_per_1M": {"input": "$2", "output": "$10"},
+      "best_for": ["hard coding (88.8% Terminal-Bench 2.1)", "long-horizon agents", "security research", "deep reasoning"],
+      "note": "Flagship GPT-5.6 tier"
+    },
+    {
+      "model": "GPT-5.6 Terra",
+      "provider": "OpenAI",
+      "context_window": "1.1M tokens",
+      "pricing_per_1M": {"input": "$2", "output": "$12"},
+      "best_for": ["production agents", "support workflows", "document analysis", "everyday production coding"],
+      "note": "Balanced middle tier"
+    },
+    {
+      "model": "GPT-6 Astra",
+      "provider": "OpenAI",
+      "context_window": "1.1M tokens",
+      "pricing_per_1M": {"input": "$10", "output": "$50"},
+      "best_for": [],
+      "note": "No verified data found for this model name. Likely a confusion with GPT-6.1 Astra (next-gen frontier tier)."
+    }
+  ]
+}   

@@ -1,0 +1,2122 @@
+[
+  {
+    "path": "docs/design/committee_phase5/discordance_review/snapshot/tests/test_module_docs.py",
+    "bytes": 68722,
+    "sha256": "2c14ab34b16ec3ef9cf224c9aeba169a068c96dd36173e407312f34ca1a88798",
+    "classes": [
+      "TestTutorialStaticFile",
+      "TestHTMLValidity",
+      "TestExternalAssetNegative",
+      "TestJSAssetFiles",
+      "TestConcordanceTutorialScaffold",
+      "TestDiscordanceDeepTutorial",
+      "TestCredibilityTutorialScaffold",
+      "TestRankingTutorialScaffold",
+      "TestValidateTutorialScaffold",
+      "TestBlockTutorialScaffold",
+      "TestAccumulatorTutorialScaffold"
+    ],
+    "tests": [
+      {
+        "kind": "method",
+        "qualified_name": "TestTutorialStaticFile.test_no_external_assets",
+        "line": 49
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestTutorialStaticFile.test_has_csp_meta_tag",
+        "line": 55
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestTutorialStaticFile.test_csp_meta_no_unsafe_eval",
+        "line": 59
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestTutorialStaticFile.test_has_style_standard_v1",
+        "line": 66
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestTutorialStaticFile.test_has_threshold_docs",
+        "line": 70
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestTutorialStaticFile.test_has_layout2_structure",
+        "line": 77
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestHTMLValidity.test_html_files_exist",
+        "line": 94
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestHTMLValidity.test_all_html_have_doctype",
+        "line": 98
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestHTMLValidity.test_all_html_have_charset",
+        "line": 105
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestHTMLValidity.test_all_html_have_viewport",
+        "line": 113
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestHTMLValidity.test_all_html_have_csp",
+        "line": 119
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestExternalAssetNegative.test_no_external_scripts",
+        "line": 137
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestExternalAssetNegative.test_no_external_stylesheets",
+        "line": 145
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestExternalAssetNegative.test_no_css_imports",
+        "line": 153
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestExternalAssetNegative.test_no_external_fonts",
+        "line": 161
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestJSAssetFiles.test_theme_js_exists",
+        "line": 183
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestJSAssetFiles.test_highlight_js_exists",
+        "line": 187
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestJSAssetFiles.test_theme_js_no_external_fetch",
+        "line": 191
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestJSAssetFiles.test_highlight_js_no_external_fetch",
+        "line": 198
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_file_exists",
+        "line": 217
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_has_csp_meta_tag",
+        "line": 222
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_has_style_standard_v1",
+        "line": 226
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_has_layout2_structure",
+        "line": 230
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_has_r1_through_r5_rows",
+        "line": 236
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_has_io_summary_section",
+        "line": 241
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_has_jump_navigation",
+        "line": 246
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_has_progress_indicator",
+        "line": 252
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_has_theme_toggle",
+        "line": 257
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_references_js_assets",
+        "line": 263
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_each_row_has_required_subheadings",
+        "line": 268
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_no_external_assets",
+        "line": 275
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_has_concordance_content",
+        "line": 281
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_has_option3_grounding_facts",
+        "line": 289
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_has_option3_expandable_details",
+        "line": 296
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_r1_has_substantive_content",
+        "line": 301
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_r2_has_piecewise_formula_content",
+        "line": 309
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_r2_mentions_maximize_minimize",
+        "line": 320
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_r3_has_implementation_details",
+        "line": 324
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_r4_has_weight_normalization_content",
+        "line": 330
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_r4_weights_nonnegative_requirement",
+        "line": 336
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_r4_upstream_enforcement",
+        "line": 343
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_r3_qp_masked_wording",
+        "line": 349
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_r5_has_edge_cases_content",
+        "line": 357
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_io_summary_has_shapes_and_invariants",
+        "line": 364
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_has_usage_disclaimer",
+        "line": 372
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_no_deterministic_output_assertions",
+        "line": 377
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_no_unqualified_speedup_claims",
+        "line": 385
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_grounding_mentions_electre_context",
+        "line": 393
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_has_notation_block",
+        "line": 401
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_notation_explains_g_function",
+        "line": 410
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_explains_diff_shape_with_example",
+        "line": 415
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_example_clarifies_alts_terminology",
+        "line": 423
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestDiscordanceDeepTutorial.test_file_exists",
+        "line": 442
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestDiscordanceDeepTutorial.test_has_csp_meta_tag",
+        "line": 447
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestDiscordanceDeepTutorial.test_has_style_standard_v1",
+        "line": 451
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestDiscordanceDeepTutorial.test_has_layout2_structure",
+        "line": 455
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestDiscordanceDeepTutorial.test_has_r1_through_r5_rows",
+        "line": 461
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestDiscordanceDeepTutorial.test_has_io_summary_section",
+        "line": 466
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestDiscordanceDeepTutorial.test_has_jump_navigation",
+        "line": 471
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestDiscordanceDeepTutorial.test_has_progress_indicator",
+        "line": 477
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestDiscordanceDeepTutorial.test_has_theme_toggle",
+        "line": 482
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestDiscordanceDeepTutorial.test_references_js_assets",
+        "line": 488
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestDiscordanceDeepTutorial.test_each_row_has_required_subheadings",
+        "line": 493
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestDiscordanceDeepTutorial.test_no_external_assets",
+        "line": 500
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestDiscordanceDeepTutorial.test_has_discordance_content",
+        "line": 506
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestDiscordanceDeepTutorial.test_verified_example_and_precise_veto_contract",
+        "line": 512
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestDiscordanceDeepTutorial.test_has_usage_disclaimer",
+        "line": 521
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestDiscordanceDeepTutorial.test_example_inputs_marked_illustrative",
+        "line": 527
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestDiscordanceDeepTutorial.test_has_option3_grounding_facts_line",
+        "line": 534
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestDiscordanceDeepTutorial.test_has_option3_expandable_details",
+        "line": 541
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestDiscordanceDeepTutorial.test_grounding_has_key_invariants",
+        "line": 548
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestDiscordanceDeepTutorial.test_no_recommended_threshold_defaults",
+        "line": 557
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestCredibilityTutorialScaffold.test_file_exists",
+        "line": 578
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestCredibilityTutorialScaffold.test_has_csp_meta_tag",
+        "line": 583
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestCredibilityTutorialScaffold.test_has_style_standard_v1",
+        "line": 587
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestCredibilityTutorialScaffold.test_has_layout2_structure",
+        "line": 591
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestCredibilityTutorialScaffold.test_has_r1_through_r5_rows",
+        "line": 597
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestCredibilityTutorialScaffold.test_has_io_summary_section",
+        "line": 602
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestCredibilityTutorialScaffold.test_has_jump_navigation",
+        "line": 607
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestCredibilityTutorialScaffold.test_has_progress_indicator",
+        "line": 612
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestCredibilityTutorialScaffold.test_references_js_assets",
+        "line": 617
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestCredibilityTutorialScaffold.test_each_row_has_required_subheadings",
+        "line": 622
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestCredibilityTutorialScaffold.test_no_external_assets",
+        "line": 629
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestCredibilityTutorialScaffold.test_has_credibility_content",
+        "line": 635
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestCredibilityTutorialScaffold.test_has_option3_grounding_facts_line",
+        "line": 641
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestCredibilityTutorialScaffold.test_has_option3_expandable_details",
+        "line": 648
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestCredibilityTutorialScaffold.test_grounding_has_key_invariants",
+        "line": 655
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestCredibilityTutorialScaffold.test_uses_implementation_contract_wording",
+        "line": 662
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestCredibilityTutorialScaffold.test_diagonal_not_enforced_here_wording",
+        "line": 669
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestCredibilityTutorialScaffold.test_no_deterministic_output_assertions",
+        "line": 676
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestCredibilityTutorialScaffold.test_has_usage_disclaimer",
+        "line": 682
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestRankingTutorialScaffold.test_file_exists",
+        "line": 700
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestRankingTutorialScaffold.test_has_csp_meta_tag",
+        "line": 705
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestRankingTutorialScaffold.test_has_style_standard_v1",
+        "line": 709
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestRankingTutorialScaffold.test_has_layout2_structure",
+        "line": 713
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestRankingTutorialScaffold.test_has_r1_through_r5_rows",
+        "line": 719
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestRankingTutorialScaffold.test_has_io_summary_section",
+        "line": 724
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestRankingTutorialScaffold.test_has_jump_navigation",
+        "line": 729
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestRankingTutorialScaffold.test_has_progress_indicator",
+        "line": 734
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestRankingTutorialScaffold.test_references_js_assets",
+        "line": 739
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestRankingTutorialScaffold.test_each_row_has_required_subheadings",
+        "line": 744
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestRankingTutorialScaffold.test_no_external_assets",
+        "line": 751
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestRankingTutorialScaffold.test_has_ranking_content",
+        "line": 757
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestRankingTutorialScaffold.test_has_option3_grounding_facts_line",
+        "line": 763
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestRankingTutorialScaffold.test_has_option3_expandable_details",
+        "line": 770
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestRankingTutorialScaffold.test_grounding_has_key_invariants",
+        "line": 777
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestRankingTutorialScaffold.test_no_deterministic_output_assertions",
+        "line": 784
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestRankingTutorialScaffold.test_no_seed_mention",
+        "line": 790
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestRankingTutorialScaffold.test_no_phi_norm_reference",
+        "line": 794
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestRankingTutorialScaffold.test_no_electre_iii_ii_typo",
+        "line": 798
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestRankingTutorialScaffold.test_has_usage_disclaimer",
+        "line": 802
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_file_exists",
+        "line": 818
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_has_doctype",
+        "line": 823
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_has_csp_meta",
+        "line": 827
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_has_shell_structure",
+        "line": 832
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_has_sidebar",
+        "line": 836
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_has_rows_container",
+        "line": 840
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_has_five_range_rows",
+        "line": 844
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_has_jump_navigation",
+        "line": 852
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_has_theme_toggle",
+        "line": 860
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_has_progress_indicator",
+        "line": 866
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_references_local_scripts",
+        "line": 870
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_each_row_has_required_subheadings",
+        "line": 875
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_no_external_assets",
+        "line": 882
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_has_validate_content",
+        "line": 888
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_has_option3_grounding_facts_line",
+        "line": 895
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_has_option3_expandable_details",
+        "line": 902
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_grounding_has_key_invariants",
+        "line": 909
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_no_deterministic_output_assertions",
+        "line": 915
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_has_io_summary",
+        "line": 921
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_has_usage_disclaimer",
+        "line": 926
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_mentions_fail_fast",
+        "line": 932
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_mentions_valueerror",
+        "line": 936
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_has_dark_mode_note_text_token",
+        "line": 941
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_has_dark_mode_note_size_token",
+        "line": 945
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_has_dark_mode_h4_color_token",
+        "line": 949
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_has_dark_mode_h4_border_token",
+        "line": 953
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_note_col_uses_note_text_token",
+        "line": 957
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_note_col_uses_note_size_token",
+        "line": 961
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_h4_uses_h4_color_token",
+        "line": 965
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_h4_has_border_left",
+        "line": 969
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_has_selection_accent_token",
+        "line": 974
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_has_selection_soft_token",
+        "line": 978
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_has_selection_border_token",
+        "line": 982
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_has_row_sel_styles",
+        "line": 986
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_selection_has_non_color_cue",
+        "line": 990
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_hl_uses_selection_tokens",
+        "line": 994
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestBlockTutorialScaffold.test_file_exists",
+        "line": 1010
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestBlockTutorialScaffold.test_has_doctype",
+        "line": 1015
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestBlockTutorialScaffold.test_has_csp_meta",
+        "line": 1019
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestBlockTutorialScaffold.test_has_style_standard_v1",
+        "line": 1024
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestBlockTutorialScaffold.test_has_shell_structure",
+        "line": 1028
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestBlockTutorialScaffold.test_has_sidebar",
+        "line": 1032
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestBlockTutorialScaffold.test_has_rows_container",
+        "line": 1036
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestBlockTutorialScaffold.test_has_five_range_rows",
+        "line": 1040
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestBlockTutorialScaffold.test_has_jump_navigation",
+        "line": 1048
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestBlockTutorialScaffold.test_has_theme_toggle",
+        "line": 1056
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestBlockTutorialScaffold.test_has_progress_indicator",
+        "line": 1062
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestBlockTutorialScaffold.test_references_local_scripts",
+        "line": 1066
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestBlockTutorialScaffold.test_each_row_has_required_subheadings",
+        "line": 1071
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestBlockTutorialScaffold.test_no_external_assets",
+        "line": 1078
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestBlockTutorialScaffold.test_has_block_content",
+        "line": 1084
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestBlockTutorialScaffold.test_has_option3_grounding_facts_line",
+        "line": 1091
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestBlockTutorialScaffold.test_has_option3_expandable_details",
+        "line": 1098
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestBlockTutorialScaffold.test_grounding_has_key_invariants",
+        "line": 1105
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestBlockTutorialScaffold.test_no_deterministic_output_assertions",
+        "line": 1111
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestBlockTutorialScaffold.test_has_io_summary",
+        "line": 1116
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestBlockTutorialScaffold.test_has_usage_disclaimer",
+        "line": 1121
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestBlockTutorialScaffold.test_mentions_concordance_discordance_credibility",
+        "line": 1127
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestBlockTutorialScaffold.test_has_preconditions_wording",
+        "line": 1133
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestBlockTutorialScaffold.test_has_min_b1_b2_diagonal_wording",
+        "line": 1138
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestBlockTutorialScaffold.test_has_mismatch_silently_mis_compute_wording",
+        "line": 1142
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestBlockTutorialScaffold.test_clipping_attributed_to_credibility_stage",
+        "line": 1146
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestBlockTutorialScaffold.test_no_misleading_guarantee_phrases",
+        "line": 1150
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_file_exists",
+        "line": 1166
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_has_doctype",
+        "line": 1171
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_has_csp_meta",
+        "line": 1175
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_has_style_standard_v1",
+        "line": 1180
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_has_shell_structure",
+        "line": 1184
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_has_sidebar",
+        "line": 1188
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_has_rows_container",
+        "line": 1192
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_has_five_range_rows",
+        "line": 1196
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_has_jump_navigation",
+        "line": 1204
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_has_theme_toggle",
+        "line": 1212
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_has_progress_indicator",
+        "line": 1218
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_references_local_scripts",
+        "line": 1222
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_each_row_has_required_subheadings",
+        "line": 1227
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_no_external_assets",
+        "line": 1234
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_has_accumulator_content",
+        "line": 1240
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_has_option3_grounding_facts_line",
+        "line": 1248
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_has_option3_expandable_details",
+        "line": 1255
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_grounding_has_key_invariants",
+        "line": 1262
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_no_deterministic_output_assertions",
+        "line": 1268
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_has_io_summary",
+        "line": 1273
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_has_usage_disclaimer",
+        "line": 1278
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_mentions_o_n_memory",
+        "line": 1284
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_mentions_block_tiling",
+        "line": 1288
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_has_preconditions_wording",
+        "line": 1292
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_has_conditional_flow_conservation",
+        "line": 1297
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_normalize_mentions_min_max",
+        "line": 1301
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_normalize_mentions_hides_scale",
+        "line": 1305
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_flow_conservation_mentions_exactly_once",
+        "line": 1309
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_flow_conservation_mentions_no_overlap",
+        "line": 1313
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_flow_conservation_mentions_no_gaps",
+        "line": 1317
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_normalize_mentions_outliers",
+        "line": 1321
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_normalize_mentions_convention",
+        "line": 1325
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_flow_conservation_mentions_same_weights_for_all_blocks",
+        "line": 1329
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_flow_conservation_mentions_floating_point_tolerance",
+        "line": 1334
+      }
+    ]
+  },
+  {
+    "path": "docs/design/phase6/credibility_review/snapshot/tests/test_module_docs.py",
+    "bytes": 68786,
+    "sha256": "6330dd0f234fee94e6d1294dbb7f13e5033101b6c2661ba80771ed0267f03431",
+    "classes": [
+      "TestTutorialStaticFile",
+      "TestHTMLValidity",
+      "TestExternalAssetNegative",
+      "TestJSAssetFiles",
+      "TestConcordanceTutorialScaffold",
+      "TestDiscordanceDeepTutorial",
+      "TestCredibilityDeepTutorial",
+      "TestRankingTutorialScaffold",
+      "TestValidateTutorialScaffold",
+      "TestBlockTutorialScaffold",
+      "TestAccumulatorTutorialScaffold"
+    ],
+    "tests": [
+      {
+        "kind": "method",
+        "qualified_name": "TestTutorialStaticFile.test_no_external_assets",
+        "line": 49
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestTutorialStaticFile.test_has_csp_meta_tag",
+        "line": 55
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestTutorialStaticFile.test_csp_meta_no_unsafe_eval",
+        "line": 59
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestTutorialStaticFile.test_has_style_standard_v1",
+        "line": 66
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestTutorialStaticFile.test_has_threshold_docs",
+        "line": 70
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestTutorialStaticFile.test_has_layout2_structure",
+        "line": 77
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestHTMLValidity.test_html_files_exist",
+        "line": 94
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestHTMLValidity.test_all_html_have_doctype",
+        "line": 98
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestHTMLValidity.test_all_html_have_charset",
+        "line": 105
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestHTMLValidity.test_all_html_have_viewport",
+        "line": 113
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestHTMLValidity.test_all_html_have_csp",
+        "line": 119
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestExternalAssetNegative.test_no_external_scripts",
+        "line": 137
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestExternalAssetNegative.test_no_external_stylesheets",
+        "line": 145
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestExternalAssetNegative.test_no_css_imports",
+        "line": 153
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestExternalAssetNegative.test_no_external_fonts",
+        "line": 161
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestJSAssetFiles.test_theme_js_exists",
+        "line": 183
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestJSAssetFiles.test_highlight_js_exists",
+        "line": 187
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestJSAssetFiles.test_theme_js_no_external_fetch",
+        "line": 191
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestJSAssetFiles.test_highlight_js_no_external_fetch",
+        "line": 198
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_file_exists",
+        "line": 217
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_has_csp_meta_tag",
+        "line": 222
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_has_style_standard_v1",
+        "line": 226
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_has_layout2_structure",
+        "line": 230
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_has_r1_through_r5_rows",
+        "line": 236
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_has_io_summary_section",
+        "line": 241
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_has_jump_navigation",
+        "line": 246
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_has_progress_indicator",
+        "line": 252
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_has_theme_toggle",
+        "line": 257
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_references_js_assets",
+        "line": 263
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_each_row_has_required_subheadings",
+        "line": 268
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_no_external_assets",
+        "line": 275
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_has_concordance_content",
+        "line": 281
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_has_option3_grounding_facts",
+        "line": 289
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_has_option3_expandable_details",
+        "line": 296
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_r1_has_substantive_content",
+        "line": 301
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_r2_has_piecewise_formula_content",
+        "line": 309
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_r2_mentions_maximize_minimize",
+        "line": 320
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_r3_has_implementation_details",
+        "line": 324
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_r4_has_weight_normalization_content",
+        "line": 330
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_r4_weights_nonnegative_requirement",
+        "line": 336
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_r4_upstream_enforcement",
+        "line": 343
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_r3_qp_masked_wording",
+        "line": 349
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_r5_has_edge_cases_content",
+        "line": 357
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_io_summary_has_shapes_and_invariants",
+        "line": 364
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_has_usage_disclaimer",
+        "line": 372
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_no_deterministic_output_assertions",
+        "line": 377
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_no_unqualified_speedup_claims",
+        "line": 385
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_grounding_mentions_electre_context",
+        "line": 393
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_has_notation_block",
+        "line": 401
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_notation_explains_g_function",
+        "line": 410
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_explains_diff_shape_with_example",
+        "line": 415
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestConcordanceTutorialScaffold.test_example_clarifies_alts_terminology",
+        "line": 423
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestDiscordanceDeepTutorial.test_file_exists",
+        "line": 442
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestDiscordanceDeepTutorial.test_has_csp_meta_tag",
+        "line": 447
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestDiscordanceDeepTutorial.test_has_style_standard_v1",
+        "line": 451
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestDiscordanceDeepTutorial.test_has_layout2_structure",
+        "line": 455
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestDiscordanceDeepTutorial.test_has_r1_through_r5_rows",
+        "line": 461
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestDiscordanceDeepTutorial.test_has_io_summary_section",
+        "line": 466
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestDiscordanceDeepTutorial.test_has_jump_navigation",
+        "line": 471
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestDiscordanceDeepTutorial.test_has_progress_indicator",
+        "line": 477
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestDiscordanceDeepTutorial.test_has_theme_toggle",
+        "line": 482
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestDiscordanceDeepTutorial.test_references_js_assets",
+        "line": 488
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestDiscordanceDeepTutorial.test_each_row_has_required_subheadings",
+        "line": 493
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestDiscordanceDeepTutorial.test_no_external_assets",
+        "line": 500
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestDiscordanceDeepTutorial.test_has_discordance_content",
+        "line": 506
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestDiscordanceDeepTutorial.test_verified_example_and_precise_veto_contract",
+        "line": 512
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestDiscordanceDeepTutorial.test_has_usage_disclaimer",
+        "line": 521
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestDiscordanceDeepTutorial.test_example_inputs_marked_illustrative",
+        "line": 527
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestDiscordanceDeepTutorial.test_has_option3_grounding_facts_line",
+        "line": 534
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestDiscordanceDeepTutorial.test_has_option3_expandable_details",
+        "line": 541
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestDiscordanceDeepTutorial.test_grounding_has_key_invariants",
+        "line": 548
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestDiscordanceDeepTutorial.test_no_recommended_threshold_defaults",
+        "line": 557
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestCredibilityDeepTutorial.test_file_exists",
+        "line": 578
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestCredibilityDeepTutorial.test_has_csp_meta_tag",
+        "line": 583
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestCredibilityDeepTutorial.test_has_style_standard_v1",
+        "line": 587
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestCredibilityDeepTutorial.test_has_layout2_structure",
+        "line": 591
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestCredibilityDeepTutorial.test_has_r1_through_r5_rows",
+        "line": 597
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestCredibilityDeepTutorial.test_has_io_summary_section",
+        "line": 602
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestCredibilityDeepTutorial.test_has_jump_navigation",
+        "line": 607
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestCredibilityDeepTutorial.test_has_progress_indicator",
+        "line": 612
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestCredibilityDeepTutorial.test_references_js_assets",
+        "line": 617
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestCredibilityDeepTutorial.test_each_row_has_required_subheadings",
+        "line": 622
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestCredibilityDeepTutorial.test_no_external_assets",
+        "line": 629
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestCredibilityDeepTutorial.test_has_credibility_content",
+        "line": 635
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestCredibilityDeepTutorial.test_has_option3_grounding_facts_line",
+        "line": 641
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestCredibilityDeepTutorial.test_has_option3_expandable_details",
+        "line": 648
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestCredibilityDeepTutorial.test_grounding_has_key_invariants",
+        "line": 655
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestCredibilityDeepTutorial.test_uses_implementation_contract_wording",
+        "line": 662
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestCredibilityDeepTutorial.test_diagonal_not_enforced_here_wording",
+        "line": 669
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestCredibilityDeepTutorial.test_example_has_computed_table_not_faux_stdout",
+        "line": 676
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestCredibilityDeepTutorial.test_has_usage_disclaimer",
+        "line": 682
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestRankingTutorialScaffold.test_file_exists",
+        "line": 700
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestRankingTutorialScaffold.test_has_csp_meta_tag",
+        "line": 705
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestRankingTutorialScaffold.test_has_style_standard_v1",
+        "line": 709
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestRankingTutorialScaffold.test_has_layout2_structure",
+        "line": 713
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestRankingTutorialScaffold.test_has_r1_through_r5_rows",
+        "line": 719
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestRankingTutorialScaffold.test_has_io_summary_section",
+        "line": 724
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestRankingTutorialScaffold.test_has_jump_navigation",
+        "line": 729
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestRankingTutorialScaffold.test_has_progress_indicator",
+        "line": 734
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestRankingTutorialScaffold.test_references_js_assets",
+        "line": 739
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestRankingTutorialScaffold.test_each_row_has_required_subheadings",
+        "line": 744
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestRankingTutorialScaffold.test_no_external_assets",
+        "line": 751
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestRankingTutorialScaffold.test_has_ranking_content",
+        "line": 757
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestRankingTutorialScaffold.test_has_option3_grounding_facts_line",
+        "line": 763
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestRankingTutorialScaffold.test_has_option3_expandable_details",
+        "line": 770
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestRankingTutorialScaffold.test_grounding_has_key_invariants",
+        "line": 777
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestRankingTutorialScaffold.test_no_deterministic_output_assertions",
+        "line": 784
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestRankingTutorialScaffold.test_no_seed_mention",
+        "line": 790
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestRankingTutorialScaffold.test_no_phi_norm_reference",
+        "line": 794
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestRankingTutorialScaffold.test_no_electre_iii_ii_typo",
+        "line": 798
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestRankingTutorialScaffold.test_has_usage_disclaimer",
+        "line": 802
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_file_exists",
+        "line": 818
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_has_doctype",
+        "line": 823
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_has_csp_meta",
+        "line": 827
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_has_shell_structure",
+        "line": 832
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_has_sidebar",
+        "line": 836
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_has_rows_container",
+        "line": 840
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_has_five_range_rows",
+        "line": 844
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_has_jump_navigation",
+        "line": 852
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_has_theme_toggle",
+        "line": 860
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_has_progress_indicator",
+        "line": 866
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_references_local_scripts",
+        "line": 870
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_each_row_has_required_subheadings",
+        "line": 875
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_no_external_assets",
+        "line": 882
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_has_validate_content",
+        "line": 888
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_has_option3_grounding_facts_line",
+        "line": 895
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_has_option3_expandable_details",
+        "line": 902
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_grounding_has_key_invariants",
+        "line": 909
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_no_deterministic_output_assertions",
+        "line": 915
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_has_io_summary",
+        "line": 921
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_has_usage_disclaimer",
+        "line": 926
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_mentions_fail_fast",
+        "line": 932
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_mentions_valueerror",
+        "line": 936
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_has_dark_mode_note_text_token",
+        "line": 941
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_has_dark_mode_note_size_token",
+        "line": 945
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_has_dark_mode_h4_color_token",
+        "line": 949
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_has_dark_mode_h4_border_token",
+        "line": 953
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_note_col_uses_note_text_token",
+        "line": 957
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_note_col_uses_note_size_token",
+        "line": 961
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_h4_uses_h4_color_token",
+        "line": 965
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_h4_has_border_left",
+        "line": 969
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_has_selection_accent_token",
+        "line": 974
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_has_selection_soft_token",
+        "line": 978
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_has_selection_border_token",
+        "line": 982
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_has_row_sel_styles",
+        "line": 986
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_selection_has_non_color_cue",
+        "line": 990
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestValidateTutorialScaffold.test_hl_uses_selection_tokens",
+        "line": 994
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestBlockTutorialScaffold.test_file_exists",
+        "line": 1010
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestBlockTutorialScaffold.test_has_doctype",
+        "line": 1015
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestBlockTutorialScaffold.test_has_csp_meta",
+        "line": 1019
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestBlockTutorialScaffold.test_has_style_standard_v1",
+        "line": 1024
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestBlockTutorialScaffold.test_has_shell_structure",
+        "line": 1028
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestBlockTutorialScaffold.test_has_sidebar",
+        "line": 1032
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestBlockTutorialScaffold.test_has_rows_container",
+        "line": 1036
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestBlockTutorialScaffold.test_has_five_range_rows",
+        "line": 1040
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestBlockTutorialScaffold.test_has_jump_navigation",
+        "line": 1048
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestBlockTutorialScaffold.test_has_theme_toggle",
+        "line": 1056
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestBlockTutorialScaffold.test_has_progress_indicator",
+        "line": 1062
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestBlockTutorialScaffold.test_references_local_scripts",
+        "line": 1066
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestBlockTutorialScaffold.test_each_row_has_required_subheadings",
+        "line": 1071
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestBlockTutorialScaffold.test_no_external_assets",
+        "line": 1078
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestBlockTutorialScaffold.test_has_block_content",
+        "line": 1084
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestBlockTutorialScaffold.test_has_option3_grounding_facts_line",
+        "line": 1091
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestBlockTutorialScaffold.test_has_option3_expandable_details",
+        "line": 1098
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestBlockTutorialScaffold.test_grounding_has_key_invariants",
+        "line": 1105
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestBlockTutorialScaffold.test_no_deterministic_output_assertions",
+        "line": 1111
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestBlockTutorialScaffold.test_has_io_summary",
+        "line": 1116
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestBlockTutorialScaffold.test_has_usage_disclaimer",
+        "line": 1121
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestBlockTutorialScaffold.test_mentions_concordance_discordance_credibility",
+        "line": 1127
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestBlockTutorialScaffold.test_has_preconditions_wording",
+        "line": 1133
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestBlockTutorialScaffold.test_has_min_b1_b2_diagonal_wording",
+        "line": 1138
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestBlockTutorialScaffold.test_has_mismatch_silently_mis_compute_wording",
+        "line": 1142
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestBlockTutorialScaffold.test_clipping_attributed_to_credibility_stage",
+        "line": 1146
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestBlockTutorialScaffold.test_no_misleading_guarantee_phrases",
+        "line": 1150
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_file_exists",
+        "line": 1166
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_has_doctype",
+        "line": 1171
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_has_csp_meta",
+        "line": 1175
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_has_style_standard_v1",
+        "line": 1180
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_has_shell_structure",
+        "line": 1184
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_has_sidebar",
+        "line": 1188
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_has_rows_container",
+        "line": 1192
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_has_five_range_rows",
+        "line": 1196
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_has_jump_navigation",
+        "line": 1204
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_has_theme_toggle",
+        "line": 1212
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_has_progress_indicator",
+        "line": 1218
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_references_local_scripts",
+        "line": 1222
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_each_row_has_required_subheadings",
+        "line": 1227
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_no_external_assets",
+        "line": 1234
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_has_accumulator_content",
+        "line": 1240
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_has_option3_grounding_facts_line",
+        "line": 1248
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_has_option3_expandable_details",
+        "line": 1255
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_grounding_has_key_invariants",
+        "line": 1262
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_no_deterministic_output_assertions",
+        "line": 1268
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_has_io_summary",
+        "line": 1273
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_has_usage_disclaimer",
+        "line": 1278
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_mentions_o_n_memory",
+        "line": 1284
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_mentions_block_tiling",
+        "line": 1288
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_has_preconditions_wording",
+        "line": 1292
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_has_conditional_flow_conservation",
+        "line": 1297
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_normalize_mentions_min_max",
+        "line": 1301
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_normalize_mentions_hides_scale",
+        "line": 1305
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_flow_conservation_mentions_exactly_once",
+        "line": 1309
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_flow_conservation_mentions_no_overlap",
+        "line": 1313
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_flow_conservation_mentions_no_gaps",
+        "line": 1317
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_normalize_mentions_outliers",
+        "line": 1321
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_normalize_mentions_convention",
+        "line": 1325
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_flow_conservation_mentions_same_weights_for_all_blocks",
+        "line": 1329
+      },
+      {
+        "kind": "method",
+        "qualified_name": "TestAccumulatorTutorialScaffold.test_flow_conservation_mentions_floating_point_tolerance",
+        "line": 1334
+      }
+    ]
+  }
+]

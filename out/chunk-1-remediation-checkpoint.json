@@ -1,0 +1,48 @@
+{
+  "chunk": "1-remediation",
+  "state": "blocked",
+  "timestamp": "2026-10-21",
+  "objective": "Update legacy CLI and security tests plus documentation notes to the approved strict shared contract.",
+  "authoritative_sources": [
+    "web-app-requirements.txt",
+    "docs/decisions/web-app-design-meeting-report.md",
+    "docs/decisions/web-app-implementation-milestones.md",
+    "electre3/shared.py",
+    "electre3/cli_run.py",
+    "electre3/config.py",
+    "app/services/security.py",
+    "existing tests"
+  ],
+  "state_transitions": [
+    "planned: inherited verified strict-contract checkpoint at out/chunk-1-checkpoint.json",
+    "active: created this pre-change checkpoint",
+    "checkpointed: migrated strict-policy conflicts in tests/test_cli_run.py and tests/test_security.py; created documentation notes",
+    "blocked: full pytest collection fails from unrelated duplicate archived test module names"
+  ],
+  "changes": [
+    "tests/test_cli_run.py",
+    "tests/test_security.py",
+    "docs/decisions/chunk-1-documentation-notes.md"
+  ],
+  "acceptance_results": {
+    "focused_command": "python -m pytest tests/test_cli_run.py tests/test_security.py tests/test_shared_contract.py -q && python -m compileall -q electre3 app",
+    "focused_result": "55 passed in 0.61s; compileall succeeded.",
+    "full_command": "python -m pytest -q",
+    "full_result": "blocked during collection: duplicate test_module_docs module names in archived documentation snapshots",
+    "documentation_check": "The Markdown artifact exists and contains Setup, CLI use, Web workflow, Validation errors and debugging, Current implementation/Approved future target, and Source evidence sections."
+  },
+  "failure": {
+    "classification": "non_retryable within scope",
+    "report": "out/chunk-1-remediation-failure-report.json",
+    "reason": "Fixing the archived snapshot test module collision is unrelated to strict policy remediation and excluded by scope."
+  },
+  "exclusions": [
+    "routes",
+    "serializers",
+    "cache",
+    "downloads",
+    "web workflow implementation"
+  ],
+  "fallback_applied": "Preserved a structured failure report and stopped after one full-suite attempt.",
+  "next_action": "A separately authorized test-collection remediation can resolve the duplicate archived module names, then rerun the full suite."
+}

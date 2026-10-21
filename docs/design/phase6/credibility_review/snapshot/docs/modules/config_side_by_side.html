@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; connect-src 'none'; img-src 'self' data:; font-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline';">
+<title>config - Side by Side</title>
+<style>
+:root {
+  --color-bg: #ffffff;
+  --color-bg-alt: #f8f9fa;
+  --color-text: #1a1a2e;
+  --color-text-muted: #6c757d;
+  --color-primary: #2563eb;
+  --color-border: #e5e7eb;
+  --color-code-bg: #f1f5f9;
+  --font-sans: Arial, sans-serif;
+  --font-mono: 'Consolas', 'Monaco', monospace;
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--color-text);
+  background: var(--color-bg);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.header {
+  background: var(--color-primary);
+  color: white;
+  padding: var(--space-sm) var(--space-md);
+  font-weight: 600;
+  flex-shrink: 0;
+}
+.container {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+.pane {
+  flex: 1;
+  overflow: auto;
+  padding: var(--space-md);
+}
+.pane-code {
+  background: var(--color-code-bg);
+  border-right: 1px solid var(--color-border);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  white-space: pre;
+}
+.pane-doc { background: var(--color-bg); }
+.pane-header {
+  font-weight: 600;
+  padding: var(--space-sm) var(--space-md);
+  background: var(--color-bg-alt);
+  border-bottom: 1px solid var(--color-border);
+  position: sticky;
+  top: 0;
+}
+.line-num {
+  display: inline-block;
+  width: 3em;
+  color: var(--color-text-muted);
+  text-align: right;
+  padding-right: var(--space-sm);
+  user-select: none;
+}
+h1 { font-size: 1.5rem; margin-bottom: var(--space-md); }
+h2 { font-size: 1.25rem; margin-top: var(--space-lg); margin-bottom: var(--space-sm); color: var(--color-primary); }
+h3 { font-size: 1.1rem; margin-top: var(--space-md); margin-bottom: var(--space-xs); }
+p { margin-bottom: var(--space-sm); }
+code { font-family: var(--font-mono); font-size: 0.9em; background: var(--color-code-bg); padding: 2px 4px; border-radius: 3px; }
+pre { background: var(--color-code-bg); padding: var(--space-sm); border-radius: var(--radius-sm); overflow-x: auto; margin-bottom: var(--space-sm); }
+pre code { background: none; padding: 0; }
+table { width: 100%; border-collapse: collapse; margin-bottom: var(--space-sm); font-size: 0.9em; }
+th, td { border: 1px solid var(--color-border); padding: var(--space-xs) var(--space-sm); text-align: left; }
+th { background: var(--color-bg-alt); }
+ul, ol { margin-bottom: var(--space-sm); padding-left: var(--space-lg); }
+@media (max-width: 900px) {
+  .container { flex-direction: column; }
+  .pane-code { border-right: none; border-bottom: 1px solid var(--color-border); max-height: 40vh; }
+}
+</style>
+</head>
+<body>
+<div class="header">ELECTRE III Module Documentation: config.py</div>
+<div class="container">
+<div class="pane pane-code">
+<div class="pane-header">Source Code</div>
+<div style="padding: var(--space-md);"><span class="line-num">1</span>&quot;&quot;&quot;Configuration dataclasses for ELECTRE III computations.&quot;&quot;&quot;
+<span class="line-num">2</span> 
+<span class="line-num">3</span>from dataclasses import dataclass
+<span class="line-num">4</span>from typing import Optional
+<span class="line-num">5</span> 
+<span class="line-num">6</span> 
+<span class="line-num">7</span>@dataclass
+<span class="line-num">8</span>class CriterionConfig:
+<span class="line-num">9</span>    &quot;&quot;&quot;Configuration for a single criterion.
+<span class="line-num">10</span> 
+<span class="line-num">11</span>    Attributes:
+<span class="line-num">12</span>        name: Human-readable criterion name.
+<span class="line-num">13</span>        weight: Relative importance (will be normalized).
+<span class="line-num">14</span>        q: Indifference threshold.
+<span class="line-num">15</span>        p: Preference threshold.
+<span class="line-num">16</span>        v: Veto threshold.
+<span class="line-num">17</span>        maximize: If True, higher values are better. Default True.
+<span class="line-num">18</span>    &quot;&quot;&quot;
+<span class="line-num">19</span> 
+<span class="line-num">20</span>    name: str
+<span class="line-num">21</span>    weight: float
+<span class="line-num">22</span>    q: float
+<span class="line-num">23</span>    p: float
+<span class="line-num">24</span>    v: float
+<span class="line-num">25</span>    maximize: bool = True
+<span class="line-num">26</span> 
+<span class="line-num">27</span>    def __post_init__(self) -&gt; None:
+<span class="line-num">28</span>        &quot;&quot;&quot;Validate threshold ordering: 0 &lt;= q &lt;= p &lt;= v.&quot;&quot;&quot;
+<span class="line-num">29</span>        if self.q &lt; 0:
+<span class="line-num">30</span>            raise ValueError(f&quot;q must be &gt;= 0, got {self.q}&quot;)
+<span class="line-num">31</span>        if self.p &lt; self.q:
+<span class="line-num">32</span>            raise ValueError(f&quot;p must be &gt;= q, got p={self.p}, q={self.q}&quot;)
+<span class="line-num">33</span>        if self.v &lt; self.p:
+<span class="line-num">34</span>            raise ValueError(f&quot;v must be &gt;= p, got v={self.v}, p={self.p}&quot;)
+<span class="line-num">35</span>        if self.weight &lt;= 0:
+<span class="line-num">36</span>            raise ValueError(f&quot;weight must be &gt; 0, got {self.weight}&quot;)
+<span class="line-num">37</span> 
+<span class="line-num">38</span> 
+<span class="line-num">39</span>@dataclass
+<span class="line-num">40</span>class ComputeConfig:
+<span class="line-num">41</span>    &quot;&quot;&quot;Configuration for the computation process.
+<span class="line-num">42</span> 
+<span class="line-num">43</span>    Attributes:
+<span class="line-num">44</span>        block_size: Number of alternatives per block. Default 1000.
+<span class="line-num">45</span>        use_numba: Enable Numba JIT if available. Default True.
+<span class="line-num">46</span>        seed: Random seed for tie-breaking. Default None.
+<span class="line-num">47</span>    &quot;&quot;&quot;
+<span class="line-num">48</span> 
+<span class="line-num">49</span>    block_size: int = 1000
+<span class="line-num">50</span>    use_numba: bool = True
+<span class="line-num">51</span>    seed: Optional[int] = None
+<span class="line-num">52</span> 
+<span class="line-num">53</span>    def __post_init__(self) -&gt; None:
+<span class="line-num">54</span>        &quot;&quot;&quot;Validate block size.&quot;&quot;&quot;
+<span class="line-num">55</span>        if self.block_size &lt; 1:
+<span class="line-num">56</span>            raise ValueError(f&quot;block_size must be &gt;= 1, got {self.block_size}&quot;)
+<span class="line-num">57</span> 
+<span class="line-num">58</span> 
+<span class="line-num">59</span>def normalize_weights(criteria: list[CriterionConfig]) -&gt; list[float]:
+<span class="line-num">60</span>    &quot;&quot;&quot;Normalize criterion weights to sum to 1.0.
+<span class="line-num">61</span> 
+<span class="line-num">62</span>    Args:
+<span class="line-num">63</span>        criteria: List of criterion configurations.
+<span class="line-num">64</span> 
+<span class="line-num">65</span>    Returns:
+<span class="line-num">66</span>        List of normalized weights in same order.
+<span class="line-num">67</span> 
+<span class="line-num">68</span>    Raises:
+<span class="line-num">69</span>        ValueError: If total weight is zero or negative.
+<span class="line-num">70</span>    &quot;&quot;&quot;
+<span class="line-num">71</span>    total = sum(c.weight for c in criteria)
+<span class="line-num">72</span>    if total &lt;= 0:
+<span class="line-num">73</span>        raise ValueError(f&quot;Total weight must be &gt; 0, got {total}&quot;)
+<span class="line-num">74</span>    return [c.weight / total for c in criteria]
+<span class="line-num">75</span> </div>
+</div>
+<div class="pane pane-doc">
+<div class="pane-header">Documentation</div>
+<div style="padding: var(--space-md);"><h1>Config Module</h1>
+
+<p>This document describes the configuration dataclasses in <code>electre3/config.py</code>.</p>
+
+<h2>1. Purpose</h2>
+
+<p>The config module defines data structures for ELECTRE III parameters.</p>
+<p>It validates inputs before expensive computations begin.</p>
+
+<h2>2. CriterionConfig</h2>
+
+<h3>2.1 Definition</h3>
+
+<pre><code>
+@dataclass
+class CriterionConfig:
+    name: str
+    weight: float
+    q: float  # indifference threshold
+    p: float  # preference threshold
+    v: float  # veto threshold
+    maximize: bool = True
+</code></pre>
+
+<h3>2.2 Threshold Semantics</h3>
+
+<table>
+<tr><th>Threshold</th><th>Symbol</th><th>Meaning</th></tr>
+<tr><td>Indifference</td><td>q</td><td>Differences ≤ q are negligible</td></tr>
+<tr><td>Preference</td><td>p</td><td>Differences ≥ p show clear preference</td></tr>
+<tr><td>Veto</td><td>v</td><td>Differences ≥ v override concordance</td></tr>
+</table>
+
+<h3>2.3 Validation Rules</h3>
+
+<p>The thresholds must satisfy:</p>
+
+<pre><code>
+0 ≤ q ≤ p ≤ v
+</code></pre>
+
+<ul>
+<li><strong>q ≥ 0</strong>: Indifference cannot be negative</li>
+<li><strong>p ≥ q</strong>: Preference threshold includes indifference zone</li>
+<li><strong>v ≥ p</strong>: Veto threshold includes preference zone</li>
+</ul>
+
+<h3>2.4 Weight Constraint</h3>
+
+<p>Weight must be positive:</p>
+
+<pre><code>
+weight &gt; 0
+</code></pre>
+
+<p>Weights are later normalized to sum to 1.0.</p>
+
+<h2>3. ComputeConfig</h2>
+
+<h3>3.1 Definition</h3>
+
+<pre><code>
+@dataclass
+class ComputeConfig:
+    block_size: int = 1000
+    use_numba: bool = True
+    seed: Optional[int] = None
+</code></pre>
+
+<h3>3.2 Block Size</h3>
+
+<p>Controls memory vs. computation trade-off:</p>
+
+<table>
+<tr><th>Block Size</th><th>Memory per Block</th><th>Suitable For</th></tr>
+<tr><td>500</td><td>~20 MB</td><td>Low-RAM systems</td></tr>
+<tr><td>1000</td><td>~80 MB</td><td>Default</td></tr>
+<tr><td>2000</td><td>~320 MB</td><td>High-RAM systems</td></tr>
+</table>
+
+<h3>3.3 Validation</h3>
+
+<p>Block size must be at least 1:</p>
+
+<pre><code>
+block_size ≥ 1
+</code></pre>
+
+<h2>4. Weight Normalization</h2>
+
+<h3>4.1 Formula</h3>
+
+<pre><code>
+w_i^norm = w_i / Σ w_j
+</code></pre>
+
+<h3>4.2 Function</h3>
+
+<pre><code>
+def normalize_weights(criteria: list[CriterionConfig]) -&gt; list[float]
+</code></pre>
+
+<p><strong>Input</strong>: List of criterion configurations.</p>
+<p><strong>Output</strong>: List of normalized weights summing to 1.0.</p>
+
+<h3>4.3 Example</h3>
+
+<pre><code>
+criteria = [
+    CriterionConfig(&quot;Price&quot;, weight=3, q=5, p=10, v=20),
+    CriterionConfig(&quot;Quality&quot;, weight=2, q=3, p=8, v=15),
+]
+weights = normalize_weights(criteria)
+# weights = [0.6, 0.4]
+</code></pre>
+
+<h2>5. Error Handling</h2>
+
+<h3>5.1 Invalid Threshold Order</h3>
+
+<pre><code>
+CriterionConfig(&quot;X&quot;, 1, q=10, p=5, v=20)
+# ValueError: p must be &gt;= q, got p=5, q=10
+</code></pre>
+
+<h3>5.2 Zero Weight</h3>
+
+<pre><code>
+CriterionConfig(&quot;X&quot;, weight=0, q=1, p=2, v=3)
+# ValueError: weight must be &gt; 0, got 0
+</code></pre>
+
+<h3>5.3 Invalid Block Size</h3>
+
+<pre><code>
+ComputeConfig(block_size=0)
+# ValueError: block_size must be &gt;= 1, got 0
+</code></pre>
+
+<h2>6. Determinism Note</h2>
+
+<p>Configuration is deterministic. The same inputs always produce the same validated objects. The optional <code>seed</code> parameter ensures reproducible tie-breaking in ranking.</p>
+</div>
+</div>
+</div>
+</body>
+</html>

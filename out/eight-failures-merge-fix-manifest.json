@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "purpose": "Evidence-backed resolution map for the eight failures after duplicate-test consolidation.",
+  "changes": [
+    {
+      "failure_id": "docs/design/committee_phase5/discordance_review/snapshot/tests/test_discordance_deep.py::test_style_and_notation_identical_to_approved_concordance",
+      "classification": "missing fixture/path",
+      "evidence": "FileNotFoundError for snapshot/docs/modules/concordance_tutorial_side_by_side.html.",
+      "change": "Restored snapshot-relative docs/modules fixture tree from docs/modules.",
+      "assertions_preserved": true
+    },
+    {
+      "failure_id": "docs/design/committee_phase5/discordance_review/snapshot/tests/test_discordance_deep.py::test_code_excerpts_match_actual_source",
+      "classification": "missing fixture/path",
+      "evidence": "FileNotFoundError for snapshot/electre3/discordance.py.",
+      "change": "Restored snapshot-relative electre3/discordance.py from active source.",
+      "assertions_preserved": true
+    },
+    {
+      "failure_id": "docs/design/committee_phase5/discordance_review/snapshot/tests/test_discordance_deep.py::test_local_links_and_served_assets",
+      "classification": "missing fixture/path",
+      "evidence": "Missing snapshot/docs/modules/credibility_tutorial_side_by_side.html link target.",
+      "change": "Restored snapshot-relative docs/modules fixture tree, including linked pages and assets.",
+      "assertions_preserved": true
+    },
+    {
+      "failure_id": "docs/design/committee_phase5/review/snapshot/tests/test_concordance_n1.py::test_all_concept_links_exist_offline_and_served",
+      "classification": "missing fixture/path",
+      "evidence": "Missing snapshot/docs/modules/discordance_tutorial_side_by_side.html link target.",
+      "change": "Restored snapshot-relative docs/modules fixture tree from docs/modules.",
+      "assertions_preserved": true
+    },
+    {
+      "failure_id": "docs/design/phase6/credibility_review/snapshot/tests/test_credibility_deep.py::test_style_notation_and_sample_remain_consistent",
+      "classification": "missing fixture/path",
+      "evidence": "FileNotFoundError for snapshot/docs/modules/concordance_tutorial_side_by_side.html.",
+      "change": "Restored snapshot-relative docs/modules fixture tree from docs/modules.",
+      "assertions_preserved": true
+    },
+    {
+      "failure_id": "docs/design/phase6/credibility_review/snapshot/tests/test_credibility_deep.py::test_source_excerpts_and_highlights_are_exact",
+      "classification": "missing fixture/path",
+      "evidence": "FileNotFoundError for snapshot/electre3/credibility.py.",
+      "change": "Restored snapshot-relative electre3/credibility.py from active source.",
+      "assertions_preserved": true
+    },
+    {
+      "failure_id": "docs/design/phase6/credibility_review/snapshot/tests/test_credibility_deep.py::test_all_local_links_and_http_targets",
+      "classification": "missing fixture/path",
+      "evidence": "Missing snapshot/docs/modules/block_tutorial_side_by_side.html link target.",
+      "change": "Restored snapshot-relative docs/modules fixture tree, including linked pages and assets.",
+      "assertions_preserved": true
+    },
+    {
+      "failure_id": "tests/test_preview_gate.py::TestComputeGate::test_compute_allowed_after_confirm",
+      "classification": "stale test input",
+      "evidence": "The test sent legacy criteria without required name/maximize fields and weights summed to 2; strict shared contract correctly returned 400.",
+      "change": "Updated only this success-path fixture to two named, maximizing criteria with 0.5 weights.",
+      "assertions_preserved": true
+    }
+  ],
+  "application_behavior_changes": [],
+  "unrelated_application_changes": false
+}

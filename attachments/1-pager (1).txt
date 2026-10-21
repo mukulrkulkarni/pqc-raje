@@ -1,0 +1,689 @@
+# 1-Page Problem Statement & Invariants — CSV + JSON → Sorted List (v4)
+
+---
+
+## Problem Statement
+
+**CLI today:** `sort-csv data.csv rules.json > out.csv`
+
+**Web target:** A single local Flask app on `127.0.0.1`. The user defines rules (by pasting JSON **or** filling structured fields), pastes CSV data whose columns are derived from the JSON keys, reviews a preview, confirms, and receives the final sorted table.
+
+**Constraints:** No JavaScript. No file uploads. No network beyond `localhost`. No build step.
+
+**Success criterion:** Identical input always produces byte-identical output, whether run via the CLI or the web form.
+
+---
+
+## Data Model
+
+The JSON is a **flat dictionary whose keys ARE the CSV column names** (after `ITEM`).
+
+```json
+{
+  "city": {"op": "eq",  "value": "Berlin"},
+  "age":  {"op": "gte", "value": 30},
+  "_sort": {"key": "age", "dir": "desc"}
+}
+```
+
+- Every key except `_sort` → a CSV column (after `ITEM`)
+- `n` keys (excluding `_sort`) → CSV must have exactly `n + 1` columns: `ITEM, key₁, key₂, … keyₙ`
+- `_sort` is the only reserved key; its `.key` must be one of the other keys
+
+**Matching CSV:**
+```
+ITEM,city,age
+Alice,Berlin,34
+Bob,Paris,28
+Carol,Berlin,41
+Dave,Tokyo,28
+```
+
+---
+
+## Workflow (4 steps, no JS)
+
+```
+┌──────────┐      ┌──────────────────┐      ┌─────────────────┐      ┌────────────┐
+│ Step 1   │      │ Step 2           │      │ Step 3          │      │ Step 4     │
+│ /        │─────▶│ /confirm-csv     │─────▶│ /preview        │─────▶│ /compute   │
+│ Define   │      │ Paste CSV        │      │ Review +        │      │ Final      │
+│ Rules    │      │ (schema checked) │      │ Confirm button  │      │ sorted     │
+└──────────┘      └──────────────────┘      └─────────────────┘      │ table      │
+  A: paste JSON                  Validates:             Shows:        └────────────┘
+  B: structured fields           columns match          filter-only
+                                 JSON keys,             rows (first 5)
+                                 first 3 rows           + "Confirm"
+```
+
+| Step | Route | Method | Purpose |
+|------|-------|--------|---------|
+| 1 | `/` | GET | User defines rules (paste JSON **or** fill fields) |
+| 2 | `/confirm-csv` | POST | JSON parsed → expected columns shown → user pastes CSV |
+| 3 | `/preview` | POST | CSV validated → filter applied → first 5 rows shown → user confirms |
+| 4 | `/compute` | POST | Full sort executed → final table rendered |
+
+---
+
+## Input Methods (Step 1)
+
+| Method | What the user does | Backend reads |
+|--------|-------------------|---------------|
+| **A** — Paste JSON | Fills the `rules_json` textarea | `rules_json` (parsed as JSON) |
+| **B** — Structured fields | Fills per-column name/op/value inputs + sort key/dir | Assembles JSON server-side from `col{i}_name`, `col{i}_op`, `col{i}_value`, `sort_key`, `sort_dir` |
+
+**Dispatch rule:** If `rules_json` is non-empty → Mode A. Otherwise → Mode B. No radio button needed.
+
+---
+
+## Non-Negotiable Invariants
+
+| # | Invariant | Rule |
+|---|-----------|------|
+| 1 | **Determinism** | `core.py::sort_csv(csv_text, rules_dict) → str` is pure. No `random`, `time`, `os`. Same input → same output, every time, in any engine. |
+| 2 | **Allow-lists** | JSON keys (except `_sort`) must match `[a-zA-Z_]+`. `op` ∈ `{eq,neq,gt,lt,gte,lte,contains}`. `dir` ∈ `{asc,desc}`. `_sort.key` must be one of the JSON's own keys. Backend rejects anything else. |
+| 3 | **CSP** | `default-src 'none'; style-src 'self'; form-action 'self'; base-uri 'none'; object-src 'none'; frame-ancestors 'none'`. No `script-src` at all (no JS exists). |
+| 4 | **File containment** | One folder, zero external requests. Data lives only in POST body → response. Never written to disk, never sent anywhere. |
+| 5 | **Core isolation** | `core.py` has no Flask, no I/O, no `os`, no `socket`. Only `csv`, `io`, `json` from stdlib. |
+| 6 | **Schema lock** | CSV header must be exactly `ITEM` + JSON keys (in order). Mismatch → immediate error at Step 2, before any computation. |
+
+---
+
+## Implementation
+
+### `core.py` (pure logic — no I/O, no framework)
+
+```python
+import csv, io, json
+
+ALLOWED_OPS  = frozenset(['eq','neq','gt','lt','gte','lte','contains'])
+ALLOWED_DIRS = frozenset(['asc','desc'])
+RESERVED     = frozenset(['_sort'])
+
+def parse_rules(json_text: str) -> dict:
+    """Parse + validate JSON. Returns {'columns': [...], 'filters': [...], 'sort': {...}}."""
+    raw = json.loads(json_text)
+    if '_sort' not in raw:
+        raise ValueError("Missing '_sort' key in JSON")
+    sort = raw['_sort']
+    if sort['dir'] not in ALLOWED_DIRS:
+        raise ValueError(f"Disallowed direction: {sort['dir']}")
+    if sort['key'] not in raw or sort['key'] in RESERVED:
+        raise ValueError(f"Sort key '{sort['key']}' not a valid column")
+
+    columns = [k for k in raw if k not in RESERVED]
+    if not columns:
+        raise ValueError("No column keys found")
+
+    filters = []
+    for col in columns:
+        spec = raw[col]
+        if spec['op'] not in ALLOWED_OPS:
+            raise ValueError(f"Disallowed operator '{spec['op']}' on column '{col}'")
+        filters.append({'key': col, 'op': spec['op'], 'value': spec['value']})
+
+    return {'columns': columns, 'filters': filters, 'sort': sort}
+
+def validate_csv(csv_text: str, expected_columns: list) -> tuple:
+    """Check CSV header matches ITEM + expected_columns. Returns (headers, rows)."""
+    reader = csv.DictReader(io.StringIO(csv_text))
+    headers = reader.fieldnames
+    expected = ['ITEM'] + expected_columns
+    if headers != expected:
+        raise ValueError(f"CSV columns {headers} don't match expected {expected}")
+    return headers, list(reader)
+
+def sort_csv(csv_text: str, rules: dict) -> str:
+    """Full computation. rules = output of parse_rules(). Returns CSV string."""
+    headers, rows = validate_csv(csv_text, rules['columns'])
+
+    for f in rules['filters']:
+        rows = [r for r in rows if _apply(r[f['key']], f['op'], f['value'])]
+
+    sort_key = rules['sort']['key']
+    reverse  = rules['sort']['dir'] == 'desc'
+    rows.sort(key=lambda r: _sort_val(r[sort_key]), reverse=reverse)
+
+    buf = io.StringIO()
+    w = csv.DictWriter(buf, fieldnames=headers, lineterminator='\n')
+    w.writeheader()
+    w.writerows(rows)
+    return buf.getvalue()
+
+def _apply(val, op, target):
+    n, t = _num(val), _num(target)
+    if op == 'eq':       return val == str(target)
+    if op == 'neq':      return val != str(target)
+    if op == 'gt':       return (n > t)   if (n is not None and t is not None) else val > str(target)
+    if op == 'lt':       return (n < t)   if (n is not None and t is not None) else val < str(target)
+    if op == 'gte':      return (n >= t)  if (n is not None and t is not None) else val >= str(target)
+    if op == 'lte':      return (n <= t)  if (n is not None and t is not None) else val <= str(target)
+    if op == 'contains': return str(target) in val
+
+def _sort_val(v):
+    n = _num(v)
+    return (0, n) if n is not None else (1, v)
+
+def _num(v):
+    try: return float(v)
+    except (ValueError, TypeError): return None
+```
+
+### `app.py` (Flask — the only I/O layer)
+
+```python
+from flask import Flask, request, render_template
+import core, csv, io, json
+
+app = Flask(__name__)
+CSP = ("default-src 'none'; style-src 'self'; form-action 'self'; "
+       "base-uri 'none'; object-src 'none'; frame-ancestors 'none'")
+
+@app.after_request
+def csp(resp):
+    resp.headers['Content-Security-Policy'] = CSP
+    return resp
+
+# ─── Step 1: Show rules form ──────────────────────────────────────
+@app.route('/', methods=['GET'])
+def index():
+    return render_template('index.html', error=None)
+
+# ─── Step 2: Rules submitted → show CSV form ─────────────────────
+@app.route('/confirm-csv', methods=['POST'])
+def confirm_csv():
+    json_text = request.form.get('rules_json', '').strip()
+
+    if json_text:
+        # Mode A: user pasted JSON
+        try:
+            rules = core.parse_rules(json_text)
+        except Exception as e:
+            return render_template('index.html', error=str(e))
+    else:
+        # Mode B: assemble JSON from structured fields
+        cols = {}
+        for i in range(1, 11):  # support up to 10 columns
+            name = request.form.get(f'col{i}_name', '').strip()
+            if name:
+                cols[name] = {'op': request.form[f'col{i}_op'],
+                              'value': request.form[f'col{i}_value']}
+        if not cols:
+            return render_template('index.html', error="No rules provided")
+        cols['_sort'] = {'key': request.form['sort_key'],
+                         'dir': request.form['sort_dir']}
+        json_text = json.dumps(cols)
+        try:
+            rules = core.parse_rules(json_text)
+        except Exception as e:
+            return render_template('index.html', error=str(e))
+
+    return render_template('csv_form.html',
+                           expected_cols=['ITEM'] + rules['columns'],
+                           rules=json_text,
+                           columns=rules['columns'])
+
+# ─── Step 3: CSV submitted → preview ─────────────────────────────
+@app.route('/preview', methods=['POST'])
+def preview():
+    json_text = request.form['rules_json']
+    csv_text  = request.form['csv_data']
+    try:
+        rules   = core.parse_rules(json_text)
+        headers, rows = core.validate_csv(csv_text, rules['columns'])
+        for f in rules['filters']:
+            rows = [r for r in rows if core._apply(r[f['key']], f['op'], f['value'])]
+        preview_rows = rows[:5]
+    except Exception as e:
+        return render_template('preview.html', error=str(e),
+                               headers=[], preview_rows=[], total=0,
+                               rules_desc='', hidden='')
+    return render_template('preview.html', error=None,
+                           headers=headers, preview_rows=preview_rows,
+                           total=len(rows),
+                           rules_desc=_describe(rules),
+                           hidden=_hidden())
+
+# ─── Step 4: Confirmed → full compute ────────────────────────────
+@app.route('/compute', methods=['POST'])
+def compute():
+    json_text = request.form['rules_json']
+    csv_text  = request.form['csv_data']
+    try:
+        rules  = core.parse_rules(json_text)
+        result = core.sort_csv(csv_text, rules)
+        reader = csv.reader(io.StringIO(result))
+        headers = next(reader)
+        rows    = list(reader)
+    except Exception as e:
+        return render_template('result.html', error=str(e), rows=[], headers=[])
+    return render_template('result.html', error=None, headers=headers, rows=rows)
+
+# ─── Helpers ──────────────────────────────────────────────────────
+def _describe(rules):
+    parts = [f"{f['key']} {f['op']} '{f['value']}'" for f in rules['filters']]
+    parts.append(f"sort by {rules['sort']['key']} {rules['sort']['dir']}")
+    return " | ".join(parts)
+
+def _hidden():
+    return '\n'.join(
+        f'<input type="hidden" name="{f}" value="{request.form.get(f, "")}">'
+        for f in ('rules_json', 'csv_data')
+    )
+
+if __name__ == '__main__':
+    app.run(host='127.0.0.1', port=5000)
+```
+
+### `templates/index.html` (Step 1)
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="/static/style.css">
+  <title>CSV Sort — Rules</title>
+</head>
+<body>
+  <h1>Step 1 — Define Rules</h1>
+  {% if error %}<p class="error">{{ error }}</p>{% endif %}
+  <p>Keys (except <code>_sort</code>) become CSV column names.
+     CSV must start with <code>ITEM</code>.</p>
+
+  <form method="POST" action="/confirm-csv">
+
+    <!-- Option A: Paste JSON -->
+    <details open>
+      <summary>Option A: Paste JSON</summary>
+      <textarea name="rules_json" rows="6" cols="60"
+        placeholder='{"city":{"op":"eq","value":"Berlin"},"age":{"op":"gte","value":30},"_sort":{"key":"age","dir":"desc"}}'></textarea>
+    </details>
+
+    <!-- Option B: Structured fields -->
+    <details>
+      <summary>Option B: Fill Fields</summary>
+      {% for i in range(1, 4) %}
+      <fieldset>
+        <legend>Column {{ i }}</legend>
+        <label>Name <input type="text" name="col{{ i }}_name" pattern="[a-zA-Z_]+"></label>
+        <label>Op
+          <select name="col{{ i }}_op">
+            <option value="eq">eq</option><option value="neq">neq</option>
+            <option value="gt">gt</option><option value="lt">lt</option>
+            <option value="gte">gte</option><option value="lte">lte</option>
+            <option value="contains">contains</option>
+          </select>
+        </label>
+        <label>Value <input type="text" name="col{{ i }}_value"></label>
+      </fieldset>
+      {% endfor %}
+      <fieldset>
+        <legend>Sort</legend>
+        <label>Key <input type="text" name="sort_key" pattern="[a-zA-Z_]+"></label>
+        <label>Dir
+          <select name="sort_dir">
+            <option value="asc">asc</option>
+            <option value="desc">desc</option>
+          </select>
+        </label>
+      </fieldset>
+    </details>
+
+    <p><small>If both options are filled, JSON (Option A) takes precedence.</small></p>
+    <button type="submit">Next → Show CSV form</button>
+  </form>
+</body>
+</html>
+```
+
+### `templates/csv_form.html` (Step 2)
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="/static/style.css">
+  <title>CSV Sort — Data</title>
+</head>
+<body>
+  <h1>Step 2 — Paste CSV</h1>
+  <p><strong>Expected columns:</strong> {{ expected_cols | join(', ') }}</p>
+  <form method="POST" action="/preview">
+    <input type="hidden" name="rules_json" value="{{ rules }}">
+    <textarea name="csv_data" rows="10" cols="60" required
+      placeholder="{{ expected_cols | join(',') }}&#10;Alice,Berlin,34&#10;Bob,Paris,28"></textarea>
+    <br><button type="submit">Preview →</button>
+    <a href="/">← Edit rules</a>
+  </form>
+</body>
+</html>
+```
+
+### `templates/preview.html` (Step 3)
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="/static/style.css">
+  <title>CSV Sort — Preview</title>
+</head>
+<body>
+  <h1>Step 3 — Preview</h1>
+  {% if error %}
+    <p class="error">{{ error }}</p>
+    <a href="/">← Start over</a>
+  {% else %}
+    <p><strong>Rules:</strong> {{ rules_desc }}</p>
+    <p><strong>Matching rows:</strong> {{ total }} (showing {{ preview_rows|length }})</p>
+    <table>
+      <thead><tr>{% for h in headers %}<th>{{ h }}</th>{% endfor %}</tr></thead>
+      <tbody>
+        {% for row in preview_rows %}
+        <tr>{% for cell in row.values() %}<td>{{ cell }}</td>{% endfor %}</tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <form method="POST" action="/compute">
+      {{ hidden|safe }}
+      <button type="submit">✓ Confirm &amp; Compute</button>
+      <a href="/">← Edit input</a>
+    </form>
+  {% endif %}
+</body>
+</html>
+```
+
+### `templates/result.html` (Step 4)
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="/static/style.css">
+  <title>CSV Sort — Result</title>
+</head>
+<body>
+  <h1>Step 4 — Result</h1>
+  {% if error %}
+    <p class="error">{{ error }}</p>
+  {% else %}
+    <table>
+      <thead><tr>{% for h in headers %}<th>{{ h }}</th>{% endfor %}</tr></thead>
+      <tbody>
+        {% for row in rows %}
+        <tr>{% for cell in row %}<td>{{ cell }}</td>{% endfor %}</tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+  <p><a href="/">← New query</a></p>
+</body>
+</html>
+```
+
+### `static/style.css`
+
+```css
+body { font-family: system-ui, sans-serif; max-width: 720px; margin: 2rem auto; padding: 0 1rem; }
+table { border-collapse: collapse; width: 100%; margin: 1rem 0; }
+th, td { border: 1px solid #ccc; padding: 0.4rem 0.6rem; text-align: left; }
+th { background: #f5f5f5; }
+textarea { width: 100%; font-family: monospace; }
+fieldset { margin: 0.8rem 0; }
+.error { color: #c0392b; font-weight: bold; }
+details { margin: 0.5rem 0; }
+summary { cursor: pointer; font-weight: bold; }
+```
+
+---
+
+## Example Walkthrough
+
+**Step 1 — User fills Option B:**
+
+| Field | Value |
+|-------|-------|
+| col1_name | `city` |
+| col1_op | `eq` |
+| col1_value | `Berlin` |
+| col2_name | `age` |
+| col2_op | `gte` |
+| col2_value | `30` |
+| sort_key | `age` |
+| sort_dir | `desc` |
+
+Backend assembles: `{"city":{"op":"eq","value":"Berlin"},"age":{"op":"gte","value":"30"},"_sort":{"key":"age","dir":"desc"}}`
+
+**Step 2 — User pastes CSV:**
+```
+ITEM,city,age
+Alice,Berlin,34
+Bob,Paris,28
+Carol,Berlin,41
+Dave,Tokyo,28
+Eve,Berlin,29
+```
+
+**Step 3 — Preview shows:**
+- Rules: `city eq 'Berlin' | age gte '30' | sort by age desc`
+- Matching rows: **2** (showing 2)
+
+| ITEM | city | age |
+|------|------|-----|
+| Carol | Berlin | 41 |
+| Alice | Berlin | 34 |
+
+*(Note: Eve is excluded — age 29 < 30. Preview is unsorted; compute sorts.)*
+
+**Step 4 — User clicks Confirm → Result:**
+
+| ITEM | city | age |
+|------|------|-----|
+| Carol | Berlin | 41 |
+| Alice | Berlin | 34 |
+
+---
+
+## Verification Checklist
+
+| Check | How |
+|-------|-----|
+| Determinism | Submit same input 10× → identical tables; also `python -c "import core; print(core.sort_csv(...))"` 10× → `diff` |
+| Schema lock | JSON keys `city, age` → CSV header `ITEM, name, age` → error at Step 2 |
+| `_sort.key` validation | `_sort.key = "salary"` but no `"salary"` key → error at Step 1 |
+| Allow-list | `op = "regex"` → `Disallowed operator` error |
+| Mode dispatch | Fill both JSON textarea AND structured fields → JSON wins |
+| No JS | `grep -ri '<script' templates/` → **0 matches** |
+| CSP | DevTools → Network → response header has no `script-src` |
+| File containment | DevTools → Network → only `127.0.0.1:5000`; zero external origins |
+| Core isolation | `grep -c 'import flask\|open(\|os\.\|socket' core.py` → **0** |
+
+---
+
+## File Tree
+
+```
+.
+├── app.py
+├── core.py
+├── templates/
+│   ├── index.html
+│   ├── csv_form.html
+│   ├── preview.html
+│   └── result.html
+└── static/
+    └── style.css
+```
+
+**Seven files. Zero JS. Zero external requests. One `python app.py` to run.**
+
+```bash
+pip install flask
+python app.py
+# → http://127.0.0.1:5000
+```
+
+---
+
+## v4.1 — Added: Ranking View + Local File Download
+
+### What changed
+
+| Addition | How (no JS) |
+|----------|-------------|
+| **Ranking (top 10)** | Step 4 table now shows a `#` column, rows 1–10 only |
+| **Save full result** | Three `<a href>` links below the table → `/download/txt`, `/download/csv`, `/download/json`. Backend stores the full result in the **Flask session** (signed cookie, no JS) and serves it via `send_file` with `Content-Disposition: attachment`. |
+
+---
+
+### Updated `app.py` (delta only)
+
+```python
+from flask import Flask, request, render_template, session, send_file
+import core, csv, io, json
+
+# ... (all existing routes unchanged) ...
+
+# ─── Step 4: Confirm → full compute + store in session ───────────
+@app.route('/compute', methods=['POST'])
+def compute():
+    json_text = request.form['rules_json']
+    csv_text  = request.form['csv_data']
+    try:
+        rules  = core.parse_rules(json_text)
+        result = core.sort_csv(csv_text, rules)
+        reader = csv.reader(io.StringIO(result))
+        headers = next(reader)
+        rows    = list(reader)
+    except Exception as e:
+        return render_template('result.html', error=str(e), rows=[], headers=[])
+
+    # Store full result in session for download
+    session['result_headers'] = headers
+    session['result_rows']    = rows
+
+    # Ranking: top 10 only
+    ranked = rows[:10]
+    return render_template('result.html', error=None,
+                           headers=headers, rows=ranked, total=len(rows))
+
+# ─── Download routes ──────────────────────────────────────────────
+@app.route('/download/<fmt>')
+def download(fmt):
+    if 'result_rows' not in session:
+        return redirect('/')
+    headers = session['result_headers']
+    rows    = session['result_rows']
+
+    if fmt == 'csv':
+        buf = io.StringIO()
+        w = csv.writer(buf, lineterminator='\n')
+        w.writerow(headers)
+        w.writerows(rows)
+        data = buf.getvalue().encode()
+        mimetype = 'text/csv'
+    elif fmt == 'json':
+        records = [dict(zip(headers, r)) for r in rows]
+        data = json.dumps(records, indent=2).encode()
+        mimetype = 'application/json'
+    else:  # txt
+        lines = [', '.join(headers)] + [', '.join(r) for r in rows]
+        data = '\n'.join(lines).encode()
+        mimetype = 'text/plain'
+
+    return send_file(
+        io.BytesIO(data),
+        mimetype=mimetype,
+        as_attachment=True,
+        download_name=f'result.{fmt}'
+    )
+```
+
+> **Session config** (add near top of `app.py`):
+> ```python
+> app.secret_key = 'local-only-dev-key'  # fine for 127.0.0.1
+> PERMANENT_SESSION_LIFETIME = 300       # 5 min
+> ```
+
+---
+
+### Updated `templates/result.html`
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="/static/style.css">
+  <title>CSV Sort — Result</title>
+</head>
+<body>
+  <h1>Step 4 — Result</h1>
+  {% if error %}
+    <p class="error">{{ error }}</p>
+  {% else %}
+    <p><strong>Showing top {{ rows|length }} of {{ total }} rows</strong></p>
+    <table>
+      <thead><tr><th>#</th>{% for h in headers %}<th>{{ h }}</th>{% endfor %}</tr></thead>
+      <tbody>
+        {% for row in rows %}
+        <tr><td>{{ loop.index }}</td>{% for cell in row %}<td>{{ cell }}</td>{% endfor %}</tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <h2>Save full result ({{ total }} rows)</h2>
+    <p>
+      <a href="/download/csv">Download CSV</a> ·
+      <a href="/download/json">Download JSON</a> ·
+      <a href="/download/txt">Download TXT</a>
+    </p>
+  {% endif %}
+  <p><a href="/">← New query</a></p>
+</body>
+</html>
+```
+
+---
+
+### Updated Invariants (one addition)
+
+| # | Invariant | Rule |
+|---|-----------|------|
+| 7 | **Session hygiene** *(new)* | Session stores only `result_headers` + `result_rows` (plain lists). Expiry = 5 min. No user data persisted to disk. `secret_key` is a static dev string (acceptable for `127.0.0.1` single-user). |
+
+---
+
+### Updated Verification
+
+| Check | How |
+|-------|-----|
+| Download works | Click "Download CSV" → browser saves `result.csv`; open and confirm row count = `total` |
+| Session expiry | Wait 5 min → click download → redirected to `/` |
+| No data on disk | `ls` the project folder after a download → no new files created |
+| Ranking capped | 50-row result → table shows exactly 10 rows numbered 1–10 |
+
+---
+
+### Updated File Tree
+
+```
+.
+├── app.py
+├── core.py
+├── templates/
+│   ├── index.html
+│   ├── csv_form.html
+│   ├── preview.html
+│   └── result.html
+└── static/
+    └── style.css
+```
+
+Same seven files. The only new imports in `app.py` are `session` and `send_file` (both Flask built-ins). No new dependencies, no JS, no disk writes.
+

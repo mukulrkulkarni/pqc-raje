@@ -1,0 +1,39 @@
+{
+  "chunk": "1",
+  "objective": "Implement shared strict validated-input contract and CLI/web compute adapter only.",
+  "state": "completed",
+  "timestamp": "2026-10-21",
+  "authoritative_sources": [
+    "web-app-requirements.txt",
+    "docs/decisions/web-app-design-meeting-report.md"
+  ],
+  "scope": [
+    "strict criteria and matrix validation",
+    "shared adapter calling electre3.ranking.compute_ranking",
+    "CLI integration",
+    "focused tests and documentation"
+  ],
+  "exclusions": [
+    "server-rendered routes",
+    "cache",
+    "serializers",
+    "downloads",
+    "runtime feasibility gate"
+  ],
+  "acceptance_tests": {
+    "command": "python -m pytest tests/test_shared_contract.py tests/test_config.py -q && python -m compileall -q electre3 app",
+    "result": "38 passed in 0.41s; compileall succeeded"
+  },
+  "known_compatibility_failure": {
+    "command": "python -m pytest tests/test_shared_contract.py tests/test_config.py tests/test_security.py tests/test_cli_run.py -q",
+    "result": "15 legacy tests fail because they use missing name/maximize, non-unit weights, or unnormalized scores now forbidden by the approved shared policy"
+  },
+  "fallback": "Preserved existing core compute API; strict policy applies at the shared adapter boundary.",
+  "stop_conditions": [
+    "undefined strict contract",
+    "material scope expansion",
+    "core algorithm requires redesign"
+  ],
+  "last_verified_checkpoint": "Strict contract, adapter, documentation, and focused acceptance tests are complete.",
+  "later_dependency": "Byte identity remains unimplemented because canonical serializers and fixed-order cross-block accumulation are outside Chunk 1."
+}

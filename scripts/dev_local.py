@@ -43,12 +43,17 @@ def run_website(port: int) -> None:
 
 
 def run_app(port: int) -> None:
+    # Ensure repo root is on sys.path when launched as a script.
+    import sys
+    if str(ROOT) not in sys.path:
+        sys.path.insert(0, str(ROOT))
+
     from app import create_app
 
-    app = create_app({"TESTING": False})
+    flask_app = create_app({"TESTING": False})
     print(f"[app] starting Flask at http://localhost:{port}/")
     # debug=False and use_reloader=False avoid spawning extra processes.
-    app.run(host="127.0.0.1", port=port, debug=False, use_reloader=False)
+    flask_app.run(host="127.0.0.1", port=port, debug=False, use_reloader=False)
 
 
 def main() -> int:

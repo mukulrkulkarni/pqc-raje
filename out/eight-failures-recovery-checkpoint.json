@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "chunk": "eight-failures-recovery",
+  "state": "completed",
+  "objective": "Resolve only the eight full-suite failures recorded after archived test consolidation.",
+  "authoritative_inputs": [
+    "out/test-collection-remediation-checkpoint.json",
+    "tests/",
+    "docs/design/*/snapshot/"
+  ],
+  "agent": "Innovium prepared Code specialist, candidate v1",
+  "model": "API-hosted assistant",
+  "expected_artifacts": [
+    "out/eight-failures-recovery-checkpoint.json",
+    "out/eight-failures-recovery-report.json",
+    "out/eight-failures-merge-fix-manifest.json"
+  ],
+  "acceptance_tests": [
+    "targeted pytest for all eight failures: 75 passed in 1.30s",
+    "python -m pytest -q: 868 passed in 6.20s",
+    "python -m compileall -q electre3 app: passed"
+  ],
+  "failure_inventory": [
+    {
+      "count": 7,
+      "classification": "missing fixture/path",
+      "resolution": "Restored exact required snapshot-relative docs/modules fixture trees and individual electre3 source inputs; strict assertions retained."
+    },
+    {
+      "id": "tests/test_preview_gate.py::TestComputeGate::test_compute_allowed_after_confirm",
+      "classification": "stale test input",
+      "resolution": "Updated only the success-path fixture to approved strict criteria fields and normalized weights."
+    }
+  ],
+  "checkpoint": {
+    "created_before_changes": true,
+    "last_verified": "Full suite and compile acceptance passed.",
+    "retry_limit": 1,
+    "retry_count": 0
+  },
+  "artifacts": {
+    "merge_fix_manifest": "out/eight-failures-merge-fix-manifest.json",
+    "report": "out/eight-failures-recovery-report.json"
+  },
+  "scope": {
+    "application_behavior_changes": false,
+    "assertions_weakened": false,
+    "unrelated_application_changes": false
+  },
+  "final_state": "completed"
+}

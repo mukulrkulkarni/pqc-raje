@@ -1,0 +1,2554 @@
+{
+  "schema_version": 1,
+  "purpose": "Maps every duplicate archived test to its active consolidated representation.",
+  "active_module": "tests/test_module_docs.py",
+  "active_test_count": 209,
+  "sources": [
+    {
+      "source_path": "docs/design/committee_phase5/discordance_review/snapshot/tests/test_module_docs.py",
+      "archive_path": "docs/design/committee_phase5/discordance_review/snapshot/archive/test_module_docs.py.txt",
+      "original_bytes": 68722,
+      "original_sha256": "2c14ab34b16ec3ef9cf224c9aeba169a068c96dd36173e407312f34ca1a88798",
+      "archived_sha256": "2c14ab34b16ec3ef9cf224c9aeba169a068c96dd36173e407312f34ca1a88798",
+      "classes": [
+        "TestTutorialStaticFile",
+        "TestHTMLValidity",
+        "TestExternalAssetNegative",
+        "TestJSAssetFiles",
+        "TestConcordanceTutorialScaffold",
+        "TestDiscordanceDeepTutorial",
+        "TestCredibilityTutorialScaffold",
+        "TestRankingTutorialScaffold",
+        "TestValidateTutorialScaffold",
+        "TestBlockTutorialScaffold",
+        "TestAccumulatorTutorialScaffold"
+      ],
+      "tests": [
+        {
+          "source_id": "TestTutorialStaticFile.test_no_external_assets",
+          "line": 49,
+          "status": "represented",
+          "active_id": "TestTutorialStaticFile.test_no_external_assets"
+        },
+        {
+          "source_id": "TestTutorialStaticFile.test_has_csp_meta_tag",
+          "line": 55,
+          "status": "represented",
+          "active_id": "TestTutorialStaticFile.test_has_csp_meta_tag"
+        },
+        {
+          "source_id": "TestTutorialStaticFile.test_csp_meta_no_unsafe_eval",
+          "line": 59,
+          "status": "represented",
+          "active_id": "TestTutorialStaticFile.test_csp_meta_no_unsafe_eval"
+        },
+        {
+          "source_id": "TestTutorialStaticFile.test_has_style_standard_v1",
+          "line": 66,
+          "status": "represented",
+          "active_id": "TestTutorialStaticFile.test_has_style_standard_v1"
+        },
+        {
+          "source_id": "TestTutorialStaticFile.test_has_threshold_docs",
+          "line": 70,
+          "status": "represented",
+          "active_id": "TestTutorialStaticFile.test_has_threshold_docs"
+        },
+        {
+          "source_id": "TestTutorialStaticFile.test_has_layout2_structure",
+          "line": 77,
+          "status": "represented",
+          "active_id": "TestTutorialStaticFile.test_has_layout2_structure"
+        },
+        {
+          "source_id": "TestHTMLValidity.test_html_files_exist",
+          "line": 94,
+          "status": "represented",
+          "active_id": "TestHTMLValidity.test_html_files_exist"
+        },
+        {
+          "source_id": "TestHTMLValidity.test_all_html_have_doctype",
+          "line": 98,
+          "status": "represented",
+          "active_id": "TestHTMLValidity.test_all_html_have_doctype"
+        },
+        {
+          "source_id": "TestHTMLValidity.test_all_html_have_charset",
+          "line": 105,
+          "status": "represented",
+          "active_id": "TestHTMLValidity.test_all_html_have_charset"
+        },
+        {
+          "source_id": "TestHTMLValidity.test_all_html_have_viewport",
+          "line": 113,
+          "status": "represented",
+          "active_id": "TestHTMLValidity.test_all_html_have_viewport"
+        },
+        {
+          "source_id": "TestHTMLValidity.test_all_html_have_csp",
+          "line": 119,
+          "status": "represented",
+          "active_id": "TestHTMLValidity.test_all_html_have_csp"
+        },
+        {
+          "source_id": "TestExternalAssetNegative.test_no_external_scripts",
+          "line": 137,
+          "status": "represented",
+          "active_id": "TestExternalAssetNegative.test_no_external_scripts"
+        },
+        {
+          "source_id": "TestExternalAssetNegative.test_no_external_stylesheets",
+          "line": 145,
+          "status": "represented",
+          "active_id": "TestExternalAssetNegative.test_no_external_stylesheets"
+        },
+        {
+          "source_id": "TestExternalAssetNegative.test_no_css_imports",
+          "line": 153,
+          "status": "represented",
+          "active_id": "TestExternalAssetNegative.test_no_css_imports"
+        },
+        {
+          "source_id": "TestExternalAssetNegative.test_no_external_fonts",
+          "line": 161,
+          "status": "represented",
+          "active_id": "TestExternalAssetNegative.test_no_external_fonts"
+        },
+        {
+          "source_id": "TestJSAssetFiles.test_theme_js_exists",
+          "line": 183,
+          "status": "represented",
+          "active_id": "TestJSAssetFiles.test_theme_js_exists"
+        },
+        {
+          "source_id": "TestJSAssetFiles.test_highlight_js_exists",
+          "line": 187,
+          "status": "represented",
+          "active_id": "TestJSAssetFiles.test_highlight_js_exists"
+        },
+        {
+          "source_id": "TestJSAssetFiles.test_theme_js_no_external_fetch",
+          "line": 191,
+          "status": "represented",
+          "active_id": "TestJSAssetFiles.test_theme_js_no_external_fetch"
+        },
+        {
+          "source_id": "TestJSAssetFiles.test_highlight_js_no_external_fetch",
+          "line": 198,
+          "status": "represented",
+          "active_id": "TestJSAssetFiles.test_highlight_js_no_external_fetch"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_file_exists",
+          "line": 217,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_file_exists"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_has_csp_meta_tag",
+          "line": 222,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_has_csp_meta_tag"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_has_style_standard_v1",
+          "line": 226,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_has_style_standard_v1"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_has_layout2_structure",
+          "line": 230,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_has_layout2_structure"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_has_r1_through_r5_rows",
+          "line": 236,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_has_r1_through_r5_rows"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_has_io_summary_section",
+          "line": 241,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_has_io_summary_section"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_has_jump_navigation",
+          "line": 246,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_has_jump_navigation"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_has_progress_indicator",
+          "line": 252,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_has_progress_indicator"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_has_theme_toggle",
+          "line": 257,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_has_theme_toggle"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_references_js_assets",
+          "line": 263,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_references_js_assets"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_each_row_has_required_subheadings",
+          "line": 268,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_each_row_has_required_subheadings"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_no_external_assets",
+          "line": 275,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_no_external_assets"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_has_concordance_content",
+          "line": 281,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_has_concordance_content"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_has_option3_grounding_facts",
+          "line": 289,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_has_option3_grounding_facts"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_has_option3_expandable_details",
+          "line": 296,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_has_option3_expandable_details"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_r1_has_substantive_content",
+          "line": 301,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_r1_has_substantive_content"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_r2_has_piecewise_formula_content",
+          "line": 309,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_r2_has_piecewise_formula_content"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_r2_mentions_maximize_minimize",
+          "line": 320,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_r2_mentions_maximize_minimize"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_r3_has_implementation_details",
+          "line": 324,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_r3_has_implementation_details"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_r4_has_weight_normalization_content",
+          "line": 330,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_r4_has_weight_normalization_content"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_r4_weights_nonnegative_requirement",
+          "line": 336,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_r4_weights_nonnegative_requirement"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_r4_upstream_enforcement",
+          "line": 343,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_r4_upstream_enforcement"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_r3_qp_masked_wording",
+          "line": 349,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_r3_qp_masked_wording"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_r5_has_edge_cases_content",
+          "line": 357,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_r5_has_edge_cases_content"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_io_summary_has_shapes_and_invariants",
+          "line": 364,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_io_summary_has_shapes_and_invariants"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_has_usage_disclaimer",
+          "line": 372,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_has_usage_disclaimer"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_no_deterministic_output_assertions",
+          "line": 377,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_no_deterministic_output_assertions"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_no_unqualified_speedup_claims",
+          "line": 385,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_no_unqualified_speedup_claims"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_grounding_mentions_electre_context",
+          "line": 393,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_grounding_mentions_electre_context"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_has_notation_block",
+          "line": 401,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_has_notation_block"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_notation_explains_g_function",
+          "line": 410,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_notation_explains_g_function"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_explains_diff_shape_with_example",
+          "line": 415,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_explains_diff_shape_with_example"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_example_clarifies_alts_terminology",
+          "line": 423,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_example_clarifies_alts_terminology"
+        },
+        {
+          "source_id": "TestDiscordanceDeepTutorial.test_file_exists",
+          "line": 442,
+          "status": "represented",
+          "active_id": "TestDiscordanceDeepTutorial.test_file_exists"
+        },
+        {
+          "source_id": "TestDiscordanceDeepTutorial.test_has_csp_meta_tag",
+          "line": 447,
+          "status": "represented",
+          "active_id": "TestDiscordanceDeepTutorial.test_has_csp_meta_tag"
+        },
+        {
+          "source_id": "TestDiscordanceDeepTutorial.test_has_style_standard_v1",
+          "line": 451,
+          "status": "represented",
+          "active_id": "TestDiscordanceDeepTutorial.test_has_style_standard_v1"
+        },
+        {
+          "source_id": "TestDiscordanceDeepTutorial.test_has_layout2_structure",
+          "line": 455,
+          "status": "represented",
+          "active_id": "TestDiscordanceDeepTutorial.test_has_layout2_structure"
+        },
+        {
+          "source_id": "TestDiscordanceDeepTutorial.test_has_r1_through_r5_rows",
+          "line": 461,
+          "status": "represented",
+          "active_id": "TestDiscordanceDeepTutorial.test_has_r1_through_r5_rows"
+        },
+        {
+          "source_id": "TestDiscordanceDeepTutorial.test_has_io_summary_section",
+          "line": 466,
+          "status": "represented",
+          "active_id": "TestDiscordanceDeepTutorial.test_has_io_summary_section"
+        },
+        {
+          "source_id": "TestDiscordanceDeepTutorial.test_has_jump_navigation",
+          "line": 471,
+          "status": "represented",
+          "active_id": "TestDiscordanceDeepTutorial.test_has_jump_navigation"
+        },
+        {
+          "source_id": "TestDiscordanceDeepTutorial.test_has_progress_indicator",
+          "line": 477,
+          "status": "represented",
+          "active_id": "TestDiscordanceDeepTutorial.test_has_progress_indicator"
+        },
+        {
+          "source_id": "TestDiscordanceDeepTutorial.test_has_theme_toggle",
+          "line": 482,
+          "status": "represented",
+          "active_id": "TestDiscordanceDeepTutorial.test_has_theme_toggle"
+        },
+        {
+          "source_id": "TestDiscordanceDeepTutorial.test_references_js_assets",
+          "line": 488,
+          "status": "represented",
+          "active_id": "TestDiscordanceDeepTutorial.test_references_js_assets"
+        },
+        {
+          "source_id": "TestDiscordanceDeepTutorial.test_each_row_has_required_subheadings",
+          "line": 493,
+          "status": "represented",
+          "active_id": "TestDiscordanceDeepTutorial.test_each_row_has_required_subheadings"
+        },
+        {
+          "source_id": "TestDiscordanceDeepTutorial.test_no_external_assets",
+          "line": 500,
+          "status": "represented",
+          "active_id": "TestDiscordanceDeepTutorial.test_no_external_assets"
+        },
+        {
+          "source_id": "TestDiscordanceDeepTutorial.test_has_discordance_content",
+          "line": 506,
+          "status": "represented",
+          "active_id": "TestDiscordanceDeepTutorial.test_has_discordance_content"
+        },
+        {
+          "source_id": "TestDiscordanceDeepTutorial.test_verified_example_and_precise_veto_contract",
+          "line": 512,
+          "status": "represented",
+          "active_id": "TestDiscordanceDeepTutorial.test_verified_example_and_precise_veto_contract"
+        },
+        {
+          "source_id": "TestDiscordanceDeepTutorial.test_has_usage_disclaimer",
+          "line": 521,
+          "status": "represented",
+          "active_id": "TestDiscordanceDeepTutorial.test_has_usage_disclaimer"
+        },
+        {
+          "source_id": "TestDiscordanceDeepTutorial.test_example_inputs_marked_illustrative",
+          "line": 527,
+          "status": "represented",
+          "active_id": "TestDiscordanceDeepTutorial.test_example_inputs_marked_illustrative"
+        },
+        {
+          "source_id": "TestDiscordanceDeepTutorial.test_has_option3_grounding_facts_line",
+          "line": 534,
+          "status": "represented",
+          "active_id": "TestDiscordanceDeepTutorial.test_has_option3_grounding_facts_line"
+        },
+        {
+          "source_id": "TestDiscordanceDeepTutorial.test_has_option3_expandable_details",
+          "line": 541,
+          "status": "represented",
+          "active_id": "TestDiscordanceDeepTutorial.test_has_option3_expandable_details"
+        },
+        {
+          "source_id": "TestDiscordanceDeepTutorial.test_grounding_has_key_invariants",
+          "line": 548,
+          "status": "represented",
+          "active_id": "TestDiscordanceDeepTutorial.test_grounding_has_key_invariants"
+        },
+        {
+          "source_id": "TestDiscordanceDeepTutorial.test_no_recommended_threshold_defaults",
+          "line": 557,
+          "status": "represented",
+          "active_id": "TestDiscordanceDeepTutorial.test_no_recommended_threshold_defaults"
+        },
+        {
+          "source_id": "TestCredibilityTutorialScaffold.test_file_exists",
+          "line": 578,
+          "status": "represented",
+          "active_id": "TestCredibilityDeepTutorial.test_file_exists"
+        },
+        {
+          "source_id": "TestCredibilityTutorialScaffold.test_has_csp_meta_tag",
+          "line": 583,
+          "status": "represented",
+          "active_id": "TestCredibilityDeepTutorial.test_has_csp_meta_tag"
+        },
+        {
+          "source_id": "TestCredibilityTutorialScaffold.test_has_style_standard_v1",
+          "line": 587,
+          "status": "represented",
+          "active_id": "TestCredibilityDeepTutorial.test_has_style_standard_v1"
+        },
+        {
+          "source_id": "TestCredibilityTutorialScaffold.test_has_layout2_structure",
+          "line": 591,
+          "status": "represented",
+          "active_id": "TestCredibilityDeepTutorial.test_has_layout2_structure"
+        },
+        {
+          "source_id": "TestCredibilityTutorialScaffold.test_has_r1_through_r5_rows",
+          "line": 597,
+          "status": "represented",
+          "active_id": "TestCredibilityDeepTutorial.test_has_r1_through_r5_rows"
+        },
+        {
+          "source_id": "TestCredibilityTutorialScaffold.test_has_io_summary_section",
+          "line": 602,
+          "status": "represented",
+          "active_id": "TestCredibilityDeepTutorial.test_has_io_summary_section"
+        },
+        {
+          "source_id": "TestCredibilityTutorialScaffold.test_has_jump_navigation",
+          "line": 607,
+          "status": "represented",
+          "active_id": "TestCredibilityDeepTutorial.test_has_jump_navigation"
+        },
+        {
+          "source_id": "TestCredibilityTutorialScaffold.test_has_progress_indicator",
+          "line": 612,
+          "status": "represented",
+          "active_id": "TestCredibilityDeepTutorial.test_has_progress_indicator"
+        },
+        {
+          "source_id": "TestCredibilityTutorialScaffold.test_references_js_assets",
+          "line": 617,
+          "status": "represented",
+          "active_id": "TestCredibilityDeepTutorial.test_references_js_assets"
+        },
+        {
+          "source_id": "TestCredibilityTutorialScaffold.test_each_row_has_required_subheadings",
+          "line": 622,
+          "status": "represented",
+          "active_id": "TestCredibilityDeepTutorial.test_each_row_has_required_subheadings"
+        },
+        {
+          "source_id": "TestCredibilityTutorialScaffold.test_no_external_assets",
+          "line": 629,
+          "status": "represented",
+          "active_id": "TestCredibilityDeepTutorial.test_no_external_assets"
+        },
+        {
+          "source_id": "TestCredibilityTutorialScaffold.test_has_credibility_content",
+          "line": 635,
+          "status": "represented",
+          "active_id": "TestCredibilityDeepTutorial.test_has_credibility_content"
+        },
+        {
+          "source_id": "TestCredibilityTutorialScaffold.test_has_option3_grounding_facts_line",
+          "line": 641,
+          "status": "represented",
+          "active_id": "TestCredibilityDeepTutorial.test_has_option3_grounding_facts_line"
+        },
+        {
+          "source_id": "TestCredibilityTutorialScaffold.test_has_option3_expandable_details",
+          "line": 648,
+          "status": "represented",
+          "active_id": "TestCredibilityDeepTutorial.test_has_option3_expandable_details"
+        },
+        {
+          "source_id": "TestCredibilityTutorialScaffold.test_grounding_has_key_invariants",
+          "line": 655,
+          "status": "represented",
+          "active_id": "TestCredibilityDeepTutorial.test_grounding_has_key_invariants"
+        },
+        {
+          "source_id": "TestCredibilityTutorialScaffold.test_uses_implementation_contract_wording",
+          "line": 662,
+          "status": "represented",
+          "active_id": "TestCredibilityDeepTutorial.test_uses_implementation_contract_wording"
+        },
+        {
+          "source_id": "TestCredibilityTutorialScaffold.test_diagonal_not_enforced_here_wording",
+          "line": 669,
+          "status": "represented",
+          "active_id": "TestCredibilityDeepTutorial.test_diagonal_not_enforced_here_wording"
+        },
+        {
+          "source_id": "TestCredibilityTutorialScaffold.test_no_deterministic_output_assertions",
+          "line": 676,
+          "status": "represented",
+          "active_id": "TestCredibilityDeepTutorial.test_no_deterministic_output_assertions"
+        },
+        {
+          "source_id": "TestCredibilityTutorialScaffold.test_has_usage_disclaimer",
+          "line": 682,
+          "status": "represented",
+          "active_id": "TestCredibilityDeepTutorial.test_has_usage_disclaimer"
+        },
+        {
+          "source_id": "TestRankingTutorialScaffold.test_file_exists",
+          "line": 700,
+          "status": "represented",
+          "active_id": "TestRankingTutorialScaffold.test_file_exists"
+        },
+        {
+          "source_id": "TestRankingTutorialScaffold.test_has_csp_meta_tag",
+          "line": 705,
+          "status": "represented",
+          "active_id": "TestRankingTutorialScaffold.test_has_csp_meta_tag"
+        },
+        {
+          "source_id": "TestRankingTutorialScaffold.test_has_style_standard_v1",
+          "line": 709,
+          "status": "represented",
+          "active_id": "TestRankingTutorialScaffold.test_has_style_standard_v1"
+        },
+        {
+          "source_id": "TestRankingTutorialScaffold.test_has_layout2_structure",
+          "line": 713,
+          "status": "represented",
+          "active_id": "TestRankingTutorialScaffold.test_has_layout2_structure"
+        },
+        {
+          "source_id": "TestRankingTutorialScaffold.test_has_r1_through_r5_rows",
+          "line": 719,
+          "status": "represented",
+          "active_id": "TestRankingTutorialScaffold.test_has_r1_through_r5_rows"
+        },
+        {
+          "source_id": "TestRankingTutorialScaffold.test_has_io_summary_section",
+          "line": 724,
+          "status": "represented",
+          "active_id": "TestRankingTutorialScaffold.test_has_io_summary_section"
+        },
+        {
+          "source_id": "TestRankingTutorialScaffold.test_has_jump_navigation",
+          "line": 729,
+          "status": "represented",
+          "active_id": "TestRankingTutorialScaffold.test_has_jump_navigation"
+        },
+        {
+          "source_id": "TestRankingTutorialScaffold.test_has_progress_indicator",
+          "line": 734,
+          "status": "represented",
+          "active_id": "TestRankingTutorialScaffold.test_has_progress_indicator"
+        },
+        {
+          "source_id": "TestRankingTutorialScaffold.test_references_js_assets",
+          "line": 739,
+          "status": "represented",
+          "active_id": "TestRankingTutorialScaffold.test_references_js_assets"
+        },
+        {
+          "source_id": "TestRankingTutorialScaffold.test_each_row_has_required_subheadings",
+          "line": 744,
+          "status": "represented",
+          "active_id": "TestRankingTutorialScaffold.test_each_row_has_required_subheadings"
+        },
+        {
+          "source_id": "TestRankingTutorialScaffold.test_no_external_assets",
+          "line": 751,
+          "status": "represented",
+          "active_id": "TestRankingTutorialScaffold.test_no_external_assets"
+        },
+        {
+          "source_id": "TestRankingTutorialScaffold.test_has_ranking_content",
+          "line": 757,
+          "status": "represented",
+          "active_id": "TestRankingTutorialScaffold.test_has_ranking_content"
+        },
+        {
+          "source_id": "TestRankingTutorialScaffold.test_has_option3_grounding_facts_line",
+          "line": 763,
+          "status": "represented",
+          "active_id": "TestRankingTutorialScaffold.test_has_option3_grounding_facts_line"
+        },
+        {
+          "source_id": "TestRankingTutorialScaffold.test_has_option3_expandable_details",
+          "line": 770,
+          "status": "represented",
+          "active_id": "TestRankingTutorialScaffold.test_has_option3_expandable_details"
+        },
+        {
+          "source_id": "TestRankingTutorialScaffold.test_grounding_has_key_invariants",
+          "line": 777,
+          "status": "represented",
+          "active_id": "TestRankingTutorialScaffold.test_grounding_has_key_invariants"
+        },
+        {
+          "source_id": "TestRankingTutorialScaffold.test_no_deterministic_output_assertions",
+          "line": 784,
+          "status": "represented",
+          "active_id": "TestRankingTutorialScaffold.test_no_deterministic_output_assertions"
+        },
+        {
+          "source_id": "TestRankingTutorialScaffold.test_no_seed_mention",
+          "line": 790,
+          "status": "represented",
+          "active_id": "TestRankingTutorialScaffold.test_no_seed_mention"
+        },
+        {
+          "source_id": "TestRankingTutorialScaffold.test_no_phi_norm_reference",
+          "line": 794,
+          "status": "represented",
+          "active_id": "TestRankingTutorialScaffold.test_no_phi_norm_reference"
+        },
+        {
+          "source_id": "TestRankingTutorialScaffold.test_no_electre_iii_ii_typo",
+          "line": 798,
+          "status": "represented",
+          "active_id": "TestRankingTutorialScaffold.test_no_electre_iii_ii_typo"
+        },
+        {
+          "source_id": "TestRankingTutorialScaffold.test_has_usage_disclaimer",
+          "line": 802,
+          "status": "represented",
+          "active_id": "TestRankingTutorialScaffold.test_has_usage_disclaimer"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_file_exists",
+          "line": 818,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_file_exists"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_has_doctype",
+          "line": 823,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_has_doctype"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_has_csp_meta",
+          "line": 827,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_has_csp_meta"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_has_shell_structure",
+          "line": 832,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_has_shell_structure"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_has_sidebar",
+          "line": 836,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_has_sidebar"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_has_rows_container",
+          "line": 840,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_has_rows_container"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_has_five_range_rows",
+          "line": 844,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_has_five_range_rows"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_has_jump_navigation",
+          "line": 852,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_has_jump_navigation"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_has_theme_toggle",
+          "line": 860,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_has_theme_toggle"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_has_progress_indicator",
+          "line": 866,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_has_progress_indicator"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_references_local_scripts",
+          "line": 870,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_references_local_scripts"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_each_row_has_required_subheadings",
+          "line": 875,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_each_row_has_required_subheadings"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_no_external_assets",
+          "line": 882,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_no_external_assets"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_has_validate_content",
+          "line": 888,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_has_validate_content"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_has_option3_grounding_facts_line",
+          "line": 895,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_has_option3_grounding_facts_line"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_has_option3_expandable_details",
+          "line": 902,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_has_option3_expandable_details"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_grounding_has_key_invariants",
+          "line": 909,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_grounding_has_key_invariants"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_no_deterministic_output_assertions",
+          "line": 915,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_no_deterministic_output_assertions"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_has_io_summary",
+          "line": 921,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_has_io_summary"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_has_usage_disclaimer",
+          "line": 926,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_has_usage_disclaimer"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_mentions_fail_fast",
+          "line": 932,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_mentions_fail_fast"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_mentions_valueerror",
+          "line": 936,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_mentions_valueerror"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_has_dark_mode_note_text_token",
+          "line": 941,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_has_dark_mode_note_text_token"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_has_dark_mode_note_size_token",
+          "line": 945,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_has_dark_mode_note_size_token"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_has_dark_mode_h4_color_token",
+          "line": 949,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_has_dark_mode_h4_color_token"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_has_dark_mode_h4_border_token",
+          "line": 953,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_has_dark_mode_h4_border_token"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_note_col_uses_note_text_token",
+          "line": 957,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_note_col_uses_note_text_token"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_note_col_uses_note_size_token",
+          "line": 961,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_note_col_uses_note_size_token"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_h4_uses_h4_color_token",
+          "line": 965,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_h4_uses_h4_color_token"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_h4_has_border_left",
+          "line": 969,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_h4_has_border_left"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_has_selection_accent_token",
+          "line": 974,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_has_selection_accent_token"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_has_selection_soft_token",
+          "line": 978,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_has_selection_soft_token"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_has_selection_border_token",
+          "line": 982,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_has_selection_border_token"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_has_row_sel_styles",
+          "line": 986,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_has_row_sel_styles"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_selection_has_non_color_cue",
+          "line": 990,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_selection_has_non_color_cue"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_hl_uses_selection_tokens",
+          "line": 994,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_hl_uses_selection_tokens"
+        },
+        {
+          "source_id": "TestBlockTutorialScaffold.test_file_exists",
+          "line": 1010,
+          "status": "represented",
+          "active_id": "TestBlockTutorialScaffold.test_file_exists"
+        },
+        {
+          "source_id": "TestBlockTutorialScaffold.test_has_doctype",
+          "line": 1015,
+          "status": "represented",
+          "active_id": "TestBlockTutorialScaffold.test_has_doctype"
+        },
+        {
+          "source_id": "TestBlockTutorialScaffold.test_has_csp_meta",
+          "line": 1019,
+          "status": "represented",
+          "active_id": "TestBlockTutorialScaffold.test_has_csp_meta"
+        },
+        {
+          "source_id": "TestBlockTutorialScaffold.test_has_style_standard_v1",
+          "line": 1024,
+          "status": "represented",
+          "active_id": "TestBlockTutorialScaffold.test_has_style_standard_v1"
+        },
+        {
+          "source_id": "TestBlockTutorialScaffold.test_has_shell_structure",
+          "line": 1028,
+          "status": "represented",
+          "active_id": "TestBlockTutorialScaffold.test_has_shell_structure"
+        },
+        {
+          "source_id": "TestBlockTutorialScaffold.test_has_sidebar",
+          "line": 1032,
+          "status": "represented",
+          "active_id": "TestBlockTutorialScaffold.test_has_sidebar"
+        },
+        {
+          "source_id": "TestBlockTutorialScaffold.test_has_rows_container",
+          "line": 1036,
+          "status": "represented",
+          "active_id": "TestBlockTutorialScaffold.test_has_rows_container"
+        },
+        {
+          "source_id": "TestBlockTutorialScaffold.test_has_five_range_rows",
+          "line": 1040,
+          "status": "represented",
+          "active_id": "TestBlockTutorialScaffold.test_has_five_range_rows"
+        },
+        {
+          "source_id": "TestBlockTutorialScaffold.test_has_jump_navigation",
+          "line": 1048,
+          "status": "represented",
+          "active_id": "TestBlockTutorialScaffold.test_has_jump_navigation"
+        },
+        {
+          "source_id": "TestBlockTutorialScaffold.test_has_theme_toggle",
+          "line": 1056,
+          "status": "represented",
+          "active_id": "TestBlockTutorialScaffold.test_has_theme_toggle"
+        },
+        {
+          "source_id": "TestBlockTutorialScaffold.test_has_progress_indicator",
+          "line": 1062,
+          "status": "represented",
+          "active_id": "TestBlockTutorialScaffold.test_has_progress_indicator"
+        },
+        {
+          "source_id": "TestBlockTutorialScaffold.test_references_local_scripts",
+          "line": 1066,
+          "status": "represented",
+          "active_id": "TestBlockTutorialScaffold.test_references_local_scripts"
+        },
+        {
+          "source_id": "TestBlockTutorialScaffold.test_each_row_has_required_subheadings",
+          "line": 1071,
+          "status": "represented",
+          "active_id": "TestBlockTutorialScaffold.test_each_row_has_required_subheadings"
+        },
+        {
+          "source_id": "TestBlockTutorialScaffold.test_no_external_assets",
+          "line": 1078,
+          "status": "represented",
+          "active_id": "TestBlockTutorialScaffold.test_no_external_assets"
+        },
+        {
+          "source_id": "TestBlockTutorialScaffold.test_has_block_content",
+          "line": 1084,
+          "status": "represented",
+          "active_id": "TestBlockTutorialScaffold.test_has_block_content"
+        },
+        {
+          "source_id": "TestBlockTutorialScaffold.test_has_option3_grounding_facts_line",
+          "line": 1091,
+          "status": "represented",
+          "active_id": "TestBlockTutorialScaffold.test_has_option3_grounding_facts_line"
+        },
+        {
+          "source_id": "TestBlockTutorialScaffold.test_has_option3_expandable_details",
+          "line": 1098,
+          "status": "represented",
+          "active_id": "TestBlockTutorialScaffold.test_has_option3_expandable_details"
+        },
+        {
+          "source_id": "TestBlockTutorialScaffold.test_grounding_has_key_invariants",
+          "line": 1105,
+          "status": "represented",
+          "active_id": "TestBlockTutorialScaffold.test_grounding_has_key_invariants"
+        },
+        {
+          "source_id": "TestBlockTutorialScaffold.test_no_deterministic_output_assertions",
+          "line": 1111,
+          "status": "represented",
+          "active_id": "TestBlockTutorialScaffold.test_no_deterministic_output_assertions"
+        },
+        {
+          "source_id": "TestBlockTutorialScaffold.test_has_io_summary",
+          "line": 1116,
+          "status": "represented",
+          "active_id": "TestBlockTutorialScaffold.test_has_io_summary"
+        },
+        {
+          "source_id": "TestBlockTutorialScaffold.test_has_usage_disclaimer",
+          "line": 1121,
+          "status": "represented",
+          "active_id": "TestBlockTutorialScaffold.test_has_usage_disclaimer"
+        },
+        {
+          "source_id": "TestBlockTutorialScaffold.test_mentions_concordance_discordance_credibility",
+          "line": 1127,
+          "status": "represented",
+          "active_id": "TestBlockTutorialScaffold.test_mentions_concordance_discordance_credibility"
+        },
+        {
+          "source_id": "TestBlockTutorialScaffold.test_has_preconditions_wording",
+          "line": 1133,
+          "status": "represented",
+          "active_id": "TestBlockTutorialScaffold.test_has_preconditions_wording"
+        },
+        {
+          "source_id": "TestBlockTutorialScaffold.test_has_min_b1_b2_diagonal_wording",
+          "line": 1138,
+          "status": "represented",
+          "active_id": "TestBlockTutorialScaffold.test_has_min_b1_b2_diagonal_wording"
+        },
+        {
+          "source_id": "TestBlockTutorialScaffold.test_has_mismatch_silently_mis_compute_wording",
+          "line": 1142,
+          "status": "represented",
+          "active_id": "TestBlockTutorialScaffold.test_has_mismatch_silently_mis_compute_wording"
+        },
+        {
+          "source_id": "TestBlockTutorialScaffold.test_clipping_attributed_to_credibility_stage",
+          "line": 1146,
+          "status": "represented",
+          "active_id": "TestBlockTutorialScaffold.test_clipping_attributed_to_credibility_stage"
+        },
+        {
+          "source_id": "TestBlockTutorialScaffold.test_no_misleading_guarantee_phrases",
+          "line": 1150,
+          "status": "represented",
+          "active_id": "TestBlockTutorialScaffold.test_no_misleading_guarantee_phrases"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_file_exists",
+          "line": 1166,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_file_exists"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_has_doctype",
+          "line": 1171,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_has_doctype"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_has_csp_meta",
+          "line": 1175,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_has_csp_meta"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_has_style_standard_v1",
+          "line": 1180,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_has_style_standard_v1"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_has_shell_structure",
+          "line": 1184,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_has_shell_structure"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_has_sidebar",
+          "line": 1188,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_has_sidebar"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_has_rows_container",
+          "line": 1192,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_has_rows_container"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_has_five_range_rows",
+          "line": 1196,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_has_five_range_rows"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_has_jump_navigation",
+          "line": 1204,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_has_jump_navigation"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_has_theme_toggle",
+          "line": 1212,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_has_theme_toggle"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_has_progress_indicator",
+          "line": 1218,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_has_progress_indicator"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_references_local_scripts",
+          "line": 1222,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_references_local_scripts"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_each_row_has_required_subheadings",
+          "line": 1227,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_each_row_has_required_subheadings"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_no_external_assets",
+          "line": 1234,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_no_external_assets"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_has_accumulator_content",
+          "line": 1240,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_has_accumulator_content"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_has_option3_grounding_facts_line",
+          "line": 1248,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_has_option3_grounding_facts_line"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_has_option3_expandable_details",
+          "line": 1255,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_has_option3_expandable_details"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_grounding_has_key_invariants",
+          "line": 1262,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_grounding_has_key_invariants"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_no_deterministic_output_assertions",
+          "line": 1268,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_no_deterministic_output_assertions"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_has_io_summary",
+          "line": 1273,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_has_io_summary"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_has_usage_disclaimer",
+          "line": 1278,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_has_usage_disclaimer"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_mentions_o_n_memory",
+          "line": 1284,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_mentions_o_n_memory"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_mentions_block_tiling",
+          "line": 1288,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_mentions_block_tiling"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_has_preconditions_wording",
+          "line": 1292,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_has_preconditions_wording"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_has_conditional_flow_conservation",
+          "line": 1297,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_has_conditional_flow_conservation"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_normalize_mentions_min_max",
+          "line": 1301,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_normalize_mentions_min_max"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_normalize_mentions_hides_scale",
+          "line": 1305,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_normalize_mentions_hides_scale"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_flow_conservation_mentions_exactly_once",
+          "line": 1309,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_flow_conservation_mentions_exactly_once"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_flow_conservation_mentions_no_overlap",
+          "line": 1313,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_flow_conservation_mentions_no_overlap"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_flow_conservation_mentions_no_gaps",
+          "line": 1317,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_flow_conservation_mentions_no_gaps"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_normalize_mentions_outliers",
+          "line": 1321,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_normalize_mentions_outliers"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_normalize_mentions_convention",
+          "line": 1325,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_normalize_mentions_convention"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_flow_conservation_mentions_same_weights_for_all_blocks",
+          "line": 1329,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_flow_conservation_mentions_same_weights_for_all_blocks"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_flow_conservation_mentions_floating_point_tolerance",
+          "line": 1334,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_flow_conservation_mentions_floating_point_tolerance"
+        }
+      ]
+    },
+    {
+      "source_path": "docs/design/phase6/credibility_review/snapshot/tests/test_module_docs.py",
+      "archive_path": "docs/design/phase6/credibility_review/snapshot/archive/test_module_docs.py.txt",
+      "original_bytes": 68786,
+      "original_sha256": "6330dd0f234fee94e6d1294dbb7f13e5033101b6c2661ba80771ed0267f03431",
+      "archived_sha256": "6330dd0f234fee94e6d1294dbb7f13e5033101b6c2661ba80771ed0267f03431",
+      "classes": [
+        "TestTutorialStaticFile",
+        "TestHTMLValidity",
+        "TestExternalAssetNegative",
+        "TestJSAssetFiles",
+        "TestConcordanceTutorialScaffold",
+        "TestDiscordanceDeepTutorial",
+        "TestCredibilityDeepTutorial",
+        "TestRankingTutorialScaffold",
+        "TestValidateTutorialScaffold",
+        "TestBlockTutorialScaffold",
+        "TestAccumulatorTutorialScaffold"
+      ],
+      "tests": [
+        {
+          "source_id": "TestTutorialStaticFile.test_no_external_assets",
+          "line": 49,
+          "status": "represented",
+          "active_id": "TestTutorialStaticFile.test_no_external_assets"
+        },
+        {
+          "source_id": "TestTutorialStaticFile.test_has_csp_meta_tag",
+          "line": 55,
+          "status": "represented",
+          "active_id": "TestTutorialStaticFile.test_has_csp_meta_tag"
+        },
+        {
+          "source_id": "TestTutorialStaticFile.test_csp_meta_no_unsafe_eval",
+          "line": 59,
+          "status": "represented",
+          "active_id": "TestTutorialStaticFile.test_csp_meta_no_unsafe_eval"
+        },
+        {
+          "source_id": "TestTutorialStaticFile.test_has_style_standard_v1",
+          "line": 66,
+          "status": "represented",
+          "active_id": "TestTutorialStaticFile.test_has_style_standard_v1"
+        },
+        {
+          "source_id": "TestTutorialStaticFile.test_has_threshold_docs",
+          "line": 70,
+          "status": "represented",
+          "active_id": "TestTutorialStaticFile.test_has_threshold_docs"
+        },
+        {
+          "source_id": "TestTutorialStaticFile.test_has_layout2_structure",
+          "line": 77,
+          "status": "represented",
+          "active_id": "TestTutorialStaticFile.test_has_layout2_structure"
+        },
+        {
+          "source_id": "TestHTMLValidity.test_html_files_exist",
+          "line": 94,
+          "status": "represented",
+          "active_id": "TestHTMLValidity.test_html_files_exist"
+        },
+        {
+          "source_id": "TestHTMLValidity.test_all_html_have_doctype",
+          "line": 98,
+          "status": "represented",
+          "active_id": "TestHTMLValidity.test_all_html_have_doctype"
+        },
+        {
+          "source_id": "TestHTMLValidity.test_all_html_have_charset",
+          "line": 105,
+          "status": "represented",
+          "active_id": "TestHTMLValidity.test_all_html_have_charset"
+        },
+        {
+          "source_id": "TestHTMLValidity.test_all_html_have_viewport",
+          "line": 113,
+          "status": "represented",
+          "active_id": "TestHTMLValidity.test_all_html_have_viewport"
+        },
+        {
+          "source_id": "TestHTMLValidity.test_all_html_have_csp",
+          "line": 119,
+          "status": "represented",
+          "active_id": "TestHTMLValidity.test_all_html_have_csp"
+        },
+        {
+          "source_id": "TestExternalAssetNegative.test_no_external_scripts",
+          "line": 137,
+          "status": "represented",
+          "active_id": "TestExternalAssetNegative.test_no_external_scripts"
+        },
+        {
+          "source_id": "TestExternalAssetNegative.test_no_external_stylesheets",
+          "line": 145,
+          "status": "represented",
+          "active_id": "TestExternalAssetNegative.test_no_external_stylesheets"
+        },
+        {
+          "source_id": "TestExternalAssetNegative.test_no_css_imports",
+          "line": 153,
+          "status": "represented",
+          "active_id": "TestExternalAssetNegative.test_no_css_imports"
+        },
+        {
+          "source_id": "TestExternalAssetNegative.test_no_external_fonts",
+          "line": 161,
+          "status": "represented",
+          "active_id": "TestExternalAssetNegative.test_no_external_fonts"
+        },
+        {
+          "source_id": "TestJSAssetFiles.test_theme_js_exists",
+          "line": 183,
+          "status": "represented",
+          "active_id": "TestJSAssetFiles.test_theme_js_exists"
+        },
+        {
+          "source_id": "TestJSAssetFiles.test_highlight_js_exists",
+          "line": 187,
+          "status": "represented",
+          "active_id": "TestJSAssetFiles.test_highlight_js_exists"
+        },
+        {
+          "source_id": "TestJSAssetFiles.test_theme_js_no_external_fetch",
+          "line": 191,
+          "status": "represented",
+          "active_id": "TestJSAssetFiles.test_theme_js_no_external_fetch"
+        },
+        {
+          "source_id": "TestJSAssetFiles.test_highlight_js_no_external_fetch",
+          "line": 198,
+          "status": "represented",
+          "active_id": "TestJSAssetFiles.test_highlight_js_no_external_fetch"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_file_exists",
+          "line": 217,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_file_exists"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_has_csp_meta_tag",
+          "line": 222,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_has_csp_meta_tag"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_has_style_standard_v1",
+          "line": 226,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_has_style_standard_v1"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_has_layout2_structure",
+          "line": 230,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_has_layout2_structure"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_has_r1_through_r5_rows",
+          "line": 236,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_has_r1_through_r5_rows"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_has_io_summary_section",
+          "line": 241,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_has_io_summary_section"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_has_jump_navigation",
+          "line": 246,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_has_jump_navigation"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_has_progress_indicator",
+          "line": 252,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_has_progress_indicator"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_has_theme_toggle",
+          "line": 257,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_has_theme_toggle"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_references_js_assets",
+          "line": 263,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_references_js_assets"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_each_row_has_required_subheadings",
+          "line": 268,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_each_row_has_required_subheadings"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_no_external_assets",
+          "line": 275,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_no_external_assets"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_has_concordance_content",
+          "line": 281,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_has_concordance_content"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_has_option3_grounding_facts",
+          "line": 289,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_has_option3_grounding_facts"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_has_option3_expandable_details",
+          "line": 296,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_has_option3_expandable_details"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_r1_has_substantive_content",
+          "line": 301,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_r1_has_substantive_content"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_r2_has_piecewise_formula_content",
+          "line": 309,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_r2_has_piecewise_formula_content"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_r2_mentions_maximize_minimize",
+          "line": 320,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_r2_mentions_maximize_minimize"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_r3_has_implementation_details",
+          "line": 324,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_r3_has_implementation_details"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_r4_has_weight_normalization_content",
+          "line": 330,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_r4_has_weight_normalization_content"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_r4_weights_nonnegative_requirement",
+          "line": 336,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_r4_weights_nonnegative_requirement"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_r4_upstream_enforcement",
+          "line": 343,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_r4_upstream_enforcement"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_r3_qp_masked_wording",
+          "line": 349,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_r3_qp_masked_wording"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_r5_has_edge_cases_content",
+          "line": 357,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_r5_has_edge_cases_content"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_io_summary_has_shapes_and_invariants",
+          "line": 364,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_io_summary_has_shapes_and_invariants"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_has_usage_disclaimer",
+          "line": 372,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_has_usage_disclaimer"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_no_deterministic_output_assertions",
+          "line": 377,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_no_deterministic_output_assertions"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_no_unqualified_speedup_claims",
+          "line": 385,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_no_unqualified_speedup_claims"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_grounding_mentions_electre_context",
+          "line": 393,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_grounding_mentions_electre_context"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_has_notation_block",
+          "line": 401,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_has_notation_block"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_notation_explains_g_function",
+          "line": 410,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_notation_explains_g_function"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_explains_diff_shape_with_example",
+          "line": 415,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_explains_diff_shape_with_example"
+        },
+        {
+          "source_id": "TestConcordanceTutorialScaffold.test_example_clarifies_alts_terminology",
+          "line": 423,
+          "status": "represented",
+          "active_id": "TestConcordanceTutorialScaffold.test_example_clarifies_alts_terminology"
+        },
+        {
+          "source_id": "TestDiscordanceDeepTutorial.test_file_exists",
+          "line": 442,
+          "status": "represented",
+          "active_id": "TestDiscordanceDeepTutorial.test_file_exists"
+        },
+        {
+          "source_id": "TestDiscordanceDeepTutorial.test_has_csp_meta_tag",
+          "line": 447,
+          "status": "represented",
+          "active_id": "TestDiscordanceDeepTutorial.test_has_csp_meta_tag"
+        },
+        {
+          "source_id": "TestDiscordanceDeepTutorial.test_has_style_standard_v1",
+          "line": 451,
+          "status": "represented",
+          "active_id": "TestDiscordanceDeepTutorial.test_has_style_standard_v1"
+        },
+        {
+          "source_id": "TestDiscordanceDeepTutorial.test_has_layout2_structure",
+          "line": 455,
+          "status": "represented",
+          "active_id": "TestDiscordanceDeepTutorial.test_has_layout2_structure"
+        },
+        {
+          "source_id": "TestDiscordanceDeepTutorial.test_has_r1_through_r5_rows",
+          "line": 461,
+          "status": "represented",
+          "active_id": "TestDiscordanceDeepTutorial.test_has_r1_through_r5_rows"
+        },
+        {
+          "source_id": "TestDiscordanceDeepTutorial.test_has_io_summary_section",
+          "line": 466,
+          "status": "represented",
+          "active_id": "TestDiscordanceDeepTutorial.test_has_io_summary_section"
+        },
+        {
+          "source_id": "TestDiscordanceDeepTutorial.test_has_jump_navigation",
+          "line": 471,
+          "status": "represented",
+          "active_id": "TestDiscordanceDeepTutorial.test_has_jump_navigation"
+        },
+        {
+          "source_id": "TestDiscordanceDeepTutorial.test_has_progress_indicator",
+          "line": 477,
+          "status": "represented",
+          "active_id": "TestDiscordanceDeepTutorial.test_has_progress_indicator"
+        },
+        {
+          "source_id": "TestDiscordanceDeepTutorial.test_has_theme_toggle",
+          "line": 482,
+          "status": "represented",
+          "active_id": "TestDiscordanceDeepTutorial.test_has_theme_toggle"
+        },
+        {
+          "source_id": "TestDiscordanceDeepTutorial.test_references_js_assets",
+          "line": 488,
+          "status": "represented",
+          "active_id": "TestDiscordanceDeepTutorial.test_references_js_assets"
+        },
+        {
+          "source_id": "TestDiscordanceDeepTutorial.test_each_row_has_required_subheadings",
+          "line": 493,
+          "status": "represented",
+          "active_id": "TestDiscordanceDeepTutorial.test_each_row_has_required_subheadings"
+        },
+        {
+          "source_id": "TestDiscordanceDeepTutorial.test_no_external_assets",
+          "line": 500,
+          "status": "represented",
+          "active_id": "TestDiscordanceDeepTutorial.test_no_external_assets"
+        },
+        {
+          "source_id": "TestDiscordanceDeepTutorial.test_has_discordance_content",
+          "line": 506,
+          "status": "represented",
+          "active_id": "TestDiscordanceDeepTutorial.test_has_discordance_content"
+        },
+        {
+          "source_id": "TestDiscordanceDeepTutorial.test_verified_example_and_precise_veto_contract",
+          "line": 512,
+          "status": "represented",
+          "active_id": "TestDiscordanceDeepTutorial.test_verified_example_and_precise_veto_contract"
+        },
+        {
+          "source_id": "TestDiscordanceDeepTutorial.test_has_usage_disclaimer",
+          "line": 521,
+          "status": "represented",
+          "active_id": "TestDiscordanceDeepTutorial.test_has_usage_disclaimer"
+        },
+        {
+          "source_id": "TestDiscordanceDeepTutorial.test_example_inputs_marked_illustrative",
+          "line": 527,
+          "status": "represented",
+          "active_id": "TestDiscordanceDeepTutorial.test_example_inputs_marked_illustrative"
+        },
+        {
+          "source_id": "TestDiscordanceDeepTutorial.test_has_option3_grounding_facts_line",
+          "line": 534,
+          "status": "represented",
+          "active_id": "TestDiscordanceDeepTutorial.test_has_option3_grounding_facts_line"
+        },
+        {
+          "source_id": "TestDiscordanceDeepTutorial.test_has_option3_expandable_details",
+          "line": 541,
+          "status": "represented",
+          "active_id": "TestDiscordanceDeepTutorial.test_has_option3_expandable_details"
+        },
+        {
+          "source_id": "TestDiscordanceDeepTutorial.test_grounding_has_key_invariants",
+          "line": 548,
+          "status": "represented",
+          "active_id": "TestDiscordanceDeepTutorial.test_grounding_has_key_invariants"
+        },
+        {
+          "source_id": "TestDiscordanceDeepTutorial.test_no_recommended_threshold_defaults",
+          "line": 557,
+          "status": "represented",
+          "active_id": "TestDiscordanceDeepTutorial.test_no_recommended_threshold_defaults"
+        },
+        {
+          "source_id": "TestCredibilityDeepTutorial.test_file_exists",
+          "line": 578,
+          "status": "represented",
+          "active_id": "TestCredibilityDeepTutorial.test_file_exists"
+        },
+        {
+          "source_id": "TestCredibilityDeepTutorial.test_has_csp_meta_tag",
+          "line": 583,
+          "status": "represented",
+          "active_id": "TestCredibilityDeepTutorial.test_has_csp_meta_tag"
+        },
+        {
+          "source_id": "TestCredibilityDeepTutorial.test_has_style_standard_v1",
+          "line": 587,
+          "status": "represented",
+          "active_id": "TestCredibilityDeepTutorial.test_has_style_standard_v1"
+        },
+        {
+          "source_id": "TestCredibilityDeepTutorial.test_has_layout2_structure",
+          "line": 591,
+          "status": "represented",
+          "active_id": "TestCredibilityDeepTutorial.test_has_layout2_structure"
+        },
+        {
+          "source_id": "TestCredibilityDeepTutorial.test_has_r1_through_r5_rows",
+          "line": 597,
+          "status": "represented",
+          "active_id": "TestCredibilityDeepTutorial.test_has_r1_through_r5_rows"
+        },
+        {
+          "source_id": "TestCredibilityDeepTutorial.test_has_io_summary_section",
+          "line": 602,
+          "status": "represented",
+          "active_id": "TestCredibilityDeepTutorial.test_has_io_summary_section"
+        },
+        {
+          "source_id": "TestCredibilityDeepTutorial.test_has_jump_navigation",
+          "line": 607,
+          "status": "represented",
+          "active_id": "TestCredibilityDeepTutorial.test_has_jump_navigation"
+        },
+        {
+          "source_id": "TestCredibilityDeepTutorial.test_has_progress_indicator",
+          "line": 612,
+          "status": "represented",
+          "active_id": "TestCredibilityDeepTutorial.test_has_progress_indicator"
+        },
+        {
+          "source_id": "TestCredibilityDeepTutorial.test_references_js_assets",
+          "line": 617,
+          "status": "represented",
+          "active_id": "TestCredibilityDeepTutorial.test_references_js_assets"
+        },
+        {
+          "source_id": "TestCredibilityDeepTutorial.test_each_row_has_required_subheadings",
+          "line": 622,
+          "status": "represented",
+          "active_id": "TestCredibilityDeepTutorial.test_each_row_has_required_subheadings"
+        },
+        {
+          "source_id": "TestCredibilityDeepTutorial.test_no_external_assets",
+          "line": 629,
+          "status": "represented",
+          "active_id": "TestCredibilityDeepTutorial.test_no_external_assets"
+        },
+        {
+          "source_id": "TestCredibilityDeepTutorial.test_has_credibility_content",
+          "line": 635,
+          "status": "represented",
+          "active_id": "TestCredibilityDeepTutorial.test_has_credibility_content"
+        },
+        {
+          "source_id": "TestCredibilityDeepTutorial.test_has_option3_grounding_facts_line",
+          "line": 641,
+          "status": "represented",
+          "active_id": "TestCredibilityDeepTutorial.test_has_option3_grounding_facts_line"
+        },
+        {
+          "source_id": "TestCredibilityDeepTutorial.test_has_option3_expandable_details",
+          "line": 648,
+          "status": "represented",
+          "active_id": "TestCredibilityDeepTutorial.test_has_option3_expandable_details"
+        },
+        {
+          "source_id": "TestCredibilityDeepTutorial.test_grounding_has_key_invariants",
+          "line": 655,
+          "status": "represented",
+          "active_id": "TestCredibilityDeepTutorial.test_grounding_has_key_invariants"
+        },
+        {
+          "source_id": "TestCredibilityDeepTutorial.test_uses_implementation_contract_wording",
+          "line": 662,
+          "status": "represented",
+          "active_id": "TestCredibilityDeepTutorial.test_uses_implementation_contract_wording"
+        },
+        {
+          "source_id": "TestCredibilityDeepTutorial.test_diagonal_not_enforced_here_wording",
+          "line": 669,
+          "status": "represented",
+          "active_id": "TestCredibilityDeepTutorial.test_diagonal_not_enforced_here_wording"
+        },
+        {
+          "source_id": "TestCredibilityDeepTutorial.test_example_has_computed_table_not_faux_stdout",
+          "line": 676,
+          "status": "represented",
+          "active_id": "TestCredibilityDeepTutorial.test_example_has_computed_table_not_faux_stdout"
+        },
+        {
+          "source_id": "TestCredibilityDeepTutorial.test_has_usage_disclaimer",
+          "line": 682,
+          "status": "represented",
+          "active_id": "TestCredibilityDeepTutorial.test_has_usage_disclaimer"
+        },
+        {
+          "source_id": "TestRankingTutorialScaffold.test_file_exists",
+          "line": 700,
+          "status": "represented",
+          "active_id": "TestRankingTutorialScaffold.test_file_exists"
+        },
+        {
+          "source_id": "TestRankingTutorialScaffold.test_has_csp_meta_tag",
+          "line": 705,
+          "status": "represented",
+          "active_id": "TestRankingTutorialScaffold.test_has_csp_meta_tag"
+        },
+        {
+          "source_id": "TestRankingTutorialScaffold.test_has_style_standard_v1",
+          "line": 709,
+          "status": "represented",
+          "active_id": "TestRankingTutorialScaffold.test_has_style_standard_v1"
+        },
+        {
+          "source_id": "TestRankingTutorialScaffold.test_has_layout2_structure",
+          "line": 713,
+          "status": "represented",
+          "active_id": "TestRankingTutorialScaffold.test_has_layout2_structure"
+        },
+        {
+          "source_id": "TestRankingTutorialScaffold.test_has_r1_through_r5_rows",
+          "line": 719,
+          "status": "represented",
+          "active_id": "TestRankingTutorialScaffold.test_has_r1_through_r5_rows"
+        },
+        {
+          "source_id": "TestRankingTutorialScaffold.test_has_io_summary_section",
+          "line": 724,
+          "status": "represented",
+          "active_id": "TestRankingTutorialScaffold.test_has_io_summary_section"
+        },
+        {
+          "source_id": "TestRankingTutorialScaffold.test_has_jump_navigation",
+          "line": 729,
+          "status": "represented",
+          "active_id": "TestRankingTutorialScaffold.test_has_jump_navigation"
+        },
+        {
+          "source_id": "TestRankingTutorialScaffold.test_has_progress_indicator",
+          "line": 734,
+          "status": "represented",
+          "active_id": "TestRankingTutorialScaffold.test_has_progress_indicator"
+        },
+        {
+          "source_id": "TestRankingTutorialScaffold.test_references_js_assets",
+          "line": 739,
+          "status": "represented",
+          "active_id": "TestRankingTutorialScaffold.test_references_js_assets"
+        },
+        {
+          "source_id": "TestRankingTutorialScaffold.test_each_row_has_required_subheadings",
+          "line": 744,
+          "status": "represented",
+          "active_id": "TestRankingTutorialScaffold.test_each_row_has_required_subheadings"
+        },
+        {
+          "source_id": "TestRankingTutorialScaffold.test_no_external_assets",
+          "line": 751,
+          "status": "represented",
+          "active_id": "TestRankingTutorialScaffold.test_no_external_assets"
+        },
+        {
+          "source_id": "TestRankingTutorialScaffold.test_has_ranking_content",
+          "line": 757,
+          "status": "represented",
+          "active_id": "TestRankingTutorialScaffold.test_has_ranking_content"
+        },
+        {
+          "source_id": "TestRankingTutorialScaffold.test_has_option3_grounding_facts_line",
+          "line": 763,
+          "status": "represented",
+          "active_id": "TestRankingTutorialScaffold.test_has_option3_grounding_facts_line"
+        },
+        {
+          "source_id": "TestRankingTutorialScaffold.test_has_option3_expandable_details",
+          "line": 770,
+          "status": "represented",
+          "active_id": "TestRankingTutorialScaffold.test_has_option3_expandable_details"
+        },
+        {
+          "source_id": "TestRankingTutorialScaffold.test_grounding_has_key_invariants",
+          "line": 777,
+          "status": "represented",
+          "active_id": "TestRankingTutorialScaffold.test_grounding_has_key_invariants"
+        },
+        {
+          "source_id": "TestRankingTutorialScaffold.test_no_deterministic_output_assertions",
+          "line": 784,
+          "status": "represented",
+          "active_id": "TestRankingTutorialScaffold.test_no_deterministic_output_assertions"
+        },
+        {
+          "source_id": "TestRankingTutorialScaffold.test_no_seed_mention",
+          "line": 790,
+          "status": "represented",
+          "active_id": "TestRankingTutorialScaffold.test_no_seed_mention"
+        },
+        {
+          "source_id": "TestRankingTutorialScaffold.test_no_phi_norm_reference",
+          "line": 794,
+          "status": "represented",
+          "active_id": "TestRankingTutorialScaffold.test_no_phi_norm_reference"
+        },
+        {
+          "source_id": "TestRankingTutorialScaffold.test_no_electre_iii_ii_typo",
+          "line": 798,
+          "status": "represented",
+          "active_id": "TestRankingTutorialScaffold.test_no_electre_iii_ii_typo"
+        },
+        {
+          "source_id": "TestRankingTutorialScaffold.test_has_usage_disclaimer",
+          "line": 802,
+          "status": "represented",
+          "active_id": "TestRankingTutorialScaffold.test_has_usage_disclaimer"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_file_exists",
+          "line": 818,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_file_exists"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_has_doctype",
+          "line": 823,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_has_doctype"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_has_csp_meta",
+          "line": 827,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_has_csp_meta"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_has_shell_structure",
+          "line": 832,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_has_shell_structure"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_has_sidebar",
+          "line": 836,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_has_sidebar"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_has_rows_container",
+          "line": 840,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_has_rows_container"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_has_five_range_rows",
+          "line": 844,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_has_five_range_rows"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_has_jump_navigation",
+          "line": 852,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_has_jump_navigation"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_has_theme_toggle",
+          "line": 860,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_has_theme_toggle"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_has_progress_indicator",
+          "line": 866,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_has_progress_indicator"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_references_local_scripts",
+          "line": 870,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_references_local_scripts"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_each_row_has_required_subheadings",
+          "line": 875,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_each_row_has_required_subheadings"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_no_external_assets",
+          "line": 882,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_no_external_assets"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_has_validate_content",
+          "line": 888,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_has_validate_content"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_has_option3_grounding_facts_line",
+          "line": 895,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_has_option3_grounding_facts_line"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_has_option3_expandable_details",
+          "line": 902,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_has_option3_expandable_details"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_grounding_has_key_invariants",
+          "line": 909,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_grounding_has_key_invariants"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_no_deterministic_output_assertions",
+          "line": 915,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_no_deterministic_output_assertions"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_has_io_summary",
+          "line": 921,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_has_io_summary"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_has_usage_disclaimer",
+          "line": 926,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_has_usage_disclaimer"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_mentions_fail_fast",
+          "line": 932,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_mentions_fail_fast"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_mentions_valueerror",
+          "line": 936,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_mentions_valueerror"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_has_dark_mode_note_text_token",
+          "line": 941,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_has_dark_mode_note_text_token"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_has_dark_mode_note_size_token",
+          "line": 945,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_has_dark_mode_note_size_token"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_has_dark_mode_h4_color_token",
+          "line": 949,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_has_dark_mode_h4_color_token"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_has_dark_mode_h4_border_token",
+          "line": 953,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_has_dark_mode_h4_border_token"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_note_col_uses_note_text_token",
+          "line": 957,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_note_col_uses_note_text_token"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_note_col_uses_note_size_token",
+          "line": 961,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_note_col_uses_note_size_token"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_h4_uses_h4_color_token",
+          "line": 965,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_h4_uses_h4_color_token"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_h4_has_border_left",
+          "line": 969,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_h4_has_border_left"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_has_selection_accent_token",
+          "line": 974,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_has_selection_accent_token"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_has_selection_soft_token",
+          "line": 978,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_has_selection_soft_token"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_has_selection_border_token",
+          "line": 982,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_has_selection_border_token"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_has_row_sel_styles",
+          "line": 986,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_has_row_sel_styles"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_selection_has_non_color_cue",
+          "line": 990,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_selection_has_non_color_cue"
+        },
+        {
+          "source_id": "TestValidateTutorialScaffold.test_hl_uses_selection_tokens",
+          "line": 994,
+          "status": "represented",
+          "active_id": "TestValidateTutorialScaffold.test_hl_uses_selection_tokens"
+        },
+        {
+          "source_id": "TestBlockTutorialScaffold.test_file_exists",
+          "line": 1010,
+          "status": "represented",
+          "active_id": "TestBlockTutorialScaffold.test_file_exists"
+        },
+        {
+          "source_id": "TestBlockTutorialScaffold.test_has_doctype",
+          "line": 1015,
+          "status": "represented",
+          "active_id": "TestBlockTutorialScaffold.test_has_doctype"
+        },
+        {
+          "source_id": "TestBlockTutorialScaffold.test_has_csp_meta",
+          "line": 1019,
+          "status": "represented",
+          "active_id": "TestBlockTutorialScaffold.test_has_csp_meta"
+        },
+        {
+          "source_id": "TestBlockTutorialScaffold.test_has_style_standard_v1",
+          "line": 1024,
+          "status": "represented",
+          "active_id": "TestBlockTutorialScaffold.test_has_style_standard_v1"
+        },
+        {
+          "source_id": "TestBlockTutorialScaffold.test_has_shell_structure",
+          "line": 1028,
+          "status": "represented",
+          "active_id": "TestBlockTutorialScaffold.test_has_shell_structure"
+        },
+        {
+          "source_id": "TestBlockTutorialScaffold.test_has_sidebar",
+          "line": 1032,
+          "status": "represented",
+          "active_id": "TestBlockTutorialScaffold.test_has_sidebar"
+        },
+        {
+          "source_id": "TestBlockTutorialScaffold.test_has_rows_container",
+          "line": 1036,
+          "status": "represented",
+          "active_id": "TestBlockTutorialScaffold.test_has_rows_container"
+        },
+        {
+          "source_id": "TestBlockTutorialScaffold.test_has_five_range_rows",
+          "line": 1040,
+          "status": "represented",
+          "active_id": "TestBlockTutorialScaffold.test_has_five_range_rows"
+        },
+        {
+          "source_id": "TestBlockTutorialScaffold.test_has_jump_navigation",
+          "line": 1048,
+          "status": "represented",
+          "active_id": "TestBlockTutorialScaffold.test_has_jump_navigation"
+        },
+        {
+          "source_id": "TestBlockTutorialScaffold.test_has_theme_toggle",
+          "line": 1056,
+          "status": "represented",
+          "active_id": "TestBlockTutorialScaffold.test_has_theme_toggle"
+        },
+        {
+          "source_id": "TestBlockTutorialScaffold.test_has_progress_indicator",
+          "line": 1062,
+          "status": "represented",
+          "active_id": "TestBlockTutorialScaffold.test_has_progress_indicator"
+        },
+        {
+          "source_id": "TestBlockTutorialScaffold.test_references_local_scripts",
+          "line": 1066,
+          "status": "represented",
+          "active_id": "TestBlockTutorialScaffold.test_references_local_scripts"
+        },
+        {
+          "source_id": "TestBlockTutorialScaffold.test_each_row_has_required_subheadings",
+          "line": 1071,
+          "status": "represented",
+          "active_id": "TestBlockTutorialScaffold.test_each_row_has_required_subheadings"
+        },
+        {
+          "source_id": "TestBlockTutorialScaffold.test_no_external_assets",
+          "line": 1078,
+          "status": "represented",
+          "active_id": "TestBlockTutorialScaffold.test_no_external_assets"
+        },
+        {
+          "source_id": "TestBlockTutorialScaffold.test_has_block_content",
+          "line": 1084,
+          "status": "represented",
+          "active_id": "TestBlockTutorialScaffold.test_has_block_content"
+        },
+        {
+          "source_id": "TestBlockTutorialScaffold.test_has_option3_grounding_facts_line",
+          "line": 1091,
+          "status": "represented",
+          "active_id": "TestBlockTutorialScaffold.test_has_option3_grounding_facts_line"
+        },
+        {
+          "source_id": "TestBlockTutorialScaffold.test_has_option3_expandable_details",
+          "line": 1098,
+          "status": "represented",
+          "active_id": "TestBlockTutorialScaffold.test_has_option3_expandable_details"
+        },
+        {
+          "source_id": "TestBlockTutorialScaffold.test_grounding_has_key_invariants",
+          "line": 1105,
+          "status": "represented",
+          "active_id": "TestBlockTutorialScaffold.test_grounding_has_key_invariants"
+        },
+        {
+          "source_id": "TestBlockTutorialScaffold.test_no_deterministic_output_assertions",
+          "line": 1111,
+          "status": "represented",
+          "active_id": "TestBlockTutorialScaffold.test_no_deterministic_output_assertions"
+        },
+        {
+          "source_id": "TestBlockTutorialScaffold.test_has_io_summary",
+          "line": 1116,
+          "status": "represented",
+          "active_id": "TestBlockTutorialScaffold.test_has_io_summary"
+        },
+        {
+          "source_id": "TestBlockTutorialScaffold.test_has_usage_disclaimer",
+          "line": 1121,
+          "status": "represented",
+          "active_id": "TestBlockTutorialScaffold.test_has_usage_disclaimer"
+        },
+        {
+          "source_id": "TestBlockTutorialScaffold.test_mentions_concordance_discordance_credibility",
+          "line": 1127,
+          "status": "represented",
+          "active_id": "TestBlockTutorialScaffold.test_mentions_concordance_discordance_credibility"
+        },
+        {
+          "source_id": "TestBlockTutorialScaffold.test_has_preconditions_wording",
+          "line": 1133,
+          "status": "represented",
+          "active_id": "TestBlockTutorialScaffold.test_has_preconditions_wording"
+        },
+        {
+          "source_id": "TestBlockTutorialScaffold.test_has_min_b1_b2_diagonal_wording",
+          "line": 1138,
+          "status": "represented",
+          "active_id": "TestBlockTutorialScaffold.test_has_min_b1_b2_diagonal_wording"
+        },
+        {
+          "source_id": "TestBlockTutorialScaffold.test_has_mismatch_silently_mis_compute_wording",
+          "line": 1142,
+          "status": "represented",
+          "active_id": "TestBlockTutorialScaffold.test_has_mismatch_silently_mis_compute_wording"
+        },
+        {
+          "source_id": "TestBlockTutorialScaffold.test_clipping_attributed_to_credibility_stage",
+          "line": 1146,
+          "status": "represented",
+          "active_id": "TestBlockTutorialScaffold.test_clipping_attributed_to_credibility_stage"
+        },
+        {
+          "source_id": "TestBlockTutorialScaffold.test_no_misleading_guarantee_phrases",
+          "line": 1150,
+          "status": "represented",
+          "active_id": "TestBlockTutorialScaffold.test_no_misleading_guarantee_phrases"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_file_exists",
+          "line": 1166,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_file_exists"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_has_doctype",
+          "line": 1171,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_has_doctype"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_has_csp_meta",
+          "line": 1175,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_has_csp_meta"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_has_style_standard_v1",
+          "line": 1180,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_has_style_standard_v1"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_has_shell_structure",
+          "line": 1184,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_has_shell_structure"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_has_sidebar",
+          "line": 1188,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_has_sidebar"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_has_rows_container",
+          "line": 1192,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_has_rows_container"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_has_five_range_rows",
+          "line": 1196,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_has_five_range_rows"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_has_jump_navigation",
+          "line": 1204,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_has_jump_navigation"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_has_theme_toggle",
+          "line": 1212,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_has_theme_toggle"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_has_progress_indicator",
+          "line": 1218,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_has_progress_indicator"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_references_local_scripts",
+          "line": 1222,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_references_local_scripts"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_each_row_has_required_subheadings",
+          "line": 1227,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_each_row_has_required_subheadings"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_no_external_assets",
+          "line": 1234,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_no_external_assets"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_has_accumulator_content",
+          "line": 1240,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_has_accumulator_content"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_has_option3_grounding_facts_line",
+          "line": 1248,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_has_option3_grounding_facts_line"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_has_option3_expandable_details",
+          "line": 1255,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_has_option3_expandable_details"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_grounding_has_key_invariants",
+          "line": 1262,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_grounding_has_key_invariants"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_no_deterministic_output_assertions",
+          "line": 1268,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_no_deterministic_output_assertions"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_has_io_summary",
+          "line": 1273,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_has_io_summary"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_has_usage_disclaimer",
+          "line": 1278,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_has_usage_disclaimer"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_mentions_o_n_memory",
+          "line": 1284,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_mentions_o_n_memory"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_mentions_block_tiling",
+          "line": 1288,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_mentions_block_tiling"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_has_preconditions_wording",
+          "line": 1292,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_has_preconditions_wording"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_has_conditional_flow_conservation",
+          "line": 1297,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_has_conditional_flow_conservation"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_normalize_mentions_min_max",
+          "line": 1301,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_normalize_mentions_min_max"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_normalize_mentions_hides_scale",
+          "line": 1305,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_normalize_mentions_hides_scale"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_flow_conservation_mentions_exactly_once",
+          "line": 1309,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_flow_conservation_mentions_exactly_once"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_flow_conservation_mentions_no_overlap",
+          "line": 1313,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_flow_conservation_mentions_no_overlap"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_flow_conservation_mentions_no_gaps",
+          "line": 1317,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_flow_conservation_mentions_no_gaps"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_normalize_mentions_outliers",
+          "line": 1321,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_normalize_mentions_outliers"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_normalize_mentions_convention",
+          "line": 1325,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_normalize_mentions_convention"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_flow_conservation_mentions_same_weights_for_all_blocks",
+          "line": 1329,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_flow_conservation_mentions_same_weights_for_all_blocks"
+        },
+        {
+          "source_id": "TestAccumulatorTutorialScaffold.test_flow_conservation_mentions_floating_point_tolerance",
+          "line": 1334,
+          "status": "represented",
+          "active_id": "TestAccumulatorTutorialScaffold.test_flow_conservation_mentions_floating_point_tolerance"
+        }
+      ]
+    }
+  ],
+  "obsolete_tests": [],
+  "validation": {
+    "all_source_tests_represented": true,
+    "archive_contents_byte_identical": true,
+    "archives_are_non_python": true
+  }
+}

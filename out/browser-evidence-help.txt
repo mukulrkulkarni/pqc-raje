@@ -1,0 +1,13 @@
+usage: run_brave_browser_evidence.py [-h] [--base-url BASE_URL]
+                                     [--cdp-url CDP_URL] [--output OUTPUT]
+                                     [--diagnose-cdp] [--connect-check]
+
+Diagnose or collect local Brave CDP evidence
+
+options:
+  -h, --help           show this help message and exit
+  --base-url BASE_URL
+  --cdp-url CDP_URL    CDP endpoint; WSL defaults to its Windows gateway
+  --output OUTPUT
+  --diagnose-cdp       probe /json/version only; collect no evidence
+  --connect-check      with --diagnose-cdp, test Playwright connect_over_cdp

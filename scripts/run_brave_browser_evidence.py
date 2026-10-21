@@ -17,11 +17,13 @@ from pathlib import Path
 from playwright.sync_api import sync_playwright
 
 BRAVE = "/mnt/c/Program Files/BraveSoftware/Brave-Browser/Application/brave.exe"
+DEFAULT_CDP = "http://127.0.0.1:9222"
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Run Brave local UX evidence checks")
     parser.add_argument("--base-url", default="http://127.0.0.1:5000")
+    parser.add_argument("--cdp-url", default=DEFAULT_CDP)
     parser.add_argument("--output", default="out/browser-evidence-local")
     args = parser.parse_args()
     out = Path(args.output)
@@ -29,16 +31,10 @@ def main() -> int:
 
     results: dict[str, object] = {"browser": BRAVE, "base_url": args.base_url}
     with sync_playwright() as p:
-        browser = p.chromium.launch(
-            executable_path=BRAVE,
-            headless=True,
-            args=["--disable-background-networking", "--disable-features=NetworkService"],
-        )
-        context = browser.new_context(
-            service_workers="block",
-            offline=True,
-            viewport={"width": 1280, "height": 900},
-        )
+        browser = p.chromium.connect_over_cdp(args.cdp_url)
+        context = browser.contexts[0] if browser.contexts else browser.new_context()
+        context.set_offline(False)
+        context.route("**/*", lambda route: route.abort() if not route.request.url.startswith(args.base_url) else route.continue_())
         page = context.new_page()
 
         page.goto(f"{args.base_url}/app/", wait_until="domcontentloaded")

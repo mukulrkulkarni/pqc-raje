@@ -16,12 +16,30 @@ pip3 install playwright
 
 The procedure does not install or download a browser. It uses the existing Brave executable.
 
+## Start Brave with CDP from WSL
+
+Use the mounted Unix path and a temporary profile:
+
+```bash
+BRAVE="/mnt/c/Program Files/BraveSoftware/Brave-Browser/Application/brave.exe"
+rm -rf /tmp/brave-evidence-profile
+"$BRAVE" --headless=new --disable-gpu --no-sandbox --user-data-dir=/tmp/brave-evidence-profile --remote-debugging-port=9222 about:blank >/tmp/brave-evidence.log 2>&1 &
+```
+
+Verify the CDP endpoint:
+
+```bash
+curl --fail http://127.0.0.1:9222/json/version
+```
+
+If this returns connection refused, inspect `/tmp/brave-evidence.log`; the browser did not start with a usable CDP endpoint.
+
 ## Run
 
 From the repository root:
 
-```cmd
-python3 scripts/run_brave_browser_evidence.py --base-url http://127.0.0.1:5000
+```bash
+python3 scripts/run_brave_browser_evidence.py --base-url http://127.0.0.1:5000 --cdp-url http://127.0.0.1:9222
 ```
 
 The script uses a temporary browser context and blocks service workers and network access. It records:

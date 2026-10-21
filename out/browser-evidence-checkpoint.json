@@ -1,0 +1,75 @@
+{
+  "chunk": "browser-evidence",
+  "state_transitions": [
+    {
+      "state": "planned",
+      "evidence": "Authorized bounded browser-evidence chunk; no browser session yet."
+    },
+    {
+      "state": "active",
+      "evidence": "Inspected relevant workflow, CSP, template, and focused test inputs."
+    },
+    {
+      "state": "blocked",
+      "evidence": "Exact authorized Brave executable preflight returned BRAVE_MISSING; stop condition applied before browser launch."
+    }
+  ],
+  "objective": "Collect local-only Brave evidence for server-rendered /app workflow without changing application behavior.",
+  "assigned_agent": "Innovium prepared Code specialist, candidate v1",
+  "browser": "C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe",
+  "environment": {
+    "workspace": "C:\\Users\\Mukul.Kulkarni\\InnoviumAI\\Projects\\IP Address Analysis Plan",
+    "profile": "not created because browser preflight failed",
+    "network": "no external service contacted"
+  },
+  "scope": [
+    "/app workflow",
+    "keyboard/focus/reflow",
+    "network-disabled local checks",
+    "automated accessibility checks if available"
+  ],
+  "evidence": {
+    "browser": {
+      "status": "not collected",
+      "reason": "BRAVE_MISSING"
+    },
+    "test_client": {
+      "command": "python -m pytest tests/test_app_workflow.py -q",
+      "result": "12 passed in 0.71s"
+    },
+    "compile": {
+      "command": "python -m compileall -q app electre3",
+      "result": "passed"
+    },
+    "diff_check": {
+      "command": "git diff --check",
+      "result": "passed before evidence-note edits"
+    }
+  },
+  "evidence_category_counts": {
+    "positive_passed": 3,
+    "negative_passed": 3,
+    "edge_passed": 2,
+    "browser_required_not_run": 7
+  },
+  "limitations": [
+    "Screen-reader and assistive-technology behavior is unverified.",
+    "No screenshots, DOM dumps, accessibility-tree output, or browser CSP observations exist.",
+    "Keyboard focus, zoom/reflow, script-disabled, and network-disabled local navigation were not executed."
+  ],
+  "stop_conditions": [
+    "browser launch failure",
+    "scope expansion",
+    "production page edits without approval"
+  ],
+  "failure": {
+    "classification": "blocked",
+    "affected_step": "browser executable preflight",
+    "recovery": "Provide Brave at the exact authorized path, then resume from this checkpoint with a temporary profile."
+  },
+  "artifacts": [
+    "docs/decisions/browser-evidence-notes.md",
+    "out/browser-evidence-checkpoint.json"
+  ],
+  "next_action": "Await authorized browser-path remediation; do not claim browser, reflow, offline, accessibility, or AT coverage."
+}

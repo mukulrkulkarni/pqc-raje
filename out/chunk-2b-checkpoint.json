@@ -1,0 +1,16 @@
+{
+  "chunk": "2B",
+  "state": "completed",
+  "created_at": "2026-10-21",
+  "completed_at": "2026-10-21",
+  "objective": "Add immutable result model and deterministic serialization foundation only.",
+  "base_commit": "9f81faa",
+  "commit": "6f88a75",
+  "commit_message": "chunk-2b-result-serialization",
+  "changed_paths": ["electre3/serialization.py", "electre3/shared.py", "tests/test_serialization.py", "tests/test_shared_contract.py", "docs/decisions/chunk-2b-documentation-notes.md"],
+  "scope": ["immutable result model", "deterministic serializers", "split manifest/reassembly", "minimal shared adapter integration"],
+  "excluded": ["cache", "downloads", "routes", "runtime benchmarks"],
+  "acceptance_tests": ["python -m pytest tests/test_serialization.py tests/test_shared_contract.py tests/test_cli_run.py -q: 43 passed", "python -m pytest tests/test_app_workflow.py tests/test_preview_gate.py tests/test_security.py tests/test_security_headers.py tests/test_docs_routes.py -q: 235 passed", "python -m compileall electre3 app: passed", "git diff --check: passed"],
+  "failure_recovery": "Two quoted commit attempts failed under Windows command parsing without modifying files. A third focused hyphenated-message commit succeeded.",
+  "working_tree": "clean after final amended checkpoint commit"
+}

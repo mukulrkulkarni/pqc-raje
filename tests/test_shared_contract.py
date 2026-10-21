@@ -30,7 +30,12 @@ def test_adapter_returns_ranking_and_net_flow(criteria, matrix):
     assert result.ranking.dtype.kind in "iu"
     assert set(result.ranking) == {0, 1, 2}
     assert result.net_flow.shape == (3,)
-    assert result.net_flow.dtype == np.float64
+    assert result.net_flow.dtype == np.dtype("<f8")
+    assert result.identifiers == ("0", "1", "2")
+    assert result.configuration.block_size == 2
+    assert result.ranking.flags.writeable is False
+    with pytest.raises(ValueError):
+        result.net_flow[0] = 0.0
 
 
 def test_cli_helper_uses_strict_shared_contract(criteria, matrix):

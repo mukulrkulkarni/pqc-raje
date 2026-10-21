@@ -16,6 +16,7 @@ import numpy as np
 
 from .config import ComputeConfig, CriterionConfig
 from .ranking import compute_ranking
+from .serialization import ComputeConfiguration, CriterionMetadata, RankingResult
 
 MAX_CRITERIA = 8
 MAX_ROWS = 100_000
@@ -26,12 +27,8 @@ _WEIGHT_SUM_TOLERANCE = 1e-12
 _REQUIRED_CRITERION_FIELDS = ("name", "weight", "q", "p", "v", "maximize")
 
 
-@dataclass(frozen=True)
-class ComputeResult:
-    """Validated ranking output, without serialization or cache concerns."""
-
-    ranking: np.ndarray
-    net_flow: np.ndarray
+# Compatibility name retained for existing shared-adapter consumers.
+ComputeResult = RankingResult
 
 
 def _finite_number(value: Any, field: str, index: int) -> float:
@@ -122,5 +119,16 @@ def compute_validated_ranking(
         )
     criteria = validate_criteria(criteria_data)
     scores = validate_score_matrix(matrix, len(criteria))
-    ranking, accumulator = compute_ranking(scores, criteria, ComputeConfig(block_size=block_size))
-    return ComputeResult(ranking=ranking, net_flow=accumulator.net_flow())
+    configuration = ComputeConfig(block_size=block_size)
+    ranking, accumulator = compute_ranking(scores, criteria, configuration)
+    return ComputeResult(
+        ranking=ranking,
+        net_flow=accumulator.net_flow(),
+        identifiers=tuple(str(index) for index in range(scores.shape[0])),
+        criteria=tuple(CriterionMetadata(**criterion.__dict__) for criterion in criteria),
+        configuration=ComputeConfiguration(
+            block_size=configuration.block_size,
+            use_numba=configuration.use_numba,
+            seed=configuration.seed,
+        ),
+    )

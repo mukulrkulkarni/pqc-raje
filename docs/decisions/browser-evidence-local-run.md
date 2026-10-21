@@ -3,7 +3,7 @@
 Run this procedure on the machine that contains Brave at:
 
 ```text
-C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe
+/mnt/c/Program Files/BraveSoftware/Brave-Browser/Application/brave.exe
 ```
 
 ## Prerequisites
@@ -11,7 +11,7 @@ C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe
 Start the local Flask app. Then install Playwright in a local virtual environment if needed:
 
 ```cmd
-python -m pip install playwright
+pip3 install playwright
 ```
 
 The procedure does not install or download a browser. It uses the existing Brave executable.
@@ -21,7 +21,7 @@ The procedure does not install or download a browser. It uses the existing Brave
 From the repository root:
 
 ```cmd
-python scripts/run_brave_browser_evidence.py --base-url http://127.0.0.1:5000
+python3 scripts/run_brave_browser_evidence.py --base-url http://127.0.0.1:5000
 ```
 
 The script uses a temporary browser context and blocks service workers and network access. It records:

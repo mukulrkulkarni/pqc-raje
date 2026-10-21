@@ -1,8 +1,8 @@
 """Run local Brave evidence checks for the server-rendered /app workflow.
 
 Prerequisites on the user's machine:
-  python -m pip install playwright
-  Start the local app, for example: python scripts/dev_local.py
+  pip3 install playwright
+  Start the local app, for example: python3 scripts/dev_local.py
 
 This script does not download or install a browser. It uses the supplied Brave
 executable and a temporary browser context. Screen-reader behavior is not
@@ -16,7 +16,7 @@ from pathlib import Path
 
 from playwright.sync_api import sync_playwright
 
-BRAVE = r"C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe"
+BRAVE = "/mnt/c/Program Files/BraveSoftware/Brave-Browser/Application/brave.exe"
 
 
 def main() -> int:

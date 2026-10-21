@@ -1,75 +1,69 @@
 {
-  "chunk": "browser-evidence",
+  "chunk": "browser-cdp-troubleshooting",
+  "state": "completed",
   "state_transitions": [
     {
       "state": "planned",
-      "evidence": "Authorized bounded browser-evidence chunk; no browser session yet."
+      "evidence": "CDP troubleshooting subchunk authorized after WSL could not reach port 9222."
     },
     {
       "state": "active",
-      "evidence": "Inspected relevant workflow, CSP, template, and focused test inputs."
+      "evidence": "Checkpoint created before procedure, script, or documentation changes."
     },
     {
-      "state": "blocked",
-      "evidence": "Exact authorized Brave executable preflight returned BRAVE_MISSING; stop condition applied before browser launch."
+      "state": "checkpointed",
+      "evidence": "Procedure, diagnostic CLI, and static validation completed; browser evidence remains uncollected."
+    },
+    {
+      "state": "completed",
+      "evidence": "Focused commit and clean working-tree verification completed."
     }
   ],
-  "objective": "Collect local-only Brave evidence for server-rendered /app workflow without changing application behavior.",
+  "objective": "Provide a user-run, local-only diagnosis for Windows Brave CDP and WSL Playwright connectivity without application changes or browser installation.",
   "assigned_agent": "Innovium prepared Code specialist, candidate v1",
-  "browser": "C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe",
-  "environment": {
-    "workspace": "C:\\Users\\Mukul.Kulkarni\\InnoviumAI\\Projects\\IP Address Analysis Plan",
-    "profile": "not created because browser preflight failed",
-    "network": "no external service contacted"
-  },
+  "inputs": [
+    "scripts/run_brave_browser_evidence.py",
+    "docs/decisions/browser-evidence-local-run.md",
+    "prior blocked browser-evidence checkpoint"
+  ],
   "scope": [
-    "/app workflow",
-    "keyboard/focus/reflow",
-    "network-disabled local checks",
-    "automated accessibility checks if available"
+    "evidence procedure scripts and documentation",
+    "CDP diagnostics",
+    "static and syntax checks"
+  ],
+  "out_of_scope": [
+    "application pages",
+    "ranking code",
+    "browser installation",
+    "browser evidence collection",
+    "external access"
+  ],
+  "acceptance_test": {
+    "syntax_and_help": "python -m py_compile scripts\\run_brave_browser_evidence.py && python scripts\\run_brave_browser_evidence.py --help: passed (exit 0).",
+    "negative_argument": "python scripts\\run_brave_browser_evidence.py --connect-check: expected failure (exit 2), reporting '--connect-check requires --diagnose-cdp'.",
+    "documentation": "Verified required Windows path, listener, Windows localhost, WSL gateway, firewall, Playwright, positive/negative/edge, limitations, and AT coverage sections."
+  },
+  "fallback": "Copyable PowerShell and WSL commands with expected output; no remote browser access was attempted.",
+  "stop_conditions": [
+    "scope expansion",
+    "external access requirement",
+    "browser evidence collection request"
   ],
   "evidence": {
-    "browser": {
-      "status": "not collected",
-      "reason": "BRAVE_MISSING"
-    },
-    "test_client": {
-      "command": "python -m pytest tests/test_app_workflow.py -q",
-      "result": "12 passed in 0.71s"
-    },
-    "compile": {
-      "command": "python -m compileall -q app electre3",
-      "result": "passed"
-    },
-    "diff_check": {
-      "command": "git diff --check",
-      "result": "passed before evidence-note edits"
-    }
-  },
-  "evidence_category_counts": {
-    "positive_passed": 3,
-    "negative_passed": 3,
-    "edge_passed": 2,
-    "browser_required_not_run": 7
-  },
-  "limitations": [
-    "Screen-reader and assistive-technology behavior is unverified.",
-    "No screenshots, DOM dumps, accessibility-tree output, or browser CSP observations exist.",
-    "Keyboard focus, zoom/reflow, script-disabled, and network-disabled local navigation were not executed."
-  ],
-  "stop_conditions": [
-    "browser launch failure",
-    "scope expansion",
-    "production page edits without approval"
-  ],
-  "failure": {
-    "classification": "blocked",
-    "affected_step": "browser executable preflight",
-    "recovery": "Provide Brave at the exact authorized path, then resume from this checkpoint with a temporary profile."
+    "browser": "not collected",
+    "network": "no external service contacted",
+    "application_changes": "none"
   },
   "artifacts": [
-    "docs/decisions/browser-evidence-notes.md",
-    "out/browser-evidence-checkpoint.json"
+    "out/browser-evidence-checkpoint.json",
+    "scripts/run_brave_browser_evidence.py",
+    "docs/decisions/browser-evidence-local-run.md",
+    "docs/decisions/browser-cdp-troubleshooting-notes.md"
   ],
-  "next_action": "Await authorized browser-path remediation; do not claim browser, reflow, offline, accessibility, or AT coverage."
+  "commit": {
+    "message": "add-browser-cdp-troubleshooting-procedure",
+    "identifier": "pending amend"
+  },
+  "working_tree": "pending final verification",
+  "next_action": "User runs the documented Windows and WSL diagnostic sequence; no browser evidence is claimed."
 }

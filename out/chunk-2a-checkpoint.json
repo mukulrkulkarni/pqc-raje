@@ -1,0 +1,15 @@
+{
+  "chunk": "2A",
+  "objective": "Implement the server-rendered /app ranking workflow only.",
+  "state": "checkpointed",
+  "agent": "Innovium prepared Code specialist, candidate v1",
+  "model": "API-provided model",
+  "baseline_commit": "27c8c4b",
+  "authoritative_inputs": ["web-app-requirements.txt", "docs/decisions/web-app-design-meeting-report.md", "electre3/shared.py"],
+  "scope": ["/app routes", "server-rendered templates", "focused tests", "config CSP correction"],
+  "exclusions": ["serializers", "result cache", "downloads", "runtime benchmarks", "split artifacts"],
+  "acceptance": {"focused_tests": "235 passed", "compileall": "passed", "no_script_scan": "passed", "docs_compatibility": "passed"},
+  "checkpoint_paths": ["app/routes/workflow.py", "app/templates/app_input.html", "app/templates/app_matrix.html", "app/templates/app_preview.html", "app/templates/app_results.html", "tests/test_app_workflow.py", "docs/decisions/chunk-2a-evidence.md"],
+  "failure_and_recovery": {"failure": "GET /app returned 308 after replacing the placeholder route.", "classification": "partial", "recovery": "Registered both /app and /app/ on the workflow route; reran tests successfully."},
+  "next_action": "Inspect staged diff, commit approved files, and verify clean working tree."
+}

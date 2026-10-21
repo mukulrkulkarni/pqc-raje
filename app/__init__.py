@@ -44,8 +44,9 @@ def create_app(config: dict | None = None) -> Flask:
         response.headers["Content-Security-Policy"] = csp
         return response
 
-    from .routes import compute, preview, docs
+    from .routes import compute, preview, docs, workflow
     app.register_blueprint(docs.bp)
+    app.register_blueprint(workflow.bp)
     app.register_blueprint(compute.bp)
     app.register_blueprint(preview.bp)
     return app

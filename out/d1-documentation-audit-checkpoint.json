@@ -1,6 +1,6 @@
 {
   "chunk": "D1",
-  "state": "checkpointed",
+  "state": "completed",
   "objective": "Audit existing documentation, UX rationale, links, and test evidence without editing pages.",
   "fallback": "PI local filesystem audit after unavailable research-agent ID",
   "delegation_failure": "Agent 120620d2-d51a-4aab-a6b8-da3a319cc882 was unavailable",

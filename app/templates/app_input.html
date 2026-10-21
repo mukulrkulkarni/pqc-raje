@@ -1,6 +1,6 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><title>Ranking criteria</title></head>
-<body><main><h1>ELECTRE III ranking</h1><p>Step 1 of 4: provide one to eight criteria.</p>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"><title>Ranking criteria</title></head>
+<body><main class="container"><h1>ELECTRE III ranking</h1><p>Step 1 of 4: provide one to eight criteria.</p>
 {% if error %}<p role="alert"><strong>Correct this input:</strong> {{ error }}</p>{% endif %}
 <form method="post" action="{{ url_for('workflow.confirm_inputs') }}">
 <fieldset><legend>Criteria entry mode</legend>
@@ -9,7 +9,7 @@
 </fieldset>
 <label for="criteria_json">Criteria JSON</label><br><textarea id="criteria_json" name="criteria_json" rows="12" cols="80">{{ submitted.get('criteria_json', '') if submitted else '' }}</textarea>
 <p>Each item requires <code>name</code>, <code>weight</code>, <code>q</code>, <code>p</code>, <code>v</code>, and boolean <code>maximize</code>. Weights sum to 1.</p>
-<fieldset><legend>Structured criteria (blank rows are ignored)</legend>
-<table><caption>Up to eight criteria</caption><thead><tr><th>Name</th><th>Weight</th><th><var>q</var></th><th><var>p</var></th><th><var>v</var></th><th>Direction</th></tr></thead><tbody>
-{% for i in range(8) %}<tr><td><label class="visually-hidden" for="c{{i}}_name">Criterion {{ i + 1 }} name</label><input id="c{{i}}_name" name="c{{i}}_name"></td><td><input aria-label="Criterion {{i + 1}} weight" name="c{{i}}_weight" type="number" step="any"></td><td><input aria-label="Criterion {{i + 1}} q" name="c{{i}}_q" type="number" step="any"></td><td><input aria-label="Criterion {{i + 1}} p" name="c{{i}}_p" type="number" step="any"></td><td><input aria-label="Criterion {{i + 1}} v" name="c{{i}}_v" type="number" step="any"></td><td><select aria-label="Criterion {{i + 1}} direction" name="c{{i}}_maximize"><option value="true">Maximize</option><option value="false">Minimize</option></select></td></tr>{% endfor %}
-</tbody></table></fieldset><button type="submit">Continue to matrix input</button></form></main></body></html>
+<fieldset><legend>Structured criteria (blank rows are ignored)</legend><div class="table-wrapper">
+<table><caption>Up to eight criteria</caption><thead><tr><th scope="col">Name</th><th scope="col">Weight</th><th scope="col"><var>q</var></th><th scope="col"><var>p</var></th><th scope="col"><var>v</var></th><th scope="col">Direction</th></tr></thead><tbody>
+{% for i in range(8) %}<tr><td data-label="Name"><label class="visually-hidden" for="c{{i}}_name">Criterion {{ i + 1 }} name</label><input id="c{{i}}_name" name="c{{i}}_name"></td><td data-label="Weight"><input aria-label="Criterion {{i + 1}} weight" name="c{{i}}_weight" type="number" step="any"></td><td data-label="q"><input aria-label="Criterion {{i + 1}} q" name="c{{i}}_q" type="number" step="any"></td><td data-label="p"><input aria-label="Criterion {{i + 1}} p" name="c{{i}}_p" type="number" step="any"></td><td data-label="v"><input aria-label="Criterion {{i + 1}} v" name="c{{i}}_v" type="number" step="any"></td><td data-label="Direction"><select aria-label="Criterion {{i + 1}} direction" name="c{{i}}_maximize"><option value="true">Maximize</option><option value="false">Minimize</option></select></td></tr>{% endfor %}
+</tbody></table></div></fieldset><button type="submit">Continue to matrix input</button></form></main></body></html>

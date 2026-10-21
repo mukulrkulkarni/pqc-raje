@@ -1,0 +1,34 @@
+{
+  "chunk": "dynamic-elements-remediation",
+  "state": "completed",
+  "created_at": "2026-10-22",
+  "objective": "Remediate approved active-template UX/security evidence gaps without adding JavaScript or changing ranking/cache contracts.",
+  "scope": [
+    "Link the existing stylesheet into active app templates when safe",
+    "Cover active template structure and no-script policy",
+    "Assert route-scoped CSP for /app and /docs",
+    "Run focused local Markdown/fragment/link checks where feasible",
+    "Attempt available browser, keyboard, and offline evidence",
+    "Record evidence and limitations in the approved decision note"
+  ],
+  "acceptance": [
+    "Focused tests pass, including positive, negative, and edge cases",
+    "Relevant regressions and compileall pass",
+    "Diff check passes and scope is inspected",
+    "Focused commit is created and approved-scope worktree is clean"
+  ],
+  "constraints": [
+    "No JavaScript, dynamic widgets, KaTeX, documentation narrative edits, ranking changes, or cache changes",
+    "Stop on CSP conflict, accessibility failure, unrelated failure, unavailable required evidence, or scope expansion"
+  ],
+  "evidence": {
+    "focused_tests": "python -m pytest tests/test_active_template_ui.py tests/test_local_document_links.py tests/test_app_workflow.py tests/test_security_headers.py tests/test_docs_routes.py -q: 223 passed in 2.22s",
+    "link_retest": "python -m pytest tests/test_local_document_links.py -q: 4 passed in 0.08s",
+    "compile_and_diff": "python -m compileall -q app electre3 tests && git diff --check: exit 0",
+    "browser_tool_attempt": "No Playwright, Chromium, Chrome, or Firefox executable found; browser, keyboard/AT, and network-disabled checks unavailable."
+  },
+  "fallback": "Preserve verified evidence and stop with a documented limitation if required tooling or evidence is unavailable.",
+  "last_action": "Focused commit created and clean-tree verification passed.",
+  "working_tree": "clean after commit",
+  "commit": "7f79344"
+}

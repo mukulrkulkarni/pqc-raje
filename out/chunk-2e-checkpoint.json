@@ -18,7 +18,7 @@
   ],
   "failure_classification": "none",
   "recovery": "Not required.",
-  "commit": {"id": "9364165", "message": "chunk-2e-integrate-app-workflow"},
+  "commit": {"id": "4447b07e6a31ab84d39c4b66ed6ea469875896d8", "message": "chunk-2e-integrate-app-workflow"},
   "working_tree": "clean after amended checkpoint commit",
   "last_action": "Focused, category, and full tests passed; documentation notes committed.",
   "next_action": "None; approved Chunk 2E is complete."

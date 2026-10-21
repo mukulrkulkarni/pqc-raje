@@ -1,0 +1,566 @@
+# 1-Page Problem Statement & Invariants — CSV + JSON → Sorted List (v4)
+
+---
+
+## Problem Statement
+
+**CLI today:** Run ELECTRE III credibility + raw net-flow ranking on a matrix and criteria JSON
+(e.g., `python -m electre3.cli matrix.(csv|npy) criteria.json [options]`).
+
+**Web target:** A single local Flask app on `127.0.0.1` that lets a user:
+1) provide a performance matrix (paste CSV or upload a local file),
+2) provide criteria + thresholds (paste JSON, and optionally a structured form),
+3) review a preview + validation report (including how CSV columns map to criteria),
+4) confirm and run the ELECTRE III pipeline **blockwise** (no NxN persistence),
+5) view a ranking summary (top 10) and download full outputs.
+
+**Constraints:** Local-only. No network beyond `localhost`. No JavaScript (server-rendered HTML). No build step.
+
+**Success criterion:** For identical inputs, CLI and web produce identical numeric results
+(net-flow vector and ranking indices). If ties occur, ordering among tied items is not guaranteed unless specified.
+
+---
+
+## Data Model
+
+This web app runs the same core data model as the CLI pipeline:
+
+### Criteria (JSON)
+
+The criteria file is a JSON **list** of length **C** (one entry per criterion). Each entry includes:
+- `name` (string)
+- `weight` (float, > 0)
+- `q`, `p`, `v` (floats, 0 ≤ q ≤ p ≤ v)
+- `maximize` (bool)
+
+The **order** of criteria in this list defines the column order for the matrix.
+
+### Matrix (CSV or NumPy)
+
+The performance matrix `G` has shape **(N, C)**.
+
+#### CSV header policy (web UI labels)
+
+Two supported CSV modes:
+
+- **CSV without headers**
+  - The web UI labels the first column as **`Asset ID`**.
+  - The web UI labels the remaining columns using the criteria JSON order: `criteria[0].name`, …, `criteria[C-1].name`.
+  - The backend still validates that the CSV has exactly **C+1** columns: `Asset ID` + C numeric criterion columns.
+
+- **CSV with headers**
+  - The backend validates that the header is aligned with the criteria list.
+  - Required header shape: first column is the asset identifier column (label may vary), followed by exactly C criterion columns.
+  - The criterion column names must match the criteria list names **in order**.
+  - The UI uses the CSV header for display after validation.
+
+#### NumPy mode
+
+If the user provides `.npy/.npz` for the matrix, the UI uses:
+- `Asset ID` for the alternative index/name column unless a separate name list is provided,
+- criteria JSON names for criterion labels.
+
+**Example (CSV with headers):**
+```
+Asset ID,E,X,O
+A,0.8,0.4,0.2
+B,0.7,0.6,0.1
+C,0.9,0.3,0.3
+```
+
+---
+
+## Workflow (4 steps, no JS)
+
+```
+┌──────────────────┐      ┌──────────────────────────────┐      ┌──────────────────────────┐      ┌──────────────────────────┐
+│ Step 1           │      │ Step 2                       │      │ Step 3                   │      │ Step 4                   │
+│ /                │─────▶│ /confirm-inputs              │─────▶│ /preview                  │─────▶│ /compute                  │
+│ Provide criteria │      │ Provide matrix (CSV/.npy)     │      │ Review + validation       │      │ Run ranking + show result │
+│ JSON (or form)   │      │ (paste or upload)            │      │ report + confirm button   │      │ + downloads               │
+└──────────────────┘      └──────────────────────────────┘      └──────────────────────────┘      └──────────────────────────┘
+  A: paste JSON                 Validates:                      Shows:                            Shows:
+  B: structured fields          criteria schema + count         parsed criteria summary           Top 10 ranking view
+                                chooses header mode             header mapping mode               Download full outputs
+                                basic file size limits          first 5 rows (display-only)
+```
+
+| Step | Route | Method | Purpose |
+|------|-------|--------|---------|
+| 1 | `/` | GET | User provides criteria (paste JSON **or** fill a structured form) |
+| 2 | `/confirm-inputs` | POST | Criteria parsed → expected criterion labels shown → user provides matrix (paste CSV or upload file) |
+| 3 | `/preview` | POST | Matrix parsed → header policy applied → criteria alignment validated → **value validation** (finite, no NaN/Inf, missing policy, and any domain constraints already enforced by CLI/validator) → shape + sample rows shown → user confirms |
+| 4 | `/compute` | POST | Blockwise ELECTRE III credibility + raw net-flow ranking executed → top-10 shown → full outputs available for download |
+
+Notes:
+- Step 3 preview is for **validation and user confirmation**; it does not persist NxN outputs.
+- Download endpoints are read-only and serve the most recent computed result for the active session.
+
+---
+
+## Input Methods (Step 1 — Criteria)
+
+| Method | What the user does | Backend reads |
+|--------|-------------------|---------------|
+| **A** — Paste criteria JSON | Selects “Paste JSON”, then pastes a JSON list of criteria into `criteria_json` textarea | `criteria_json` (parsed + validated) |
+| **B** — Structured criteria fields | Selects “Fill form”, then enters up to 8 criteria rows (name, weight, q, p, v, maximize) | Assembles criteria JSON server-side from `c{i}_name`, `c{i}_weight`, `c{i}_q`, `c{i}_p`, `c{i}_v`, `c{i}_maximize` |
+
+**Selection control:** A required radio button `criteria_mode ∈ {json, form}` selects Mode A or B.
+
+**Limit:** The UI supports **at most 8 criteria**. More than 8 criteria is rejected at Step 1 with a clear error.
+
+**Validation at Step 1 (before any matrix is accepted):**
+- JSON is a list; length `C` satisfies `1 ≤ C ≤ 8`
+- required keys exist for each criterion: `name, weight, q, p, v, maximize`
+- numeric constraints: `weight > 0`, `0 ≤ q ≤ p ≤ v`
+
+---
+
+## Non-Negotiable Invariants
+
+| # | Invariant | Rule |
+|---|-----------|------|
+| 1 | **Determinism** | `compute_ranking(G, criteria, config) → (ranking, accumulator)` is pure with respect to validated inputs and configuration. The canonical score vector is `accumulator.net_flow()`. For identical inputs, `ranking` and scores must match element-by-element, including shape, dtype, and values. Tied alternatives have no guaranteed permutation unless a tie policy is specified. |
+| 2 | **Byte identity** | CLI and web use the same canonical serializers. Repeated outputs must be byte-for-byte identical, including encoding, newline style, field order, numeric formatting, JSON key order, and NumPy dtype/order. Verification uses a byte-level comparison (`cmp` or `filecmp.cmp(..., shallow=False)`). |
+| 3 | **Blockwise compute** | `config.block_size` is a documented positive integer with one shared default for CLI and web. For `B1, B2 ≤ block_size`, pairwise intermediates have shape `(B1, B2, C)` and credibility blocks have shape `(B1, B2)`. Retain only current-block intermediates plus O(N) accumulators; never materialize or persist an N×N result. |
+| 4 | **Block-size invariance** | For fixed valid inputs, changing `block_size` preserves scores, ranking, and canonical output bytes. The implementation must use a canonical accumulation/reduction order so floating-point summation does not create block-size-dependent bytes. |
+| 5 | **Input allow-list and bounds** | Accept only `.csv`, `.npy`, `.npz`, and criteria JSON. Enforce maximum upload bytes and maximum matrix rows before computation. Reject unknown formats and client-supplied filesystem paths. |
+| 6 | **Value validation** | Reject malformed, missing, non-numeric, NaN, or Inf matrix values, invalid shapes, and invalid criteria values. For CSV only, a missing-cell policy may replace missing cells with a numeric value in `[0, 1]` only when the user checks an explicit approval checkbox. The default replacement is `0`; if the checkbox is not selected, reject the CSV. Missing values in criteria JSON always cause rejection. |
+| 7 | **Criteria contract** | Accept 1–8 criteria. Require `name`, `weight`, `q`, `p`, `v`, and `maximize`; enforce `weight > 0`, `0 ≤ q ≤ p ≤ v`, and boolean `maximize`. |
+| 8 | **Header contract** | Headerless CSV uses display-only labels `Asset ID` plus criteria names in JSON order. Headered CSV must contain an asset-ID column followed by criterion headers that match criteria names in order; reject misalignment before computation. |
+| 9 | **CSP and local-only execution** | Bind to `127.0.0.1`, make no external requests, use server-rendered HTML without JavaScript, and enforce `default-src 'none'; style-src 'self'; form-action 'self'; base-uri 'none'; object-src 'none'; frame-ancestors 'none'`. Omit `script-src`. |
+| 10 | **Upload containment** | Keep uploads in memory or an app-controlled temporary location. Enforce bounds, never trust client paths, and delete temporary data after processing or expiry. |
+| 11 | **Core isolation** | Ranking modules contain no Flask, filesystem/network I/O, clock, or randomness operations. |
+| 12 | **Bounded result cache** | Store only the latest result in a bounded process-memory cache, limited by entries and bytes. Do not store raw inputs in the cache or signed cookies. |
+| 13 | **Token protection** | Generate cryptographically random opaque download tokens, bind them to the active local session, avoid logging/referrer leakage, and compare tokens safely. |
+| 14 | **TTL, eviction, and deployment scope** | Expire cached results after a short documented TTL, evict on replacement and under memory pressure, and define unknown/expired-token behavior. Support only one worker unless shared state is deliberately added; restarts invalidate cached downloads. |
+| 15 | **Download controls and tests** | Downloads are read-only, rate-limited, timeout-bounded, and return exact cached bytes with correct content types. Tests cover malformed/expired tokens, size limits, eviction, replacement, races, restart invalidation, exact bytes, deterministic scores, ranking, and block-size invariance. |
+
+---
+
+## Implementation
+
+### Core ranking interface
+
+The CLI and web app must call the same core pipeline:
+
+```python
+ranking, accumulator = compute_ranking(
+    G,
+    criteria,
+    ComputeConfig(block_size=block_size),
+)
+scores = accumulator.net_flow()
+```
+
+- `G`: validated `float64` matrix with shape `(N, C)`.
+- `criteria`: ordered `CriterionConfig` objects.
+- `ranking`: alternative indices sorted by raw net flow descending.
+- `scores`: canonical net-flow vector with shape `(N,)`.
+- `accumulator`: O(N) inflow/outflow state.
+- Web and CLI must not implement separate ELECTRE calculations.
+
+### Input and validation pipeline
+
+1. Parse criteria JSON into `CriterionConfig` objects.
+2. Enforce one to eight criteria and criteria constraints.
+3. Detect CSV header mode.
+4. For headerless CSV, assign display labels `Asset ID` plus criteria names.
+5. For headered CSV, validate the asset-ID column and criterion names/order.
+6. Convert the performance values to `float64`.
+7. Apply the missing-CSV-value checkbox policy.
+8. Reject missing criteria values, non-numeric values, NaN, Inf, invalid shape, excessive rows, and oversized uploads.
+9. Show the validation report and require confirmation.
+10. Run `compute_ranking` only after successful validation.
+
+### Shared compute configuration
+
+- The CLI and web app use the same documented default `block_size`.
+- Users may select a positive block size within an application-defined safe bound.
+- The web app passes the selected value through `ComputeConfig`.
+- The implementation computes `(B1, B2, C)` pairwise arrays and `(B1, B2)` credibility blocks.
+- It retains only current-block intermediates and O(N) accumulators.
+- It must preserve scores and canonical serialized bytes across supported block sizes.
+
+### Result view and serialization
+
+The result page shows the top 10 rows with:
+
+- rank position
+- asset identifier
+- criteria display values, where available
+- raw net-flow score
+- tie indication when scores are equal
+
+The full result is serialized once using shared canonical serializers. The cache stores only the serialized result bytes and metadata. Supported downloads must have fixed encoding, newline, field order, numeric formatting, JSON key order, and NumPy dtype/order.
+
+### Bounded in-memory result cache
+
+- Store only the latest result.
+- Enforce entry count and byte limits before insertion.
+- Use a cryptographically random opaque token.
+- Bind the token to the active local session.
+- Apply a documented TTL.
+- Evict on replacement, expiry, and memory pressure.
+- Do not log tokens or expose them through referrers.
+- Unknown and expired tokens return a safe error or redirect.
+- Operate as a single-worker application unless shared state is added.
+- A process restart invalidates cached downloads.
+
+### Module boundaries
+
+```text
+Web routes
+  ├── input parsing and validation
+  ├── preview and confirmation
+  ├── bounded result cache and downloads
+  └── shared canonical serializers
+          │
+          ▼
+CLI runner ───────► compute_ranking
+                         │
+                         ├── validate.py
+                         ├── block.py
+                         ├── concordance.py
+                         ├── discordance.py
+                         ├── credibility.py
+                         └── accumulator.py
+```
+
+The core ranking modules remain framework-free and perform no filesystem or network operations.
+
+### Required implementation tests
+
+Tests must cover:
+
+- CLI/web numerical and byte-identical outputs.
+- `accumulator.net_flow()` shape, dtype, and values.
+- Headered and headerless CSV modes.
+- Missing-value checkbox behavior.
+- Criteria JSON missing values.
+- NaN, Inf, non-numeric, malformed, oversized, and over-row-limit inputs.
+- Block-size invariance.
+- Top-10 display and exact full downloads.
+- Unknown, malformed, expired, replaced, and evicted tokens.
+- Cache byte and entry limits.
+- Restart invalidation.
+- Concurrent replacement and download behavior.
+
+---
+
+## Example Walkthrough
+
+This walkthrough separates current CLI behavior from the approved web target. It uses these criteria: `Quantum-Vulnerability`, `Migration-Complexity`, `Business-Criticality`, and `Data-Sensitivity`.
+
+### 1. Inputs and validation ownership
+
+The performance matrix is `G` with shape `(N, C)`: `N` alternatives and `C` criteria. The criteria file is a top-level JSON list. Each item contains `name`, `weight`, `q`, `p`, `v`, and `maximize`; the approved web target allows at most eight criteria.
+
+Current core validation requires positive finite weights, finite thresholds, and `0 ≤ q ≤ p ≤ v`. The current CLI can supply defaults for missing criterion fields and does not enforce a boolean `maximize`, an eight-criterion limit, weights summing to one, or score bounds `[0,1]`. The approved web target must enforce required fields, boolean `maximize`, at most eight criteria, complete finite matrix values, normalized scores in `[0,1]`, and weights summing to `1`.
+
+Example `criteria.json`:
+
+```json
+[
+  {"name":"Quantum-Vulnerability","weight":0.25,"q":0.02,"p":0.08,"v":0.25,"maximize":false},
+  {"name":"Migration-Complexity","weight":0.25,"q":0.03,"p":0.10,"v":0.30,"maximize":false},
+  {"name":"Business-Criticality","weight":0.25,"q":0.02,"p":0.07,"v":0.20,"maximize":true},
+  {"name":"Data-Sensitivity","weight":0.25,"q":0.02,"p":0.07,"v":0.20,"maximize":true}
+]
+```
+
+These example weights sum to `1.0`. The threshold and matrix values are illustrative inputs, not claimed computed outputs.
+
+### 2. CSV and identifier handling
+
+The current CLI accepts numeric-only CSV, `.npy`, `.npz`, and, when the optional dependency is installed, `.parquet`. A direct CLI CSV has no header or identifier column; numeric columns follow the JSON criterion order:
+
+```csv
+0.30,0.20,0.80,0.70
+0.40,0.10,0.60,0.90
+0.20,0.30,0.70,0.60
+```
+
+For a headered source containing identifier content such as `A-001 / 10.0.0.5`, convert it first:
+
+```csv
+Asset ID / IP,Quantum-Vulnerability,Migration-Complexity,Business-Criticality,Data-Sensitivity
+A-001 / 10.0.0.5,0.30,0.20,0.80,0.70
+A-002 / 10.0.0.9,0.40,0.10,0.60,0.90
+A-003 / 10.0.0.12,0.20,0.30,0.70,0.60
+```
+
+```bash
+python scripts/convert_matrix_csv.py matrix_with_ids.csv matrix.npy --has-header --id-col "Asset ID / IP"
+```
+
+The converter produces the numeric matrix consumed by the CLI. Keep the identifier mapping separately so ranking indices can be mapped back to `Asset ID / IP` values.
+
+For the web target, headerless input uses the display label `Asset ID` for its first column and JSON criterion names for the remaining labels. Headered input uses its identifier header after validation; its identifier values may contain the user-facing form `Asset ID / IP`. Headered criterion names must match the JSON names in order.
+
+### 3. Run the current CLI
+
+```bash
+python -m electre3.cli matrix_file criteria_file [-o OUTPUT] [-b BLOCK_SIZE] [-y] [-q]
+```
+
+Example:
+
+```bash
+python -m electre3.cli matrix.npy criteria.json -b 256 -q -o results.npy
+```
+
+Here `-b 256` is an integer block size. Without `-o`, the CLI prints the first 10 ranking indices and reports how many remain. With `-o results.npy`, it uses `numpy.save` and saves ranking indices only; it does not print the ranking or save identifiers or net-flow scores. The current CLI run path does not print or save `accumulator.net_flow()`. The `-q` option suppresses status and save messages but does not suppress prompts; add `-y` for a non-interactive run.
+
+### 4. Blockwise ELECTRE III computation
+
+For alternatives `a` and `b`—objects, not criteria—direction-adjust each criterion before comparison:
+
+\[
+g'_j(x)=\begin{cases}g_j(x),&maximize_j=true\\-g_j(x),&maximize_j=false\end{cases},\qquad diff_j(a,b)=g'_j(a)-g'_j(b).
+\]
+
+`B1` and `B2` are row and column groups of alternatives in one block pair. Pairwise criterion intermediates have shape `(B1, B2, C)`; the credibility block has shape `(B1, B2)`.
+
+Partial concordance uses inclusive boundaries:
+
+\[
+c_j=\begin{cases}1,&diff_j\ge-q_j\\0,&diff_j\le-p_j\\(diff_j+p_j)/(p_j-q_j),&-p_j<diff_j<-q_j\end{cases}.
+\]
+
+The implementation checks the full-concordance branch first. Therefore, when `q=p`, an overlapping boundary is classified as `c_j=1` whenever `diff_j ≥ -q_j`.
+
+Discordance uses:
+
+\[
+d_j=\begin{cases}1,&diff_j\le-v_j\\0,&diff_j\ge-p_j\\(-diff_j-p_j)/(v_j-p_j),&-v_j<diff_j<-p_j\end{cases}.
+\]
+
+The implementation checks the full-veto branch first. Therefore, when `p=v`, an overlapping boundary is classified as `d_j=1` whenever `diff_j ≤ -v_j`.
+
+Global concordance uses normalized weights. If the input weights are `w_j`, the core computes `\hat w_j=w_j/Σ_k w_k` and then:
+
+\[
+C_{ab}=\sum_j\hat w_j c_j(a,b).
+\]
+
+Credibility starts at `C_ab` and applies the implemented reductions:
+
+\[
+S(a,b)=C_{ab}\prod_{j:d_j>C_{ab}}\frac{1-d_j}{1-C_{ab}}.
+\]
+
+If any `d_j ≥ 1`, the implementation sets `S(a,b)=0`. If `C_ab=1` and no full veto occurs, it avoids division by zero and retains credibility `1`.
+
+### 5. Net-flow ranking and current versus target behavior
+
+The accumulator computes raw net flow without dividing by `N−1`:
+
+\[
+\Phi(a)=\sum_{b\ne a}S(a,b)-\sum_{b\ne a}S(b,a).
+\]
+
+The ranking sorts `Φ(a)` descending. Equal scores are ties; their relative order is not guaranteed.
+
+The current CLI performs blockwise computation and outputs ranking indices. The approved web target adds preview validation, the header display policy, normalized `[0,1]` scores, weights summing to `1`, top-10 display with scores, and downloads. CLI/web equivalence is a target contract only after both paths use the same validated inputs, configuration, and canonical serializers. The example values above are not computed ranking outputs.
+
+
+---
+
+## Verification Checklist
+
+| Check | How |
+|-------|-----|
+| Determinism | Submit same input 10× → identical tables; also `python -c "import core; print(core.sort_csv(...))"` 10× → `diff` |
+| Schema lock | JSON keys `city, age` → CSV header `ITEM, name, age` → error at Step 2 |
+| `_sort.key` validation | `_sort.key = "salary"` but no `"salary"` key → error at Step 1 |
+| Allow-list | `op = "regex"` → `Disallowed operator` error |
+| Mode dispatch | Fill both JSON textarea AND structured fields → JSON wins |
+| No JS | `grep -ri '<script' templates/` → **0 matches** |
+| CSP | DevTools → Network → response header has no `script-src` |
+| File containment | DevTools → Network → only `127.0.0.1:5000`; zero external origins |
+| Core isolation | `grep -c 'import flask\|open(\|os\.\|socket' core.py` → **0** |
+
+---
+
+## File Tree
+
+```
+.
+├── app.py
+├── core.py
+├── templates/
+│   ├── index.html
+│   ├── csv_form.html
+│   ├── preview.html
+│   └── result.html
+└── static/
+    └── style.css
+```
+
+**Seven files. Zero JS. Zero external requests. One `python app.py` to run.**
+
+```bash
+pip install flask
+python app.py
+# → http://127.0.0.1:5000
+```
+
+---
+
+## v4.1 — Added: Ranking View + Local File Download
+
+### What changed
+
+| Addition | How (no JS) |
+|----------|-------------|
+| **Ranking (top 10)** | Step 4 table now shows a `#` column, rows 1–10 only |
+| **Save full result** | Three `<a href>` links below the table → `/download/txt`, `/download/csv`, `/download/json`. Backend stores the full result in the **Flask session** (signed cookie, no JS) and serves it via `send_file` with `Content-Disposition: attachment`. |
+
+---
+
+### Updated `app.py` (delta only)
+
+```python
+from flask import Flask, request, render_template, session, send_file
+import core, csv, io, json
+
+# ... (all existing routes unchanged) ...
+
+# ─── Step 4: Confirm → full compute + store in session ───────────
+@app.route('/compute', methods=['POST'])
+def compute():
+    json_text = request.form['rules_json']
+    csv_text  = request.form['csv_data']
+    try:
+        rules  = core.parse_rules(json_text)
+        result = core.sort_csv(csv_text, rules)
+        reader = csv.reader(io.StringIO(result))
+        headers = next(reader)
+        rows    = list(reader)
+    except Exception as e:
+        return render_template('result.html', error=str(e), rows=[], headers=[])
+
+    # Store full result in session for download
+    session['result_headers'] = headers
+    session['result_rows']    = rows
+
+    # Ranking: top 10 only
+    ranked = rows[:10]
+    return render_template('result.html', error=None,
+                           headers=headers, rows=ranked, total=len(rows))
+
+# ─── Download routes ──────────────────────────────────────────────
+@app.route('/download/<fmt>')
+def download(fmt):
+    if 'result_rows' not in session:
+        return redirect('/')
+    headers = session['result_headers']
+    rows    = session['result_rows']
+
+    if fmt == 'csv':
+        buf = io.StringIO()
+        w = csv.writer(buf, lineterminator='\n')
+        w.writerow(headers)
+        w.writerows(rows)
+        data = buf.getvalue().encode()
+        mimetype = 'text/csv'
+    elif fmt == 'json':
+        records = [dict(zip(headers, r)) for r in rows]
+        data = json.dumps(records, indent=2).encode()
+        mimetype = 'application/json'
+    else:  # txt
+        lines = [', '.join(headers)] + [', '.join(r) for r in rows]
+        data = '\n'.join(lines).encode()
+        mimetype = 'text/plain'
+
+    return send_file(
+        io.BytesIO(data),
+        mimetype=mimetype,
+        as_attachment=True,
+        download_name=f'result.{fmt}'
+    )
+```
+
+> **Session config** (add near top of `app.py`):
+> ```python
+> app.secret_key = 'local-only-dev-key'  # fine for 127.0.0.1
+> PERMANENT_SESSION_LIFETIME = 300       # 5 min
+> ```
+
+---
+
+### Updated `templates/result.html`
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="/static/style.css">
+  <title>CSV Sort — Result</title>
+</head>
+<body>
+  <h1>Step 4 — Result</h1>
+  {% if error %}
+    <p class="error">{{ error }}</p>
+  {% else %}
+    <p><strong>Showing top {{ rows|length }} of {{ total }} rows</strong></p>
+    <table>
+      <thead><tr><th>#</th>{% for h in headers %}<th>{{ h }}</th>{% endfor %}</tr></thead>
+      <tbody>
+        {% for row in rows %}
+        <tr><td>{{ loop.index }}</td>{% for cell in row %}<td>{{ cell }}</td>{% endfor %}</tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <h2>Save full result ({{ total }} rows)</h2>
+    <p>
+      <a href="/download/csv">Download CSV</a> ·
+      <a href="/download/json">Download JSON</a> ·
+      <a href="/download/txt">Download TXT</a>
+    </p>
+  {% endif %}
+  <p><a href="/">← New query</a></p>
+</body>
+</html>
+```
+
+---
+
+### Updated Invariants (one addition)
+
+| # | Invariant | Rule |
+|---|-----------|------|
+| 7 | **Session hygiene** *(new)* | Session stores only `result_headers` + `result_rows` (plain lists). Expiry = 5 min. No user data persisted to disk. `secret_key` is a static dev string (acceptable for `127.0.0.1` single-user). |
+
+---
+
+### Updated Verification
+
+| Check | How |
+|-------|-----|
+| Download works | Click "Download CSV" → browser saves `result.csv`; open and confirm row count = `total` |
+| Session expiry | Wait 5 min → click download → redirected to `/` |
+| No data on disk | `ls` the project folder after a download → no new files created |
+| Ranking capped | 50-row result → table shows exactly 10 rows numbered 1–10 |
+
+---
+
+### Updated File Tree
+
+```
+.
+├── app.py
+├── core.py
+├── templates/
+│   ├── index.html
+│   ├── csv_form.html
+│   ├── preview.html
+│   └── result.html
+└── static/
+    └── style.css
+```
+
+Same seven files. The only new imports in `app.py` are `session` and `send_file` (both Flask built-ins). No new dependencies, no JS, no disk writes.

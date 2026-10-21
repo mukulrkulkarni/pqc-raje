@@ -85,7 +85,12 @@ def _canonical_json(value: Any) -> bytes:
 def _result_metadata(result: RankingResult) -> dict[str, Any]:
     return {
         "criteria": [asdict(criterion) for criterion in result.criteria],
-        "configuration": asdict(result.configuration),
+        # Block size controls execution only. Omit it so equivalent computations
+        # serialize byte-identically across approved block sizes.
+        "configuration": {
+            "seed": result.configuration.seed,
+            "use_numba": result.configuration.use_numba,
+        },
         "identifiers": list(result.identifiers),
         "serializer_version": SERIALIZER_VERSION,
     }

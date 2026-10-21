@@ -1,0 +1,30 @@
+{
+  "chunk": "2C",
+  "state": "completed",
+  "created_at": "2026-10-21",
+  "checkpointed_at": "2026-10-21",
+  "objective": "Implement runtime feasibility benchmarking/model, 300-second gate, 330-second timeout, and byte-identity evidence.",
+  "base_commit": "3ae23dc",
+  "changed_paths": [
+    "electre3/runtime.py",
+    "electre3/ranking.py",
+    "electre3/shared.py",
+    "electre3/accumulator.py",
+    "electre3/serialization.py",
+    "scripts/benchmark_runtime.py",
+    "tests/test_runtime.py",
+    "docs/decisions/chunk-2c-documentation-notes.md",
+    "out/chunk-2c-benchmark.json"
+  ],
+  "scope": ["runtime benchmark harness and deterministic model", "pre-compute feasibility gate", "hard timeout and partial-result handling", "cross-block-size byte-identity tests", "Chunk 2C documentation notes"],
+  "excluded": ["cache", "downloads", "split artifacts", "new routes"],
+  "acceptance_tests": [
+    "python -m scripts.benchmark_runtime: wrote out/chunk-2c-benchmark.json",
+    "python -m pytest tests/test_runtime.py tests/test_shared_contract.py tests/test_serialization.py tests/test_cli_run.py tests/test_accumulator.py tests/test_accumulator_deep.py -q: 66 passed",
+    "python -m compileall electre3 app scripts: passed",
+    "git diff --check: passed"
+  ],
+  "benchmark_boundary": "All requested sizes are recorded. Only safe points at or below 1,000 rows run; no 100,000-row computation runs.",
+  "failure_recovery": "Initial byte-identity test failed because execution metadata and floating-point reduction order varied. Canonical serialization omits execution-only block size; scalar global-order accumulation now preserves exact output bytes.",
+  "working_tree": "pending focused commit"
+}

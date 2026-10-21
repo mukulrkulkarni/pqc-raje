@@ -1,13 +1,7 @@
-"""Strict shared CLI and web input contract for ELECTRE III.
-
-This module validates untrusted criteria mappings and score matrices before it calls
-``compute_ranking``.  It deliberately does not parse uploads, serialize results,
-or manage web state.
-"""
+"""Strict shared CLI and web input contract for ELECTRE III."""
 from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
-from dataclasses import dataclass
 import math
 from numbers import Real
 from typing import Any
@@ -16,6 +10,7 @@ import numpy as np
 
 from .config import ComputeConfig, CriterionConfig
 from .ranking import compute_ranking
+from .runtime import HARD_TIMEOUT_SECONDS, RuntimeModel, deadline_after, require_feasible
 from .serialization import ComputeConfiguration, CriterionMetadata, RankingResult
 
 MAX_CRITERIA = 8
@@ -26,8 +21,6 @@ MAX_BLOCK_SIZE = 10_000
 _WEIGHT_SUM_TOLERANCE = 1e-12
 _REQUIRED_CRITERION_FIELDS = ("name", "weight", "q", "p", "v", "maximize")
 
-
-# Compatibility name retained for existing shared-adapter consumers.
 ComputeResult = RankingResult
 
 
@@ -46,7 +39,6 @@ def validate_criteria(criteria_data: Any) -> list[CriterionConfig]:
         raise ValueError("criteria must be a list")
     if not 1 <= len(criteria_data) <= MAX_CRITERIA:
         raise ValueError(f"criteria must contain 1 through {MAX_CRITERIA} entries")
-
     criteria: list[CriterionConfig] = []
     weights: list[float] = []
     for index, raw in enumerate(criteria_data):
@@ -67,7 +59,6 @@ def validate_criteria(criteria_data: Any) -> list[CriterionConfig]:
         v = _finite_number(raw["v"], "v", index)
         criteria.append(CriterionConfig(name, weight, q, p, v, maximize))
         weights.append(weight)
-
     if not math.isclose(math.fsum(weights), 1.0, rel_tol=0.0, abs_tol=_WEIGHT_SUM_TOLERANCE):
         raise ValueError("criteria weights must sum to 1")
     return criteria
@@ -93,11 +84,7 @@ def validate_score_matrix(matrix: Any, criterion_count: int) -> np.ndarray:
 
 
 def validate_csv_headers(headers: Sequence[Any], criteria: Sequence[CriterionConfig]) -> None:
-    """Validate header-mode identifier and ordered criterion-name mapping.
-
-    The first header identifies alternatives and can use any non-empty string. The
-    remaining headers must exactly match criterion names in their supplied order.
-    """
+    """Validate header-mode identifier and ordered criterion-name mapping."""
     expected = [criterion.name for criterion in criteria]
     if len(headers) != len(expected) + 1:
         raise ValueError(f"CSV header has {len(headers)} columns, expected {len(expected) + 1}")
@@ -108,19 +95,31 @@ def validate_csv_headers(headers: Sequence[Any], criteria: Sequence[CriterionCon
 
 
 def compute_validated_ranking(
-    matrix: Any, criteria_data: Any, block_size: int = DEFAULT_BLOCK_SIZE
+    matrix: Any,
+    criteria_data: Any,
+    block_size: int = DEFAULT_BLOCK_SIZE,
+    *,
+    runtime_model: RuntimeModel | None = None,
+    timeout_seconds: float = HARD_TIMEOUT_SECONDS,
 ) -> ComputeResult:
-    """Validate shared inputs, call core ranking, and expose its net-flow vector."""
+    """Validate, gate, compute, and return a complete immutable ranking result.
+
+    Passing a runtime model activates the pre-compute feasibility gate. The default
+    preserves existing CLI and Chunk 2A behavior until a deployment profile supplies
+    measured benchmarks.
+    """
     if isinstance(block_size, bool) or not isinstance(block_size, int):
         raise ValueError("block_size must be an integer")
     if not MIN_BLOCK_SIZE <= block_size <= MAX_BLOCK_SIZE:
-        raise ValueError(
-            f"block_size must be between {MIN_BLOCK_SIZE} and {MAX_BLOCK_SIZE}"
-        )
+        raise ValueError(f"block_size must be between {MIN_BLOCK_SIZE} and {MAX_BLOCK_SIZE}")
     criteria = validate_criteria(criteria_data)
     scores = validate_score_matrix(matrix, len(criteria))
+    if runtime_model is not None:
+        require_feasible(runtime_model, scores.shape[0], len(criteria), block_size)
     configuration = ComputeConfig(block_size=block_size)
-    ranking, accumulator = compute_ranking(scores, criteria, configuration)
+    ranking, accumulator = compute_ranking(
+        scores, criteria, configuration, deadline=deadline_after(timeout_seconds)
+    )
     return ComputeResult(
         ranking=ranking,
         net_flow=accumulator.net_flow(),

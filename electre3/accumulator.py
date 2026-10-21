@@ -2,6 +2,7 @@
 import numpy as np
 from dataclasses import dataclass, field
 
+
 @dataclass
 class NetFlowAccumulator:
     n_alternatives: int
@@ -14,9 +15,28 @@ class NetFlowAccumulator:
         self.inflow = np.zeros(self.n_alternatives, dtype=np.float64)
 
     def update(self, S_block: np.ndarray, row_start: int, col_start: int) -> None:
-        B1, B2 = S_block.shape
-        self.outflow[row_start:row_start + B1] += S_block.sum(axis=1)
-        self.inflow[col_start:col_start + B2] += S_block.sum(axis=0)
+        """Add cells in global row-major order for block-size-independent sums.
+
+        Vector reductions change floating-point grouping when blocks change. Scalar
+        additions retain each global row's column order and each column's row order,
+        so canonical result bytes remain invariant across permitted block sizes.
+        """
+        rows, columns = S_block.shape
+        if row_start >= 0 and row_start + rows > self.n_alternatives:
+            raise ValueError("row block exceeds accumulator bounds")
+        if col_start >= 0 and col_start + columns > self.n_alternatives:
+            raise ValueError("column block exceeds accumulator bounds")
+        for local_row in range(rows):
+            global_row = row_start + local_row
+            row_in_bounds = 0 <= global_row < self.n_alternatives
+            for local_column in range(columns):
+                global_column = col_start + local_column
+                column_in_bounds = 0 <= global_column < self.n_alternatives
+                value = S_block[local_row, local_column]
+                if row_in_bounds:
+                    self.outflow[global_row] += value
+                if column_in_bounds:
+                    self.inflow[global_column] += value
         self.blocks_done += 1
 
     def net_flow(self) -> np.ndarray:

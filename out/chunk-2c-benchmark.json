@@ -1,0 +1,377 @@
+{
+  "method": "complete shared adapter plus canonical JSON serialization",
+  "requested_rows": [
+    100,
+    500,
+    1000,
+    5000,
+    10000,
+    15000
+  ],
+  "criteria_counts": [
+    4,
+    8
+  ],
+  "block_sizes": [
+    1000,
+    5000,
+    10000
+  ],
+  "repeats": 3,
+  "max_measured_rows": 1000,
+  "memory_formula": "min(N, block_size)^2 * C * 48 bytes",
+  "records": [
+    {
+      "rows": 100,
+      "criteria": 4,
+      "block_size": 1000,
+      "status": "measured",
+      "samples_seconds": [
+        0.029234200017526746,
+        0.00867650005966425,
+        0.008229899918660522
+      ],
+      "reason": null
+    },
+    {
+      "rows": 100,
+      "criteria": 4,
+      "block_size": 5000,
+      "status": "measured",
+      "samples_seconds": [
+        0.008463399950414896,
+        0.007936399895697832,
+        0.008514899993315339
+      ],
+      "reason": null
+    },
+    {
+      "rows": 100,
+      "criteria": 4,
+      "block_size": 10000,
+      "status": "measured",
+      "samples_seconds": [
+        0.008491199929267168,
+        0.008658400038257241,
+        0.008901499910280108
+      ],
+      "reason": null
+    },
+    {
+      "rows": 100,
+      "criteria": 8,
+      "block_size": 1000,
+      "status": "measured",
+      "samples_seconds": [
+        0.012608100194483995,
+        0.012348399963229895,
+        0.012648900039494038
+      ],
+      "reason": null
+    },
+    {
+      "rows": 100,
+      "criteria": 8,
+      "block_size": 5000,
+      "status": "measured",
+      "samples_seconds": [
+        0.01261320011690259,
+        0.012446000007912517,
+        0.0117125001270324
+      ],
+      "reason": null
+    },
+    {
+      "rows": 100,
+      "criteria": 8,
+      "block_size": 10000,
+      "status": "measured",
+      "samples_seconds": [
+        0.011570700211450458,
+        0.010468699969351292,
+        0.010747899999842048
+      ],
+      "reason": null
+    },
+    {
+      "rows": 500,
+      "criteria": 4,
+      "block_size": 1000,
+      "status": "measured",
+      "samples_seconds": [
+        0.17613369994796813,
+        0.18353540007956326,
+        0.19608459994196892
+      ],
+      "reason": null
+    },
+    {
+      "rows": 500,
+      "criteria": 4,
+      "block_size": 5000,
+      "status": "measured",
+      "samples_seconds": [
+        0.19763660011813045,
+        0.19149080011993647,
+        0.18569039995782077
+      ],
+      "reason": null
+    },
+    {
+      "rows": 500,
+      "criteria": 4,
+      "block_size": 10000,
+      "status": "measured",
+      "samples_seconds": [
+        0.17512209992855787,
+        0.17402249993756413,
+        0.17555109993554652
+      ],
+      "reason": null
+    },
+    {
+      "rows": 500,
+      "criteria": 8,
+      "block_size": 1000,
+      "status": "measured",
+      "samples_seconds": [
+        0.22752489987760782,
+        0.234486699802801,
+        0.2260532001964748
+      ],
+      "reason": null
+    },
+    {
+      "rows": 500,
+      "criteria": 8,
+      "block_size": 5000,
+      "status": "measured",
+      "samples_seconds": [
+        0.23391880001872778,
+        0.33966879989020526,
+        0.37006250000558794
+      ],
+      "reason": null
+    },
+    {
+      "rows": 500,
+      "criteria": 8,
+      "block_size": 10000,
+      "status": "measured",
+      "samples_seconds": [
+        0.358075900003314,
+        0.33310599997639656,
+        0.33583049988374114
+      ],
+      "reason": null
+    },
+    {
+      "rows": 1000,
+      "criteria": 4,
+      "block_size": 1000,
+      "status": "measured",
+      "samples_seconds": [
+        1.1307848999276757,
+        1.0907441000454128,
+        1.0475147999823093
+      ],
+      "reason": null
+    },
+    {
+      "rows": 1000,
+      "criteria": 4,
+      "block_size": 5000,
+      "status": "measured",
+      "samples_seconds": [
+        1.1203882999252528,
+        1.1614281998481601,
+        1.0075894999317825
+      ],
+      "reason": null
+    },
+    {
+      "rows": 1000,
+      "criteria": 4,
+      "block_size": 10000,
+      "status": "measured",
+      "samples_seconds": [
+        1.2123261999804527,
+        1.1328050999436527,
+        1.0280731001403183
+      ],
+      "reason": null
+    },
+    {
+      "rows": 1000,
+      "criteria": 8,
+      "block_size": 1000,
+      "status": "rejected",
+      "samples_seconds": [],
+      "reason": "temporary memory bound"
+    },
+    {
+      "rows": 1000,
+      "criteria": 8,
+      "block_size": 5000,
+      "status": "rejected",
+      "samples_seconds": [],
+      "reason": "temporary memory bound"
+    },
+    {
+      "rows": 1000,
+      "criteria": 8,
+      "block_size": 10000,
+      "status": "rejected",
+      "samples_seconds": [],
+      "reason": "temporary memory bound"
+    },
+    {
+      "rows": 5000,
+      "criteria": 4,
+      "block_size": 1000,
+      "status": "rejected",
+      "samples_seconds": [],
+      "reason": "measured-row bound"
+    },
+    {
+      "rows": 5000,
+      "criteria": 4,
+      "block_size": 5000,
+      "status": "rejected",
+      "samples_seconds": [],
+      "reason": "measured-row bound"
+    },
+    {
+      "rows": 5000,
+      "criteria": 4,
+      "block_size": 10000,
+      "status": "rejected",
+      "samples_seconds": [],
+      "reason": "measured-row bound"
+    },
+    {
+      "rows": 5000,
+      "criteria": 8,
+      "block_size": 1000,
+      "status": "rejected",
+      "samples_seconds": [],
+      "reason": "measured-row bound"
+    },
+    {
+      "rows": 5000,
+      "criteria": 8,
+      "block_size": 5000,
+      "status": "rejected",
+      "samples_seconds": [],
+      "reason": "measured-row bound"
+    },
+    {
+      "rows": 5000,
+      "criteria": 8,
+      "block_size": 10000,
+      "status": "rejected",
+      "samples_seconds": [],
+      "reason": "measured-row bound"
+    },
+    {
+      "rows": 10000,
+      "criteria": 4,
+      "block_size": 1000,
+      "status": "rejected",
+      "samples_seconds": [],
+      "reason": "measured-row bound"
+    },
+    {
+      "rows": 10000,
+      "criteria": 4,
+      "block_size": 5000,
+      "status": "rejected",
+      "samples_seconds": [],
+      "reason": "measured-row bound"
+    },
+    {
+      "rows": 10000,
+      "criteria": 4,
+      "block_size": 10000,
+      "status": "rejected",
+      "samples_seconds": [],
+      "reason": "measured-row bound"
+    },
+    {
+      "rows": 10000,
+      "criteria": 8,
+      "block_size": 1000,
+      "status": "rejected",
+      "samples_seconds": [],
+      "reason": "measured-row bound"
+    },
+    {
+      "rows": 10000,
+      "criteria": 8,
+      "block_size": 5000,
+      "status": "rejected",
+      "samples_seconds": [],
+      "reason": "measured-row bound"
+    },
+    {
+      "rows": 10000,
+      "criteria": 8,
+      "block_size": 10000,
+      "status": "rejected",
+      "samples_seconds": [],
+      "reason": "measured-row bound"
+    },
+    {
+      "rows": 15000,
+      "criteria": 4,
+      "block_size": 1000,
+      "status": "rejected",
+      "samples_seconds": [],
+      "reason": "measured-row bound"
+    },
+    {
+      "rows": 15000,
+      "criteria": 4,
+      "block_size": 5000,
+      "status": "rejected",
+      "samples_seconds": [],
+      "reason": "measured-row bound"
+    },
+    {
+      "rows": 15000,
+      "criteria": 4,
+      "block_size": 10000,
+      "status": "rejected",
+      "samples_seconds": [],
+      "reason": "measured-row bound"
+    },
+    {
+      "rows": 15000,
+      "criteria": 8,
+      "block_size": 1000,
+      "status": "rejected",
+      "samples_seconds": [],
+      "reason": "measured-row bound"
+    },
+    {
+      "rows": 15000,
+      "criteria": 8,
+      "block_size": 5000,
+      "status": "rejected",
+      "samples_seconds": [],
+      "reason": "measured-row bound"
+    },
+    {
+      "rows": 15000,
+      "criteria": 8,
+      "block_size": 10000,
+      "status": "rejected",
+      "samples_seconds": [],
+      "reason": "measured-row bound"
+    }
+  ],
+  "model": {
+    "safety_factor": 1.25,
+    "estimate_100000_rows_8_criteria_seconds": 73085.50004381686
+  }
+}

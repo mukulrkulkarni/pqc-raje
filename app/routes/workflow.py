@@ -12,6 +12,8 @@ import numpy as np
 from flask import Blueprint, Response, abort, render_template, request, session, url_for
 
 from app.services.result_cache import result_cache
+from app.services.runtime_profile import APP_RUNTIME_MODEL
+from electre3.runtime import ComputeTimeoutError, FeasibilityError
 from electre3.serialization import serialize_result_json
 from electre3.shared import (
     DEFAULT_BLOCK_SIZE,
@@ -47,6 +49,8 @@ def _new_workflow(criteria_data: list[dict[str, Any]]) -> str:
     workflow_id = secrets.token_urlsafe(24)
     _WORKFLOWS[workflow_id] = {"criteria": criteria_data, "previewed": False}
     session["app_workflow_id"] = workflow_id
+    # Keep only opaque identifiers in the signed cookie for 30 minutes.
+    session.permanent = True
     session.modified = True
     return workflow_id
 
@@ -209,8 +213,18 @@ def compute():
         abort(400, "Preview is required before computation.")
     if request.form.get("confirm_compute") != "yes":
         abort(400, "Confirm validated inputs before computation.")
+    # Reject infeasible work before ranking. The shared adapter owns validation,
+    # calculation, deadline checks, and immutable RankingResult construction.
     try:
-        result = compute_validated_ranking(state["matrix"], state["criteria"], DEFAULT_BLOCK_SIZE)
+        result = compute_validated_ranking(
+            state["matrix"], state["criteria"], DEFAULT_BLOCK_SIZE,
+            runtime_model=APP_RUNTIME_MODEL,
+        )
+    except FeasibilityError as exc:
+        abort(422, f"Computation rejected before start: {exc}")
+    except ComputeTimeoutError as exc:
+        # Do not serialize or publish a partial result after the hard deadline.
+        abort(504, str(exc))
     except ValueError as exc:
         abort(400, str(exc))
     top = []

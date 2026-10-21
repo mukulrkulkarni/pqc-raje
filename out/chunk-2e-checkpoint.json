@@ -1,0 +1,25 @@
+{
+  "chunk": "2E",
+  "objective": "Integrate the approved /app workflow with strict shared ranking, feasibility and timeout controls, canonical results, bounded atomic cache downloads, and 30-minute session metadata.",
+  "state": "completed",
+  "agent": "Innovium prepared Code specialist, candidate v1",
+  "model": "internal",
+  "inputs": ["Committed chunks through 9552149", "Approved contracts in shared scratch pad"],
+  "acceptance": ["/app pre-compute feasibility gate", "330-second hard timeout with no result publication", "canonical RankingResult artifact and exact download", "bounded cache/session behavior", "documented positive, negative, and edge evidence"],
+  "limits": {"estimated_runtime_seconds": 300, "hard_timeout_seconds": 330, "session_seconds": 1800, "cache_total_bytes": 33554432, "artifact_bytes": 16777216},
+  "repository_state_before": "clean",
+  "changed_paths": ["app/__init__.py", "app/routes/workflow.py", "app/services/runtime_profile.py", "tests/test_app_workflow.py", "docs/decisions/chunk-2e-documentation-notes.md", "out/chunk-2e-checkpoint.json"],
+  "test_evidence": [
+    {"command": "python -m pytest tests/test_app_workflow.py tests/test_runtime.py tests/test_shared_contract.py tests/test_serialization.py tests/test_result_cache.py -q", "result": "56 passed in 1.42s"},
+    {"command": "python -m pytest tests/test_app_workflow.py tests/test_runtime.py tests/test_shared_contract.py tests/test_serialization.py tests/test_result_cache.py tests/test_end_to_end_composition.py tests/test_n1_scientific_followup.py tests/test_security.py tests/test_security_headers.py tests/test_ui_styles.py tests/test_cli_run.py -q", "result": "133 passed in 1.77s"},
+    {"command": "python -m pytest -q", "result": "904 passed in 8.72s"},
+    {"command": "python -m compileall app electre3 tests", "result": "exit 0"},
+    {"command": "git diff --check", "result": "exit 0"}
+  ],
+  "failure_classification": "none",
+  "recovery": "Not required.",
+  "commit": {"id": "9364165", "message": "chunk-2e-integrate-app-workflow"},
+  "working_tree": "clean after amended checkpoint commit",
+  "last_action": "Focused, category, and full tests passed; documentation notes committed.",
+  "next_action": "None; approved Chunk 2E is complete."
+}

@@ -1,4 +1,6 @@
 """Flask application factory for ELECTRE III web interface."""
+from datetime import timedelta
+
 from flask import Flask, request
 
 # Base security headers applied to all responses
@@ -33,6 +35,8 @@ def create_app(config: dict | None = None) -> Flask:
     app.config["SECRET_KEY"] = "dev-secret-key-change-in-production"
     app.config["MAX_CONTENT_LENGTH"] = 100 * 1024 * 1024
     app.config["UPLOAD_FOLDER"] = "uploads"
+    # Signed session metadata has the approved 30-minute lifetime.
+    app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(minutes=30)
     if config:
         app.config.update(config)
 

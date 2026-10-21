@@ -1,0 +1,39 @@
+{
+  "chunk": "browser-evidence-script-correction",
+  "objective": "Replace Playwright locator-based script detection with native DOM evaluation without collecting browser evidence.",
+  "state": "checkpointed",
+  "timestamp": "2026-10-22",
+  "agent": "Innovium prepared Code specialist, candidate v1",
+  "model": "API-hosted model",
+  "inputs": [
+    "scripts/run_brave_browser_evidence.py",
+    "docs/decisions/browser-evidence-notes.md"
+  ],
+  "allowed_changes": [
+    "scripts/run_brave_browser_evidence.py",
+    "docs/decisions/browser-evidence-notes.md",
+    "out/browser-evidence-script-correction-checkpoint.json"
+  ],
+  "acceptance": [
+    "Use document.scripts.length for count",
+    "Capture each script outerHTML",
+    "Preserve WSL/CDP CLI support",
+    "Record positive, negative, and edge validation evidence",
+    "Commit only scoped files"
+  ],
+  "fallback": "Run Python compilation and CLI validation without browser connection.",
+  "repository_state_before": "Untracked unrelated paths: attachments/browser-evidence.json; out/browser-evidence-local/.",
+  "last_verified_checkpoint": "Source and notes edits saved; py_compile and --help completed before a malformed Windows command prevented the DOM helper check.",
+  "failure": {
+    "classification": "retryable",
+    "evidence": "The combined Windows command produced SyntaxError: unterminated string literal for the inline positive/edge helper check. The separate negative CLI check did reject --connect-check as expected.",
+    "affected_chunk": "Validation",
+    "recovery": "Stopped by user instruction after tool failure; do not retry without a new approved action."
+  },
+  "next_action": "Run the corrected collector from the user's Windows PowerShell/Brave CDP session; no browser evidence is claimed here.",
+  "stop_conditions": [
+    "Scope expansion",
+    "Tool failure",
+    "Browser evidence collection request"
+  ]
+}

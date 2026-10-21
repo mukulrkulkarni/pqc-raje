@@ -1,73 +1,83 @@
 # Browser Evidence Notes
 
-**Chunk status:** blocked at browser preflight; no browser evidence was collected.
+**Chunk status:** partial. The evidence collector correction is complete, but no browser evidence was collected in this correction chunk.
 
 ## Current and target status
 
-The approved target is the server-rendered, no-JavaScript `/app` workflow on local `127.0.0.1`. This chunk did not alter application behavior, production pages, JavaScript, or browser installation.
+The target remains the server-rendered, no-JavaScript `/app` workflow on local `127.0.0.1`. The prior local CDP collector reported `app_has_script=true`, while a manual Brave console check reported `document.scripts=[]`. This correction replaces locator-based script detection with a native DOM evaluation. It changes no application page, JavaScript, or application behavior.
 
-The supplied executable path was checked exactly as authorized:
+The authorized Windows Brave executable preflight previously returned `BRAVE_MISSING` for:
 
 ```cmd
 if exist "C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe" (echo BRAVE_PRESENT) else (echo BRAVE_MISSING)
 ```
 
-The result was `BRAVE_MISSING`. The stop condition for browser-launch failure applies before server launch, temporary-profile creation, local navigation, or screenshot capture.
+No Brave browser or CDP session was launched for this correction.
 
-## Methodology and environment
+## Corrected collector method
 
-- Workspace: `C:\Users\Mukul.Kulkarni\InnoviumAI\Projects\IP Address Analysis Plan`
-- Requested browser: `C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe`
-- Browser profile: not created, because the executable preflight failed.
-- Test conditions: no external service, browser installation, application change, or page edit.
-- Fallback: static and Flask test-client validation only; it is not browser evidence.
+After `/app/` loads, `scripts/run_brave_browser_evidence.py` calls `page.evaluate` with this native browser expression:
 
-## Positive, negative, and edge inventory
+```javascript
+() => ({
+  script_count: document.scripts.length,
+  scripts: Array.from(document.scripts, (script) => script.outerHTML)
+})
+```
 
-| Category | Check | Evidence | Result |
-|---|---|---|---|
-| Positive | Valid criteria/matrix through preview, compute, top result, and download | `test_complete_workflow_displays_top_scores_and_mapping`; `test_download_serves_exact_cached_bytes_with_safe_headers` | Passed |
-| Positive | CLI/web ranking agreement | `test_web_and_cli_share_identical_ranking_result` | Passed |
-| Negative | Compute without preview or confirmation | `test_compute_requires_preview_and_confirmation` | Passed |
-| Negative | Invalid criteria, misaligned headers, missing values, and out-of-range scores | `test_preview_reports_header_and_missing_value_errors`; `test_rejects_out_of_range_scores_and_invalid_criteria` | Passed |
-| Negative | Unknown download token | `test_download_rejects_unknown_token_and_preserves_compatibility_routes` | Passed |
-| Edge | Missing-value approval uses zero replacement | `test_missing_value_approval_replaces_with_default_zero` | Passed |
-| Edge | Infeasible runtime and hard timeout avoid partial downloads | `test_compute_rejects_infeasible_work_before_cache_publication`; `test_compute_timeout_returns_no_partial_result_or_download` | Passed |
-| Static security | `/app` output contains no script element; app CSP omits `script-src` | `test_get_app_has_accessible_criteria_modes_and_no_scripts` | Passed |
-| Browser required | Launch and route traversal; preview/confirmation UI; rendered top-10/download | Brave executable unavailable | Not run |
-| Browser required | Keyboard tab order and visible focus | Brave executable unavailable | Not run |
-| Browser required | Narrow viewport and 200%/400% zoom reflow | Brave executable unavailable | Not run |
-| Browser required | Script-disabled/no-JS behavior | Brave executable unavailable | Not run |
-| Browser required | Network-disabled local app/docs navigation | Brave executable unavailable | Not run |
-| Browser required | Route-scoped CSP observations | Brave executable unavailable | Not run |
-| Browser required | Automated accessibility scan | Brave executable unavailable | Not run |
+The collector writes the native values to `app_script_count` and `app_scripts_outer_html`; it derives the compatibility field `app_has_script` from `script_count > 0`. WSL gateway discovery, CDP endpoint selection, Playwright `connect_over_cdp`, and all other existing collector scope remain unchanged.
+
+## Expected JSON
+
+A future user-run collector invocation must write `browser-evidence.json` with these relevant fields. For an app document with no script elements, the expected values are:
+
+```json
+{
+  "base_url": "http://127.0.0.1:5000",
+  "cdp_url": "http://WINDOWS_GATEWAY:9222",
+  "app_url": "http://127.0.0.1:5000/app/",
+  "app_script_count": 0,
+  "app_scripts_outer_html": [],
+  "app_has_script": false,
+  "app_has_stylesheet": false
+}
+```
+
+If scripts exist, `app_script_count` equals the length of `app_scripts_outer_html`, and each list item is the script element's `outerHTML` as returned by the browser.
 
 ## Commands and results
 
 ```cmd
-python -m pytest tests/test_app_workflow.py -q
+python -m py_compile scripts/run_brave_browser_evidence.py
 ```
 
-Result: `12 passed in 0.71s`.
+Result: passed.
 
 ```cmd
-python -m compileall -q app electre3
+python scripts/run_brave_browser_evidence.py --help
 ```
 
-Result: succeeded with exit code 0.
+Result: passed; CLI exposes `--diagnose-cdp` and `--connect-check`.
 
 ```cmd
-git diff --check
+python scripts/run_brave_browser_evidence.py --connect-check
 ```
 
-Result: succeeded with exit code 0 before evidence-note edits.
+Result: rejected with exit code 2 because `--connect-check` requires `--diagnose-cdp`.
+
+The native DOM helper was not run without a browser. These checks validate script syntax and CLI control flow only; they do not constitute browser evidence.
+
+## Positive, negative, and edge evidence
+
+| Category | Check | Result |
+|---|---|---|
+| Positive | Native evaluation returns one script count and that script's `outerHTML` | Pending execution |
+| Negative | `--connect-check` without `--diagnose-cdp` is rejected | Pending execution |
+| Edge | Native evaluation returns zero count and an empty list for no script elements | Pending execution |
+| Browser required | Brave/CDP navigation and rendered DOM output | Not run; no user-run evidence supplied |
 
 ## Limitations and recovery
 
-Screen-reader and assistive-technology behavior remains explicitly unverified. Automated accessibility checks did not run because no browser session launched. Browser visual, zoom/reflow, focus, script-disabled, and network-disabled evidence is absent. Route-scoped CSP has static test evidence only, not browser observation.
+Screen-reader and assistive-technology behavior remains unverified. No browser visual, focus-order, zoom/reflow, script-disabled, network-disabled, CSP, or automated accessibility evidence exists from this correction. Do not treat static checks or a collector implementation change as browser evidence.
 
-To resume, make the authorized Brave executable available at the exact supplied path, then run the approved local-only workflow with a newly created temporary profile. Capture route, DOM/accessibility, screenshot, focus-order, reflow, CSP, and offline-local-navigation evidence without changing application files.
-
-## Debugging and tutorial notes
-
-No tutorial or documentation narrative was edited. The focused test suite provides the current deterministic fallback for valid, invalid, recovery, confirmation-gate, result, download, CSP-static, and no-script checks. Do not treat these test-client results as a substitute for browser or AT evidence.
+To collect browser evidence, the user must run the corrected collector against an authorized local Brave/CDP session and supply its output. Capture the resulting JSON without changing application files. The `app_script_count` and `app_scripts_outer_html` fields then provide the authoritative native DOM result for script elements.

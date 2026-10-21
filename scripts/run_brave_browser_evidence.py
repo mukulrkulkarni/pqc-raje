@@ -74,6 +74,16 @@ def diagnose_cdp(cdp_url: str, connect: bool) -> int:
     return 0
 
 
+def script_dom_evidence(page: object) -> dict[str, object]:
+    """Return native DOM script evidence without Playwright locator filtering."""
+    return page.evaluate(
+        """() => ({
+            script_count: document.scripts.length,
+            scripts: Array.from(document.scripts, (script) => script.outerHTML)
+        })"""
+    )
+
+
 def collect_evidence(args: argparse.Namespace) -> int:
     try:
         from playwright.sync_api import sync_playwright
@@ -90,7 +100,10 @@ def collect_evidence(args: argparse.Namespace) -> int:
         page = context.new_page()
         page.goto(f"{args.base_url.rstrip('/')}/app/", wait_until="domcontentloaded")
         results["app_url"] = page.url
-        results["app_has_script"] = page.locator("script").count() > 0
+        script_evidence = script_dom_evidence(page)
+        results["app_script_count"] = script_evidence["script_count"]
+        results["app_scripts_outer_html"] = script_evidence["scripts"]
+        results["app_has_script"] = script_evidence["script_count"] > 0
         results["app_has_stylesheet"] = page.locator('link[href*="style.css"]').count() > 0
         (out / "browser-evidence.json").write_text(json.dumps(results, indent=2) + "\n", encoding="utf-8")
         context.close()

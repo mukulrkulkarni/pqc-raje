@@ -1,0 +1,40 @@
+{
+  "chunk": "2D",
+  "state": "checkpointed",
+  "created_at": "2026-10-21",
+  "checkpointed_at": "2026-10-21",
+  "objective": "Implement the bounded latest-result process-memory cache and /app download route.",
+  "base_commit": "76730e6",
+  "changed_paths": [
+    "app/services/result_cache.py",
+    "app/routes/workflow.py",
+    "app/templates/app_results.html",
+    "tests/test_result_cache.py",
+    "tests/test_app_workflow.py",
+    "docs/decisions/chunk-2d-documentation-notes.md",
+    "out/chunk-2d-checkpoint.json"
+  ],
+  "scope": [
+    "32 MiB latest-only process-memory cache",
+    "16 MiB per-artifact split manifests",
+    "30-minute session-bound opaque download tokens",
+    "30 successful downloads per session per minute",
+    "exact-byte download serving and safe headers",
+    "security, expiry, concurrency, token, rate, split, and byte tests",
+    "Chunk 2D documentation notes"
+  ],
+  "excluded": [
+    "ranking algorithm changes",
+    "runtime benchmark changes",
+    "new JavaScript",
+    "compatibility-route changes"
+  ],
+  "acceptance_tests": [
+    "python -m pytest tests/test_result_cache.py tests/test_app_workflow.py tests/test_serialization.py tests/test_shared_contract.py tests/test_cli_run.py -q: 56 passed",
+    "python -m pytest tests/test_app_workflow.py tests/test_serialization.py -q: 21 passed",
+    "python -m pytest tests/test_runtime.py tests/test_shared_contract.py tests/test_serialization.py tests/test_cli_run.py tests/test_accumulator.py tests/test_accumulator_deep.py -q: 66 passed",
+    "python -m compileall electre3 app tests && git diff --check: passed"
+  ],
+  "failure_recovery": "The first test run found a workflow.py import SyntaxError from the edit. The import was corrected; the full target suite then passed.",
+  "working_tree": "pending focused commit"
+}

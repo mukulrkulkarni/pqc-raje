@@ -9,8 +9,10 @@ from dataclasses import dataclass
 from typing import Any
 
 import numpy as np
-from flask import Blueprint, abort, render_template, request, session
+from flask import Blueprint, Response, abort, render_template, request, session, url_for
 
+from app.services.result_cache import result_cache
+from electre3.serialization import serialize_result_json
 from electre3.shared import (
     DEFAULT_BLOCK_SIZE,
     MAX_ROWS,
@@ -29,6 +31,16 @@ def _workflow() -> dict[str, Any]:
     if not isinstance(workflow_id, str) or workflow_id not in _WORKFLOWS:
         abort(400, "Start at /app/ and submit criteria first.")
     return _WORKFLOWS[workflow_id]
+
+
+def _download_session_id() -> str:
+    """Return a small opaque identifier stored in Flask's signed session cookie."""
+    session_id = session.get("app_download_session_id")
+    if not isinstance(session_id, str) or not session_id:
+        session_id = secrets.token_urlsafe(24)
+        session["app_download_session_id"] = session_id
+        session.modified = True
+    return session_id
 
 
 def _new_workflow(criteria_data: list[dict[str, Any]]) -> str:
@@ -205,4 +217,28 @@ def compute():
     for rank, index in enumerate(result.ranking[:10], start=1):
         row = int(index)
         top.append({"rank": rank, "identifier": state["identifiers"][row], "score": float(result.net_flow[row])})
-    return render_template("app_results.html", top=top, total=len(result.ranking))
+    token = result_cache.store(_download_session_id(), "ranking-result.json", serialize_result_json(result))
+    return render_template(
+        "app_results.html", top=top, total=len(result.ranking),
+        download_url=url_for("workflow.download_result", token=token),
+    )
+
+
+@bp.get("/download/<token>")
+def download_result(token: str):
+    """Serve a current, session-bound, checksum-verified result without storage."""
+    try:
+        cached = result_cache.download(_download_session_id(), token)
+    except PermissionError:
+        abort(429, "Download rate limit exceeded.")
+    except ValueError:
+        abort(410, "Cached result integrity validation failed.")
+    if cached is None:
+        abort(404, "Download is unavailable or expired.")
+    name, payload = cached
+    response = Response(payload, mimetype="application/json")
+    response.headers["Content-Disposition"] = f'attachment; filename="{name}"'
+    response.headers["Cache-Control"] = "no-store"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Content-Length"] = str(len(payload))
+    return response

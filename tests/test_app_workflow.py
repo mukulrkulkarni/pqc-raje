@@ -86,7 +86,23 @@ def test_rejects_out_of_range_scores_and_invalid_criteria(client):
     assert b"normalized to [0, 1]" in response.data
 
 
-def test_compatibility_and_docs_routes_remain_available(client):
+def test_download_serves_exact_cached_bytes_with_safe_headers(client):
+    assert _criteria(client).status_code == 200
+    assert _preview(client).status_code == 200
+    result = client.post("/app/compute", data={"confirm_compute": "yes"})
+    download_path = re.search(rb'href="(/app/download/[^"]+)"', result.data).group(1).decode()
+    download = client.get(download_path)
+    assert download.status_code == 200
+    assert download.data.endswith(b"\n")
+    assert download.headers["Cache-Control"] == "no-store"
+    assert download.headers["X-Content-Type-Options"] == "nosniff"
+    assert download.headers["Content-Disposition"] == 'attachment; filename="ranking-result.json"'
+    assert download.headers["Content-Length"] == str(len(download.data))
+    assert "script-src" not in download.headers["Content-Security-Policy"]
+
+
+def test_download_rejects_unknown_token_and_preserves_compatibility_routes(client):
+    assert client.get("/app/download/not-a-token").status_code == 404
     assert client.get("/").status_code == 200
     assert client.get("/docs/modules/config").status_code == 200
     assert client.post("/compute/start", json={}).status_code == 400

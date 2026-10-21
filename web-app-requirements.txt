@@ -369,198 +369,69 @@ The current CLI performs blockwise computation and outputs ranking indices. The 
 
 ## Verification Checklist
 
-| Check | How |
-|-------|-----|
-| Determinism | Submit same input 10× → identical tables; also `python -c "import core; print(core.sort_csv(...))"` 10× → `diff` |
-| Schema lock | JSON keys `city, age` → CSV header `ITEM, name, age` → error at Step 2 |
-| `_sort.key` validation | `_sort.key = "salary"` but no `"salary"` key → error at Step 1 |
-| Allow-list | `op = "regex"` → `Disallowed operator` error |
-| Mode dispatch | Fill both JSON textarea AND structured fields → JSON wins |
-| No JS | `grep -ri '<script' templates/` → **0 matches** |
-| CSP | DevTools → Network → response header has no `script-src` |
-| File containment | DevTools → Network → only `127.0.0.1:5000`; zero external origins |
-| Core isolation | `grep -c 'import flask\|open(\|os\.\|socket' core.py` → **0** |
+| Check | Verification |
+|---|---|
+| **Criteria schema** | Accept a top-level list with `name`, `weight`, `q`, `p`, `v`, `maximize`; reject missing fields, non-boolean `maximize`, invalid thresholds, zero/negative weights, and more than 8 criteria in the web target. |
+| **Weight normalization** | Verify the core normalizes positive weights by their sum; compare `\(\hat w_j=w_j/\sum_k w_k\)` with the implementation. |
+| **Matrix shape** | Verify matrix shape is `(N, C)`, `N ≥ 2`, and `C` matches the criteria count. |
+| **Matrix values** | Reject missing, non-numeric, NaN, and Inf values. In the web target, reject values outside `[0,1]`. |
+| **Missing CSV values** | Without the approval checkbox, reject missing cells. With approval, apply the selected value in `[0,1]`; default to `0`. Never apply this policy to criteria JSON. |
+| **Headerless CSV** | Use `Asset ID` as the first display label and criteria JSON names in order for remaining columns. |
+| **Headered CSV** | Validate criterion headers against JSON names and order; preserve the source identifier header after validation. |
+| **Headered conversion** | Run the converter with `--has-header --id-col`; verify the resulting `.npy` contains only numeric criteria columns and preserves the identifier mapping separately. |
+| **CLI behavior** | Verify `-b` accepts a positive integer, `-y` skips prompts, `-q` suppresses status messages but not prompts, and `-o` saves ranking indices as `.npy`. |
+| **Pairwise shapes** | Verify block intermediates have shape `(B1, B2, C)` and credibility blocks have shape `(B1, B2)`. |
+| **Threshold boundaries** | Test `q=p` concordance priority and `p=v` discordance/veto priority at exact boundaries. |
+| **Credibility** | Verify concordance, discordance, full-veto, `C=1`, and reduction-factor behavior against source equations. |
+| **Net flow** | Verify outgoing minus incoming credibility sums, with no division by `N−1`. |
+| **Ranking** | Verify raw net-flow descending order; document tied alternatives as unordered. |
+| **Block-size invariance** | Run several valid block sizes and compare score vectors, ranking arrays, and canonical output bytes. |
+| **CLI/web equivalence** | For identical validated inputs and configuration, compare ranking arrays and net-flow vectors element-by-element. |
+| **Byte identity** | Compare repeated and CLI/web serialized outputs byte-for-byte using `cmp` or `filecmp.cmp(..., shallow=False)`. |
+| **Result display** | Verify top-10 presentation includes rank, identifier, and raw net-flow score; verify fewer-than-10 behavior. |
+| **Result cache bounds** | Test entry limits, byte limits, replacement, expiry, memory-pressure eviction, and latest-result-only behavior. |
+| **Download tokens** | Reject malformed, unknown, expired, replayed, and session-mismatched tokens; avoid token logging and referrer leakage. |
+| **Restart behavior** | Verify process restart invalidates in-memory downloads. Document single-worker support. |
+| **Download integrity** | Verify exact cached bytes, fixed content types, encoding, newline style, field order, and serialization format. |
+| **Security headers** | Verify CSP, `base-uri`, `object-src`, `frame-ancestors`, and absence of `script-src`. |
+| **Local-only behavior** | Verify binding to `127.0.0.1`, no external requests, no client-controlled paths, and upload size/row limits. |
+| **No JavaScript** | Search templates and generated pages for script elements and inline event handlers. |
+| **Regression suite** | Run all project tests plus targeted web, CLI, scientific, security, and cache tests. |
 
 ---
 
 ## File Tree
 
+The requirements map to the current repository structure rather than the obsolete standalone `app.py`/`core.py` example:
+
 ```
 .
-├── app.py
-├── core.py
-├── templates/
-│   ├── index.html
-│   ├── csv_form.html
-│   ├── preview.html
-│   └── result.html
-└── static/
-    └── style.css
+├── app/
+│   ├── __init__.py
+│   ├── routes/
+│   ├── services/
+│   ├── static/
+│   └── templates/
+├── electre3/
+│   ├── accumulator.py
+│   ├── block.py
+│   ├── concordance.py
+│   ├── config.py
+│   ├── credibility.py
+│   ├── data.py
+│   ├── discordance.py
+│   ├── ranking.py
+│   └── validate.py
+├── scripts/
+│   └── convert_matrix_csv.py
+├── tests/
+└── web-app-requirements.txt
 ```
 
-**Seven files. Zero JS. Zero external requests. One `python app.py` to run.**
+The application must remain local-only, server-rendered, and free of JavaScript. The `electre3/` package remains the shared framework-free ranking core. The `app/` package owns web orchestration, validation presentation, result caching, and downloads.
 
 ```bash
-pip install flask
-python app.py
-# → http://127.0.0.1:5000
+python scripts/dev_local.py
+# Website: http://127.0.0.1:8000
+# App:     http://127.0.0.1:5000
 ```
-
----
-
-## v4.1 — Added: Ranking View + Local File Download
-
-### What changed
-
-| Addition | How (no JS) |
-|----------|-------------|
-| **Ranking (top 10)** | Step 4 table now shows a `#` column, rows 1–10 only |
-| **Save full result** | Three `<a href>` links below the table → `/download/txt`, `/download/csv`, `/download/json`. Backend stores the full result in the **Flask session** (signed cookie, no JS) and serves it via `send_file` with `Content-Disposition: attachment`. |
-
----
-
-### Updated `app.py` (delta only)
-
-```python
-from flask import Flask, request, render_template, session, send_file
-import core, csv, io, json
-
-# ... (all existing routes unchanged) ...
-
-# ─── Step 4: Confirm → full compute + store in session ───────────
-@app.route('/compute', methods=['POST'])
-def compute():
-    json_text = request.form['rules_json']
-    csv_text  = request.form['csv_data']
-    try:
-        rules  = core.parse_rules(json_text)
-        result = core.sort_csv(csv_text, rules)
-        reader = csv.reader(io.StringIO(result))
-        headers = next(reader)
-        rows    = list(reader)
-    except Exception as e:
-        return render_template('result.html', error=str(e), rows=[], headers=[])
-
-    # Store full result in session for download
-    session['result_headers'] = headers
-    session['result_rows']    = rows
-
-    # Ranking: top 10 only
-    ranked = rows[:10]
-    return render_template('result.html', error=None,
-                           headers=headers, rows=ranked, total=len(rows))
-
-# ─── Download routes ──────────────────────────────────────────────
-@app.route('/download/<fmt>')
-def download(fmt):
-    if 'result_rows' not in session:
-        return redirect('/')
-    headers = session['result_headers']
-    rows    = session['result_rows']
-
-    if fmt == 'csv':
-        buf = io.StringIO()
-        w = csv.writer(buf, lineterminator='\n')
-        w.writerow(headers)
-        w.writerows(rows)
-        data = buf.getvalue().encode()
-        mimetype = 'text/csv'
-    elif fmt == 'json':
-        records = [dict(zip(headers, r)) for r in rows]
-        data = json.dumps(records, indent=2).encode()
-        mimetype = 'application/json'
-    else:  # txt
-        lines = [', '.join(headers)] + [', '.join(r) for r in rows]
-        data = '\n'.join(lines).encode()
-        mimetype = 'text/plain'
-
-    return send_file(
-        io.BytesIO(data),
-        mimetype=mimetype,
-        as_attachment=True,
-        download_name=f'result.{fmt}'
-    )
-```
-
-> **Session config** (add near top of `app.py`):
-> ```python
-> app.secret_key = 'local-only-dev-key'  # fine for 127.0.0.1
-> PERMANENT_SESSION_LIFETIME = 300       # 5 min
-> ```
-
----
-
-### Updated `templates/result.html`
-
-```html
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <link rel="stylesheet" href="/static/style.css">
-  <title>CSV Sort — Result</title>
-</head>
-<body>
-  <h1>Step 4 — Result</h1>
-  {% if error %}
-    <p class="error">{{ error }}</p>
-  {% else %}
-    <p><strong>Showing top {{ rows|length }} of {{ total }} rows</strong></p>
-    <table>
-      <thead><tr><th>#</th>{% for h in headers %}<th>{{ h }}</th>{% endfor %}</tr></thead>
-      <tbody>
-        {% for row in rows %}
-        <tr><td>{{ loop.index }}</td>{% for cell in row %}<td>{{ cell }}</td>{% endfor %}</tr>
-        {% endfor %}
-      </tbody>
-    </table>
-
-    <h2>Save full result ({{ total }} rows)</h2>
-    <p>
-      <a href="/download/csv">Download CSV</a> ·
-      <a href="/download/json">Download JSON</a> ·
-      <a href="/download/txt">Download TXT</a>
-    </p>
-  {% endif %}
-  <p><a href="/">← New query</a></p>
-</body>
-</html>
-```
-
----
-
-### Updated Invariants (one addition)
-
-| # | Invariant | Rule |
-|---|-----------|------|
-| 7 | **Session hygiene** *(new)* | Session stores only `result_headers` + `result_rows` (plain lists). Expiry = 5 min. No user data persisted to disk. `secret_key` is a static dev string (acceptable for `127.0.0.1` single-user). |
-
----
-
-### Updated Verification
-
-| Check | How |
-|-------|-----|
-| Download works | Click "Download CSV" → browser saves `result.csv`; open and confirm row count = `total` |
-| Session expiry | Wait 5 min → click download → redirected to `/` |
-| No data on disk | `ls` the project folder after a download → no new files created |
-| Ranking capped | 50-row result → table shows exactly 10 rows numbered 1–10 |
-
----
-
-### Updated File Tree
-
-```
-.
-├── app.py
-├── core.py
-├── templates/
-│   ├── index.html
-│   ├── csv_form.html
-│   ├── preview.html
-│   └── result.html
-└── static/
-    └── style.css
-```
-
-Same seven files. The only new imports in `app.py` are `session` and `send_file` (both Flask built-ins). No new dependencies, no JS, no disk writes.

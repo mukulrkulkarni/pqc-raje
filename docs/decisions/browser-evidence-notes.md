@@ -1,6 +1,6 @@
 # Browser Evidence Notes
 
-**Chunk status:** partial. The evidence collector correction is complete, but no browser evidence was collected in this correction chunk.
+**Chunk status:** checkpointed. The evidence collector correction and screenshot field additions are complete and passed static validation. No browser evidence was collected in this correction chunk.
 
 ## Current and target status
 
@@ -25,7 +25,7 @@ After `/app/` loads, `scripts/run_brave_browser_evidence.py` calls `page.evaluat
 })
 ```
 
-The collector writes the native values to `app_script_count` and `app_scripts_outer_html`; it derives the compatibility field `app_has_script` from `script_count > 0`. WSL gateway discovery, CDP endpoint selection, Playwright `connect_over_cdp`, and all other existing collector scope remain unchanged.
+The collector writes the native values to `app_script_count` and `app_scripts_outer_html`; it derives the compatibility field `app_has_script` from `script_count > 0`. It calls Playwright `page.screenshot` after page load, saves `app-page.png` in the requested output directory, and records `app_screenshot_path` and `app_screenshot_status`. WSL gateway discovery, CDP endpoint selection, Playwright `connect_over_cdp`, and all other existing collector scope remain unchanged.
 
 ## Expected JSON
 
@@ -34,50 +34,54 @@ A future user-run collector invocation must write `browser-evidence.json` with t
 ```json
 {
   "base_url": "http://127.0.0.1:5000",
-  "cdp_url": "http://WINDOWS_GATEWAY:9222",
+  "cdp_url": "http://127.0.0.1:9222",
   "app_url": "http://127.0.0.1:5000/app/",
   "app_script_count": 0,
   "app_scripts_outer_html": [],
   "app_has_script": false,
-  "app_has_stylesheet": false
+  "app_has_stylesheet": false,
+  "app_screenshot_path": "out/browser-evidence-local/app-page.png",
+  "app_screenshot_status": "captured"
 }
 ```
 
-If scripts exist, `app_script_count` equals the length of `app_scripts_outer_html`, and each list item is the script element's `outerHTML` as returned by the browser.
+If scripts exist, `app_script_count` equals the length of `app_scripts_outer_html`, and each list item is the script element's `outerHTML` as returned by the browser. `app_screenshot_status` is `captured` only after Playwright successfully writes the screenshot.
 
-## Commands and results
+## Commands and actual static results
 
 ```cmd
 python -m py_compile scripts/run_brave_browser_evidence.py
 ```
 
-Result: passed.
+Result: exit code 0; compilation passed.
 
 ```cmd
 python scripts/run_brave_browser_evidence.py --help
 ```
 
-Result: passed; CLI exposes `--diagnose-cdp` and `--connect-check`.
+Result: exit code 0; usage and all five supported options rendered without a browser connection.
+
+The negative invocation ran through a Python subprocess wrapper so its expected argparse exit code did not fail the tool host:
 
 ```cmd
 python scripts/run_brave_browser_evidence.py --connect-check
 ```
 
-Result: rejected with exit code 2 because `--connect-check` requires `--diagnose-cdp`.
+Result: collector exit code 2; argparse printed `--connect-check requires --diagnose-cdp`. The wrapper exited 0 after recording that expected result.
 
-The native DOM helper was not run without a browser. These checks validate script syntax and CLI control flow only; they do not constitute browser evidence.
+No browser, CDP, DOM helper, screenshot, browser accessibility, or assistive-technology command ran in this correction. Static checks validate syntax and CLI control flow only; they do not constitute browser evidence.
 
 ## Positive, negative, and edge evidence
 
-| Category | Check | Result |
+| Category | Check | Actual result |
 |---|---|---|
-| Positive | Native evaluation returns one script count and that script's `outerHTML` | Pending execution |
-| Negative | `--connect-check` without `--diagnose-cdp` is rejected | Pending execution |
-| Edge | Native evaluation returns zero count and an empty list for no script elements | Pending execution |
-| Browser required | Brave/CDP navigation and rendered DOM output | Not run; no user-run evidence supplied |
+| Positive | Python compilation of collector | Passed: exit code 0 |
+| Negative | `--connect-check` without `--diagnose-cdp` is rejected | Passed: collector exit code 2 and required-argument error |
+| Edge | `--help` renders without a browser connection | Passed: exit code 0 and usage rendered |
+| Browser required | Brave/CDP navigation, native DOM output, screenshot generation, and rendered DOM output | Not run; no browser evidence collected |
 
 ## Limitations and recovery
 
-Screen-reader and assistive-technology behavior remains unverified. No browser visual, focus-order, zoom/reflow, script-disabled, network-disabled, CSP, or automated accessibility evidence exists from this correction. Do not treat static checks or a collector implementation change as browser evidence.
+Screen-reader and assistive-technology behavior remains unverified. No browser visual, focus-order, zoom/reflow, script-disabled, network-disabled, CSP, automated accessibility, screenshot, or browser evidence exists from this correction. Do not treat static checks or a collector implementation change as browser evidence.
 
-To collect browser evidence, the user must run the corrected collector against an authorized local Brave/CDP session and supply its output. Capture the resulting JSON without changing application files. The `app_script_count` and `app_scripts_outer_html` fields then provide the authoritative native DOM result for script elements.
+To collect browser evidence, the user must run the corrected collector against an authorized local Brave/CDP session and supply its output. Capture the resulting JSON and screenshot without changing application files. The `app_script_count`, `app_scripts_outer_html`, `app_screenshot_path`, and `app_screenshot_status` fields then provide the authoritative collected result.

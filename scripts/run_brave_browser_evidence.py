@@ -105,6 +105,10 @@ def collect_evidence(args: argparse.Namespace) -> int:
         results["app_scripts_outer_html"] = script_evidence["scripts"]
         results["app_has_script"] = script_evidence["script_count"] > 0
         results["app_has_stylesheet"] = page.locator('link[href*="style.css"]').count() > 0
+        screenshot_path = out / "app-page.png"
+        results["app_screenshot_path"] = str(screenshot_path)
+        page.screenshot(path=str(screenshot_path), full_page=True)
+        results["app_screenshot_status"] = "captured"
         (out / "browser-evidence.json").write_text(json.dumps(results, indent=2) + "\n", encoding="utf-8")
         context.close()
         browser.close()

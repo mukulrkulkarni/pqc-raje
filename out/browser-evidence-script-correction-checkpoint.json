@@ -1,6 +1,6 @@
 {
   "chunk": "browser-evidence-script-correction",
-  "objective": "Replace Playwright locator-based script detection with native DOM evaluation without collecting browser evidence.",
+  "objective": "Add screenshot capture metadata and validate the collector without collecting browser evidence.",
   "state": "checkpointed",
   "timestamp": "2026-10-22",
   "agent": "Innovium prepared Code specialist, candidate v1",
@@ -17,23 +17,36 @@
   "acceptance": [
     "Use document.scripts.length for count",
     "Capture each script outerHTML",
+    "Capture an app screenshot and record its path and status",
     "Preserve WSL/CDP CLI support",
-    "Record positive, negative, and edge validation evidence",
+    "Run Python compilation, help, and negative-argument checks",
     "Commit only scoped files"
   ],
   "fallback": "Run Python compilation and CLI validation without browser connection.",
-  "repository_state_before": "Untracked unrelated paths: attachments/browser-evidence.json; out/browser-evidence-local/.",
-  "last_verified_checkpoint": "Source and notes edits saved; py_compile and --help completed before a malformed Windows command prevented the DOM helper check.",
-  "failure": {
-    "classification": "retryable",
-    "evidence": "The combined Windows command produced SyntaxError: unterminated string literal for the inline positive/edge helper check. The separate negative CLI check did reject --connect-check as expected.",
-    "affected_chunk": "Validation",
-    "recovery": "Stopped by user instruction after tool failure; do not retry without a new approved action."
-  },
-  "next_action": "Run the corrected collector from the user's Windows PowerShell/Brave CDP session; no browser evidence is claimed here.",
+  "repository_state_before": "Untracked unrelated paths preserved: attachments/browser-evidence (1).json; attachments/browser-evidence.json; out/browser-evidence-help.txt; out/browser-evidence-local/; out/browser-evidence-negative.txt; out/browser-evidence-script-correction-negative.txt.",
+  "last_verified_checkpoint": "Static validation passed without a browser: py_compile exit 0; --help exit 0; --connect-check exited 2 with the required --diagnose-cdp argparse error, captured by a wrapper that exited 0. Collector uses native DOM script evidence and adds app-page.png screenshot capture fields. No browser command was run.",
+  "static_checks": [
+    {
+      "command": "python -m py_compile scripts/run_brave_browser_evidence.py",
+      "result": "passed",
+      "exit_code": 0
+    },
+    {
+      "command": "python scripts/run_brave_browser_evidence.py --help",
+      "result": "passed",
+      "exit_code": 0
+    },
+    {
+      "command": "python scripts/run_brave_browser_evidence.py --connect-check",
+      "result": "expected argparse rejection captured",
+      "collector_exit_code": 2,
+      "tool_wrapper_exit_code": 0
+    }
+  ],
+  "browser_evidence_collected": false,
+  "assistive_technology_verified": false,
   "stop_conditions": [
     "Scope expansion",
-    "Tool failure",
     "Browser evidence collection request"
   ]
 }

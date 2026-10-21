@@ -1,0 +1,13 @@
+{
+  "chunk":"dynamic-elements-meeting",
+  "state":"completed",
+  "objective":"Conduct approved collective assessment of dynamic page elements for CLI/web documentation and companion website.",
+  "participants":["engineering-critic","security-lead","ui-ux-redesign-agent","20f79d1e-51fb-4d65-8e79-f41f604bb41f","technical-document-writer","PI"],
+  "scope_exclusions":["page drafting","webpage edits","application implementation","deployment"],
+  "required_outputs":["decision matrix","technical recommendation","executive recommendation","controls/tests","placement guidance"],
+  "evidence":"Independent assessments plus bounded specialist evidence; UI/UX found active app stylesheet linkage gap; Security found missing route-scoped CSP assertions; Code assessment executed 242 focused tests; Engineering assessment executed 433 focused tests.",
+  "limitations":["No browser/AT execution","No network-disabled offline execution","No files edited by specialists"],
+  "artifact":"docs/decisions/dynamic-elements-meeting-report.md",
+  "stop_conditions":["fix stylesheet linkage and extend active-template UI tests before material layout claims","add route-scoped CSP tests","browser/AT evidence required before material layout approval"],
+  "next_action":"PI reviews collective recommendation; implementation fixes require separate approval"
+}

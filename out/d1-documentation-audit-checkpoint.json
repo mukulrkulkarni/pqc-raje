@@ -1,0 +1,35 @@
+{
+  "chunk": "D1",
+  "state": "checkpointed",
+  "objective": "Audit existing documentation, UX rationale, links, and test evidence without editing pages.",
+  "fallback": "PI local filesystem audit after unavailable research-agent ID",
+  "delegation_failure": "Agent 120620d2-d51a-4aab-a6b8-da3a319cc882 was unavailable",
+  "scope_exclusions": [
+    "final tutorial writing",
+    "page edits",
+    "application implementation"
+  ],
+  "next_action": "PI verifies D1 artifacts, reruns acceptance checks, and commits focused paths",
+  "pinned_revision": "b5a1e9d2bd2abf1829aa6eca3fac94183908d847",
+  "implementation_diff": "27c8c4b..b5a1e9d",
+  "artifacts": [
+    "docs/decisions/d1-documentation-audit.md",
+    "docs/decisions/d1-documentation-evidence-matrix.md",
+    "docs/decisions/d1-documentation-risk-register.md"
+  ],
+  "executed_evidence": {
+    "focused_tests": "273 passed in 2.70s",
+    "test_collection": "904 collected in 2.61s; collection is not execution",
+    "website_build_check": "python scripts/build_website.py --check exited 0"
+  },
+  "limitations": [
+    "No full-suite rerun in D1",
+    "No browser or assistive-technology execution",
+    "No network-disabled offline runtime test",
+    "No dedicated Markdown and fragment link checker executed",
+    "No separately named four-phase onboarding template was found; supplied four-step workflow was assessed as context"
+  ],
+  "commit": null,
+  "commit_policy": "Fallback must not commit; PI verifies and commits",
+  "working_tree_note": "D1 artifacts and checkpoint remain uncommitted by design"
+}

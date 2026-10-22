@@ -41,7 +41,7 @@ def test_active_template_uses_html5_document_structure(template_path):
     assert "<title>" in content
 
 
-@pytest.mark.parametrize("template_path", (TEMPLATE_DIR / "app_input.html", TEMPLATE_DIR / "app_preview.html", TEMPLATE_DIR / "app_results.html"), ids=lambda path: path.name)
+@pytest.mark.parametrize("template_path", (TEMPLATE_DIR / "app_preview.html", TEMPLATE_DIR / "app_results.html"), ids=lambda path: path.name)
 def test_active_tables_have_scoped_headers_and_responsive_data_labels(template_path):
     content = template_path.read_text(encoding="utf-8")
     assert '<th scope="col">' in content

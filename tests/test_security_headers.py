@@ -1,7 +1,8 @@
 """Tests for Flask security response headers."""
-import pytest
+
 import numpy as np
-from pathlib import Path
+import pytest
+
 from app import create_app
 from app.services.security import register_upload
 
@@ -37,6 +38,24 @@ class TestSecurityHeaders:
         assert response.status_code == 200
         assert "Content-Security-Policy" in response.headers
         assert "default-src 'none'" in response.headers["Content-Security-Policy"]
+
+    def test_app_csp_allows_same_origin_styles_without_javascript(self, client):
+        """The app permits its stylesheet but permits no scripts."""
+        response = client.get("/app/")
+        assert response.status_code == 200
+        csp = response.headers["Content-Security-Policy"]
+        assert "style-src 'self' 'unsafe-inline'" in csp
+        assert "script-src" not in csp
+        assert b'href="/static/style.css"' in response.data
+        assert b"<script" not in response.data.lower()
+
+    def test_app_stylesheet_loads_under_app_csp(self, client):
+        """The linked same-origin stylesheet responds with CSS content."""
+        response = client.get("/static/style.css")
+        assert response.status_code == 200
+        assert response.mimetype == "text/css"
+        assert b".criteria-grid" in response.data
+        assert "style-src 'self' 'unsafe-inline'" in response.headers["Content-Security-Policy"]
 
     def test_x_content_type_options(self, client, sample_upload):
         """Response should have X-Content-Type-Options: nosniff."""

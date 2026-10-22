@@ -21,7 +21,7 @@ CSP_DOCS = (
 CSP_APP = (
     "default-src 'none'; base-uri 'none'; form-action 'self'; "
     "frame-ancestors 'none'; img-src 'self' data:; font-src 'self'; "
-    "style-src 'unsafe-inline';"
+    "style-src 'self' 'unsafe-inline';"
 )
 
 

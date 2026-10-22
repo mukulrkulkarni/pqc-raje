@@ -70,9 +70,11 @@ def _criteria_from_form() -> list[dict[str, Any]]:
         raise ValueError("Select either Paste JSON or Fill form.")
     criteria = []
     for index in range(8):
-        name = request.form.get(f"c{index}_name", "").strip()
-        if not name:
+        # A card participates only when its explicit Include checkbox is posted.
+        # Ignore all values from omitted cards, including malformed edited values.
+        if request.form.get(f"c{index}_include") != "true":
             continue
+        name = request.form.get(f"c{index}_name", "").strip()
         try:
             criteria.append({
                 "name": name, "weight": float(request.form.get(f"c{index}_weight", "")),
@@ -83,6 +85,8 @@ def _criteria_from_form() -> list[dict[str, Any]]:
             })
         except ValueError as exc:
             raise ValueError(f"Criterion {index + 1} contains an invalid number.") from exc
+    if len(criteria) < 2:
+        raise ValueError("Select at least 2 criteria in the structured form.")
     return criteria
 
 

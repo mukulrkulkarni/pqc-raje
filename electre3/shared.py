@@ -83,6 +83,21 @@ def validate_score_matrix(matrix: Any, criterion_count: int) -> np.ndarray:
     return np.ascontiguousarray(scores, dtype=np.float64)
 
 
+def validate_identifiers(identifiers: Sequence[Any]) -> tuple[str, ...]:
+    """Validate stable source-row identifiers without changing their display text."""
+    if not identifiers:
+        raise ValueError("identifiers must not be empty")
+    if any(not isinstance(identifier, str) for identifier in identifiers):
+        raise ValueError("identifiers must be strings")
+    if any(not identifier.strip() for identifier in identifiers):
+        raise ValueError("identifiers must be non-empty after trimming")
+    if any(len(identifier) > 50 for identifier in identifiers):
+        raise ValueError("identifiers must be at most 50 characters")
+    if len(set(identifiers)) != len(identifiers):
+        raise ValueError("identifiers must be unique")
+    return tuple(identifiers)
+
+
 def validate_csv_headers(headers: Sequence[Any], criteria: Sequence[CriterionConfig]) -> None:
     """Validate header-mode identifier and ordered criterion-name mapping."""
     expected = [criterion.name for criterion in criteria]
@@ -101,6 +116,7 @@ def compute_validated_ranking(
     *,
     runtime_model: RuntimeModel | None = None,
     timeout_seconds: float = HARD_TIMEOUT_SECONDS,
+    identifiers: Sequence[str] | None = None,
 ) -> ComputeResult:
     """Validate, gate, compute, and return a complete immutable ranking result.
 
@@ -114,6 +130,12 @@ def compute_validated_ranking(
         raise ValueError(f"block_size must be between {MIN_BLOCK_SIZE} and {MAX_BLOCK_SIZE}")
     criteria = validate_criteria(criteria_data)
     scores = validate_score_matrix(matrix, len(criteria))
+    source_identifiers = (
+        tuple(str(index) for index in range(scores.shape[0]))
+        if identifiers is None else validate_identifiers(identifiers)
+    )
+    if len(source_identifiers) != scores.shape[0]:
+        raise ValueError("identifiers must match matrix row count")
     if runtime_model is not None:
         require_feasible(runtime_model, scores.shape[0], len(criteria), block_size)
     configuration = ComputeConfig(block_size=block_size)
@@ -123,7 +145,7 @@ def compute_validated_ranking(
     return ComputeResult(
         ranking=ranking,
         net_flow=accumulator.net_flow(),
-        identifiers=tuple(str(index) for index in range(scores.shape[0])),
+        identifiers=source_identifiers,
         criteria=tuple(CriterionMetadata(**criterion.__dict__) for criterion in criteria),
         configuration=ComputeConfiguration(
             block_size=configuration.block_size,

@@ -35,7 +35,8 @@ def compute_ranking(
     G_adj = G.copy()
     for j, criterion in enumerate(criteria):
         if not criterion.maximize:
-            G_adj[:, j] = -G_adj[:, j]
+            # Shared validation requires normalized scores in [0, 1].
+            G_adj[:, j] = 1.0 - G_adj[:, j]
     rows, block_size = G.shape[0], config.block_size
     accumulator = NetFlowAccumulator(rows)
     for row_start in range(0, rows, block_size):

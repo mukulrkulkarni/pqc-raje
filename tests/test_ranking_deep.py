@@ -171,7 +171,7 @@ def test_blocking_matches_independent_full_reference(B: int) -> None:
     original = G.copy()
     cs = criteria()
     adj = G.copy()
-    adj[:, 1] *= -1
+    adj[:, 1] = 1.0 - adj[:, 1]
     diff = adj[:, None, :] - adj[None, :, :]
     q = np.ones(2)
     p = np.full(2, 3.0)

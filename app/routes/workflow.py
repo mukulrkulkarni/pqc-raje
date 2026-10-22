@@ -21,6 +21,7 @@ from electre3.shared import (
     compute_validated_ranking,
     validate_criteria,
     validate_csv_headers,
+    validate_identifiers,
 )
 
 bp = Blueprint("workflow", __name__, url_prefix="/app")
@@ -108,7 +109,7 @@ def _parse_csv(payload: bytes, criteria: list[Any], header_mode: str, allow_miss
     if header_mode not in {"headered", "headerless"}:
         raise ValueError("Select whether the CSV has a header row.")
     config = validate_criteria(criteria)
-    expected = len(config) + (1 if header_mode == "headered" else 0)
+    expected = len(config) + 1
     headers = ["Asset ID", *[criterion.name for criterion in config]]
     identifiers: list[str] = []
     data_rows = rows
@@ -120,11 +121,8 @@ def _parse_csv(payload: bytes, criteria: list[Any], header_mode: str, allow_miss
     for row_index, row in enumerate(data_rows, start=2 if header_mode == "headered" else 1):
         if len(row) != expected:
             raise ValueError(f"CSV row {row_index} has {len(row)} columns; expected {expected}.")
-        score_cells = row[1:] if header_mode == "headered" else row
-        if header_mode == "headered":
-            identifiers.append(row[0])
-        else:
-            identifiers.append(str(row_index))
+        score_cells = row[1:]
+        identifiers.append(row[0])
         scores = []
         for column_index, cell in enumerate(score_cells, start=1):
             if not cell.strip():
@@ -137,6 +135,7 @@ def _parse_csv(payload: bytes, criteria: list[Any], header_mode: str, allow_miss
             except ValueError as exc:
                 raise ValueError(f"CSV row {row_index}, score column {column_index} is not numeric.") from exc
         values.append(scores)
+    validate_identifiers(identifiers)
     return np.asarray(values, dtype=np.float64), headers, identifiers
 
 
@@ -219,6 +218,7 @@ def compute():
         result = compute_validated_ranking(
             state["matrix"], state["criteria"], DEFAULT_BLOCK_SIZE,
             runtime_model=APP_RUNTIME_MODEL,
+            identifiers=state["identifiers"],
         )
     except FeasibilityError as exc:
         abort(422, f"Computation rejected before start: {exc}")
@@ -230,7 +230,7 @@ def compute():
     top = []
     for rank, index in enumerate(result.ranking[:10], start=1):
         row = int(index)
-        top.append({"rank": rank, "identifier": state["identifiers"][row], "score": float(result.net_flow[row])})
+        top.append({"rank": rank, "identifier": result.identifiers[row], "score": float(result.net_flow[row])})
     token = result_cache.store(_download_session_id(), "ranking-result.json", serialize_result_json(result))
     return render_template(
         "app_results.html", top=top, total=len(result.ranking),

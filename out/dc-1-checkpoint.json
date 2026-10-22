@@ -1,0 +1,40 @@
+{
+  "chunk": "DC-1",
+  "state": "dirty_tree",
+  "created_at": "2026-10-22T00:44:30+04:00",
+  "updated_at": "2026-10-22T00:47:20+04:00",
+  "objective": "Implement identifier-plus-scores input contract and serializer v2.",
+  "authoritative_contract": {
+    "csv_shape": "(N,C+1)",
+    "identifier_rules": "column 0; non-empty after trim; unique; maximum 50 characters",
+    "score_rules": "columns 1..C; finite numeric values in [0,1]",
+    "numpy_identifiers": "positional",
+    "serializer_version": 2,
+    "minimize_transform": "1-g after normalized-score validation"
+  },
+  "changed_paths": [
+    "electre3/data.py", "electre3/shared.py", "electre3/ranking.py", "electre3/serialization.py", "electre3/cli.py",
+    "app/routes/workflow.py", "app/templates/app_matrix.html", "app/templates/app_preview.html",
+    "tests/test_dc1_contract.py", "tests/test_ranking_deep.py", "docs/decisions/dc-1-documentation-notes.md"
+  ],
+  "acceptance_evidence": {
+    "focused": "110 passed in 1.59s",
+    "regression": "114 passed in 1.45s",
+    "compileall_and_diff_check": "passed"
+  },
+  "commit": "774b3a8 implement_DC1_identifier_input_contract",
+  "failure_classification": "dirty_tree",
+  "dirty_paths_preserved": [
+    "docs/decisions/data-contract-before-after.md",
+    "docs/decisions/data-contract-impact-assessment.md",
+    "docs/decisions/data-contract-test-matrix.md",
+    "out/data-contract-impact-checkpoint.json"
+  ],
+  "limitations": [
+    "No full CSV migration beyond DC-1.",
+    "No user pages or D3 documentation changes.",
+    "No browser accessibility or performance-load verification.",
+    "Repository is not clean because pre-existing unrelated untracked assessment artifacts were preserved."
+  ],
+  "next_action": "User direction is required to resolve unrelated untracked artifacts before a clean-tree claim."
+}

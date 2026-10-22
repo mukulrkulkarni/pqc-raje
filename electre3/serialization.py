@@ -14,7 +14,7 @@ from typing import Any, Mapping, Sequence
 
 import numpy as np
 
-SERIALIZER_VERSION = "1"
+SERIALIZER_VERSION = "2"
 MAX_ARTIFACT_BYTES = 16 * 1024 * 1024
 
 

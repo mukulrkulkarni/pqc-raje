@@ -144,4 +144,18 @@ git diff --check
 
 Both commands returned exit code `0`.
 
-One initial focused test run failed because two assertions still expected the former `h2` badge selector. The assertions were corrected to `h3`; the full focused command then passed. The user visual pass and UI/UX review are complete. Final engineering verification and commit remain required.
+One initial focused test run failed because two assertions still expected the former `h2` badge selector. The assertions were corrected to `h3`; the full focused command then passed. The user visual pass and UI/UX review are complete.
+
+## Reconciled completion metadata
+
+DC4.5 was committed after the final focused verification:
+
+```text
+git log -1 --format="%H%n%s" cd6b3cf
+cd6b3cf6765e26823b98fc31761b4aecb37a790e
+implement-dc45-criteria-card-ui
+```
+
+The commit contains the DC4.5 implementation, focused tests, checkpoint, and these notes. DC-5 independently reran the UI/CSP/no-JavaScript regression on 2026-10-22: `64 passed in 1.37s`. DC4.5 status is **committed**; it is no longer awaiting engineering verification or commit.
+
+Browser limitations remain unverified: no current rendered-browser check, keyboard traversal, zoom/reflow, assistive-technology, offline, or load-performance evidence. The Innovium Project Plan/Scratch Pad remains an external overlay, not application HTML.

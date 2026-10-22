@@ -1,0 +1,54 @@
+{
+  "contract": "DC-5 final contract and release verification",
+  "state": "checkpointed",
+  "created_at": "2026-10-22",
+  "updated_at": "2026-10-22",
+  "agent": "Innovium prepared Code specialist, candidate v1",
+  "model": "unspecified",
+  "objective": "Reconcile stale DC4.5/DC-5 status metadata, verify release evidence, request the required release reviews, and commit only accepted records.",
+  "authoritative_inputs": [
+    "git commits 8cab5db, 62f461b, 36b2bb0, e111b46, cd6b3cf",
+    "existing implementation, tests, documentation, and shared scratch-pad status"
+  ],
+  "acceptance_tests": [
+    "full pytest passes",
+    "contract/security/runtime/DC4.5/local-reproducibility categories pass",
+    "compileall and diff checks pass",
+    "documentation status matches committed history",
+    "Scientific, Engineering, Security, and UI/UX reviews record a verdict",
+    "independent local reproducibility passes without a persistent service"
+  ],
+  "evidence": {
+    "full_pytest": "932 passed in 9.69s: python -m pytest tests -q",
+    "contract_regression": "128 passed in 2.73s: python -m pytest tests/test_dc1_contract.py tests/test_dc2_identifier_migration.py tests/test_dc3_minimize_transform.py tests/test_dc4_cli_converter_migration.py tests/test_dc45_criteria_cards.py tests/test_serialization.py tests/test_result_cache.py tests/test_security.py tests/test_security_headers.py tests/test_runtime.py tests/test_end_to_end_composition.py tests/test_local_document_links.py -q",
+    "security_cache_runtime": "45 passed in 1.43s: python -m pytest tests/test_security.py tests/test_security_headers.py tests/test_runtime.py tests/test_result_cache.py -q",
+    "local_reproducibility": "36 passed in 1.17s: python -m pytest tests/test_cli_run.py tests/test_convert_matrix_csv.py tests/test_app_workflow.py -q; no persistent service started",
+    "dc45_ui_csp_no_js": "64 passed in 1.37s: python -m pytest tests/test_dc45_criteria_cards.py tests/test_active_template_ui.py tests/test_ui_styles.py tests/test_security_headers.py -q",
+    "compileall_diff": "passed: python -m compileall -q electre3 app tests && git diff --check && git diff --cached --check"
+  },
+  "metadata_reconciliation": {
+    "dc45_commit": "cd6b3cf6765e26823b98fc31761b4aecb37a790e",
+    "dc45_subject": "implement-dc45-criteria-card-ui",
+    "status": "DC4.5 note corrected: committed; no pending engineering verification or commit."
+  },
+  "reviews": {
+    "scientific": "requested; no verdict recorded",
+    "engineering": "requested; no verdict recorded",
+    "security": "requested; no verdict recorded",
+    "uiux": "requested; no verdict recorded"
+  },
+  "positive_negative_edge_evidence": "Named DC contract and UI suites cover successful workflows, invalid selected inputs/minimum-selection failures, and maximum-selection/unchecked-malformed-input boundaries. Full suite passed.",
+  "browser_limitations": [
+    "No current rendered-browser check",
+    "Keyboard traversal and focus presentation unverified",
+    "Zoom and responsive reflow unverified",
+    "Assistive-technology, offline, and load-performance behavior unverified"
+  ],
+  "preserved_untracked_artifacts": [
+    "attachments/clipboard-2026-10-22_05-35-51.png",
+    "out/dc-4-5-single-card-selected.svg",
+    "out/dc-4-5-single-card-unselected.svg"
+  ],
+  "fallback": "Preserve verified metadata and evidence; stop release acceptance until all four review verdicts exist.",
+  "next_action": "Collect four bounded release-review verdicts. Do not assert release acceptance. Commit the approved DC-5 records after review outcomes are recorded."
+}

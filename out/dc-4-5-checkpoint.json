@@ -1,1 +1,42 @@
-{"chunk":"DC4.5","state":"checkpointed","objective":"Implement and refine the server-rendered two-row four-card criteria UI with explicit selection states and accessible ordering.","scope":["card geometry","checkbox order and visibility","selected/unselected state cues","Step 1 hierarchy","CSP stylesheet loading","focused tests and documentation"],"limits":{"cards":8,"desktop_rows":2,"desktop_columns":4,"minimum_selected":2,"maximum_selected":8},"status":"Implementation complete; UIUX approved and user visual pass received; final commit is authorized after metadata reconciliation.","test_evidence":{"latest_focused_tests":"101 passed","compileall":"passed","diff_check":"passed","earlier_card_suite":"101 passed before final focus-selector correction"},"reviews":{"uiux":"approved after final focus selector correction per latest review","scientific":"not required for cosmetic UI-only changes","engineering":"not required yet; run before commit if required"},"limitations":["No rendered browser screenshot for current final state; user visual pass is required","Zoom/reflow/keyboard/offline/AT remain unverified","Project Plan/Scratch Pad is external overlay"],"next_action":"User visual pass; then final engineering check if needed, commit, clean-tree verification","commit":null}
+{
+  "chunk": "DC4.5",
+  "state": "completed",
+  "objective": "Implement and refine the server-rendered two-row four-card criteria UI with explicit selection states and accessible ordering.",
+  "scope": [
+    "card geometry",
+    "checkbox order and visibility",
+    "selected/unselected state cues",
+    "Step 1 hierarchy",
+    "CSP stylesheet loading",
+    "focused tests and documentation"
+  ],
+  "limits": {
+    "cards": 8,
+    "desktop_rows": 2,
+    "desktop_columns": 4,
+    "minimum_selected": 2,
+    "maximum_selected": 8
+  },
+  "status": "Implementation complete; UI/UX approved and user visual pass received; committed in cd6b3cf.",
+  "test_evidence": {
+    "committed_focused_tests": "101 passed for the latest card-order correction",
+    "dc5_ui_csp_no_js_rerun": "64 passed in 1.37s on 2026-10-22",
+    "compileall": "passed",
+    "diff_check": "passed"
+  },
+  "reviews": {
+    "uiux": "approved after final focus-selector correction; user visual pass received",
+    "scientific": "not required for the DC4.5 cosmetic UI-only change",
+    "engineering": "commit evidence reconciled by DC-5; no pending DC4.5 engineering gate"
+  },
+  "limitations": [
+    "No current rendered-browser check",
+    "Zoom/reflow/keyboard/offline/assistive technology remain unverified",
+    "Project Plan/Scratch Pad is an external overlay"
+  ],
+  "commit": {
+    "hash": "cd6b3cf6765e26823b98fc31761b4aecb37a790e",
+    "subject": "implement-dc45-criteria-card-ui"
+  },
+  "next_action": "Retain DC4.5 as committed regression evidence for DC-5 release review."
+}

@@ -1,8 +1,20 @@
-# CLI Quickstart (CSV → ELECTRE III net‑flow ranking)
+# CLI Quickstart (CSV → ELECTRE III ranking indices)
 
 This tutorial shows how to run the project’s ranking pipeline from the command line using a CSV matrix and a criteria JSON file.
 
-**What you get:** a deterministic net-flow score for each alternative, and a ranking by **raw net flow (descending)**. If two alternatives have equal net flow, their relative order is not guaranteed by the current implementation.
+**What you get:** a deterministic ranking of alternative indices. The CLI validates finite matrix scores in `[0,1]`, prints ranking indices, and saves ranking indices when `-o` is used. It does not print or save net-flow scores. Equal internal net-flow values have no documented stable relative order.
+
+## Phase 1: verify the committed Asset Priority scenario
+
+Run commands from the **repo root** (the directory that contains `electre3/`, `app/`, `docs/`, `tests/`). Use Python 3.10 or newer and the repository environment.
+
+```bash
+python -m compileall -q electre3 app
+python scripts/convert_matrix_csv.py examples/assets_priority/matrix_with_headers.csv out/assets_priority_cli.npy --has-header --id-col Asset
+python -m electre3.cli out/assets_priority_cli.npy examples/assets_priority/criteria.json -y
+```
+
+The ranking output contains `Alt 1`, `Alt 0`, and `Alt 2`. The CLI uses zero-based indices; `examples/assets_priority/asset_names.txt` maps this committed sample to `B > A > C`. This applies to this data revision only. The CLI prints indices only; it does not print net-flow scores. Exact ties have no documented stable order.
 
 ## Prerequisites
 
@@ -21,7 +33,8 @@ Accepted formats:
 - `.npy` / `.npz` — NumPy arrays (recommended once converted).
 
 Constraints:
-- Values must be numeric and finite.
+- Values must be numeric, finite, and in `[0,1]`.
+- The CLI validates matrix scores in `[0,1]` before ranking.
 - `electre3.data.load_matrix` loads CSV values as `float64`.
 - `electre3.validate.validate_matrix` enforces: 2-D shape, N≥2, C matches number of criteria, and finite values.
 - Column order must match the order of criteria in your criteria JSON.
@@ -38,12 +51,7 @@ The CLI reads this file and constructs `CriterionConfig` objects.
 
 ## Dependency map (pipeline)
 
-### Chosen
-- Mermaid flowchart — Lightweight, readable, supported by GitHub and many doc renderers.
-
-### Near-miss
-- Graphviz DOT — Precise, but needs rendering tooling.
-- ASCII box diagram — Always works, but harder to maintain.
+The Mermaid flowchart is used because common repository renderers support it without an additional build step. Graphviz DOT and an ASCII box diagram are omitted because they add rendering work or maintenance burden.
 
 ```mermaid
 flowchart TD
@@ -108,8 +116,9 @@ python -m electre3.cli out/matrix.npy criteria.json -b 1000 -y -o out/ranking.np
 ```
 
 Output contract:
-- The CLI prints the top-ranked alternatives as **indices** (`Alt 0`, `Alt 1`, …).
-- Saved output is a NumPy array of indices ordered best → worst.
+- The CLI prints the top-ranked alternatives as **indices** (`Alt 0`, `Alt 1`, …), not net-flow scores.
+- Saved output is a NumPy array of indices ordered best → worst, not net-flow scores.
+- Net flow drives the internal ordering but is not exposed by this CLI output contract.
 
 ## How to interpret results
 

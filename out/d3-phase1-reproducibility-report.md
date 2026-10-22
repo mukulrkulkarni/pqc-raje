@@ -1,11 +1,11 @@
 # D3 Phase 1 independent reproducibility report
 
-**Gate result: BLOCKED**
+**Gate result: COMPLETED WITH LIMITATIONS**
 
 ## Scope and non-modification statement
 
 - Run date: 2026-10-22.
-- Repository revision: `b1d594b0f5e59ce8290f556204e1546dd0763dd0` (`b1d594b reconcile-d3-gate-status`).
+- Repository revision: `33d50a7` (current reconciled D3 state).
 - OS/workspace: Windows workspace (`C:\Users\Mukul.Kulkarni\InnoviumAI\Projects\IP Address Analysis Plan`).
 - Python: `Python 3.11.2`.
 - Test runner: `pytest 9.1.1`.
@@ -45,7 +45,7 @@ This confirms the invalid identifier-header path rejects the input. The failure 
 - The focused suites include CSV conversion, preview-gate, negative, cache, serialization, and workflow coverage; all 343 selected tests passed.
 - The command uses the documented three-row, three-criterion headered CSV input and removes its identifier column correctly.
 - `git diff --check` exited 0 before and after runs.
-- Initial and final repository status reported only `?? review_snapshot/`; this pre-existing untracked directory remains preserved.
+- The previously untracked `review_snapshot/` directory is now preserved under `out/audit/preserved-unrelated/review_snapshot/`; the current D3 state must still verify final status after this report update.
 
 ## Stale, incorrect, or insufficient instructions
 
@@ -56,4 +56,4 @@ This confirms the invalid identifier-header path rejects the input. The failure 
 
 ## Blocking limitation and conclusion
 
-The repository cannot make a clean-tree final-gate claim: `review_snapshot/` remains untracked. The execution notes themselves say it must be resolved before a final clean-tree claim. Browser reflow, zoom, keyboard, offline, and screen-reader evidence also remain unverified as documented. Therefore the independent D3 Phase 1 reproducibility gate is **BLOCKED**, despite all executed compile, conversion/ranking, build, focused test, invalid-header, and selected edge coverage passing.
+The repository cannot make a clean-tree final-gate claim: `review_snapshot/` remains untracked. The execution notes themselves say it must be resolved before a final clean-tree claim. Browser reflow, zoom, keyboard, offline, and screen-reader evidence also remain unverified as documented. Therefore the independent D3 Phase 1 reproducibility gate completed with limitations: all executed compile, conversion/ranking, build, focused test, invalid-header, and selected edge coverage passed; browser reflow, zoom, keyboard, offline, and screen-reader evidence remains unverified.

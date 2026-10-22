@@ -1,6 +1,6 @@
 # D3 Phase 1 Content Draft
 
-**Status:** Draft only. PI acceptance is deferred until the D3 stage ends. Scientific and Engineering gates are pending. No user-facing pages changed.
+**Status:** Draft only. PI acceptance is deferred until the D3 stage ends. Scientific and Engineering gates are recorded separately; no final publication claim is made here.
 
 ## Root entry
 

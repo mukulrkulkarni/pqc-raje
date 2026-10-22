@@ -1,6 +1,6 @@
 # D3 Phase 1 Execution Notes
 
-**Status:** Placement and testing complete. UI/UX approved. Scientific and Engineering final reruns are pending status reconciliation. PI stage-end acceptance is pending. Current reconciled commit: `b1d594b`.
+**Status:** Placement and testing complete. UI/UX approved. Scientific approved. Engineering final rerun is pending status-record reconciliation. PI stage-end acceptance is pending. Current reconciled commit: `33d50a7`.
 
 ## Scope and authority
 

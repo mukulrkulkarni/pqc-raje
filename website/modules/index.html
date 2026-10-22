@@ -6,16 +6,16 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; font-src 'self'; script-src 'self'; style-src 'unsafe-inline';">
 <title>Tutorials</title>
 <style>
-:root{--bg:#ffffff;--text:#0f172a;--dim:#475569;--border:#e2e8f0;--surface:#f8fafc;--accent:#2563eb;--radius:10px;--s3:12px;--s4:16px;--s5:24px;--sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;}
-body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);} .main{max-width:980px;margin:0 auto;padding:var(--s5);} 
-.nav{display:flex;gap:14px;margin:0 0 var(--s4);} .nav a{color:var(--dim);text-decoration:none;font-weight:600;} .nav a:hover{color:var(--text);} 
+:root{--bg:#ffffff;--text:#253746;--dim:#53646d;--border:#c9d4d9;--surface:#f5f7f8;--accent:#6400ff;--aqua:#7eddd3;--radius:8px;--s3:12px;--s4:16px;--s5:24px;--sans:Arial,sans-serif;}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);} .main{max-width:980px;margin:0 auto;padding:var(--s5);}
+.nav{display:flex;gap:14px;margin:0 0 var(--s4);} .nav a{color:var(--dim);text-decoration:none;font-weight:600;} .nav a:hover,.nav a[aria-current="page"]{color:var(--accent);background:rgba(126,221,211,.35);}.nav a:focus-visible{outline:3px solid var(--aqua);outline-offset:2px;}
 .h{margin:0 0 var(--s3);font-size:20px;letter-spacing:-.02em;}
 .p{margin:0 0 var(--s4);color:var(--dim);line-height:1.6;}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;}
-.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:var(--s4);} 
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:var(--s4);}
 .card h2{margin:0 0 8px;font-size:14px;} .card p{margin:0 0 10px;color:var(--dim);font-size:13px;}
 .a{color:var(--accent);text-decoration:none;font-weight:600;} .a:hover{text-decoration:underline;}
-.small{font-size:12px;color:var(--dim);} code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;font-size:12px;background:#eef2ff;padding:1px 4px;border-radius:4px;}
+.small{font-size:12px;color:var(--dim);} code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;font-size:12px;background:rgba(126,221,211,.35);padding:1px 4px;border-radius:4px;}
 </style>
 </head>
 <body>
@@ -25,41 +25,14 @@ body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);} .
     <a href="/app/index.html">App</a>
     <a href="/modules/index.html" aria-current="page">Tutorials</a>
   </nav>
-
   <h1 class="h">Tutorial docs</h1>
   <p class="p">Deep, offline-first module tutorials (Layout 2). Each module has a landing page and a side-by-side tutorial.</p>
-
   <div class="grid">
-    <section class="card">
-      <h2>config</h2>
-      <p>Criterion configuration dataclasses and constraints.</p>
-      <p><a class="a" href="/modules/config/">Open module →</a></p>
-      <p class="small">Tutorial: <code>/modules/config/tutorial/</code></p>
-    </section>
-    <section class="card">
-      <h2>validate</h2>
-      <p>Validation utilities for configs and arrays.</p>
-      <p><a class="a" href="/modules/validate/">Open module →</a></p>
-      <p class="small">Tutorial: <code>/modules/validate/tutorial/</code></p>
-    </section>
-    <section class="card">
-      <h2>block</h2>
-      <p>Blockwise credibility computation for scalability.</p>
-      <p><a class="a" href="/modules/block/">Open module →</a></p>
-      <p class="small">Tutorial: <code>/modules/block/tutorial/</code></p>
-    </section>
-    <section class="card">
-      <h2>accumulator</h2>
-      <p>O(N) net-flow accumulation from credibility blocks.</p>
-      <p><a class="a" href="/modules/accumulator/">Open module →</a></p>
-      <p class="small">Tutorial: <code>/modules/accumulator/tutorial/</code></p>
-    </section>
-    <section class="card">
-      <h2>ranking</h2>
-      <p>Net-flow ranking (raw descending) and presentation helpers.</p>
-      <p><a class="a" href="/modules/ranking/">Open module →</a></p>
-      <p class="small">Tutorial: <code>/modules/ranking/tutorial/</code></p>
-    </section>
+    <section class="card"><h2>config</h2><p>Criterion configuration dataclasses and constraints.</p><p><a class="a" href="/modules/config/">Open module →</a></p><p class="small">Tutorial: <code>/modules/config/tutorial/</code></p></section>
+    <section class="card"><h2>validate</h2><p>Validation utilities for configs and arrays.</p><p><a class="a" href="/modules/validate/">Open module →</a></p><p class="small">Tutorial: <code>/modules/validate/tutorial/</code></p></section>
+    <section class="card"><h2>block</h2><p>Blockwise credibility computation for scalability.</p><p><a class="a" href="/modules/block/">Open module →</a></p><p class="small">Tutorial: <code>/modules/block/tutorial/</code></p></section>
+    <section class="card"><h2>accumulator</h2><p>O(N) net-flow accumulation from credibility blocks.</p><p><a class="a" href="/modules/accumulator/">Open module →</a></p><p class="small">Tutorial: <code>/modules/accumulator/tutorial/</code></p></section>
+    <section class="card"><h2>ranking</h2><p>Net-flow ranking (raw descending) and presentation helpers.</p><p><a class="a" href="/modules/ranking/">Open module →</a></p><p class="small">Tutorial: <code>/modules/ranking/tutorial/</code></p></section>
   </div>
 </main>
 </body>

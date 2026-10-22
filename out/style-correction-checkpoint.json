@@ -1,0 +1,19 @@
+{
+  "chunk": "approved-styling-corrections",
+  "state": "checkpointed",
+  "created_at": "2026-10-22",
+  "objective": "Align owned module/tutorial HTML styling with the MK-TII reference without content, formula, identifier, route, asset, generated-source, or app no-JS drift.",
+  "authoritative_inputs": ["app/static/style.css", "docs/GETTING_STARTED.html", "docs/decisions/style-gap-register.md", "scripts/build_website.py"],
+  "owned_scope": ["docs/modules", "website/modules", "website/_includes/primary-nav.html", "scripts/build_website.py", "tests/test_style_corrections.py", "docs/decisions/style-correction-notes.md"],
+  "generated_output_rule": "Do not hand-edit website/modules tutorial outputs; change docs/modules authoritative sources and regenerate.",
+  "acceptance_results": {
+    "static_link_math_generator_tests": "22 passed",
+    "full_scoped_regression_tests": "433 passed",
+    "compileall": "passed",
+    "generator_idempotence": "passed",
+    "ui_ux_review": "approved",
+    "engineering_review": "approved"
+  },
+  "limitations": ["Browser-rendered checks are deferred and non-blocking.", "No browser tests ran in this chunk."],
+  "next_action": "Perform final diff, commit only approved paths, and verify clean tree."
+}

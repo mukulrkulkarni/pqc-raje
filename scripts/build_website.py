@@ -71,15 +71,12 @@ def inject_primary_nav(html: str, active_href: str) -> str:
         raise ValueError('Tutorial HTML missing <body> tag')
 
     nav = (
-        '<nav aria-label="Primary" style="background:var(--bg,#fff);'
-        'border-bottom:1px solid var(--border,#e2e8f0);'
-        'padding:10px 16px;font-family:var(--sans,system-ui);font-size:13px;">'
-        '<a href="/index.html" style="margin-right:12px;text-decoration:none;">Getting Started</a>'
-        '<a href="/app/index.html" style="margin-right:12px;text-decoration:none;">App</a>'
-        '<a href="/modules/index.html" style="margin-right:12px;text-decoration:none;">Tutorials</a>'
-        '<span style="color:var(--text-dim,#64748b);margin:0 8px;">|</span>'
-        '<a href="http://localhost:5000/" style="margin-right:12px;text-decoration:none;">Flask home</a>'
-        '<a href="http://localhost:5000/docs/modules" style="text-decoration:none;">Flask modules</a>'
+        '<nav class="primary-nav" aria-label="Primary">'
+        '<a href="/index.html">Getting Started</a>'
+        '<a href="/app/index.html">App</a>'
+        '<a href="/modules/index.html" aria-current="page">Tutorials</a>'
+        '<a href="http://localhost:5000/">Flask home</a>'
+        '<a href="http://localhost:5000/docs/modules">Flask modules</a>'
         '</nav>'
     )
 

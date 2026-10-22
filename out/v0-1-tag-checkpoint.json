@@ -1,0 +1,41 @@
+{
+  "chunk": "Create v0.1 Release Tag",
+  "state": "active",
+  "date": "2026-10-22",
+  "agent": "Innovium prepared Code specialist, candidate v1",
+  "objective": "Record release-tag evidence, commit only those evidence records, and create annotated tag v0.1 if all release gates agree.",
+  "authoritative_release_commit": "cff0f400ee7b7a280120988abd0cd91fbdcc3412",
+  "release_verification_commit": "cff0f40",
+  "release_verification_checkpoint": "out/v0-1-release-verification-checkpoint.json",
+  "release_notes": "docs/decisions/v0-1-release-notes.md",
+  "executive_summary": "docs/decisions/v0-1-executive-summary.md",
+  "review_verdicts": {
+    "engineering": "APPROVED",
+    "scientific": "APPROVED",
+    "security": "APPROVED",
+    "ui_ux": "APPROVED WITH DEFERRED LIMITATIONS"
+  },
+  "full_test_evidence": "947 passed in 18.91s",
+  "deferred_non_blocking_limitations": [
+    "browser-rendered and assistive-technology checks",
+    "screen-reader",
+    "zoom",
+    "reflow",
+    "keyboard",
+    "offline",
+    "load performance"
+  ],
+  "pre_tag_checks": {
+    "head": "cff0f400ee7b7a280120988abd0cd91fbdcc3412",
+    "worktree": "clean",
+    "tag_preexisting": false,
+    "evidence_consistent": true
+  },
+  "approved_evidence_paths": [
+    "out/v0-1-tag-checkpoint.json",
+    "docs/decisions/v0-1-tag-notes.md"
+  ],
+  "fallback": "Stop without creating a tag if the evidence-record commit or final tag validation fails.",
+  "evidence_record_scope": "Only out/v0-1-tag-checkpoint.json and docs/decisions/v0-1-tag-notes.md",
+  "next_action": "Create an annotated v0.1 tag from this documented final successor after final clean-worktree validation."
+}

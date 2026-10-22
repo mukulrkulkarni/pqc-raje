@@ -56,16 +56,31 @@ class RankingResult:
             raise ValueError("ranking and net_flow must have equal lengths")
         if len(self.identifiers) != len(ranking):
             raise ValueError("identifiers must match ranking length")
-        if any(not isinstance(identifier, str) for identifier in self.identifiers):
-            raise ValueError("identifiers must be strings")
+        identifiers = _validated_identifiers(self.identifiers)
         if set(ranking.tolist()) != set(range(len(ranking))):
             raise ValueError("ranking must be a permutation of row indices")
         if not np.isfinite(scores).all():
             raise ValueError("net_flow must contain finite scores")
         object.__setattr__(self, "ranking", ranking)
         object.__setattr__(self, "net_flow", scores)
-        object.__setattr__(self, "identifiers", tuple(self.identifiers))
+        object.__setattr__(self, "identifiers", identifiers)
         object.__setattr__(self, "criteria", tuple(self.criteria))
+
+
+def _validated_identifiers(values: Sequence[str]) -> tuple[str, ...]:
+    """Validate display-safe source identifiers at the result boundary."""
+    identifiers = tuple(values)
+    if any(not isinstance(identifier, str) for identifier in identifiers):
+        raise ValueError("identifiers must be strings")
+    if any(not identifier.strip() for identifier in identifiers):
+        raise ValueError("identifiers must be non-empty after trimming")
+    if any(len(identifier) > 50 for identifier in identifiers):
+        raise ValueError("identifiers must be at most 50 characters")
+    if len(set(identifiers)) != len(identifiers):
+        raise ValueError("identifiers must be unique")
+    if any(any(ord(character) < 32 or ord(character) == 127 for character in identifier) for identifier in identifiers):
+        raise ValueError("identifiers must not contain control characters")
+    return identifiers
 
 
 def _readonly_vector(values: Any, dtype: np.dtype[Any], field: str) -> np.ndarray:

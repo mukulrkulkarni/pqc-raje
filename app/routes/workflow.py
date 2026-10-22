@@ -202,7 +202,11 @@ def preview():
     except ValueError as exc:
         return render_template("app_matrix.html", workflow_id=session["app_workflow_id"], criteria=state["criteria"], error=str(exc)), 400
     state.update(matrix=matrix, headers=headers, identifiers=identifiers, source=source, previewed=True)
-    return render_template("app_preview.html", criteria=state["criteria"], headers=headers, rows=matrix[:5], identifiers=identifiers[:5], total_rows=len(matrix), source=source)
+    return render_template(
+        "app_preview.html", criteria=state["criteria"], headers=headers,
+        rows=matrix[:5], identifiers=identifiers[:5], total_rows=len(matrix), source=source,
+        identifier_label=headers[0],
+    )
 
 
 @bp.post("/compute")
@@ -234,6 +238,7 @@ def compute():
     token = result_cache.store(_download_session_id(), "ranking-result.json", serialize_result_json(result))
     return render_template(
         "app_results.html", top=top, total=len(result.ranking),
+        identifier_label=state["headers"][0],
         download_url=url_for("workflow.download_result", token=token),
     )
 

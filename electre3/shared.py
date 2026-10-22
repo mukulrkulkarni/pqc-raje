@@ -95,6 +95,8 @@ def validate_identifiers(identifiers: Sequence[Any]) -> tuple[str, ...]:
         raise ValueError("identifiers must be at most 50 characters")
     if len(set(identifiers)) != len(identifiers):
         raise ValueError("identifiers must be unique")
+    if any(any(ord(character) < 32 or ord(character) == 127 for character in identifier) for identifier in identifiers):
+        raise ValueError("identifiers must not contain control characters")
     return tuple(identifiers)
 
 

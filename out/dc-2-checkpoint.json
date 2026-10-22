@@ -1,0 +1,17 @@
+{
+  "chunk": "DC-2",
+  "objective": "Migrate CSV identifiers through preview, compute, RankingResult, serialization, cache, downloads, and result labels.",
+  "state": "completed",
+  "agent": "Innovium Code specialist candidate v1",
+  "model": "internal",
+  "created_at": "2026-10-22",
+  "sources": ["user-approved DC-2 brief", "docs/decisions/data-contract-impact-assessment.md", "docs/decisions/data-contract-test-matrix.md"],
+  "implementation": ["CSV parser retains source identifiers and numeric (N,C) core", "preview/results display headered source label or headerless Asset ID", "RankingResult rejects unsafe direct identifiers", "canonical v2 serializers/cache/download retain identifiers"],
+  "acceptance": {"focused": "169 passed in 1.76s", "dc1_regression": "9 passed in 0.52s", "full_relevant_suite": "891 passed in 7.42s", "compileall_and_diff_check": "passed"},
+  "reviews": {"scientific": "approved: numeric core and DC-1 minimize-boundary evidence retained", "engineering": "approved: workflow/template/cache/security diff reviewed", "ui_ux": "not required: no material result/table layout change"},
+  "commit": {"id": "40c4203", "message": "implement_DC2_identifier_propagation"},
+  "fallback": "Preserve verified partial changes and report blockers without scope expansion.",
+  "stop_conditions": ["identifier loss", "serializer/cache mismatch", "failed edge tests", "stale documentation", "unrelated failure", "scope expansion"],
+  "last_action": "Committed approved DC-2 files; clean-tree verification follows.",
+  "next_action": "None after clean-tree verification."
+}

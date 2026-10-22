@@ -1,6 +1,6 @@
 {
   "contract": "DC5 evidence-remediation only",
-  "state": "checkpointed",
+  "state": "dirty_tree",
   "created_at": "2026-10-22",
   "updated_at": "2026-10-22",
   "agent": "Innovium prepared Code specialist, candidate v1",
@@ -76,5 +76,8 @@
     "Offline behavior unverified"
   ],
   "fallback": "Preserve verified records and report dirty_tree if focused commit succeeds while preserved archive files remain untracked.",
-  "next_action": "Inspect scope diff, commit only remediation documentation/checkpoint records, then verify final status and commit traceability."
+  "remediation_commit": "5c3f95ce5db7c09d25391d92814a1c1bcef41947",
+  "remediation_commit_subject": "record-dc5-evidence-remediation",
+  "final_working_tree": "dirty_tree: exactly three intentionally preserved archive artifacts remain untracked; no staged changes.",
+  "next_action": "Obtain separately authorized browser/AT/zoom/reflow/offline evidence before any final release claim."
 }

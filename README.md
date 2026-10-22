@@ -8,19 +8,28 @@ Run commands from the repository root with Python 3.10 or newer. Use the reposit
 
 ```bash
 python -m compileall -q electre3 app
+python -m electre3.cli examples/assets_priority/matrix_with_headers.csv examples/assets_priority/criteria.json -y
+```
+
+The approved CSV input shape is `(N,C+1)`: string identifier in column zero and `C` normalized numeric scores. A headered CSV preserves its first-column heading; a headerless CSV labels it `Asset ID`. IDs must be nonempty, unique, at most 50 characters, and contain no control characters. `.npy`/`.npz` inputs contain only numeric `(N,C)` cores and receive positional IDs (`0`, `1`, ...).
+
+Expected sample output:
+
+```text
+Ranking:
+  1. B
+  2. A
+  3. C
+```
+
+Use the converter only when you need a numeric NumPy core. It validates and removes the specified identifier column; retaining source IDs requires keeping and using the original CSV.
+
+```bash
 python scripts/convert_matrix_csv.py examples/assets_priority/matrix_with_headers.csv out/assets_priority_cli.npy --has-header --id-col Asset
 python -m electre3.cli out/assets_priority_cli.npy examples/assets_priority/criteria.json -y
 ```
 
-The ranking output contains:
-
-```text
-1. Alt 1
-2. Alt 0
-3. Alt 2
-```
-
-The CLI prints zero-based indices. `examples/assets_priority/asset_names.txt` maps this example to `B > A > C`. This ordering is evidence for the committed sample data, not a universal result. The ranking uses raw net flow, <var>Φ</var>(a) = Σ<sub>b</sub> S(a,b) − Σ<sub>b</sub> S(b,a), ordered highest first. Scores are not normalized. Exact ties have no documented stable order.
+The converted NumPy ranking prints positional IDs. The ranking uses raw net flow, <var>Φ</var>(a) = Σ<sub>b</sub> S(a,b) − Σ<sub>b</sub> S(b,a), ordered highest first. Scores are normalized to `[0,1]`. Minimize criteria have the approved `1-g` meaning; pairwise evaluation directly computes the equivalent `g(b)-g(a)` for numerical stability. Exact ties have no documented stable order.
 
 ## Choose a path
 
@@ -40,7 +49,7 @@ Open `http://127.0.0.1:5000/app/`. Provide criteria and a matrix, review the pre
 
 ## Validation and recovery
 
-The validator rejects missing criterion fields, invalid thresholds, missing or non-finite matrix values, values outside `[0,1]`, and header/criteria order mismatches. Correct the input or use the approved CSV missing-value replacement during preview; do not bypass validation.
+The validator rejects missing criterion fields, invalid thresholds, missing or non-finite matrix values, values outside `[0,1]`, invalid identifiers, and header/criteria order mismatches. Correct the input or use the approved CSV missing-value replacement during preview; do not bypass validation.
 
 ## Documentation status
 

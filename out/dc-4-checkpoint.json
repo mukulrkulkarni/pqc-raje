@@ -1,0 +1,45 @@
+{
+  "chunk": "DC-4 recovery",
+  "objective": "Resolve only stale D3 documentation assertions and closely related DC-4 placed CLI references for the approved identifier-bearing CSV contract.",
+  "state": "completed",
+  "created_at": "2026-10-22",
+  "updated_at": "2026-10-22",
+  "agent": "Innovium prepared Code specialist, candidate v1",
+  "model": "internal",
+  "scope": {
+    "included": [
+      "Approved DC-4 identifier-bearing CSV migration",
+      "Stale D3 documentation assertions",
+      "Closely related getting-started and website CLI references",
+      "DC-4 test evidence and reviews"
+    ],
+    "excluded": [
+      "DC4.5 criteria-card UI",
+      "Application behavior changes",
+      "D3 layout, styling, hardening, and navigation changes"
+    ]
+  },
+  "contract": {
+    "csv": "(N,C+1), with nonempty unique string identifiers in column zero and C numeric scores",
+    "headerless_label": "Asset ID",
+    "headered_heading": "Preserved",
+    "numpy": "(N,C) numeric core with positional identifiers",
+    "serializer": "v2 preserves identifiers",
+    "minimize": "Semantic 1-g; direct pairwise evaluation preserves IEEE-754 subnormal differences"
+  },
+  "acceptance": {
+    "initial_d3_failure": "3 failed, 6 passed; stale Alt N, Mermaid, and obsolete output wording",
+    "d3_documentation": "python -m pytest tests/test_d3_phase1_docs.py -q -> 9 passed in 0.09s",
+    "focused_dc4": "python -m pytest tests/test_dc4_cli_converter_migration.py tests/test_convert_matrix_csv.py tests/test_dc1_contract.py tests/test_dc2_identifier_migration.py tests/test_dc3_minimize_transform.py tests/test_serialization.py tests/test_result_cache.py tests/test_security.py tests/test_end_to_end_composition.py tests/test_cli_run.py tests/test_d3_phase1_docs.py -q -> 128 passed in 1.68s",
+    "compile_and_diff": "python -m compileall -q electre3 app scripts tests && git diff --check -> passed; only Git LF-to-CRLF warnings",
+    "full_suite": "python -m pytest tests -q -> 917 passed in 9.26s"
+  },
+  "reviews": {
+    "scientific": "approved; identifier propagation, serializer v2, and direct 1-g/subnormal evidence passed",
+    "engineering": "approved; scoped migration/documentation/test diff passes all checks",
+    "ui_ux": "not required; DC4.5 card UI and page layout/styling were not changed"
+  },
+  "fallback": "Preserve approved files and stop if a regression, scope expansion, stale checkpoint, or unrelated failure appears.",
+  "commit": "efff807 recover_DC4_identifier_CSV_documentation",
+  "next_action": "None; DC-4 recovery is complete after clean-tree verification."
+}

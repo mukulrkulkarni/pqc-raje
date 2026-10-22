@@ -1,148 +1,99 @@
-# CLI Quickstart (CSV → ELECTRE III ranking indices)
+# CLI Quickstart (identifier CSV → ELECTRE III ranking)
 
-This tutorial shows how to run the project’s ranking pipeline from the command line using a CSV matrix and a criteria JSON file.
+This tutorial runs the ranking pipeline using an approved identifier-bearing CSV and a criteria JSON file.
 
-**What you get:** a deterministic ranking of alternative indices. The CLI validates finite matrix scores in `[0,1]`, prints ranking indices, and saves ranking indices when `-o` is used. It does not print or save net-flow scores. Equal internal net-flow values have no documented stable relative order.
+**What you get:** a deterministic ranking of source identifiers. The CLI validates finite normalized scores in `[0,1]`, CSV identifier rules, and ordered header names. It prints the first ten ranked identifiers and saves ranking row indices when `-o` is used. It does not save net-flow scores. Equal internal net-flow values have no documented stable relative order.
 
 ## Phase 1: verify the committed Asset Priority scenario
 
-Run commands from the **repo root** (the directory that contains `electre3/`, `app/`, `docs/`, `tests/`). Use Python 3.10 or newer and the repository environment.
+Run commands from the repository root with Python 3.10 or newer and the repository environment.
 
 ```bash
 python -m compileall -q electre3 app
-python scripts/convert_matrix_csv.py examples/assets_priority/matrix_with_headers.csv out/assets_priority_cli.npy --has-header --id-col Asset
-python -m electre3.cli out/assets_priority_cli.npy examples/assets_priority/criteria.json -y
+python -m electre3.cli examples/assets_priority/matrix_with_headers.csv examples/assets_priority/criteria.json -y
 ```
 
-The ranking output contains `Alt 1`, `Alt 0`, and `Alt 2`. The CLI uses zero-based indices; `examples/assets_priority/asset_names.txt` maps this committed sample to `B > A > C`. This applies to this data revision only. The CLI prints indices only; it does not print net-flow scores. Exact ties have no documented stable order.
+Expected output is `B`, then `A`, then `C`. This applies only to the committed sample data. Exact ties have no documented stable order.
 
-## Prerequisites
+## Data contract
 
-Run commands from the **repo root** (the directory that contains `electre3/`, `app/`, `docs/`, `tests/`).
+### Identifier-bearing CSV
 
-## Data contract (inputs)
+CLI CSV input has shape **`(N,C+1)`**:
 
-### Matrix
+- Column zero is the string identifier for each alternative.
+- The remaining `C` columns are numeric criterion scores in criteria JSON order.
+- Headered CSV preserves its first heading and must list criterion names in exact order.
+- Headerless CSV has no heading and uses the display label `Asset ID`.
+- Identifiers must be nonempty, unique, at most 50 characters, and contain no control characters.
+- Scores must be numeric, finite, and in `[0,1]`.
 
-A matrix `G` with shape **(N, C)**:
-- `N` = number of alternatives (rows)
-- `C` = number of criteria (columns)
+### Numeric NumPy core
 
-Accepted formats:
-- `.csv` — numeric-only (no header row, no ID column) when using `electre3.data.load_matrix`.
-- `.npy` / `.npz` — NumPy arrays (recommended once converted).
-
-Constraints:
-- Values must be numeric, finite, and in `[0,1]`.
-- The CLI validates matrix scores in `[0,1]` before ranking.
-- `electre3.data.load_matrix` loads CSV values as `float64`.
-- `electre3.validate.validate_matrix` enforces: 2-D shape, N≥2, C matches number of criteria, and finite values.
-- Column order must match the order of criteria in your criteria JSON.
+`.npy` and `.npz` inputs have shape **`(N,C)`** and have no source identifiers. The CLI assigns positional identifiers `0`, `1`, ..., `N-1`. Use the original CSV whenever source identifiers must remain visible.
 
 ### Criteria JSON
 
-A JSON **list** of length **C**. Each element describes one criterion:
-- `name` (string)
-- `weight` (float, must be > 0)
-- `q`, `p`, `v` (floats, must satisfy **0 ≤ q ≤ p ≤ v**)
-- `maximize` (bool; set `false` for cost criteria)
+A JSON list of length `C`. Each criterion has `name`, `weight`, `q`, `p`, `v`, and Boolean `maximize`. Thresholds satisfy `0 ≤ q ≤ p ≤ v`; weights sum to `1`.
 
-The CLI reads this file and constructs `CriterionConfig` objects.
+## Prepare inputs
 
-## Dependency map (pipeline)
+### Headered CSV
 
-The Mermaid flowchart is used because common repository renderers support it without an additional build step. Graphviz DOT and an ASCII box diagram are omitted because they add rendering work or maintenance burden.
-
-```mermaid
-flowchart TD
-  A[CSV/.npy matrix] --> B[electre3.data.load_matrix]
-  C[criteria.json] --> D[electre3.cli_run.run_ranking]
-  B --> D
-  D --> E[electre3.ranking.compute_ranking]
-  E --> F[electre3.block.compute_block]
-  F --> G[electre3.accumulator.NetFlowAccumulator.update]
-  G --> H[net_flow = outflow - inflow]
-  H --> I[ranking: raw net flow desc]
+```csv
+Asset,E,X,O
+A,0.90,0.40,0.60
+B,0.60,0.90,0.70
+C,0.70,0.60,0.50
 ```
 
-Fallback (plaintext):
-- Load matrix → validate thresholds and matrix → build blocks → compute S blocks → accumulate O(N) flows → sort by raw net flow.
-
-Blockwise detail:
-- Pairwise intermediates: `diff`, `c_j`, `d_j` have shape (B1, B2, C).
-- Credibility block: `S_block` has shape (B1, B2).
-- Accumulator keeps two length-N vectors (`outflow`, `inflow`) for O(N) storage.
-
-## Step 1 — Prepare inputs
-
-### Option A: already-clean numeric CSV
-
-If your CSV has **no headers** and **no ID column**, you can run the CLI directly.
-
-### Option B: real-world CSV (header and/or ID column)
-
-Use the converter to produce a strict numeric `.npy` matrix.
-
-Example:
-```bash
-python scripts/convert_matrix_csv.py in.csv out/matrix.npy --has-header --id-col Asset
-```
-
-Notes:
-- `--id-col` accepts a header name (when `--has-header`) or a 0-based index.
-- Empty cells are rejected by default. Use `--fill-empty 0` only if that is valid for your model.
-
-## Step 2 — Run the CLI
-
-### Run (with preview + confirmation)
+Run it directly:
 
 ```bash
-python -m electre3.cli out/matrix.npy criteria.json -b 1000
+python -m electre3.cli matrix.csv criteria.json -y
 ```
 
-- The CLI prints a preview and asks `Proceed? [y/N]`.
-- Use `-b/--block-size` to control blockwise memory.
+### Headerless CSV
 
-### Run non-interactively
+Remove the header but retain identifier column zero:
+
+```csv
+A,0.90,0.40,0.60
+B,0.60,0.90,0.70
+```
+
+The loader labels its identifier column `Asset ID`. Header detection is automatic only when the first row exactly matches the criteria names after its identifier heading; callers that use `load_input` can select `header_mode` explicitly.
+
+### Convert deliberately to NumPy
 
 ```bash
-python -m electre3.cli out/matrix.npy criteria.json -b 1000 -y
+python scripts/convert_matrix_csv.py matrix.csv out/matrix.npy --has-header --id-col Asset
+python -m electre3.cli out/matrix.npy criteria.json -y
 ```
 
-### Save output
+The converter validates the removed IDs and emits only the numeric core. The subsequent NumPy CLI run prints positional IDs. Empty numeric cells fail unless `--fill-empty` supplies a finite model-approved value.
+
+## CLI options
 
 ```bash
-python -m electre3.cli out/matrix.npy criteria.json -b 1000 -y -o out/ranking.npy
+python -m electre3.cli matrix.csv criteria.json -b 1000
+python -m electre3.cli matrix.csv criteria.json -b 1000 -y
+python -m electre3.cli matrix.csv criteria.json -b 1000 -y -o out/ranking.npy
 ```
 
-Output contract:
-- The CLI prints the top-ranked alternatives as **indices** (`Alt 0`, `Alt 1`, …), not net-flow scores.
-- Saved output is a NumPy array of indices ordered best → worst, not net-flow scores.
-- Net flow drives the internal ordering but is not exposed by this CLI output contract.
+- Without `-y`, the CLI prints a preview and asks for confirmation.
+- `-b/--block-size` controls blockwise memory.
+- `-o` saves ranking row indices, ordered best to worst.
 
-## How to interpret results
+## Direction and interpretation
 
-Net flow is computed from credibility values **S(a,b)**, where **a** and **b** are alternative objects and S(a,b) is the credibility of “a outranks b”. In blockwise computation, block rows and columns are comparison groups of alternatives.
+Net flow is `φ(a) = Σ_b S(a,b) − Σ_b S(b,a)`, ranked descending. The diagonal is excluded. Minimize criteria have the approved normalized `1-g` meaning. The implementation evaluates pairwise values directly as `g(b)-g(a)` for numerical stability, including subnormal binary64 inputs.
 
-Definitions (diagonal excluded):
-- outgoing flow φ⁺(a) = Σ_b S(a,b)
-- incoming flow φ⁻(a) = Σ_b S(b,a)
-- net flow φ(a) = φ⁺(a) − φ⁻(a)
-
-Diagonal handling:
-- The pipeline clears self-comparisons by setting S(a,a)=0 in diagonal blocks (`compute_block(..., is_diagonal=True)`).
-
-This project ranks by **raw** φ(a) (descending). Equal φ values indicate ties in the net-flow score.
-
-## References (repo links)
+## References
 
 - CLI entrypoint: `electre3/cli.py`
-- CSV/NumPy loader: `electre3/data.py` (`load_matrix`)
+- CSV/NumPy loader: `electre3/data.py` (`load_input`)
 - CSV converter: `scripts/convert_matrix_csv.py`
-- CLI runner: `electre3/cli_run.py` (`run_ranking`, `format_preview`)
-- Ranking pipeline: `electre3/ranking.py` (`compute_ranking`)
-- Block computation: `electre3/block.py` (`compute_block`)
-- Accumulator: `electre3/accumulator.py` (`NetFlowAccumulator`)
+- Shared validator: `electre3/shared.py`
+- Ranking pipeline: `electre3/ranking.py`
 - Debugging playbook: `docs/runbook/debugging.md`
-- Runbook architecture: `docs/runbook/architecture.md`
-- Runbook dependencies: `docs/runbook/dependencies.md`

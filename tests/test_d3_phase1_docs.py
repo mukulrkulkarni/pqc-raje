@@ -27,9 +27,12 @@ def test_phase1_entry_points_publish_verified_cli_commands() -> None:
         text = _read(path)
         for command in (SETUP_CHECK, CONVERT_COMMAND, CLI_COMMAND):
             assert command in text, f"{path} omits {command}"
-        assert "1. Alt 1" in text or "<code>Alt 1</code>" in text
-        assert "Alt 0" in text
-        assert "Alt 2" in text
+        # DC-4 CSV inputs preserve source identifiers; NumPy conversions use positional IDs.
+        assert "B" in text
+        assert "A" in text
+        assert "C" in text
+        assert "(N,C+1)" in text
+        assert "positional" in text
 
 
 def test_phase1_pages_do_not_invent_install_commands() -> None:
@@ -82,7 +85,11 @@ def test_uiux_gate_corrections_preserve_semantics_and_local_links() -> None:
 
     assert "### Chosen" not in quickstart
     assert "### Near-miss" not in quickstart
-    assert "Mermaid flowchart is used because" in quickstart
+    assert "identifier-bearing CSV" in quickstart
+    assert "shape **`(N,C+1)`**" in quickstart
+    assert "Column zero is the string identifier" in quickstart
+    assert "positional identifiers" in quickstart
+    assert "Serializer" not in quickstart  # This D3 tutorial does not claim serializer behavior.
 
 
 def test_uiux_gate_uses_shared_tokens_and_spacing_names() -> None:
@@ -104,11 +111,12 @@ def test_uiux_gate_uses_shared_tokens_and_spacing_names() -> None:
 def test_cli_quickstart_matches_cli_score_and_output_contract() -> None:
     """The quickstart describes strict scores and ranking-index-only CLI output."""
     text = _read(ROOT / "docs" / "tutorials" / "cli_quickstart.md")
-    assert "finite matrix scores in `[0,1]`" in text
-    assert "prints ranking indices" in text
-    assert "saves ranking indices" in text
-    assert "does not print or save net-flow scores" in text
-    assert "not net-flow scores" in text
+    assert "finite normalized scores in `[0,1]`" in text
+    assert "prints the first ten ranked identifiers" in text
+    assert "saves ranking row indices" in text
+    assert "does not save net-flow scores" in text
+    assert "`(N,C+1)`" in text
+    assert "Column zero is the string identifier" in text
 
 
 def test_browser_evidence_names_zoom_as_unverified() -> None:

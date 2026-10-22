@@ -22,7 +22,7 @@
     "regression": "114 passed in 1.45s",
     "compileall_and_diff_check": "passed"
   },
-  "commit": "774b3a8 implement_DC1_identifier_input_contract",
+  "commit": "8cab5db implement_DC1_identifier_input_contract",
   "failure_classification": "dirty_tree",
   "dirty_paths_preserved": [
     "docs/decisions/data-contract-before-after.md",

@@ -58,7 +58,7 @@ The following pre-existing reference/mockup artifacts remain preserved and exclu
 - `out/dc-4-5-single-card-selected.svg`
 - `out/dc-4-5-single-card-unselected.svg`
 
-This recovery creates or updates only DC4.5/DC-5 metadata and notes. A subsequent focused commit must exclude the preserved artifacts. Until that commit and post-commit status check, the repository is **dirty_tree**, not clean.
+This recovery updates only DC4.5/DC-5 metadata and notes. Focused recovery commit `0aee973` (`recover-dc5-release-metadata`) excludes the preserved artifacts. The post-commit status check shows those three preserved artifacts remain untracked; therefore the repository is **dirty_tree**, not clean.
 
 ## Browser limitations
 

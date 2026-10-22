@@ -78,10 +78,28 @@ Checks:
   - `np.isfinite()` summary
   - min/max
 
+## Local launcher
+
+Run both local services from the repository root with one command:
+
+```bash
+python scripts/dev_local.py
+```
+
+The launcher prints `Website: http://127.0.0.1:8000/` and `App: http://127.0.0.1:5000/app/`. Press `Ctrl+C` once to stop both. Set distinct ports when needed:
+
+```bash
+WEBSITE_PORT=8100 APP_PORT=5100 python scripts/dev_local.py
+```
+
+On Windows Command Prompt, use `set WEBSITE_PORT=8100&& set APP_PORT=5100&& python scripts\dev_local.py`. A port conflict or invalid port exits with code `2` before startup URLs print. The launcher binds only `127.0.0.1`; it is not a network deployment.
+
 ## Repro commands
 
 - Main suite:
   - `python -m pytest -q tests/`
+- Launcher lifecycle suite:
+  - `python -m pytest -q tests/test_dev_local.py`
 
 ## CSV input: common failure and fix
 

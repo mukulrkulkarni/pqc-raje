@@ -1,0 +1,47 @@
+{
+  "chunk": "Single Launcher Implementation",
+  "state": "checkpointed",
+  "agent": "Innovium prepared Code specialist, candidate v1",
+  "model": "internal",
+  "created_at": "2026-10-22",
+  "objective": "Implement and verify a one-command local launcher for the companion website and Flask app.",
+  "scope": [
+    "scripts/dev_local.py",
+    "tests/test_dev_local.py",
+    "README.md",
+    "docs/GETTING_STARTED.html",
+    "docs/runbook/debugging.md",
+    "docs/decisions/launcher-documentation-notes.md",
+    "docs/decisions/launcher-engineering-review.md"
+  ],
+  "acceptance_tests": {
+    "command": "python -m pytest -q tests/test_dev_local.py",
+    "result": "7 passed in 6.06s",
+    "coverage": [
+      "both services start, print URLs, and answer over loopback HTTP",
+      "Windows console break/Ctrl+C shutdown closes both ports without orphan listeners",
+      "occupied port fails deterministically before URLs print",
+      "invalid ports and matching ports fail deterministically",
+      "child failure stops the peer and returns a nonzero result"
+    ]
+  },
+  "static_checks": [
+    {
+      "command": "python -m compileall -q scripts/dev_local.py tests/test_dev_local.py",
+      "result": "passed"
+    },
+    {
+      "command": "git diff --check -- launcher-scoped files",
+      "result": "passed; CRLF conversion warnings only"
+    }
+  ],
+  "engineering_review": "docs/decisions/launcher-engineering-review.md",
+  "fallback": "Use isolated Python subprocess tests with ephemeral loopback ports; preserve evidence if verification fails.",
+  "limitations": [
+    "Browser reflow, zoom, keyboard, offline, screen-reader/assistive-technology, and load checks remain deferred and non-blocking.",
+    "Launcher verification covers local loopback lifecycle and HTTP reachability only."
+  ],
+  "last_action": "Implemented, tested, compiled, diff-checked, and reviewed launcher scope.",
+  "next_action": "Commit only launcher-scoped files, then verify approved scope is clean.",
+  "repository_state": "Pending focused commit and post-commit status check."
+}

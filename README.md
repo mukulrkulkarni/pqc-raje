@@ -41,11 +41,21 @@ The converted NumPy ranking prints positional IDs. The ranking uses raw net flow
 
 ## Local web workflow
 
+Run one command from the repository root:
+
 ```bash
 python scripts/dev_local.py
 ```
 
-Open `http://127.0.0.1:5000/app/`. Provide criteria and a matrix, review the preview, confirm the input, and compute the ranking. The app serves HTML without JavaScript. Browser reflow, browser zoom, keyboard, offline, and screen-reader evidence remain unverified as documented.
+The launcher starts the companion website at `http://127.0.0.1:8000/` and the Flask app at `http://127.0.0.1:5000/app/`. It prints the effective URLs. Press `Ctrl+C` once to stop both services. Configure distinct loopback ports when needed:
+
+```bash
+WEBSITE_PORT=8100 APP_PORT=5100 python scripts/dev_local.py
+```
+
+On Windows Command Prompt, use `set WEBSITE_PORT=8100&& set APP_PORT=5100&& python scripts\dev_local.py`.
+
+Provide criteria and a matrix in the app, review the preview, confirm the input, and compute the ranking. The app serves HTML without JavaScript. Browser reflow, browser zoom, keyboard, offline, and screen-reader evidence remain unverified as documented.
 
 ## Validation and recovery
 

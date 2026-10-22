@@ -1,24 +1,30 @@
-# DC-3 documentation notes
+# DC-3 documentation notes — superseded
 
-## Current and target status
+> **Superseded on 2026-10-22 by [DC-3 recovery notes](dc-3-recovery-notes.md).**
+> The recovery implements stable direct pairwise evaluation, restores the shared
+> closed `[0,1]` validation boundary, and records passing scientific and
+> regression evidence. This retained record describes the pre-recovery failure
+> only. Do not use it as current implementation, validation, or release status.
 
-**Current implementation:** `electre3/ranking.py` transforms every normalized minimize column with `1.0 - g` before pairwise computation. DC-1 proves ordinary boundary translation for `g = 0`, `0.5`, and `1`.
+## Historical pre-recovery status
 
-**Target contract:** prove the approved `maximize=False -> 1-g` transformation against the former `-g` representation for normalized scores, including ordinary and IEEE-754 boundaries. The target also requires q/p/v boundary, veto, tie, mixed-direction, and raw-net-flow evidence.
+**Current implementation at the time:** `electre3/ranking.py` transformed every normalized minimize column with `1.0 - g` before pairwise computation. DC-1 proved ordinary boundary translation for `g = 0`, `0.5`, and `1`.
 
-**Status: blocked — not finalized.** DC-3 stopped before review, regression, and commit because the required IEEE-754 pairwise-difference invariance fails in the current implementation.
+**Target contract at the time:** prove the approved `maximize=False -> 1-g` transformation against the former `-g` representation for normalized scores, including ordinary and IEEE-754 boundaries. The target also required q/p/v boundary, veto, tie, mixed-direction, and raw-net-flow evidence.
 
-## Proof and failure evidence
+**Historical status: blocked — not finalized.** DC-3 stopped before review, regression, and commit because the required IEEE-754 pairwise-difference invariance failed in that implementation.
+
+## Historical proof and failure evidence
 
 In exact arithmetic,
 
 `(1 - g_a) - (1 - g_b) = (-g_a) - (-g_b) = g_b - g_a`.
 
-In binary64 arithmetic, subtraction of a subnormal score from `1.0` rounds to `1.0`. For `g = nextafter(0.0, 1.0)`, the transformed pairwise difference is `0.0`, while the former negative representation retains `5e-324`. The focused scientific test also observed a one-ULP raw-net-flow difference for `nextafter(0.25, 0.0)`.
+In binary64 arithmetic, subtraction of a subnormal score from `1.0` rounds to `1.0`. For `g = nextafter(0.0, 1.0)`, the transformed pairwise difference was `0.0`, while the former negative representation retained `5e-324`. The focused scientific test also observed a one-ULP raw-net-flow difference for `nextafter(0.25, 0.0)`.
 
-The input validator additionally rejects non-finite values but does not itself enforce the claimed closed normalized interval `[0,1]`; `nextafter(0.0, -1.0)` and `nextafter(1.0, 2.0)` reach ranking without an exception.
+The input validator at that time additionally rejected non-finite values but did not itself enforce the claimed closed normalized interval `[0,1]`; `nextafter(0.0, -1.0)` and `nextafter(1.0, 2.0)` reached ranking without an exception.
 
-## Tests by category
+## Historical tests by category
 
 | Category | Evidence | Result |
 |---|---|---|
@@ -29,18 +35,20 @@ The input validator additionally rejects non-finite values but does not itself e
 | Negative | non-finite score rejection | Passed |
 | Normalized boundary | values just below `0` and above `1` | Failed; no `ValueError` |
 
-## Command and result
+## Historical command and result
 
 `python -m pytest tests/test_dc3_minimize_transform.py -q`
 
-Result: `3 failed, 10 passed in 0.49s`.
+Historical result: `3 failed, 10 passed in 0.49s`.
 
 Failures: exact old-`-g` raw-flow equality at `nextafter(0.25, 0.0)`; pairwise-difference equality at `nextafter(0.0, 1.0)`; rejection of just-outside `[0,1]` values.
 
-## Tutorial notes
+## Historical tutorial warning
 
-Do not publish a tutorial claim that `1-g` is bitwise equivalent to `-g` for all IEEE-754 normalized inputs. The ordinary mathematical identity remains valid, but the current floating-point implementation lacks the required subnormal invariant proof.
+Do not publish a tutorial claim that explicitly materialized `1-g` is bitwise equivalent to `-g` for all IEEE-754 normalized inputs. The ordinary mathematical identity remained valid, but that floating-point implementation lacked the required subnormal invariant proof.
 
-## Limitations and next action
+## Historical limitation and next action
 
-No Scientific or Engineering approval was obtained, because the mandatory stop condition occurred before review. No UI/UX review is required: this chunk changes no user-facing output or layout. No relevant regression suite, compileall check, diff acceptance check, or commit was run after the failed focused acceptance test. A new approved recovery scope must decide whether to constrain accepted score granularity, reformulate pairwise computation, or revise the required IEEE-754 contract; this DC-3 scope must not expand unilaterally.
+No Scientific or Engineering approval was obtained at this historical checkpoint because the mandatory stop condition occurred before review. No UI/UX review was required: that chunk changed no user-facing output or layout. No relevant regression suite, compileall check, diff acceptance check, or commit was run after the failed focused acceptance test.
+
+**Current authority:** [DC-3 recovery notes](dc-3-recovery-notes.md).

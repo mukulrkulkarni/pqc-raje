@@ -1,0 +1,80 @@
+{
+  "contract": "DC5 evidence-remediation only",
+  "state": "checkpointed",
+  "created_at": "2026-10-22",
+  "updated_at": "2026-10-22",
+  "agent": "Innovium prepared Code specialist, candidate v1",
+  "model": "unspecified",
+  "objective": "Supersede stale DC3 notes, reconcile DC5 traceability, record reproducible security and branding evidence, archive approved preserved references, obtain bounded release reviews, and commit remediation records only.",
+  "authoritative_inputs": [
+    "docs/decisions/dc-3-documentation-notes.md",
+    "docs/decisions/dc-3-recovery-notes.md",
+    "docs/decisions/dc-5-documentation-notes.md",
+    "out/dc-5-checkpoint.json",
+    "git HEAD before remediation: 6c6b2d478f8fda23e37d17a4134e8e9df19b6c57",
+    "skills/brand-styling-framework/MK-TII-brand-template.json"
+  ],
+  "acceptance_tests": [
+    "full pytest suite passes",
+    "security/cache/runtime and route/CSP evidence passes",
+    "identifier safety positive, negative, and edge coverage passes",
+    "compileall and diff checks pass",
+    "four release-review verdicts are recorded after metadata is current",
+    "focused remediation commit excludes unrelated work"
+  ],
+  "scope_exclusions": [
+    "No application features",
+    "No tutorial rewrite",
+    "No browser, assistive-technology, zoom, reflow, or offline release claim",
+    "No deletion of preserved artifacts"
+  ],
+  "prechange_repository_state": {
+    "head": "6c6b2d478f8fda23e37d17a4134e8e9df19b6c57",
+    "head_subject": "record-dc5-recovery-commit-state",
+    "unrelated_untracked": [
+      "attachments/clipboard-2026-10-22_05-35-51.png",
+      "out/dc-4-5-single-card-selected.svg",
+      "out/dc-4-5-single-card-unselected.svg"
+    ]
+  },
+  "traceability": {
+    "dc5_metadata_commit": "0aee973678f7395aa77e3ca24741c6a86eacd5d6",
+    "dc5_metadata_subject": "recover-dc5-release-metadata",
+    "pre_remediation_head": "6c6b2d478f8fda23e37d17a4134e8e9df19b6c57",
+    "pre_remediation_head_subject": "record-dc5-recovery-commit-state",
+    "dc45_implementation_commit": "cd6b3cf6765e26823b98fc31761b4aecb37a790e"
+  },
+  "evidence": {
+    "full_suite": "python -m pytest tests -q => 932 passed in 8.62s",
+    "security_cache_runtime_routes": "python -m pytest tests/test_security.py tests/test_security_headers.py tests/test_runtime.py tests/test_result_cache.py tests/test_app_workflow.py -q => 57 passed in 1.57s",
+    "identifier_boundary": "python -m pytest tests/test_dc2_identifier_migration.py tests/test_dc45_criteria_cards.py tests/test_serialization.py tests/test_dc3_minimize_transform.py -q => 54 passed in 0.90s",
+    "syntax_diff": "python -m compileall -q electre3 app tests && git diff --check && git diff --cached --check => exit code 0",
+    "security_bundle": "docs/decisions/dc-5-security-evidence.md",
+    "brand_archive_bundle": "docs/decisions/dc-5-branding-and-archive-notes.md"
+  },
+  "reviews": {
+    "scientific": "APPROVED; docs/decisions/dc-5-release-reviews.md",
+    "engineering": "APPROVED; docs/decisions/dc-5-release-reviews.md",
+    "security": "APPROVED; docs/decisions/dc-5-release-reviews.md",
+    "uiux": "APPROVED WITH DEFERRED LIMITATIONS; docs/decisions/dc-5-release-reviews.md"
+  },
+  "archived_preserved_artifacts": {
+    "archive_path": "out/archive/dc-5-preserved-references",
+    "manifest": "out/archive/dc-5-preserved-references/ARCHIVE-MANIFEST.md",
+    "items": [
+      "clipboard-2026-10-22_05-35-51.png",
+      "dc-4-5-single-card-selected.svg",
+      "dc-4-5-single-card-unselected.svg"
+    ],
+    "commit_status": "intentionally untracked and excluded from focused remediation commit"
+  },
+  "deferred_limitations": [
+    "No browser-rendered evidence",
+    "Assistive-technology behavior unverified",
+    "Keyboard traversal unverified in browser",
+    "Zoom and responsive reflow unverified in browser",
+    "Offline behavior unverified"
+  ],
+  "fallback": "Preserve verified records and report dirty_tree if focused commit succeeds while preserved archive files remain untracked.",
+  "next_action": "Inspect scope diff, commit only remediation documentation/checkpoint records, then verify final status and commit traceability."
+}

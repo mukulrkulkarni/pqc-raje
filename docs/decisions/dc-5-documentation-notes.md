@@ -1,69 +1,47 @@
-# DC-5 documentation notes — recovery checkpoint
+# DC5 documentation notes — evidence remediation
 
 ## Scope and authority
 
-- Approved scope: reconcile stale DC4.5/DC-5 status metadata and verify the existing DC-5 release evidence.
+- Approved scope: documentation/evidence remediation only; no application feature or tutorial rewrite.
+- Current pre-remediation `HEAD`: `6c6b2d478f8fda23e37d17a4134e8e9df19b6c57` — `record-dc5-recovery-commit-state`.
+- Preceding DC5 metadata commit: `0aee973678f7395aa77e3ca24741c6a86eacd5d6` — `recover-dc5-release-metadata`.
 - Authoritative implementation commits: DC-1 `8cab5db`, DC-2 `62f461b`, DC-3 `36b2bb0`, DC-4 `e111b46`, and DC4.5 `cd6b3cf`.
-- DC4.5 commit identity is verified as `cd6b3cf6765e26823b98fc31761b4aecb37a790e` (`implement-dc45-criteria-card-ui`).
-- No application feature, tutorial, or test logic changed during this recovery.
+- DC4.5 commit identity: `cd6b3cf6765e26823b98fc31761b4aecb37a790e` — `implement-dc45-criteria-card-ui`.
 
-## Metadata reconciliation
+## Remediation completed before focused commit
 
-The former DC-5 blocker was stale text in `docs/decisions/dc-4-5-documentation-notes.md` stating that no commit existed and that engineering verification and commit remained required. That text is corrected.
+1. `docs/decisions/dc-3-documentation-notes.md` now clearly identifies itself as historical and superseded by `dc-3-recovery-notes.md`; its failure history is preserved.
+2. [DC5 security evidence](dc-5-security-evidence.md) records exact current commands/results for full suite, CSP, security/cache/runtime, download/session/token behavior, identifier safety, and positive/negative/edge coverage.
+3. [DC5 branding and archive notes](dc-5-branding-and-archive-notes.md) verifies static brand alignment with `skills/brand-styling-framework/MK-TII-brand-template.json` and identifies browser/AT/zoom/reflow/offline as deferred limitations.
+4. Preserved untracked screenshot/mockup references moved without deletion to `out/archive/dc-5-preserved-references/`; [its manifest](../../out/archive/dc-5-preserved-references/ARCHIVE-MANIFEST.md) records provenance and classification.
+5. [DC5 bounded release reviews](dc-5-release-reviews.md) records Scientific, Engineering, Security, and UI/UX verdicts after evidence metadata became current.
 
-| Item | Actual gate state |
-| --- | --- |
-| DC4.5 implementation | **Committed** in `cd6b3cf`. |
-| DC4.5 focused UI evidence | **Passed:** 64 tests in the fresh DC-5 rerun. |
-| DC-5 validation evidence | **Passed:** full suite and required category reruns. |
-| DC-5 Scientific review | **Requested; verdict pending.** |
-| DC-5 Engineering review | **Requested; verdict pending.** |
-| DC-5 Security review | **Requested; verdict pending.** |
-| DC-5 UI/UX review | **Requested; verdict pending.** |
-| DC-5 release acceptance | **Not asserted:** four requested review verdicts are not yet recorded. |
-
-## Executed validation evidence
+## Current executed validation evidence
 
 | Category | Command | Result |
 | --- | --- | --- |
-| Full suite | `python -m pytest tests -q` | `932 passed in 9.69s` |
-| DC1–DC4.5 contract/serialization/cache/security/runtime/end-to-end/link regression | `python -m pytest tests/test_dc1_contract.py tests/test_dc2_identifier_migration.py tests/test_dc3_minimize_transform.py tests/test_dc4_cli_converter_migration.py tests/test_dc45_criteria_cards.py tests/test_serialization.py tests/test_result_cache.py tests/test_security.py tests/test_security_headers.py tests/test_runtime.py tests/test_end_to_end_composition.py tests/test_local_document_links.py -q` | `128 passed in 2.73s` |
-| Security/cache/runtime | `python -m pytest tests/test_security.py tests/test_security_headers.py tests/test_runtime.py tests/test_result_cache.py -q` | `45 passed in 1.43s` |
-| Local reproducibility | `python -m pytest tests/test_cli_run.py tests/test_convert_matrix_csv.py tests/test_app_workflow.py -q` | `36 passed in 1.17s`; no persistent service started |
-| DC4.5 UI/CSP/no-JavaScript | `python -m pytest tests/test_dc45_criteria_cards.py tests/test_active_template_ui.py tests/test_ui_styles.py tests/test_security_headers.py -q` | `64 passed in 1.37s` |
-| Syntax and diff | `python -m compileall -q electre3 app tests && git diff --check && git diff --cached --check` | Exit code `0` |
+| Full suite | `python -m pytest tests -q` | `932 passed in 8.62s` |
+| Security/cache/runtime/workflow routes | `python -m pytest tests/test_security.py tests/test_security_headers.py tests/test_runtime.py tests/test_result_cache.py tests/test_app_workflow.py -q` | `57 passed in 1.57s` |
+| Identifier/card/serialization/DC3 boundary evidence | `python -m pytest tests/test_dc2_identifier_migration.py tests/test_dc45_criteria_cards.py tests/test_serialization.py tests/test_dc3_minimize_transform.py -q` | `54 passed in 0.90s` |
+| Syntax and whitespace diff | `python -m compileall -q electre3 app tests && git diff --check && git diff --cached --check` | exit code `0` |
 
-The covered tests include positive paths, negative validation/error paths, and edge boundaries. In particular, the DC4.5 suite exercises successful two-criterion submission, invalid one-criterion and malformed-selected input rejection, eight-selected maximum acceptance, and ignored malformed input for unchecked criteria. Contract suites cover identifier propagation, serializer v2, direct 1-g invariance, cache/download/session, security, runtime, end-to-end, and local-document-link behavior.
+The commands cover positive workflow and download paths, negative security/validation paths, and boundary/concurrency/identifier/selection/IEEE-754 edge cases. See the security bundle for test-level details.
 
-## Documentation audit
+## Reviews
 
-The stale DC4.5 status statements were replaced with the verified commit identity and current gate state. No stale `No commit was created` or `Final engineering verification and commit remain required` marker remains in the corrected DC4.5 note.
+| Review | Verdict | Basis |
+| --- | --- | --- |
+| Scientific | **APPROVED** | DC3 stable direct evaluation and positive/negative/edge evidence reviewed. |
+| Engineering | **APPROVED** | Traceability, exact commands, focused scope, and reproducibility evidence reviewed. |
+| Security | **APPROVED** | Header, cache, download, session/token, identifier, and runtime evidence reviewed. |
+| UI/UX | **APPROVED WITH DEFERRED LIMITATIONS** | Static brand/UI semantics and card tests reviewed; no browser claim. |
 
-## Requested release reviews
+The review details and limitations are authoritative in [DC5 bounded release reviews](dc-5-release-reviews.md).
 
-After metadata reconciliation, the following bounded reviews are requested against the recorded evidence and current repository state:
+## Deferred limitations and release boundary
 
-- **Scientific:** DC1–DC3 contracts, direct 1-g invariance, serializer result integrity, and positive/negative/edge evidence.
-- **Engineering:** test evidence, reproducibility, documentation-state consistency, and commit scope.
-- **Security:** cache/download/session/security/runtime evidence and no-JavaScript/CSP regression coverage.
-- **UI/UX:** DC4.5 card UI/CSP/no-JavaScript evidence and declared browser limitations.
+No browser automation or rendered-browser evidence was obtained. Browser/assistive-technology behavior, keyboard traversal, zoom, responsive reflow, offline operation, and load performance remain deferred limitations. This remediation records no final release claim.
 
-No reviewer verdict is fabricated in this record. Release acceptance remains blocked until these reviews are recorded.
+## Commit and tree boundary
 
-## Preserved untracked artifacts and repository state
-
-The following pre-existing reference/mockup artifacts remain preserved and excluded from this scope:
-
-- `attachments/clipboard-2026-10-22_05-35-51.png`
-- `out/dc-4-5-single-card-selected.svg`
-- `out/dc-4-5-single-card-unselected.svg`
-
-This recovery updates only DC4.5/DC-5 metadata and notes. Focused recovery commit `0aee973` (`recover-dc5-release-metadata`) excludes the preserved artifacts. The post-commit status check shows those three preserved artifacts remain untracked; therefore the repository is **dirty_tree**, not clean.
-
-## Browser limitations
-
-No current rendered-browser check was run. Keyboard traversal, focus presentation, zoom, responsive reflow, assistive-technology behavior, offline behavior, and load-performance behavior remain unverified. The Innovium Project Plan/Scratch Pad is an external overlay, not application HTML.
-
-## Next action
-
-Record all four review verdicts without expanding feature scope. Then commit only accepted DC4.5/DC-5 metadata, notes, and required evidence artifacts; preserve the listed untracked reference/mockup artifacts and classify the final tree as dirty if they remain.
+The focused remediation commit must contain only DC5 documentation/checkpoint records and the DC3 supersession marker. The preserved reference archive remains intentionally untracked and excluded from that commit, so the post-commit repository state is expected to be **dirty_tree**. No unrelated work may be deleted, staged, or committed.

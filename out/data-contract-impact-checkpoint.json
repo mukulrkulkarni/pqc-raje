@@ -1,0 +1,92 @@
+{
+  "chunk": "data-contract-impact-assessment",
+  "state": "checkpointed",
+  "objective": "Assess the approved identifier-bearing CSV contract and maximize=false transform without implementation or user-facing page edits.",
+  "assigned_agent": "Innovium prepared Code specialist, candidate v1",
+  "model": "API-hosted model; resolved identifier unavailable",
+  "state_transitions": [
+    {
+      "state": "planned",
+      "evidence": "Pre-existing approved checkpoint"
+    },
+    {
+      "state": "active",
+      "evidence": "Read-only inspection of core, workflow, cache, converter, examples, tests, and documentation"
+    },
+    {
+      "state": "checkpointed",
+      "evidence": "Three requested assessment artifacts written and structurally verified"
+    }
+  ],
+  "scope": [
+    "before/after contract",
+    "source impact map",
+    "identifier propagation",
+    "serializer/cache/download impact",
+    "tests/documentation impact",
+    "migration strategy",
+    "maximize=false pairwise-difference proof"
+  ],
+  "authoritative_sources": [
+    "web-app-requirements.txt",
+    "electre3/shared.py",
+    "electre3/data.py",
+    "electre3/ranking.py",
+    "electre3/config.py",
+    "electre3/serialization.py",
+    "app/routes/workflow.py",
+    "app/services/result_cache.py",
+    "scripts/convert_matrix_csv.py",
+    "examples/assets_priority/",
+    "tests/"
+  ],
+  "repository": {
+    "revision_before_assessment": "b7fa080 reconcile-d3-final-gate-records",
+    "working_tree_before_assessment": "out/data-contract-impact-checkpoint.json was untracked; preserved as approved assessment artifact",
+    "commit_policy": "No commit requested; assessment must not claim completed under commit-required implementation policy."
+  },
+  "artifacts": [
+    "docs/decisions/data-contract-impact-assessment.md",
+    "docs/decisions/data-contract-before-after.md",
+    "docs/decisions/data-contract-test-matrix.md",
+    "out/data-contract-impact-checkpoint.json"
+  ],
+  "executed_evidence": {
+    "command": "python -m pytest tests/test_data.py tests/test_ranking.py tests/test_serialization.py tests/test_app_workflow.py tests/test_result_cache.py tests/test_cli_run.py tests/test_convert_matrix_csv.py tests/test_shared_contract.py -q",
+    "result": "99 passed in 1.35s",
+    "meaning": "Current-behavior regression only; no unimplemented target contract claims."
+  },
+  "verified_findings": [
+    "Headered web CSV already parses a column-zero identifier, but shared result construction replaces it with positional strings.",
+    "Headerless web CSV currently expects C numeric cells and fabricates positional identifiers.",
+    "Result serializers already carry RankingResult.identifiers.",
+    "Ranking minimize adjustment currently uses -g.",
+    "Cache/download stores exact serializer bytes with checksums and session-bound token checks."
+  ],
+  "recommendations": [
+    "Use a parsed identifier-plus-scores model and keep the core score matrix numeric (N,C).",
+    "Require both CSV modes to use (N,C+1), preserving headered source heading and assigning headerless Asset ID.",
+    "Adopt explicit numeric-only NumPy compatibility and identifier sidecar/structured-input policy.",
+    "Replace -g with 1-g only in separately authorized implementation after scientific test evidence.",
+    "Resolve serializer-version policy before release."
+  ],
+  "acceptance_test": "Requested documents exist, identify verified behavior separately from recommendations, include contract/migration/evidence scope, and report no implementation.",
+  "fallback": "Preserve a read-only assessment and stop rather than edit implementation files.",
+  "stop_conditions": [
+    "identifier loss",
+    "ambiguous NumPy policy",
+    "serializer mismatch",
+    "missing test categories",
+    "scope expansion"
+  ],
+  "exclusions": [
+    "implementation",
+    "page edits",
+    "D3 implementation reopening",
+    "commits",
+    "external services",
+    "browser acceptance claims"
+  ],
+  "next_action": "PI review of assessment artifacts and separate authorization before any implementation chunk.",
+  "final_status": "checkpointed"
+}

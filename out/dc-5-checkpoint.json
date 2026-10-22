@@ -50,5 +50,5 @@
     "out/dc-4-5-single-card-unselected.svg"
   ],
   "fallback": "Preserve verified metadata and evidence; stop release acceptance until all four review verdicts exist.",
-  "next_action": "Collect four bounded release-review verdicts. Do not assert release acceptance. Commit the approved DC-5 records after review outcomes are recorded."
+  "next_action": "Evidence remediation reviews are recorded; final release remains bounded by documented browser/AT/zoom/reflow/offline limitations and preserved archive classification."
 }

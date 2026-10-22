@@ -3,8 +3,8 @@
 ## Scope and authority
 
 - Approved scope: documentation/evidence remediation only; no application feature or tutorial rewrite.
-- Current pre-remediation `HEAD`: `6c6b2d478f8fda23e37d17a4134e8e9df19b6c57` — `record-dc5-recovery-commit-state`.
-- Preceding DC5 metadata commit: `0aee973678f7395aa77e3ca24741c6a86eacd5d6` — `recover-dc5-release-metadata`.
+- Current verified DC5 evidence head: `0d23d07` — finalized DC5 recovery checkpoint.
+- Earlier DC5 metadata commits: `0aee973` and `6c6b2d4`; superseded by the current evidence records.
 - Authoritative implementation commits: DC-1 `8cab5db`, DC-2 `62f461b`, DC-3 `36b2bb0`, DC-4 `e111b46`, and DC4.5 `cd6b3cf`.
 - DC4.5 commit identity: `cd6b3cf6765e26823b98fc31761b4aecb37a790e` — `implement-dc45-criteria-card-ui`.
 

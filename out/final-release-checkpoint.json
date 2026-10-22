@@ -1,0 +1,54 @@
+{
+  "contract": "Final Release Gate",
+  "state": "completed",
+  "created_at": "2026-10-22",
+  "updated_at": "2026-10-22",
+  "agent": "Innovium prepared Code specialist, candidate v1",
+  "model": "unspecified",
+  "objective": "Run approved final release validation, commit only the three preserved archive artifacts and final release records, and report released with limitations.",
+  "authoritative_inputs": [
+    "out/dc-5-checkpoint.json",
+    "out/dc-5-evidence-remediation-checkpoint.json",
+    "docs/decisions/dc-5-release-reviews.md",
+    "docs/decisions/dc-5-security-evidence.md",
+    "docs/decisions/dc-5-branding-and-archive-notes.md",
+    "current repository source and tests"
+  ],
+  "approved_scope": [
+    "out/archive/dc-5-preserved-references/clipboard-2026-10-22_05-35-51.png",
+    "out/archive/dc-5-preserved-references/dc-4-5-single-card-selected.svg",
+    "out/archive/dc-5-preserved-references/dc-4-5-single-card-unselected.svg",
+    "out/final-release-checkpoint.json",
+    "docs/decisions/final-release-notes.md",
+    "docs/decisions/final-release-executive-summary.md"
+  ],
+  "acceptance_results": {
+    "full_pytest": "python -m pytest tests -q => 932 passed in 8.00s",
+    "release_contract_categories": "python -m pytest tests/test_dc1_contract.py tests/test_dc2_identifier_migration.py tests/test_dc3_minimize_transform.py tests/test_dc4_cli_converter_migration.py tests/test_dc45_criteria_cards.py tests/test_serialization.py tests/test_result_cache.py tests/test_security.py tests/test_security_headers.py tests/test_runtime.py tests/test_end_to_end_composition.py tests/test_local_document_links.py -q => 128 passed in 2.82s",
+    "dc45_ui_csp_no_js": "python -m pytest tests/test_dc45_criteria_cards.py tests/test_active_template_ui.py tests/test_ui_styles.py tests/test_security_headers.py -q => 64 passed in 0.83s",
+    "independent_local_reproducibility": "python -m pytest tests/test_cli_run.py tests/test_convert_matrix_csv.py tests/test_app_workflow.py -q => 36 passed in 0.80s; no persistent service started",
+    "compileall_and_diff": "python -m compileall -q electre3 app tests && git diff --check && git diff --cached --check => exit code 0",
+    "reviews": "Scientific APPROVED; Engineering APPROVED; Security APPROVED; UI/UX APPROVED WITH DEFERRED LIMITATIONS; docs/decisions/dc-5-release-reviews.md"
+  },
+  "release_status": "released with limitations",
+  "limitations": [
+    "No browser-rendered reflow verification",
+    "No zoom verification",
+    "No keyboard verification",
+    "No offline verification",
+    "No screen-reader or assistive-technology verification",
+    "No load-performance verification"
+  ],
+  "checkpoint_paths": [
+    "out/final-release-checkpoint.json",
+    "docs/decisions/final-release-notes.md",
+    "docs/decisions/final-release-executive-summary.md"
+  ],
+  "commit": {
+    "id": "9b9fb5c",
+    "message": "record-final-release-gate",
+    "scope": "Three approved archive artifacts and final release records only."
+  },
+  "working_tree": "clean after the focused commit",
+  "next_action": "None; Final Release Gate accepted with documented limitations."
+}

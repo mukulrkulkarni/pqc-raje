@@ -196,8 +196,8 @@ def test_diagonal_flags_and_local_offdiagonal_positions(monkeypatch) -> None:
     calls: list[tuple[np.ndarray, np.ndarray, bool, np.ndarray]] = []
     real = ranking_module.compute_block
 
-    def spy(rows, cols, q, p, v, w, is_diagonal):
-        S = real(rows, cols, q, p, v, w, is_diagonal)
+    def spy(rows, cols, q, p, v, w, is_diagonal, directions=None):
+        S = real(rows, cols, q, p, v, w, is_diagonal, directions)
         calls.append((rows.copy(), cols.copy(), is_diagonal, S.copy()))
         return S
 

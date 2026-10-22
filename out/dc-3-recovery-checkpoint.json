@@ -1,0 +1,45 @@
+{
+  "chunk": "DC-3 recovery",
+  "objective": "Restore normalized minimize-direction IEEE-754 pairwise invariance with direct differences and retain strict shared CLI/web [0,1] validation.",
+  "state": "checkpointed",
+  "agent": "Innovium Code specialist candidate v1",
+  "model": "internal",
+  "date": "2026-10-22",
+  "authoritative_sources": [
+    "user-approved DC-3 recovery brief",
+    "out/dc-3-checkpoint.json",
+    "docs/decisions/dc-3-documentation-notes.md",
+    "current tracked implementation and tests"
+  ],
+  "changed_paths": [
+    "electre3/block.py",
+    "electre3/ranking.py",
+    "tests/test_dc3_minimize_transform.py",
+    "tests/test_ranking_deep.py",
+    "docs/decisions/dc-3-recovery-notes.md",
+    "out/dc-3-recovery-checkpoint.json"
+  ],
+  "contract": {
+    "semantic_transform": "For normalized minimize scores, maximize=false retains semantic 1-g.",
+    "pairwise_evaluation": "maximize: g(a)-g(b); minimize: g(b)-g(a).",
+    "shared_cli_web_validation": "validate_score_matrix converts to float64 and rejects non-finite scores and all values outside closed [0,1].",
+    "low_level_boundary": "compute_ranking preserves historical arbitrary-scale API; strict normalized validation applies at the shared CLI/web boundary."
+  },
+  "acceptance": {
+    "focused": "python -m pytest tests/test_dc3_minimize_transform.py -q",
+    "focused_result": "16 passed in 0.51s",
+    "relevant_regression": "python -m pytest tests/test_dc3_minimize_transform.py tests/test_validate.py tests/test_ranking.py tests/test_ranking_deep.py tests/test_block.py tests/test_block_deep.py tests/test_shared_contract.py tests/test_serialization.py tests/test_result_cache.py tests/test_app_workflow.py tests/test_end_to_end_composition.py -q",
+    "relevant_regression_result": "152 passed in 1.61s",
+    "full_suite": "python -m pytest tests -q",
+    "full_suite_result": "907 passed in 7.56s",
+    "completed": ["compileall", "git diff --check"],
+    "pending": ["final review of staged diff", "focused commit", "clean-tree verification"]
+  },
+  "reviews": {
+    "scientific": "approved; direct subnormal and threshold-ULP evidence matches independent -g reference",
+    "engineering": "approved; scoped calculation change preserves serializers, cache, download, and strict shared validation",
+    "ui_ux": "not required; no output or layout change"
+  },
+  "fallback": "Preserve this checkpoint and stop without scope expansion if invariance, serializer, evidence, or unrelated-regression acceptance fails.",
+  "next_action": "Run final compile/diff checks, inspect approved paths, commit only approved recovery files, then verify clean tree."
+}

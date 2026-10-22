@@ -1,0 +1,33 @@
+{
+  "chunk": "DC-3",
+  "objective": "Validate the approved normalized-score minimize transformation maximize=false -> 1-g with scientific proof, boundaries, invariance, documentation, and focused regression evidence.",
+  "state": "blocked",
+  "agent": "Innovium Code specialist candidate v1",
+  "model": "internal",
+  "created_at": "2026-10-22",
+  "authoritative_sources": [
+    "user-approved DC-3 brief",
+    "out/dc-2-checkpoint.json",
+    "docs/decisions/dc-2-documentation-notes.md",
+    "current tracked implementation and tests"
+  ],
+  "expected_artifacts": [
+    "out/dc-3-checkpoint.json",
+    "docs/decisions/dc-3-documentation-notes.md",
+    "tests/test_dc3_minimize_transform.py"
+  ],
+  "acceptance": {
+    "focused_command": "python -m pytest tests/test_dc3_minimize_transform.py -q",
+    "result": "3 failed, 10 passed in 0.49s",
+    "failure_evidence": [
+      "Exact raw-net-flow equality to old -g differs by one ULP at nextafter(0.25, 0.0).",
+      "At nextafter(0.0, 1.0), (1-g_a)-(1-g_b) rounds to 0 while (-g_a)-(-g_b) is 5e-324.",
+      "validate_matrix rejects non-finite values but accepts values just outside [0,1]."
+    ],
+    "not_run_after_stop": ["relevant regression suite", "compileall", "final diff check", "Scientific review", "Engineering review", "commit"]
+  },
+  "fallback": "Preserve verified evidence and stop without widening scope if a scientific invariant, serializer contract, or unrelated test fails.",
+  "stop_condition": "invariance failure",
+  "last_action": "Created focused scientific tests and documented the verified IEEE-754 and normalized-range failures.",
+  "next_action": "Obtain new explicit scope before altering numerical formulation or input-validation contract."
+}

@@ -18,8 +18,9 @@ def compute_ranking(
 ) -> tuple[np.ndarray, NetFlowAccumulator]:
     """Compute a complete ranking, checking the supplied monotonic deadline per block.
 
-    A timeout raises before this function returns. Callers therefore cannot serialize
-    an incomplete accumulator as a ranking result.
+    Minimize semantics remain the normalized transform ``1-g``. Pairwise calculation
+    evaluates its equivalent directly as ``g(b)-g(a)`` to avoid loss from storing
+    ``1-g`` near binary64 endpoints.
     """
     if not criteria:
         raise ValueError("criteria list cannot be empty")
@@ -31,21 +32,17 @@ def compute_ranking(
     q = np.array([c.q for c in criteria], dtype=np.float64)
     p = np.array([c.p for c in criteria], dtype=np.float64)
     v = np.array([c.v for c in criteria], dtype=np.float64)
+    directions = np.array([1.0 if c.maximize else -1.0 for c in criteria], dtype=np.float64)
     validate_arrays_match(q, p, v, weights)
-    G_adj = G.copy()
-    for j, criterion in enumerate(criteria):
-        if not criterion.maximize:
-            # Shared validation requires normalized scores in [0, 1].
-            G_adj[:, j] = 1.0 - G_adj[:, j]
     rows, block_size = G.shape[0], config.block_size
     accumulator = NetFlowAccumulator(rows)
     for row_start in range(0, rows, block_size):
         for column_start in range(0, rows, block_size):
             require_before_deadline(deadline)
             credibility = compute_block(
-                G_adj[row_start:min(row_start + block_size, rows)],
-                G_adj[column_start:min(column_start + block_size, rows)],
-                q, p, v, weights, row_start == column_start,
+                G[row_start:min(row_start + block_size, rows)],
+                G[column_start:min(column_start + block_size, rows)],
+                q, p, v, weights, row_start == column_start, directions,
             )
             accumulator.update(credibility, row_start, column_start)
     require_before_deadline(deadline)

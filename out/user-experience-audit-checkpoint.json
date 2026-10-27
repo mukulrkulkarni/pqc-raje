@@ -1,0 +1,94 @@
+{
+  "chunk": "architecture-ux-audit-uiux",
+  "agent": "UI/UX Redesign Agent",
+  "state": "checkpointed",
+  "timestamp": "2026-10-27",
+  "objective": "Audit user stories and journeys for CLI, /app, Getting Started, tutorials, runbooks, companion website, criteria cards, results/downloads, onboarding, errors/recovery, branding/layout/typography/spacing/navigation, semantic math, no-JS boundaries, and browser-deferred limitations.",
+  "companion_audit": {
+    "agent": "Engineering Critic",
+    "path": "docs/decisions/architecture-repository-audit.md",
+    "verdict": "NEEDS WORK"
+  },
+  "scope": [
+    "CLI user stories and journeys",
+    "/app server-rendered no-JS workflow (criteria, matrix, preview, compute, results)",
+    "Getting Started landing page",
+    "Module tutorials and companion website",
+    "Criteria cards UX",
+    "Results/downloads UX",
+    "Onboarding and errors/recovery flows",
+    "Branding, layout, typography, spacing, navigation consistency",
+    "Semantic math rendering",
+    "No-JS boundaries",
+    "Browser-deferred limitations (explicitly scoped as non-blocking)"
+  ],
+  "exclusions": [
+    "Application edits",
+    "Documentation page edits",
+    "Remote Git operations",
+    "Browser, assistive-technology, zoom, reflow, keyboard-execution, and offline/load execution",
+    "Commit"
+  ],
+  "verdict": "NEEDS WORK",
+  "deliverable": "docs/decisions/user-experience-audit.md",
+  "executed_evidence": [
+    {
+      "command": "pytest -q tests/test_docs_routes.py tests/test_app_workflow.py tests/test_module_docs.py tests/test_website_static.py tests/test_local_document_links.py tests/test_ui_styles.py tests/test_active_template_ui.py tests/test_preview_gate.py tests/test_dc45_criteria_cards.py tests/test_style_corrections.py tests/test_security_headers.py",
+      "result": "503 passed in 3.74s",
+      "raw_output": "out/ux_audit_test_evidence.txt"
+    }
+  ],
+  "key_findings": [
+    {
+      "priority": "P0",
+      "finding": "Orphaned JSON-API flow (/preview/<id>, /compute/start) coexists with the real /app no-JS flow, undocumented as legacy; debugging.md section 1 describes the wrong gate/status code for the real /app journey.",
+      "evidence": ["app/routes/preview.py", "app/routes/compute.py", "docs/runbook/debugging.md", "tests/test_app_workflow.py::test_download_rejects_unknown_token_and_preserves_compatibility_routes"]
+    },
+    {
+      "priority": "P1",
+      "finding": "CLI quickstart expected-output claims differ across cli_quickstart.md, GETTING_STARTED.html, and website/index.html for the same committed scenario without explaining the direct-CSV-vs-converted-NumPy identifier labeling difference.",
+      "evidence": ["docs/tutorials/cli_quickstart.md", "docs/GETTING_STARTED.html", "website/index.html"]
+    },
+    {
+      "priority": "P1",
+      "finding": "/app wizard templates have no persistent navigation; mid-flow users have no visible escape hatch except browser Back.",
+      "evidence": ["app/templates/app_input.html", "app/templates/app_matrix.html", "app/templates/app_preview.html", "app/templates/app_results.html"]
+    },
+    {
+      "priority": "P2",
+      "finding": "Design tokens duplicated (not shared) across app/static/style.css and inline <style> blocks in docs/ and website/, with two materially different spacing scales and no sign-posted reason for the density shift.",
+      "evidence": ["app/static/style.css", "docs/GETTING_STARTED.html", "docs/modules/index.html", "docs/modules/ranking_tutorial_side_by_side.html"]
+    },
+    {
+      "priority": "P2",
+      "finding": "Structured-criteria cards default to q=p=v=0 with no inline nudge to set deliberate thresholds before submit.",
+      "evidence": ["app/templates/app_input.html"]
+    },
+    {
+      "priority": "P3",
+      "finding": "Bare Flask 404 for missing module docs gives no link back to /docs/modules.",
+      "evidence": ["app/routes/docs.py", "tests/test_docs_routes.py::TestModuleDocs::test_missing_module_returns_404"]
+    },
+    {
+      "priority": "P3",
+      "finding": "highlight.js ships a ?debug=1 console-logging mode in the production-served asset (no sensitive data observed).",
+      "evidence": ["tests/test_docs_routes.py::TestHighlightJsAsset::test_highlight_js_has_debug_mode"]
+    }
+  ],
+  "positive_findings_summary": [
+    "4-step wizard with explicit step indicators and in-context, field-specific error recovery",
+    "CSS-only criteria-card include/exclude toggle with non-color text badge cue",
+    "Checksum-verified, rate-limited, no-store download path with timeout/infeasibility handling that never publishes partial results",
+    "Semantic HTML math (entities, sup/sub) consistent with no-JS/offline/CSP-strict goals; no renderer-failure risk",
+    "Progressive enhancement pattern (:target CSS fallback plus optional JS) in module tutorials, with documented localStorage-failure handling",
+    "Consistent brand token vocabulary (color/radius/font) across /app, docs, and website despite duplication",
+    "Thorough static/keyboard-source test coverage (Enter/Space, aria-pressed, preventDefault, reduced-motion, missing-element guards)"
+  ],
+  "limitations": [
+    "No live upstream comparison",
+    "No browser, assistive-technology, zoom, reflow, keyboard-execution, or offline/load evidence; all deferred and non-blocking per project policy",
+    "Static/source-level and test-assertion evidence only; not a substitute for browser execution"
+  ],
+  "next_action": "PI consolidates Engineering and UIUX audits, then commits the approved audit chunk after scope and clean-tree review.",
+  "commit": null
+}

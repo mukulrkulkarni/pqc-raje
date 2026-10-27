@@ -49,10 +49,18 @@ def apply_domains(html: str, docs_base: str, app_base: str) -> str:
 
 
 def normalize_tutorial_assets(html: str) -> str:
-    # Tutorials copied under /modules/<name>/tutorial/index.html need ../assets/
-    html = html.replace('src="assets/theme.js"', 'src="../assets/theme.js"')
-    html = html.replace('src="assets/highlight.js"', 'src="../assets/highlight.js"')
-    # Some tutorials already use ../assets; keep stable.
+    """Resolve tutorial assets and repository-reference links after relocation."""
+    html = html.replace('src="assets/theme.js"', 'src="../../assets/theme.js"')
+    html = html.replace('src="assets/highlight.js"', 'src="../../assets/highlight.js"')
+    for source, generated in {
+        '../../README.md': '../../../../README.md',
+        '../tutorials/': '../../../../docs/tutorials/',
+        '../runbook/': '../../../../docs/runbook/',
+        '../../examples/': '../../../../examples/',
+        '../../electre3/': '../../../../electre3/',
+        '../../tests/': '../../../../tests/',
+    }.items():
+        html = html.replace(f'href="{source}', f'href="{generated}')
     return html
 
 

@@ -61,8 +61,17 @@ def _local_errors(path: Path, root: Path) -> list[str]:
 
 def _normalized_generated_source(source: Path) -> str:
     text = source.read_text(encoding="utf-8")
-    text = text.replace('src="assets/theme.js"', 'src="../assets/theme.js"')
-    text = text.replace('src="assets/highlight.js"', 'src="../assets/highlight.js"')
+    text = text.replace('src="assets/theme.js"', 'src="../../assets/theme.js"')
+    text = text.replace('src="assets/highlight.js"', 'src="../../assets/highlight.js"')
+    for source_link, generated_link in {
+        '../../README.md': '../../../../README.md',
+        '../tutorials/': '../../../../docs/tutorials/',
+        '../runbook/': '../../../../docs/runbook/',
+        '../../examples/': '../../../../examples/',
+        '../../electre3/': '../../../../electre3/',
+        '../../tests/': '../../../../tests/',
+    }.items():
+        text = text.replace(f'href="{source_link}', f'href="{generated_link}')
     nav = (
         '<nav class="primary-nav" aria-label="Primary">'
         '<a href="/index.html">Getting Started</a>'
@@ -98,14 +107,13 @@ def test_landing_pages_use_mk_tii_tokens_and_active_navigation() -> None:
 
 def test_owned_html_local_links_and_fragments_resolve() -> None:
     pages = [*TUTORIALS, DOC_MODULES / "index.html", *WEBSITE_MODULES.rglob("*.html")]
-    # Generated tutorials resolve shared assets from website/modules/assets, not their parent.
-    errors = [error for page in pages if "/tutorial/" not in page.as_posix() for error in _local_errors(page, ROOT)]
+    errors = [error for page in pages for error in _local_errors(page, ROOT)]
     for page in WEBSITE_MODULES.glob("*/tutorial/index.html"):
         text = page.read_text(encoding="utf-8")
         assert (WEBSITE_MODULES / "assets" / "theme.js").is_file()
         assert (WEBSITE_MODULES / "assets" / "highlight.js").is_file()
-        assert 'src="../assets/theme.js"' in text
-        assert 'src="../assets/highlight.js"' in text
+        assert 'src="../../assets/theme.js"' in text
+        assert 'src="../../assets/highlight.js"' in text
     assert errors == []
 
 

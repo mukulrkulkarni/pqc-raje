@@ -1,0 +1,42 @@
+{
+  "chunk": "D5 placement correction and re-review",
+  "state": "completed",
+  "base_revision": "1e0d447",
+  "objective": "Correct D5 tutorial placement findings and verify source and generated outputs.",
+  "approved_scope": [
+    "generated tutorial target resolution",
+    "h1 before Mental Model h2",
+    "computed binary64 tie wording",
+    "block-intermediate memory wording",
+    "25-pass evidence reconciliation",
+    "source and generated style/link coverage"
+  ],
+  "ownership": {
+    "editable_source": "docs/modules/ranking_tutorial_side_by_side.html",
+    "generated_output": "website/modules/ranking/tutorial/index.html",
+    "generator": "scripts/build_website.py"
+  },
+  "evidence": {
+    "tests": "26 passed in 2.73s",
+    "independent_reproducibility": "1 passed in 1.17s",
+    "build": "python scripts\\build_website.py: exit 0",
+    "compile": "python -m compileall -q electre3 app scripts tests: exit 0",
+    "diff": "git diff --check and git diff --cached --check: exit 0"
+  },
+  "review_gates": {
+    "scientific": "passed local source-to-claim review",
+    "engineering": "passed local ownership and target-resolution review",
+    "ui_ux": "passed static hierarchy and token review",
+    "independent_reproducibility": "passed subprocess build and D5 suite"
+  },
+  "commit": {
+    "id": "8bb0683",
+    "message": "correct-d5-tutorial-placement"
+  },
+  "working_tree": "clean after commit",
+  "limitations": [
+    "Browser, assistive-technology, keyboard, zoom, reflow, offline, and load evidence remain deferred and non-blocking.",
+    "No remote Git or browser testing is authorized.",
+    "Formal ELECTRE III publication review was not performed."
+  ]
+}

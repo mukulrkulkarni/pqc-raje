@@ -1,0 +1,38 @@
+{
+  "chunk": "D5 placement/reproducibility",
+  "state": "checkpointed",
+  "created_before_changes": true,
+  "base_revision": "1e0d447",
+  "objective": "Place the approved D5 mental-model content in the source-owned ranking tutorial and regenerate its static website output.",
+  "inputs": [
+    "docs/decisions/d5-mental-model-draft.md",
+    "docs/modules/ranking_tutorial_side_by_side.html",
+    "scripts/build_website.py",
+    "skills/brand-styling-framework/MK-TII-brand-template.json"
+  ],
+  "outputs": [
+    "docs/modules/ranking_tutorial_side_by_side.html",
+    "website/modules/ranking/tutorial/index.html",
+    "tests/test_d5_placement.py",
+    "docs/decisions/d5-placement-notes.md"
+  ],
+  "acceptance": {
+    "compileall": "passed",
+    "tests": "33 passed",
+    "static_links": "passed through test_style_corrections",
+    "generator_idempotence": "passed through test_d5_placement and test_style_corrections",
+    "verbatim_claim_checks": "passed through test_d5_placement",
+    "diff_check": "passed"
+  },
+  "review_gates": {
+    "scientific": "requested",
+    "engineering": "requested",
+    "ui_ux": "requested",
+    "user_pi_stage_end": "pending"
+  },
+  "commit": "prohibited until all review and acceptance gates pass",
+  "limitations": [
+    "Browser, assistive-technology, keyboard, zoom, reflow, offline, and load evidence remain deferred and non-blocking.",
+    "No formal ELECTRE III reference was added; the tutorial documents repository implementation behavior."
+  ]
+}

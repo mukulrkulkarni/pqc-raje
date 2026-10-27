@@ -2,7 +2,7 @@
 
 These tests enforce basic hardening invariants for the website/ folder:
 - no external asset references (http/https) except cross-subdomain navigation links
-- tutorial pages reference local assets via ../assets/
+- tutorial pages reference local assets via ../../assets/
 - landing priority exists as pages and links are relative
 
 Note: this validates *repo artifacts*, not a deployed host.
@@ -56,11 +56,11 @@ def test_no_external_assets_in_website_html() -> None:
 
 
 def test_tutorial_pages_reference_local_assets() -> None:
-    """Tutorials copied under /modules/<name>/tutorial/ must use ../assets/"""
+    """Tutorials copied under /modules/<name>/tutorial/ use ../../assets/."""
     for tut in WEBSITE.rglob("modules/*/tutorial/index.html"):
         text = _read(tut)
-        assert 'src="../assets/theme.js"' in text
-        assert 'src="../assets/highlight.js"' in text
+        assert 'src="../../assets/theme.js"' in text
+        assert 'src="../../assets/highlight.js"' in text
 
 
 def test_tutorial_pages_have_primary_nav_back_links() -> None:

@@ -209,6 +209,19 @@ pre code{display:block; white-space:pre;}
 .gnd-content li{margin-bottom:2px;}
 .gnd-content b{color:var(--text); font-weight:600;}
 
+/* D5 mental-model reference uses the shared surface, spacing, cards, tables, and code tokens. */
+.mental-model{margin:0 0 var(--s5);padding:var(--s5);background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);}
+.mental-model h2{margin:0 0 var(--s2);font-size:18px;letter-spacing:-.02em;}
+.mental-model h3{margin:var(--s4) 0 var(--s2);font-size:14px;color:var(--accent);}
+.mental-model p,.mental-model li{color:var(--text-muted);line-height:1.6;}
+.mental-model .lede{margin:0 0 var(--s4);font-size:14px;}
+.mental-model .diagram{margin:var(--s4) 0;padding:var(--s3);border-left:4px solid var(--accent);background:var(--surface-2);font-family:var(--mono);font-size:12px;line-height:1.5;overflow-x:auto;}
+.mental-model table{width:100%;border-collapse:collapse;margin:var(--s3) 0;font-size:12px;}
+.mental-model th,.mental-model td{padding:var(--s2);border:1px solid var(--border);text-align:left;vertical-align:top;}
+.mental-model th{background:var(--surface-2);color:var(--text);}
+.mental-model code{font-family:var(--mono);font-size:11px;background:var(--surface-2);padding:1px 4px;border-radius:3px;}
+.mental-model .warning{padding:var(--s3);border-left:4px solid var(--warn);background:var(--warn-soft);}
+
 /* usage: code + output side by side */
 .usage{margin-top:var(--s6);}
 .usage .split{grid-template-columns:var(--code-frac) 1fr;}
@@ -349,6 +362,36 @@ footer{margin-top:var(--s6); padding-top:var(--s3); border-top:1px solid var(--b
       </div>
     </div>
 
+    <section class="mental-model" id="mental-model" aria-labelledby="mental-model-title">
+      <h2 id="mental-model-title">Mental model: credibility to raw net flow</h2>
+      <p class="lede">This implementation calculates ELECTRE III credibility, then ranks alternatives by descending raw net flow. It does not implement ELECTRE III distillation.</p>
+      <p>The numeric matrix <var>G</var> has shape (<var>N</var>, <var>C</var>): <var>N</var> alternatives and <var>C</var> criteria. Each criterion has a positive weight, ordered thresholds <var>q</var> ≤ <var>p</var> ≤ <var>v</var>, and a direction. The shared web and CLI entry contract accepts normalized scores in [0,1], one to eight criteria, and weights that sum to 1. The low-level <code>electre3/ranking.py</code> API renormalizes positive weights; do not substitute that broader contract for the shared entry contract.</p>
+      <pre class="diagram" aria-label="Blockwise credibility and raw net-flow diagram">G(N,C)
+   │ split row and column groups
+   ▼
+(B1,B2,C) ── concordance and discordance ──► (B1,B2) credibility
+   │                                                    │
+   └──────────── O(N) flow accumulator ◄───────────────┘
+                              │
+                              ▼
+                    raw net-flow ranking</pre>
+      <h3>Pairwise credibility</h3>
+      <p>A row alternative <var>a</var> is compared against a column alternative <var>b</var>. For a maximize criterion, the implementation uses <var>g</var>(<var>a</var>) − <var>g</var>(<var>b</var>); for a minimize criterion, it uses <var>g</var>(<var>b</var>) − <var>g</var>(<var>a</var>). This equals comparing transformed minimize scores without storing rounded transformed values.</p>
+      <table>
+        <caption>Threshold branches for one criterion</caption>
+        <thead><tr><th scope="col">Measure</th><th scope="col">Value</th><th scope="col">Boundary rule</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Partial concordance <var>c</var></th><td>1 when <var>diff</var> ≥ −<var>q</var>; 0 when <var>diff</var> ≤ −<var>p</var>; linear between</td><td>When <var>q</var>=<var>p</var>, the full-concordance branch has priority.</td></tr>
+          <tr><th scope="row">Discordance <var>d</var></th><td>0 when <var>diff</var> ≥ −<var>p</var>; 1 when <var>diff</var> ≤ −<var>v</var>; linear between</td><td>When <var>p</var>=<var>v</var>, the full-veto branch has priority.</td></tr>
+        </tbody>
+      </table>
+      <p>Global concordance <var>C</var> is the weighted sum after weight normalization. Credibility starts at <var>C</var>. For each <var>d</var> &gt; <var>C</var>, the implementation multiplies by (1−<var>d</var>)/(1−<var>C</var>). A full veto (<var>d</var> ≥ 1) makes credibility zero. If <var>C</var>=1 without a full veto, credibility remains one.</p>
+      <h3>Blocks, flow, and ties</h3>
+      <p>Block processing retains criterion-level pairwise intermediates with shape (<var>B1</var>, <var>B2</var>, <var>C</var>) and one credibility value per pair with shape (<var>B1</var>, <var>B2</var>). It does not retain an <var>N</var>×<var>N</var> credibility matrix. The accumulator stores only incoming and outgoing vectors of length <var>N</var>.</p>
+      <p>For alternative <var>a</var>, raw net flow is <var>Φ</var>(<var>a</var>) = Σ<sub>b</sub> <var>S</var>(<var>a</var>,<var>b</var>) − Σ<sub>b</sub> <var>S</var>(<var>b</var>,<var>a</var>). Higher raw flow ranks first. These scores are neither probabilities nor normalized after accumulation. Equal computed binary64 flows are ties; a nonzero computed binary64 difference remains a near-tie. <code>np.argsort(-net_flow)</code> documents no stable order within ties.</p>
+      <aside class="warning"><strong>Gotchas:</strong> Do not transpose row and column comparison groups. A veto can defeat strong concordance. Map ranking indices through <code>RankingResult.identifiers</code>. Numeric NumPy inputs use positional identifiers, while CSV identifiers remain separate from numeric columns.</aside>
+      <p><strong>Reproduce and inspect:</strong> use the <a href="../../../../README.md">README</a>, <a href="../../../../docs/tutorials/cli_quickstart.md">CLI quickstart</a>, <a href="../../../../docs/runbook/debugging.md">debugging runbook</a>, <a href="../../../../examples/d4_phase2/scenario-3/criteria_balanced.json">D4 fixture criteria</a>, <a href="../../../../electre3/ranking.py">ranking core</a>, and <a href="../../../../tests/d4_checks/test_evidence.py">D4 evidence test</a>. Browser, keyboard, zoom, offline, assistive-technology, and load evidence remain deferred and non-blocking.</p>
+    </section>
     <!-- I/O Summary - compact overview -->
     <div class="io-summary">
       <h3>I/O Summary</h3>
@@ -367,7 +410,7 @@ footer{margin-top:var(--s6); padding-top:var(--s3); border-top:1px solid var(--b
       <div class="io-item">
         <b>Pipeline</b>
         <span class="type">Steps:</span> validate &rarr; normalize &rarr; block loop &rarr; accumulate &rarr; argsort<br>
-        <span class="type">Blocking:</span> O(block_size&sup2;) memory per iteration
+        <span class="type">Blocking:</span> (<var>B1</var>·<var>B2</var>·<var>C</var>) criterion intermediates plus (<var>B1</var>·<var>B2</var>) credibility per iteration
       </div>
     </div>
 
@@ -377,7 +420,7 @@ footer{margin-top:var(--s6); padding-top:var(--s3); border-top:1px solid var(--b
         <dt>Criteria</dt><dd>must be non-empty</dd>
         <dt>S range</dt><dd>assumes S &isin; [0,1] from block</dd>
         <dt>Diagonal</dt><dd>excluded via is_diagonal flag in block</dd>
-        <dt>Memory</dt><dd>O(N) accumulator + O(B&sup2;) per block</dd>
+        <dt>Memory</dt><dd>O(N) accumulator + (<var>B1</var>·<var>B2</var>·<var>C</var>) intermediates per block</dd>
       </dl>
     </div>
 
@@ -385,7 +428,7 @@ footer{margin-top:var(--s6); padding-top:var(--s3); border-top:1px solid var(--b
       <summary>Scientific grounding &amp; calibration notes</summary>
       <div class="gnd-content">
         <p><b>Definition:</b> The ranking pipeline computes ELECTRE III net flow scores and returns alternatives sorted by descending net flow. Net flow &phi; = &phi;<sup>+</sup> - &phi;<sup>-</sup> where &phi;<sup>+</sup> is outflow (how much a dominates others) and &phi;<sup>-</sup> is inflow (how much others dominate a).</p>
-        <p><b>Blocking strategy:</b> For large N, storing full N&times;N credibility matrix is infeasible. Block processing computes B&times;B submatrices and accumulates flows incrementally. Memory is O(N) for accumulator + O(B&sup2;) per block iteration.</p>
+        <p><b>Blocking strategy:</b> For large N, storing a full N&times;N credibility matrix is infeasible. Block processing retains (<var>B1</var>,<var>B2</var>,<var>C</var>) criterion intermediates and a (<var>B1</var>,<var>B2</var>) credibility block, then accumulates flows. Memory is O(N) for the accumulator plus those block intermediates.</p>
         <p><b>Calibration notes:</b></p>
         <ul>
           <li><b>Block size:</b> Larger blocks may be faster but use more memory; tune based on available RAM.</li>
@@ -463,11 +506,11 @@ footer{margin-top:var(--s6); padding-top:var(--s3); border-top:1px solid var(--b
           </div>
           <div class="note-col">
             <h4>Purpose</h4>
-            <p>[Placeholder] Iterates over B&times;B blocks to compute credibility submatrices without storing full N&times;N.</p>
+            <p>[Placeholder] Iterates over row and column blocks without storing a full N&times;N credibility matrix.</p>
             <h4>I/O</h4>
-            <p>[Placeholder] Each iteration produces S block and updates accumulator. Memory: O(B&sup2;) per block.</p>
+            <p>[Placeholder] Each iteration produces an S block and updates the accumulator. It retains (<var>B1</var>·<var>B2</var>·<var>C</var>) criterion intermediates and (<var>B1</var>·<var>B2</var>) credibility.</p>
             <h4>Why</h4>
-            <p>[Placeholder] N=100k would need 80GB for N&times;N. Blocking keeps memory at O(B&sup2;).</p>
+            <p>[Placeholder] N=100k would need 80GB for N&times;N. Blocking bounds intermediates to the selected row, column, and criterion block sizes.</p>
             <h4>Pitfalls</h4>
             <p>[Placeholder] Very small block_size increases loop overhead; very large exhausts memory.</p>
           </div>
@@ -610,7 +653,7 @@ ranking, acc = compute_ranking(G, criteria)
   </main>
 </div>
 
-<script src="../assets/theme.js" defer></script>
-<script src="../assets/highlight.js" defer></script>
+<script src="../../assets/theme.js" defer></script>
+<script src="../../assets/highlight.js" defer></script>
 </body>
 </html>

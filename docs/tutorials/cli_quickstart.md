@@ -71,7 +71,7 @@ python scripts/convert_matrix_csv.py matrix.csv out/matrix.npy --has-header --id
 python -m electre3.cli out/matrix.npy criteria.json -y
 ```
 
-The converter validates the removed IDs and emits only the numeric core. The subsequent NumPy CLI run prints positional IDs. Empty numeric cells fail unless `--fill-empty` supplies a finite model-approved value.
+The converter validates then removes IDs and emits only the numeric core. The subsequent NumPy CLI run prints zero-based positional identifiers, not source IDs or one-based rank positions. For the committed Asset Priority sample, direct CSV ranks `B`, `A`, `C`, while the converted NumPy path prints `1`, `0`, `2`; both describe the same ordering. Verify the converted path with the commands above rather than citing `examples/assets_priority/ranking.txt`, which records the direct CSV labels. Empty numeric cells fail unless `--fill-empty` supplies a finite model-approved value.
 
 ## CLI options
 

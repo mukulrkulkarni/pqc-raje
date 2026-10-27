@@ -9,17 +9,22 @@
 
 ## Common failures and fast diagnosis
 
-### 1) “Upload not confirmed” (HTTP 403)
+### 1) Supported app computation needs preview and confirmation (HTTP 400)
 
 Symptoms:
-- `POST /compute/start` returns 403.
+- `POST /app/compute` returns 400 when no successful preview exists or `confirm_compute` is absent.
 
 Meaning:
-- The UI requires a confirmation gate before computation.
+- The supported server-rendered `/app/` workflow requires criteria, a successful preview, and explicit confirmation before computation.
 
 Checks:
-- Call `POST /preview/<upload_id>/confirm`.
-- Ensure the client preserves the session cookie.
+- Return to `/app/`, correct the relevant form, review the preview, then confirm computation.
+- Inspect the response message; do not infer `/app/` guidance from legacy JSON endpoints.
+
+Legacy compatibility only:
+- `/preview/<upload_id>`, `/preview/<upload_id>/confirm`, `/preview/<upload_id>/cancel`, `/compute/start`, and `/compute/status/<job_id>` are legacy compatibility routes, not the primary browser workflow.
+- `app/templates/preview.html` and `app/templates/config.html` support legacy compatibility only. Do not direct new users to them.
+- In that legacy JSON flow, an unconfirmed upload at `POST /compute/start` returns HTTP 403. Its client must preserve the session cookie and call `POST /preview/<upload_id>/confirm`.
 
 ### 2) Module docs return 404
 

@@ -1,0 +1,22 @@
+{
+  "chunk": "D4 fixture/draft correction",
+  "state": "checkpointed",
+  "created_at": "2026-10-27T18:44:00+04:00",
+  "checkpointed_at": "2026-10-27T18:47:00+04:00",
+  "objective": "Correct D4 fixtures, deterministic tie evidence, and tutorial draft without user-facing page edits or commits.",
+  "authoritative_inputs": ["docs/decisions/d4-phase2-tutorial-draft.md", "electre3 implementation", "canonical tests"],
+  "agent": "Innovium prepared Code specialist candidate v1",
+  "permissions": {"remote_git": false, "user_facing_pages": false, "commit": false},
+  "outputs": ["examples/d4_phase2/", "out/generate_d4_fixture_evidence.py", "out/d4-fixture-evidence.json", "docs/decisions/d4-phase2-tutorial-draft.md", "docs/decisions/d4-fixture-correction-notes.md", "tests/test_d4_fixture_correction.py"],
+  "acceptance_evidence": [
+    "python out\\generate_d4_fixture_evidence.py: exit 0; regenerated all fixtures and binary64 raw-flow evidence",
+    "python -m pytest -q tests\\test_d4_fixture_correction.py tests\\test_concordance.py tests\\test_discordance.py tests\\test_credibility.py tests\\test_ranking.py tests\\test_serialization.py tests\\test_app_workflow.py: 78 passed in 3.74s",
+    "python -m compileall -q electre3 app scripts out\\generate_d4_fixture_evidence.py: exit 0",
+    "git diff --check: exit 0"
+  ],
+  "tie_evidence": {"exact": ["0x1.4aac3cd964020p-2", "0x1.4aac3cd964020p-2"], "near": ["0x1.4aac3cd964020p-2", "0x1.4aac3cd964028p-2"]},
+  "failure_and_recovery": "Initial generator import lacked repository root; added local sys.path insertion. Initial malformed-header expectation was corrected to CLI auto-detection behavior. No retry remains pending.",
+  "limitations": ["Browser evidence deferred/non-blocking", "Scientific and Engineering review required", "No commit performed"],
+  "next_action": "Obtain Scientific and Engineering review before commit.",
+  "repository_state": "Approved in-scope D4 files remain modified/untracked; no unrelated work was changed by this chunk."
+}

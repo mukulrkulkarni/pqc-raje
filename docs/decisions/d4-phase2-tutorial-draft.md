@@ -1,106 +1,86 @@
-# D4 Phase 2 Tutorial Draft — Three Controlled Preference Scenarios
+# D4 Phase 2 tutorial draft — controlled migration-priority fixtures
 
-**Status:** Draft only. No user-facing page edits. Scientific and Engineering re-review required.
-**Base revision:** `4e47749` for current D3 documentation pages and source behavior.
+**Status:** D4 review-recovery draft. Fixture evidence is regenerated locally; Scientific and Engineering approval remains required before commit. No user-facing page changed.
+**Pinned behavior revision:** `7beb15e` (D4 draft baseline); this recovery correction is uncommitted.
+**Evidence revision:** generated locally by `out/generate_d4_fixture_evidence.py` on Python 3.11; `tests/d4_checks/test_raw_flow.py` independently recomputes tie flows from raw CSV and criteria inputs.
+**Current vs planned:** The paths below exist now. D5 mental-model and D6 reference targets are planned; no target page exists. Browser evidence remains deferred and non-blocking.
 
-## Contract and notation
+## Fixture contract
 
-The method computes **ELECTRE III credibility with raw net-flow ranking**, not ELECTRE III distillation. The performance matrix has shape `(N,C)` after identifier extraction. CSV input has shape `(N,C+1)`: identifier in column 0 and normalized criterion scores in columns 1..C.
+The executable fixtures are under `examples/d4_phase2/`:
 
-Each criterion has `name`, positive `weight`, `q`, `p`, `v`, and Boolean `maximize`, with `0 ≤ q ≤ p ≤ v`; weights sum to `1`. The shared validator supports at most eight criteria. `a` and `b` are alternative objects. In a block, rows contain `a` alternatives and columns contain comparison-group `b` alternatives.
+- `scenario-3/matrix_headered.csv` and `criteria_balanced.json` — 3 assets, balanced weights.
+- `scenario-5/matrix_headered.csv`, `criteria_balanced.json`, and `criteria_business-criticality-priority.json` — controlled 5-asset comparison.
+- `scenario-8/matrix_headered.csv`, `criteria_balanced.json`, and `criteria_data-sensitivity-priority.json` — controlled 8-asset comparison.
+- `exact-tie/` and `near-tie/` — deterministic three-asset comparison fixtures.
+- `out/d4-fixture-evidence.json` — generated hashes, CLI output, credibility matrices, and binary64 hexadecimal flows.
 
-Raw net flow is:
+Every fixture has these criteria, in this order: `Quantum-Vulnerability`, `Migration-Complexity`, `Business-Criticality`, `Data-Sensitivity`.
 
-`Φ(a) = Σ_b S(a,b) − Σ_b S(b,a)`.
-
-Higher raw net flow ranks first. Raw scores are not probabilities. Equal raw flows are ties; near-ties are not ties, and tied order has no documented stable policy.
-
-## Controlled comparison design
-
-All three scenarios use the same four criteria, score matrix scale, thresholds, maximize directions, and asset order where comparison is claimed. Only the weight priorities change between controlled runs. Each scenario has a separate dataset size to demonstrate workflow scale; do not compare ranks across different datasets as causal evidence.
-
-Required criteria names:
-
-- Quantum-Vulnerability
-- Migration-Complexity
-- Business-Criticality
-- Data-Sensitivity
-
-The four-criterion fixtures, criteria JSON files, hashes, and generated outputs must be created and independently executed before publication. This draft does not invent rankings.
-
-## Scenario 1 — Three assets, balanced priority
-
-**Purpose:** Complete the smallest workflow.
-
-- Assets: `A-001 / 10.0.0.5`, `A-002 / 10.0.0.9`, `A-003 / 10.0.0.12`.
-- Weights: `0.25` for each criterion.
-- Thresholds and directions: fixed in the scenario criteria JSON.
-- Files: `fixtures/d4/scenario-3/criteria.json`, `matrix_headered.csv`, `matrix_headerless.csv`.
-
-Run both header modes after fixture creation. Verify identifiers remain attached to ranked rows.
-
-## Scenario 2 — Five assets, Business-Criticality priority
-
-**Purpose:** Show a changed preference policy.
-
-- Five assets.
-- Use the same five-row score matrix, thresholds, directions, and criterion order for both balanced and priority runs.
-- Priority weights assign the largest weight to `Business-Criticality`; exact values must be recorded in the criteria JSON.
-- Compare the two outputs only after recording both criteria-file hashes.
-
-A changed ranking demonstrates a changed preference policy, not a changed algorithm.
-
-## Scenario 3 — Eight assets, Data-Sensitivity priority
-
-**Purpose:** Demonstrate a larger scenario and a different priority axis.
-
-- Eight assets.
-- Use a fixed eight-row matrix and the same thresholds/directions for balanced and priority runs.
-- Priority weights assign the largest weight to `Data-Sensitivity`; exact values must be recorded in the criteria JSON.
-- Add a deterministic tie fixture separately. Do not claim a tie unless the executed raw flows are exactly equal.
-
-## CLI execution
-
-Run from the repository root in Windows Command Prompt:
-
-```cmd
-set PYTHONPATH=.
-python scripts/convert_matrix_csv.py fixtures/d4/scenario-3/matrix_headered.csv out/d4-s3.npy --has-header --id-col "Asset ID / IP"
-python -m electre3.cli out/d4-s3.npy fixtures/d4/scenario-3/criteria.json -y
+```json
+[
+  {"name":"Quantum-Vulnerability","weight":0.25,"q":0.03,"p":0.12,"v":0.35,"maximize":true},
+  {"name":"Migration-Complexity","weight":0.25,"q":0.03,"p":0.12,"v":0.35,"maximize":true},
+  {"name":"Business-Criticality","weight":0.25,"q":0.03,"p":0.12,"v":0.35,"maximize":true},
+  {"name":"Data-Sensitivity","weight":0.25,"q":0.03,"p":0.12,"v":0.35,"maximize":true}
+]
 ```
 
-For direct identifier-bearing CSV, use the supported `load_input` path where documented. For converted NumPy, positional identifiers are used. Record exact output, exit code, revision, file hashes, and limitation.
+Scores are normalized to `[0,1]`. Higher scores mean greater migration priority: quantum exposure, difficulty/complexity, business impact, and data exposure. Thus every criterion sets `maximize: true`. All fixtures use `q=0.03`, `p=0.12`, `v=0.35` and the identifier-first header `Asset ID / IP`, followed by the ordered criterion names. The 5- and 8-asset comparisons hold the **identical matrix, threshold values, directions, criterion order, and asset order** fixed; only weights change. Their priority files use `[0.15,0.15,0.55,0.15]` and `[0.15,0.15,0.15,0.55]` respectively.
 
-## Web execution
-
-Run the local launcher:
+SHA-256 values are in `out/d4-fixture-evidence.json`; regenerate them rather than transcribing stale values:
 
 ```cmd
-python scripts/dev_local.py
+python out\generate_d4_fixture_evidence.py
+python -m pytest -q tests\test_d4_fixture_correction.py
 ```
 
-Open `http://127.0.0.1:5000/app/`. Enter criteria, provide the matrix, review the preview, approve any missing score replacement, confirm, and compute. The app uses server-rendered HTML without JavaScript. Browser rendering, zoom, reflow, keyboard, offline, screen-reader, and load evidence remain deferred and non-blocking.
+## Method semantics
 
-## Recovery example
+The implementation computes ELECTRE III credibility, then ranks by descending raw net flow. It does not implement ELECTRE III distillation. An alternative object is one asset record: `a` is the row alternative under evaluation and `b` is a comparison-group alternative in the columns. For each credibility block `S[a,b]`, rows enumerate the `a` comparison group and columns enumerate the `b` comparison group; `S[a,b]` states support for `a` outranking `b`. The diagonal `S[a,a]` is zeroed and does not express a self-comparison. For an assertion that `a` outranks `b`, direction-adjusted `diff_j(a,b)` is `g_j(a)-g_j(b)` for maximize; minimize uses its equivalent `g_j(b)-g_j(a)` calculation.
 
-Use a wrong header order, blank identifier, duplicate identifier, or score outside `[0,1]`. Preview must reject the input with an actionable message. For a missing CSV score only, use the approval checkbox and a replacement in `[0,1]`; missing criteria JSON values remain rejected.
+| Block notation | Meaning |
+| --- | --- |
+| row `a` | evaluated alternative object |
+| column `b` | comparison-group alternative object |
+| cell `S[a,b]` | credibility that row `a` outranks column `b` |
+| diagonal `S[a,a]` | forced to zero; excluded self-comparison |
 
-## Evidence before publication
+Partial concordance is `c_j=1` when `diff >= -q`, `c_j=0` when `diff <= -p`, else `(diff+p)/(p-q)`. When `q=p`, the ordered conditions take precedence: `diff >= -q` returns `1`, then `diff <= -p` returns `0`; interpolation is never selected. Global concordance is `C=sum(w_j*c_j)`.
 
-Record exact commands, exit codes, actual output, file hashes, source paths, environment, revision, and limitations. Required evidence:
+Discordance is `d_j=1` when `diff <= -v`, `d_j=0` when `diff >= -p`, else `(-diff-p)/(v-p)`. With `p=v`, veto precedence applies first: `diff <= -v` returns `1`, then `diff >= -p` returns `0`; interpolation is never selected.
 
-- positive: all three scenarios through CLI and `/app`;
-- negative: malformed headers, identifiers, scores, criteria, and missing routes;
-- edge: 2/8 criteria, 100 MiB/100,000-row limits, block sizes, thresholds, ties, Unicode and formula-looking identifiers;
-- scientific: raw flows, direction handling, exact ties versus near-ties;
-- integration: rendered and downloaded identifiers match;
-- serialization/cache/security: v2 bytes, checksums, expiry, token/session rules;
-- links: local paths, fragments, and planned Phase 3/4 targets.
+Credibility starts as `S=C`. For each criterion where `d_j>C` and `d_j<1`, it multiplies by `(1-d_j)/(1-C)`. Where `d_j<=C`, that criterion leaves credibility unchanged. Any `d_j>=1` sets `S=0`, including `C=1`; `C=1` with every finite `d_j<1` remains `1`. Diagonal credibility is zeroed. Raw flow is `Phi(a)=sum_b S(a,b)-sum_b S(b,a)`; higher ranks first.
 
-This draft is not publication evidence until the fixture creation and independent verbatim runs pass.
+`exact-tie` gives identical full-precision flows for T-001 and T-002: `0x1.4aac3cd964020p-2`. `near-tie` gives distinct flows for N-001 and N-002: `0x1.4aac3cd964020p-2` and `0x1.4aac3cd964028p-2`. Hexadecimal binary64 strings, all credibility entries, outflow, inflow, hashes, stdout, and commands appear in `out/d4-fixture-evidence.json`. A displayed order for equal flows is not a tie-breaking policy.
 
-## Related phases
+## Direct and converter CLI paths
 
-- Phase 1: `README.md`, `docs/GETTING_STARTED.html`, `docs/tutorials/cli_quickstart.md`.
-- Phase 3: planned mental model, blockwise computation, thresholds, net flow, and gotchas.
-- Phase 4: planned CLI/module reference, limits, debugging, and migration notes.
+Run from repository root. This direct CSV path retains source identifiers:
+
+```cmd
+python -m electre3.cli examples\d4_phase2\scenario-3\matrix_headered.csv examples\d4_phase2\scenario-3\criteria_balanced.json -y -b 2
+```
+
+The converter path deliberately removes identifiers; NumPy input prints positional identifiers:
+
+```cmd
+python scripts\convert_matrix_csv.py examples\d4_phase2\scenario-3\matrix_headered.csv out\d4-s3.npy --has-header --id-col "Asset ID / IP"
+python -m electre3.cli out\d4-s3.npy examples\d4_phase2\scenario-3\criteria_balanced.json -y -b 2
+```
+
+Actual direct-CSV stdout for every fixture is stored in `out/d4-fixture-evidence.json`. The CLI validates 1–8 criteria, 2–100,000 rows, normalized finite scores, ordered headers, and safe unique identifiers. `/app` additionally has a 100 MiB request upload cap. Its feasibility gate is deployment-profile dependent and can reject a computation before ranking; do not describe this as a CLI cap.
+
+## `/app` path and recovery
+
+**Current:** start `python scripts\dev_local.py`, then open `http://127.0.0.1:5000/app/`. Enter criteria, upload or enter the matrix, review, approve permitted missing-score replacement, confirm, and compute. The path is server-rendered HTML.
+
+**Current recovery checks:** wrong criterion order, blank or duplicate identifier, or a score outside `[0,1]` must fail validation. A missing CSV score needs the explicit preview approval and a `[0,1]` replacement. Criteria JSON omissions remain invalid.
+
+**Deferred:** browser rendering, zoom, reflow, keyboard, assistive technology, offline, and load evidence. These are non-blocking for this correction.
+
+## Links and planned targets
+
+**Current:** [repository README](../../README.md), [Getting Started](../GETTING_STARTED.html), [CLI quickstart](../tutorials/cli_quickstart.md), and [debugging runbook](../runbook/debugging.md).
+
+**Planned D5:** mental model, blockwise computation, thresholds, net flow, and gotchas. **Planned D6:** CLI/module reference, limits, debugging, and migration notes. These are labels, not links, because targets do not exist.

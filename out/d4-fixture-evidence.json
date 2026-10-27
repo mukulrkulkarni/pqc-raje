@@ -1,0 +1,611 @@
+{
+  "schema_version": 1,
+  "method": "ELECTRE III credibility with raw net-flow ranking",
+  "precision": "binary64 hexadecimal float strings preserve full raw-flow precision",
+  "thresholds": {
+    "q": 0.03,
+    "p": 0.12,
+    "v": 0.35
+  },
+  "criteria": [
+    {
+      "name": "Quantum-Vulnerability",
+      "weight": 0.25,
+      "q": 0.03,
+      "p": 0.12,
+      "v": 0.35,
+      "maximize": true
+    },
+    {
+      "name": "Migration-Complexity",
+      "weight": 0.25,
+      "q": 0.03,
+      "p": 0.12,
+      "v": 0.35,
+      "maximize": true
+    },
+    {
+      "name": "Business-Criticality",
+      "weight": 0.25,
+      "q": 0.03,
+      "p": 0.12,
+      "v": 0.35,
+      "maximize": true
+    },
+    {
+      "name": "Data-Sensitivity",
+      "weight": 0.25,
+      "q": 0.03,
+      "p": 0.12,
+      "v": 0.35,
+      "maximize": true
+    }
+  ],
+  "runs": {
+    "scenario-3/balanced": {
+      "matrix": "examples/d4_phase2/scenario-3/matrix_headered.csv",
+      "criteria": "examples/d4_phase2/scenario-3/criteria_balanced.json",
+      "matrix_sha256": "74ad0ab97283f71cd4e61081a3aab7b0b04482bae12aee48c652bf7fc11af66d",
+      "criteria_sha256": "8290a0cbdf1f08eb6b8b5a322f2ac2cbc3756d2ab4d4634dbb5e079e2c290a8a",
+      "cli_command": "python -m electre3.cli examples\\d4_phase2\\scenario-3\\matrix_headered.csv examples\\d4_phase2\\scenario-3\\criteria_balanced.json -y -b 2",
+      "cli_exit_code": 0,
+      "cli_stdout": "Ranking:\n  1. A-003 / 10.0.0.12\n  2. A-002 / 10.0.0.9\n  3. A-001 / 10.0.0.5\n",
+      "ranking": [
+        "A-003 / 10.0.0.12",
+        "A-002 / 10.0.0.9",
+        "A-001 / 10.0.0.5"
+      ],
+      "outflow": [
+        "0x1.0b21642c85900p-3",
+        "0x1.642c8590b2162p-2",
+        "0x1.be74404f26567p-1"
+      ],
+      "inflow": [
+        "0x1.eaf9d1013c995p-1",
+        "0x1.0b21642c85906p-2",
+        "0x1.0b21642c85900p-3"
+      ],
+      "net_flow": [
+        "-0x1.a83177f61b355p-1",
+        "0x1.642c8590b2170p-4",
+        "0x1.7babe74404f27p-1"
+      ],
+      "credibility": [
+        [
+          "0x0.0p+0",
+          "0x0.0p+0",
+          "0x1.0b21642c85900p-3"
+        ],
+        [
+          "0x1.642c8590b2162p-2",
+          "0x0.0p+0",
+          "0x0.0p+0"
+        ],
+        [
+          "0x1.38e38e38e38e4p-1",
+          "0x1.0b21642c85906p-2",
+          "0x0.0p+0"
+        ]
+      ]
+    },
+    "scenario-5/balanced": {
+      "matrix": "examples/d4_phase2/scenario-5/matrix_headered.csv",
+      "criteria": "examples/d4_phase2/scenario-5/criteria_balanced.json",
+      "matrix_sha256": "78d6e760055911a556b49f51281bf7c73587b6324df5dfbb0b1df516e44a5b60",
+      "criteria_sha256": "8290a0cbdf1f08eb6b8b5a322f2ac2cbc3756d2ab4d4634dbb5e079e2c290a8a",
+      "cli_command": "python -m electre3.cli examples\\d4_phase2\\scenario-5\\matrix_headered.csv examples\\d4_phase2\\scenario-5\\criteria_balanced.json -y -b 2",
+      "cli_exit_code": 0,
+      "cli_stdout": "Ranking:\n  1. B-004 / 10.0.1.21\n  2. B-003 / 10.0.1.13\n  3. B-002 / 10.0.1.8\n  4. B-005 / 10.0.1.34\n  5. B-001 / 10.0.1.5\n",
+      "ranking": [
+        "B-004 / 10.0.1.21",
+        "B-003 / 10.0.1.13",
+        "B-002 / 10.0.1.8",
+        "B-005 / 10.0.1.34",
+        "B-001 / 10.0.1.5"
+      ],
+      "outflow": [
+        "0x1.ef8bdb389ebabp-5",
+        "0x1.d642c8590b216p+0",
+        "0x1.038e38e38e38ep+1",
+        "0x1.b2df2df2df2e1p+0",
+        "0x1.08590b21642c8p+1"
+      ],
+      "inflow": [
+        "0x1.238e38e38e38ep+1",
+        "0x1.7981dae6076bcp+0",
+        "0x1.4f265691eeafbp+0",
+        "0x1.590b21642c856p-1",
+        "0x1.f422a93e6b405p+0"
+      ],
+      "net_flow": [
+        "-0x1.1bd00976abbdfp+1",
+        "0x1.7303b5cc0ed68p-2",
+        "0x1.6fec366a5b842p-1",
+        "0x1.06599d40c8eb6p+0",
+        "0x1.c8f6d045d18b0p-4"
+      ],
+      "credibility": [
+        [
+          "0x0.0p+0",
+          "0x0.0p+0",
+          "0x0.0p+0",
+          "0x0.0p+0",
+          "0x1.ef8bdb389ebabp-5"
+        ],
+        [
+          "0x1.8000000000000p-1",
+          "0x0.0p+0",
+          "0x1.642c8590b2168p-4",
+          "0x1.0000000000000p-1",
+          "0x1.0000000000000p-1"
+        ],
+        [
+          "0x1.8000000000000p-1",
+          "0x1.0000000000000p-1",
+          "0x0.0p+0",
+          "0x0.0p+0",
+          "0x1.8e38e38e38e38p-1"
+        ],
+        [
+          "0x0.0p+0",
+          "0x1.2aaaaaaaaaaabp-1",
+          "0x1.0000000000000p-1",
+          "0x0.0p+0",
+          "0x1.3b13b13b13b16p-1"
+        ],
+        [
+          "0x1.8e38e38e38e39p-1",
+          "0x1.90b21642c8598p-2",
+          "0x1.71c71c71c71c9p-1",
+          "0x1.642c8590b2158p-3",
+          "0x0.0p+0"
+        ]
+      ]
+    },
+    "scenario-5/business-criticality-priority": {
+      "matrix": "examples/d4_phase2/scenario-5/matrix_headered.csv",
+      "criteria": "examples/d4_phase2/scenario-5/criteria_business-criticality-priority.json",
+      "matrix_sha256": "78d6e760055911a556b49f51281bf7c73587b6324df5dfbb0b1df516e44a5b60",
+      "criteria_sha256": "3a960853a7781ffabc34f56ef5e141f3250a6d8aab02931e59391465586b67d8",
+      "cli_command": "python -m electre3.cli examples\\d4_phase2\\scenario-5\\matrix_headered.csv examples\\d4_phase2\\scenario-5\\criteria_business-criticality-priority.json -y -b 2",
+      "cli_exit_code": 0,
+      "cli_stdout": "Ranking:\n  1. B-002 / 10.0.1.8\n  2. B-004 / 10.0.1.21\n  3. B-003 / 10.0.1.13\n  4. B-005 / 10.0.1.34\n  5. B-001 / 10.0.1.5\n",
+      "ranking": [
+        "B-002 / 10.0.1.8",
+        "B-004 / 10.0.1.21",
+        "B-003 / 10.0.1.13",
+        "B-005 / 10.0.1.34",
+        "B-001 / 10.0.1.5"
+      ],
+      "outflow": [
+        "0x1.cef796c62bc49p-6",
+        "0x1.39f89467e251bp+1",
+        "0x1.e5afe628a0116p+0",
+        "0x1.e0b60b60b60b7p+0",
+        "0x1.e5d5ab44717efp+0"
+      ],
+      "inflow": [
+        "0x1.4888888888889p+1",
+        "0x1.7c42817170c1ap-1",
+        "0x1.b118fb4cec75fp+0",
+        "0x1.8c8fbdda797b0p-1",
+        "0x1.306abbfa59246p+1"
+      ],
+      "net_flow": [
+        "-0x1.44ea995afc310p+1",
+        "0x1.b5cfe8170c429p+0",
+        "0x1.a4b756dd9cdb8p-3",
+        "0x1.1a6e2c73794dfp+0",
+        "-0x1.ebff32c103274p-2"
+      ],
+      "credibility": [
+        [
+          "0x0.0p+0",
+          "0x0.0p+0",
+          "0x0.0p+0",
+          "0x0.0p+0",
+          "0x1.cef796c62bc49p-6"
+        ],
+        [
+          "0x1.b333333333334p-1",
+          "0x0.0p+0",
+          "0x1.9f89467e251a6p-3",
+          "0x1.6666666666667p-1",
+          "0x1.6666666666667p-1"
+        ],
+        [
+          "0x1.b333333333334p-1",
+          "0x1.71c3758944ceep-3",
+          "0x0.0p+0",
+          "0x0.0p+0",
+          "0x1.bbbbbbbbbbbbcp-1"
+        ],
+        [
+          "0x0.0p+0",
+          "0x1.93e93e93e93eap-2",
+          "0x1.6666666666667p-1",
+          "0x0.0p+0",
+          "0x1.9111111111112p-1"
+        ],
+        [
+          "0x1.bbbbbbbbbbbbcp-1",
+          "0x1.57741314abba7p-3",
+          "0x1.93e93e93e93eep-1",
+          "0x1.314abba098a4bp-4",
+          "0x0.0p+0"
+        ]
+      ]
+    },
+    "scenario-8/balanced": {
+      "matrix": "examples/d4_phase2/scenario-8/matrix_headered.csv",
+      "criteria": "examples/d4_phase2/scenario-8/criteria_balanced.json",
+      "matrix_sha256": "7582bda30ba949f190cdde289e03aca3a4cbd6f3f2bda4a4873f3f7b893d474a",
+      "criteria_sha256": "8290a0cbdf1f08eb6b8b5a322f2ac2cbc3756d2ab4d4634dbb5e079e2c290a8a",
+      "cli_command": "python -m electre3.cli examples\\d4_phase2\\scenario-8\\matrix_headered.csv examples\\d4_phase2\\scenario-8\\criteria_balanced.json -y -b 2",
+      "cli_exit_code": 0,
+      "cli_stdout": "Ranking:\n  1. C-004 / 10.0.2.19\n  2. C-003 / 10.0.2.11\n  3. C-002 / 10.0.2.7\n  4. C-005 / 10.0.2.28\n  5. C-006 / 10.0.2.39\n  6. C-007 / 10.0.2.44\n  7. C-008 / 10.0.2.52\n  8. C-001 / 10.0.2.3\n",
+      "ranking": [
+        "C-004 / 10.0.2.19",
+        "C-003 / 10.0.2.11",
+        "C-002 / 10.0.2.7",
+        "C-005 / 10.0.2.28",
+        "C-006 / 10.0.2.39",
+        "C-007 / 10.0.2.44",
+        "C-008 / 10.0.2.52",
+        "C-001 / 10.0.2.3"
+      ],
+      "outflow": [
+        "0x1.3831b5a11c50fp-5",
+        "0x1.be26d274e57dep+1",
+        "0x1.a96e115062efep+1",
+        "0x1.cc749ac41b8fcp+1",
+        "0x1.d1013c995a47ap+1",
+        "0x1.061f2a4bafdc5p+2",
+        "0x1.07be2f6ce27adp+1",
+        "0x1.3d37a6f4de9bbp+1"
+      ],
+      "inflow": [
+        "0x1.038e38e38e38ep+2",
+        "0x1.577f61b352dc4p+1",
+        "0x1.2e8b7add6cfddp+1",
+        "0x1.02efec366a5b7p+1",
+        "0x1.7c9e58f26e890p+1",
+        "0x1.e7e2519f89466p+1",
+        "0x1.0c8d7aedf1a78p+1",
+        "0x1.59fa4ce43367ap+1"
+      ],
+      "net_flow": [
+        "-0x1.011dd5784c004p+2",
+        "0x1.9a9dc3064a864p-1",
+        "0x1.eb8a59cbd7c84p-1",
+        "0x1.93095d1b6268ap+0",
+        "0x1.518b8e9baefa8p-1",
+        "0x1.22e017beb3920p-2",
+        "-0x1.33d2e043cb2c0p-5",
+        "-0x1.cc2a5ef54cbf0p-3"
+      ],
+      "credibility": [
+        [
+          "0x0.0p+0",
+          "0x0.0p+0",
+          "0x0.0p+0",
+          "0x0.0p+0",
+          "0x1.3831b5a11c50fp-5",
+          "0x0.0p+0",
+          "0x0.0p+0",
+          "0x0.0p+0"
+        ],
+        [
+          "0x1.8000000000000p-1",
+          "0x0.0p+0",
+          "0x0.0p+0",
+          "0x1.0000000000000p-1",
+          "0x1.0000000000000p-1",
+          "0x1.71c71c71c71c9p-1",
+          "0x1.71c71c71c71c9p-1",
+          "0x1.2a1a21e00f7cap-2"
+        ],
+        [
+          "0x1.8000000000000p-1",
+          "0x1.bd37a6f4de9bcp-2",
+          "0x0.0p+0",
+          "0x0.0p+0",
+          "0x1.8e38e38e38e3cp-1",
+          "0x1.2aaaaaaaaaaa8p-1",
+          "0x0.0p+0",
+          "0x1.8e38e38e38e39p-1"
+        ],
+        [
+          "0x0.0p+0",
+          "0x1.638e38e38e390p-1",
+          "0x1.0000000000000p-1",
+          "0x0.0p+0",
+          "0x1.17d9d6a88bed4p-1",
+          "0x1.8000000000000p-1",
+          "0x1.c71c71c71c71ap-1",
+          "0x1.bd37a6f4de9c4p-3"
+        ],
+        [
+          "0x1.b8e38e38e38e2p-1",
+          "0x1.37a6f4de9bd3cp-2",
+          "0x1.8000000000000p-1",
+          "0x1.bd37a6f4de9b4p-3",
+          "0x0.0p+0",
+          "0x1.2aaaaaaaaaaa8p-1",
+          "0x0.0p+0",
+          "0x1.d555555555556p-1"
+        ],
+        [
+          "0x1.8000000000000p-1",
+          "0x1.38e38e38e38e4p-1",
+          "0x1.37a6f4de9bd30p-1",
+          "0x1.471c71c71c71dp-1",
+          "0x1.0000000000000p-1",
+          "0x0.0p+0",
+          "0x1.f2a4bafdc61f4p-2",
+          "0x1.0000000000000p-1"
+        ],
+        [
+          "0x0.0p+0",
+          "0x1.471c71c71c71ep-1",
+          "0x1.ef8bdb389eb83p-5",
+          "0x1.5555555555552p-1",
+          "0x0.0p+0",
+          "0x1.638e38e38e38dp-1",
+          "0x0.0p+0",
+          "0x0.0p+0"
+        ],
+        [
+          "0x1.e38e38e38e38cp-1",
+          "0x0.0p+0",
+          "0x1.c71c71c71c717p-2",
+          "0x0.0p+0",
+          "0x1.38e38e38e38e2p-1",
+          "0x1.e9bd37a6f4de6p-2",
+          "0x0.0p+0",
+          "0x0.0p+0"
+        ]
+      ]
+    },
+    "scenario-8/data-sensitivity-priority": {
+      "matrix": "examples/d4_phase2/scenario-8/matrix_headered.csv",
+      "criteria": "examples/d4_phase2/scenario-8/criteria_data-sensitivity-priority.json",
+      "matrix_sha256": "7582bda30ba949f190cdde289e03aca3a4cbd6f3f2bda4a4873f3f7b893d474a",
+      "criteria_sha256": "d485c797df07df3682b97a235cd63b50bf13b301360121edeaab2f93c63ee36f",
+      "cli_command": "python -m electre3.cli examples\\d4_phase2\\scenario-8\\matrix_headered.csv examples\\d4_phase2\\scenario-8\\criteria_data-sensitivity-priority.json -y -b 2",
+      "cli_exit_code": 0,
+      "cli_stdout": "Ranking:\n  1. C-003 / 10.0.2.11\n  2. C-005 / 10.0.2.28\n  3. C-004 / 10.0.2.19\n  4. C-008 / 10.0.2.52\n  5. C-007 / 10.0.2.44\n  6. C-006 / 10.0.2.39\n  7. C-002 / 10.0.2.7\n  8. C-001 / 10.0.2.3\n",
+      "ranking": [
+        "C-003 / 10.0.2.11",
+        "C-005 / 10.0.2.28",
+        "C-004 / 10.0.2.19",
+        "C-008 / 10.0.2.52",
+        "C-007 / 10.0.2.44",
+        "C-006 / 10.0.2.39",
+        "C-002 / 10.0.2.7",
+        "C-001 / 10.0.2.3"
+      ],
+      "outflow": [
+        "0x1.ae04ffd1ed2cap-7",
+        "0x1.67147af56a9eep+1",
+        "0x1.0222222222222p+2",
+        "0x1.aa60b24d50eb7p+1",
+        "0x1.08ff420a636e8p+2",
+        "0x1.ee5acf6a2e49ep+1",
+        "0x1.025eca997eccbp+1",
+        "0x1.6aaaaaaaaaaaap+1"
+      ],
+      "inflow": [
+        "0x1.1bbbbbbbbbbbcp+2",
+        "0x1.e222222222224p+1",
+        "0x1.4b2b56003f09cp+0",
+        "0x1.fd96a1c327538p+0",
+        "0x1.49513803984ccp+1",
+        "0x1.160b60b60b60bp+2",
+        "0x1.3c71c71c71c73p+1",
+        "0x1.14f5e94282bc6p+1"
+      ],
+      "net_flow": [
+        "-0x1.1ae4b93bd2c53p+2",
+        "-0x1.ec369cb2de0d4p-1",
+        "0x1.5eae994424bf6p+1",
+        "0x1.572ac2d77a836p+0",
+        "0x1.915a98225d20cp+0",
+        "-0x1.eddf900f43bc8p-2",
+        "-0x1.d097e41797d40p-2",
+        "0x1.56d305a09fb90p-1"
+      ],
+      "credibility": [
+        [
+          "0x0.0p+0",
+          "0x0.0p+0",
+          "0x0.0p+0",
+          "0x0.0p+0",
+          "0x1.ae04ffd1ed2cap-7",
+          "0x0.0p+0",
+          "0x0.0p+0",
+          "0x0.0p+0"
+        ],
+        [
+          "0x1.b333333333334p-1",
+          "0x0.0p+0",
+          "0x0.0p+0",
+          "0x1.3333333333333p-2",
+          "0x1.af640920259bep-3",
+          "0x1.2222222222224p-1",
+          "0x1.93e93e93e93eep-1",
+          "0x1.6d05e05647357p-4"
+        ],
+        [
+          "0x1.b333333333334p-1",
+          "0x1.6666666666667p-1",
+          "0x0.0p+0",
+          "0x0.0p+0",
+          "0x1.bbbbbbbbbbbbep-1",
+          "0x1.7ffffffffffffp-1",
+          "0x0.0p+0",
+          "0x1.bbbbbbbbbbbbcp-1"
+        ],
+        [
+          "0x0.0p+0",
+          "0x1.a222222222224p-1",
+          "0x1.c717f31f199c2p-3",
+          "0x0.0p+0",
+          "0x1.a9abd7d264730p-2",
+          "0x1.b333333333334p-1",
+          "0x1.ddddddddddddcp-1",
+          "0x1.7d9d6a88becf2p-4"
+        ],
+        [
+          "0x1.d555555555555p-1",
+          "0x1.6666666666667p-1",
+          "0x1.cccccccccccccp-2",
+          "0x1.03b5cc0ed7300p-1",
+          "0x0.0p+0",
+          "0x1.7ffffffffffffp-1",
+          "0x0.0p+0",
+          "0x1.a222222222225p-1"
+        ],
+        [
+          "0x1.b333333333334p-1",
+          "0x1.888888888888ap-1",
+          "0x1.9f89467e25198p-3",
+          "0x1.638e38e38e38dp-1",
+          "0x1.3333333333333p-2",
+          "0x0.0p+0",
+          "0x1.8000000000001p-1",
+          "0x1.314abba098a57p-2"
+        ],
+        [
+          "0x0.0p+0",
+          "0x1.9111111111112p-1",
+          "0x1.2f654cbf66665p-6",
+          "0x1.f49f49f49f492p-2",
+          "0x0.0p+0",
+          "0x1.749f49f49f49dp-1",
+          "0x0.0p+0",
+          "0x0.0p+0"
+        ],
+        [
+          "0x1.eeeeeeeeeeeeep-1",
+          "0x0.0p+0",
+          "0x1.9999999999990p-2",
+          "0x0.0p+0",
+          "0x1.8888888888888p-1",
+          "0x1.6666666666667p-1",
+          "0x0.0p+0",
+          "0x0.0p+0"
+        ]
+      ]
+    },
+    "exact-tie/balanced": {
+      "matrix": "examples/d4_phase2/exact-tie/matrix_headered.csv",
+      "criteria": "examples/d4_phase2/exact-tie/criteria_balanced.json",
+      "matrix_sha256": "9ece1e3ab2cb6da21c61ee805c16b6ad248a658c301ad725fb7e9579998926d0",
+      "criteria_sha256": "8290a0cbdf1f08eb6b8b5a322f2ac2cbc3756d2ab4d4634dbb5e079e2c290a8a",
+      "cli_command": "python -m electre3.cli examples\\d4_phase2\\exact-tie\\matrix_headered.csv examples\\d4_phase2\\exact-tie\\criteria_balanced.json -y -b 2",
+      "cli_exit_code": 0,
+      "cli_stdout": "Ranking:\n  1. T-001 / 10.0.3.1\n  2. T-002 / 10.0.3.2\n  3. T-003 / 10.0.3.3\n",
+      "ranking": [
+        "T-001 / 10.0.3.1",
+        "T-002 / 10.0.3.2",
+        "T-003 / 10.0.3.3"
+      ],
+      "outflow": [
+        "0x1.642c8590b2166p+0",
+        "0x1.642c8590b2166p+0",
+        "0x1.181765a5915e2p-3"
+      ],
+      "inflow": [
+        "0x1.1181765a5915ep+0",
+        "0x1.1181765a5915ep+0",
+        "0x1.90b21642c8598p-1"
+      ],
+      "net_flow": [
+        "0x1.4aac3cd964020p-2",
+        "0x1.4aac3cd964020p-2",
+        "-0x1.4aac3cd964020p-1"
+      ],
+      "credibility": [
+        [
+          "0x0.0p+0",
+          "0x1.0000000000000p+0",
+          "0x1.90b21642c8598p-2"
+        ],
+        [
+          "0x1.0000000000000p+0",
+          "0x0.0p+0",
+          "0x1.90b21642c8598p-2"
+        ],
+        [
+          "0x1.181765a5915e2p-4",
+          "0x1.181765a5915e2p-4",
+          "0x0.0p+0"
+        ]
+      ]
+    },
+    "near-tie/balanced": {
+      "matrix": "examples/d4_phase2/near-tie/matrix_headered.csv",
+      "criteria": "examples/d4_phase2/near-tie/criteria_balanced.json",
+      "matrix_sha256": "2bb5903242f6d9e30b9168640ddce750ccbd261ff32bc52a9445d2dce59cbd75",
+      "criteria_sha256": "8290a0cbdf1f08eb6b8b5a322f2ac2cbc3756d2ab4d4634dbb5e079e2c290a8a",
+      "cli_command": "python -m electre3.cli examples\\d4_phase2\\near-tie\\matrix_headered.csv examples\\d4_phase2\\near-tie\\criteria_balanced.json -y -b 2",
+      "cli_exit_code": 0,
+      "cli_stdout": "Ranking:\n  1. N-002 / 10.0.4.2\n  2. N-001 / 10.0.4.1\n  3. N-003 / 10.0.4.3\n",
+      "ranking": [
+        "N-002 / 10.0.4.2",
+        "N-001 / 10.0.4.1",
+        "N-003 / 10.0.4.3"
+      ],
+      "outflow": [
+        "0x1.642c8590b2166p+0",
+        "0x1.642c8590b2166p+0",
+        "0x1.181765a5915cfp-3"
+      ],
+      "inflow": [
+        "0x1.1181765a5915ep+0",
+        "0x1.1181765a5915cp+0",
+        "0x1.90b21642c8598p-1"
+      ],
+      "net_flow": [
+        "0x1.4aac3cd964020p-2",
+        "0x1.4aac3cd964028p-2",
+        "-0x1.4aac3cd964024p-1"
+      ],
+      "credibility": [
+        [
+          "0x0.0p+0",
+          "0x1.0000000000000p+0",
+          "0x1.90b21642c8598p-2"
+        ],
+        [
+          "0x1.0000000000000p+0",
+          "0x0.0p+0",
+          "0x1.90b21642c8598p-2"
+        ],
+        [
+          "0x1.181765a5915e2p-4",
+          "0x1.181765a5915bcp-4",
+          "0x0.0p+0"
+        ]
+      ]
+    }
+  },
+  "assertions": {
+    "exact_tie": {
+      "indices": [
+        0,
+        1
+      ],
+      "equal_net_flow": true
+    },
+    "near_tie": {
+      "indices": [
+        0,
+        1
+      ],
+      "unequal_net_flow": true
+    }
+  },
+  "generator": "out/generate_d4_fixture_evidence.py"
+}

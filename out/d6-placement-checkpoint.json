@@ -1,0 +1,29 @@
+{
+  "chunk": "D6 placement/reproducibility",
+  "state": "checkpointed",
+  "base_commit": "f1c5843",
+  "scope": [
+    "docs/tutorials/cli_quickstart.md",
+    "docs/runbook/debugging.md",
+    "docs/decisions/d6-placement-notes.md",
+    "docs/decisions/d6-placement-reviews.md",
+    "tests/test_d6_placement.py"
+  ],
+  "acceptance": {
+    "focused": "27 passed",
+    "full_suite": "983 passed",
+    "positive_cli": "B, A, C",
+    "negative": "malformed threshold returns nonzero",
+    "generated_website": "build succeeds; no website diff",
+    "compileall": "passed",
+    "strict_python": "not applicable; no Python production modules changed"
+  },
+  "reviews": {
+    "scientific": "approved",
+    "engineering": "approved",
+    "uiux": "conditional static-scope approved"
+  },
+  "remote_operations": "prohibited",
+  "deferred": ["browser", "AT", "zoom", "reflow", "offline", "load"],
+  "next_action": "Commit approved D6 files and verify clean tree."
+}

@@ -99,10 +99,44 @@ WEBSITE_PORT=8100 APP_PORT=5100 python scripts/dev_local.py
 
 On Windows Command Prompt, use `set WEBSITE_PORT=8100&& set APP_PORT=5100&& python scripts\dev_local.py`. A port conflict or invalid port exits with code `2` before startup URLs print. The launcher binds only `127.0.0.1`; it is not a network deployment.
 
+## Runtime, cache, download, and session limits
+
+The supported `/app/*` workflow uses server-rendered HTML without JavaScript and requires preview before compute. Supported routes are `GET /app/`, `POST /app/confirm-inputs`, `POST /app/preview`, `POST /app/compute`, and `GET /app/download/<token>`.
+
+- `/app` accepts uploads through 100 MiB and returns HTTP 413 for larger requests.
+- Shared input rows are limited to 100,000.
+- The feasibility gate rejects estimated ranking runtime above 300 seconds with HTTP 422.
+- The hard deadline is 330 seconds. It publishes no partial result and returns HTTP 504.
+- The cache stores one latest process-memory result. Cached artifact payloads are limited to 32 MiB; metadata has separate memory overhead.
+- Serializer version 2 validates split parts of at most 16 MiB and checks checksums.
+- Cache entries and signed sessions expire after 30 minutes. Restarting the single-worker, process-local cache loses results.
+- A session may complete 30 successful downloads in a rolling minute.
+
+Download diagnosis: HTTP 404 means an expired, replaced, foreign-session, unknown, or restart-lost token. HTTP 410 means cached checksum validation failed. HTTP 429 means the successful-download rate limit was reached.
+
+## Migration and legacy compatibility
+
+New users must use `/app/`. Legacy compatibility routes are `GET /preview/<upload_id>`, `POST /preview/<upload_id>/confirm`, `POST /preview/<upload_id>/cancel`, `POST /compute/start`, and `GET /compute/status/<job_id>`. They have separate behavior and retain their confirmation requirement. A legacy `POST /compute/start` without upload confirmation returns HTTP 403.
+
+Migrate identifier-bearing CSV work by keeping the source CSV as the record of IDs. The converter creates a numeric `(N,C)` NumPy matrix and therefore changes displayed labels to positional identifiers. Map output indices back through the original CSV identifiers; do not treat saved NumPy ranking indices as source IDs or net-flow scores.
+
+## Reproducibility evidence
+
+Run commands at a pinned revision. Record the command, environment, exit code, output, file hashes, and deferred limitations. Include positive, negative, and edge tests for unit, integration, scientific, security, UI/static, serialization/cache, end-to-end, links, and generated-site output. Audit every changed or added Python module for the strict 50-executable-line policy; `scripts/build_website.py` remains an existing documented exception.
+
+Browser rendering, keyboard, zoom, reflow, offline, assistive-technology, screen-reader, and load evidence remain deferred and non-blocking.
+
 ## Repro commands
 
 - Main suite:
   - `python -m pytest -q tests/`
+- CLI positive path:
+  - `python -m electre3.cli examples/assets_priority/matrix_with_headers.csv examples/assets_priority/criteria.json -y`
+- CLI negative threshold order:
+  - `python -c "from electre3.validate import validate_thresholds; from electre3.config import CriterionConfig; validate_thresholds([CriterionConfig('x', 1, .3, .2, .4, True)])"`
+- Website reproducibility and static checks:
+  - `python scripts/build_website.py`
+  - `python -m pytest -q tests/test_website_static.py tests/test_local_document_links.py`
 - Launcher lifecycle suite:
   - `python -m pytest -q tests/test_dev_local.py`
 

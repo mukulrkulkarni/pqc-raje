@@ -89,11 +89,33 @@ python -m electre3.cli matrix.csv criteria.json -b 1000 -y -o out/ranking.npy
 
 Net flow is `φ(a) = Σ_b S(a,b) − Σ_b S(b,a)`, ranked descending. The diagonal is excluded. Minimize criteria have the approved normalized `1-g` meaning. The implementation evaluates pairwise values directly as `g(b)-g(a)` for numerical stability, including subnormal binary64 inputs.
 
-## References
+## Complete CLI reference
+
+```text
+python -m electre3.cli matrix_file criteria_file [-o OUTPUT] [-b BLOCK_SIZE] [-y] [-q]
+```
+
+- `matrix_file` accepts an identifier-bearing CSV, numeric `.npy`, or one-array `.npz`.
+- `criteria_file` is a UTF-8 JSON criteria list.
+- `-b`/`--block-size` accepts an integer from 1 through 10000; the default is 1000.
+- `-y`/`--yes` skips confirmation prompts.
+- `-q`/`--quiet` suppresses computation, status, and save messages. It does not suppress prompts or ranking output when `--output` is absent.
+- `-o`/`--output` saves zero-based ranking row indices with NumPy serialization. It does not save identifiers or raw net-flow scores.
+
+Errors print to standard error and return a nonzero exit code. The ranking deadline covers ranking computation; parsing, request handling, and response serialization are separate work.
+
+## Reference and source ownership
+
+The CLI ranks by descending raw net flow after ELECTRE III credibility. This is not ELECTRE III distillation. Raw flow excludes the diagonal: `φ(a) = Σ(b≠a) S(a,b) − Σ(b≠a) S(b,a)`. `NetFlowAccumulator.normalize()` is not used for ranking. Exact equal flows are ties; `np.argsort(-net_flow)` has no documented stable relative order within a tie.
+
+Validated minimize criteria compare `g(b)-g(a)`, which is equivalent to normalized `1-g` without storing rounded transformed values. Shared CLI/web entry points validate scores in `[0,1]`, one through eight criteria, positive weights summing to one, and `0 ≤ q ≤ p ≤ v`. At equal thresholds, the full-concordance branch has priority when `q=p`, and the full-veto branch has priority when `p=v`.
 
 - CLI entrypoint: `electre3/cli.py`
 - CSV/NumPy loader: `electre3/data.py` (`load_input`)
-- CSV converter: `scripts/convert_matrix_csv.py`
-- Shared validator: `electre3/shared.py`
+- Shared validator and result builder: `electre3/shared.py`
 - Ranking pipeline: `electre3/ranking.py`
-- Debugging playbook: `docs/runbook/debugging.md`
+- Concordance, discordance, credibility: `electre3/concordance.py`, `electre3/discordance.py`, `electre3/credibility.py`
+- Flow accumulator: `electre3/accumulator.py`
+- CSV converter: `scripts/convert_matrix_csv.py`
+- App workflow and cache: `app/routes/workflow.py`, `app/services/result_cache.py`
+- [Debugging, runtime, migration, and reproducibility](../runbook/debugging.md)

@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; font-src 'self'; script-src 'self'; style-src 'unsafe-inline';">
+<meta name="color-scheme" content="light dark">
+<title>ELECTRE III reference</title>
+<style>
+:root{--bg:#fff;--surface:#f5f7f8;--text:#253746;--muted:#53646d;--accent:#6400ff;--border:#c9d4d9;--focus:#7eddd3;--sans:Arial,sans-serif}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 var(--sans)}main{max-width:900px;margin:auto;padding:2rem}nav{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:2rem}a{color:var(--accent);font-weight:700}nav a{border:1px solid var(--border);border-radius:4px;color:var(--text);padding:.45rem .8rem;text-decoration:none}a:focus-visible{outline:3px solid var(--focus);outline-offset:2px}h1{margin-bottom:.25rem}h2{margin-top:2rem}.lede,.meta{color:var(--muted)}.card{background:var(--surface);border:1px solid var(--border);border-radius:8px;margin-top:1rem;padding:1rem}code{font-family:Consolas,monospace;font-size:.9em}footer{border-top:1px solid var(--border);color:var(--muted);margin-top:2rem;padding-top:1rem}</style>
+</head>
+<body>
+<main>
+<nav aria-label="Primary"><a href="/index.html">Getting Started</a><a href="/app/index.html">App</a><a href="/modules/index.html">Tutorials</a><a href="/reference/index.html" aria-current="page">Reference</a></nav>
+<h1>Reference and support</h1>
+<p class="lede">Use the static companion site for orientation. Use the Flask documentation route for module documentation.</p>
+<section class="card"><h2>Current routes</h2><p><a href="/modules/index.html">Static tutorials</a> use companion-site paths. <a href="https://docs.pqcmig.scoring.draft/docs/modules">Flask module documentation</a> uses the Flask <code>/docs/modules</code> route.</p></section>
+<section class="card"><h2>Current repository reference</h2><p>The approved D6 CLI and debugging source remains repository-owned: <code>docs/tutorials/cli_quickstart.md</code> and <code>docs/runbook/debugging.md</code>. It is not copied into this static site.</p></section>
+<section class="card"><h2>Planned hosting</h2><p>Publish repository reference pages only when their owning documentation host defines stable routes. Until then, do not infer static <code>/docs/...</code> paths.</p></section>
+<footer>Static paths and Flask paths remain separate by design.</footer>
+</main>
+</body>
+</html>

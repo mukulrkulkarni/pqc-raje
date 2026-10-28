@@ -1,0 +1,42 @@
+{
+  "chunk": "D7 Companion Website Integration",
+  "state": "checkpointed",
+  "base_commit": "80fa2ac",
+  "scope": [
+    "website navigation and approved reference links",
+    "Flask/static path reconciliation",
+    "D7 documentation notes and focused tests"
+  ],
+  "changed_paths": [
+    "website/index.html",
+    "website/app/index.html",
+    "website/modules/index.html",
+    "website/reference/index.html",
+    "docs/decisions/d7-documentation-notes.md",
+    "docs/decisions/d7-documentation-reviews.md",
+    "tests/test_d7_website_integration.py",
+    "tests/test_local_document_links.py"
+  ],
+  "acceptance": {
+    "website_build": "passed",
+    "focused_tests": "20 passed in 0.78s",
+    "regression_tests": "994 passed in 26.33s",
+    "python_compile": "passed",
+    "diff_check": "passed",
+    "negative": "Flask traversal-shaped path returns HTTP 404",
+    "edge": "static and Flask tutorial paths remain distinct"
+  },
+  "reviews": {
+    "engineering": "approved",
+    "uiux": "approved for static scope",
+    "scientific": "not required; no math/content claims changed"
+  },
+  "constraints_met": [
+    "scripts/build_website.py unchanged",
+    "no algorithms, app logic, or Flask routes changed",
+    "generated tutorial ownership preserved",
+    "new Python test has fewer than 50 executable lines"
+  ],
+  "remote_operations": "prohibited",
+  "deferred": ["browser", "AT", "zoom", "reflow", "keyboard", "offline", "load"]
+}

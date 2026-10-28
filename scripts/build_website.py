@@ -21,6 +21,7 @@ ROOT = Path(__file__).resolve().parent.parent
 DOCS = ROOT / "docs"
 EXAMPLES = ROOT / "examples"
 WEBSITE = ROOT / "website"
+STATIC_ASSET_MANIFEST = DOCS / "static-asset-manifest.json"
 
 MODULES = [
     "config",
@@ -138,9 +139,37 @@ def synchronize_generated_tree(src: Path, dst: Path) -> None:
             shutil.rmtree(backup)
 
 
+def load_static_asset_manifest() -> dict:
+    """Load and validate the owned static asset publication manifest."""
+    manifest = json.loads(read_text(STATIC_ASSET_MANIFEST))
+    if manifest.get("version") != 1 or not isinstance(manifest.get("assets"), list):
+        raise ValueError("Invalid static asset manifest")
+    ownership = manifest.get("ownership", {})
+    if ownership != {"source": "examples/", "published": "website/examples/", "generator": "scripts/build_website.py"}:
+        raise ValueError("Unexpected static asset manifest ownership")
+    for asset in manifest["assets"]:
+        if set(asset) != {"id", "source", "target", "files"}:
+            raise ValueError("Invalid static asset manifest entry")
+        if not all(isinstance(asset[key], str) and asset[key] and "/" not in asset[key] and "\\" not in asset[key] and asset[key] not in {".", ".."} for key in ("id", "source", "target")):
+            raise ValueError("Invalid static asset source or target")
+        files = asset["files"]
+        if not isinstance(files, list) or not files or len(files) != len(set(files)):
+            raise ValueError("Invalid static asset file list")
+        for file_name in files:
+            if not isinstance(file_name, str) or not file_name or Path(file_name).name != file_name or file_name in {".", ".."}:
+                raise ValueError("Invalid static asset file path")
+    return manifest
+
+
 def copy_examples() -> None:
-    """Copy committed examples for static-site links without editing their sources."""
-    synchronize_generated_tree(EXAMPLES / "assets_priority", WEBSITE / "examples" / "assets_priority")
+    """Publish exactly manifest-owned examples without editing their sources."""
+    for asset in load_static_asset_manifest()["assets"]:
+        source = EXAMPLES / asset["source"]
+        expected = set(asset["files"])
+        actual = {path.name for path in source.iterdir()} if source.is_dir() else set()
+        if actual != expected or any(not (source / name).is_file() for name in expected):
+            raise ValueError(f"Static asset manifest does not match source: {source}")
+        synchronize_generated_tree(source, WEBSITE / "examples" / asset["target"])
 
 
 def build_module(name: str, cfg: dict) -> None:

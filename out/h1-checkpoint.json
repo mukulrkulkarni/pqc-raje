@@ -1,0 +1,79 @@
+{
+  "chunk": "H1",
+  "state": "completed",
+  "baseline_commit": "e28ae17245ef906ef563b00af3304901b351636c",
+  "objective": "Refactor electre3.cli and config.py into cohesive helpers while preserving public APIs and behavior under the strict 50 executable-line policy; recover the stale ranking-tutorial repository-link assertion only.",
+  "scope": {
+    "included": [
+      "electre3/cli.py",
+      "electre3/config.py",
+      "electre3/cli_args.py",
+      "electre3/cli_io.py",
+      "electre3/cli_output.py",
+      "electre3/config_validation.py",
+      "tests/test_cli.py",
+      "tests/test_ranking_deep.py",
+      "out/h1_line_audit.py",
+      "docs/decisions/h1-line-policy-notes.md",
+      "out/h1-checkpoint.json"
+    ],
+    "excluded": [
+      "D6 materials",
+      "user documentation pages",
+      "CSP preflight",
+      "remote Git",
+      "v0.1 tag"
+    ]
+  },
+  "review": {
+    "reviewer": "Engineering Critic",
+    "status": "approved",
+    "approval": "H1 stale-link recovery approved by Engineering Critic; final acceptance authorized by the task instruction."
+  },
+  "coverage": {
+    "positive": "The repaired ranking tutorial test accepts the repository-root README link; 30 ranking tests passed. The CLI regression test saves a ranking using existing flags; 29 focused H1 tests passed.",
+    "negative": "Existing link-negative coverage rejects #missing, missing.html, https://example.com, //example.com, and ../../escape.html. The CLI regression test reports a missing input file to stderr and returns 1.",
+    "edge": "A repository-root README is a valid local file but has no Flask documentation route. The recovery retains file and fragment checks for all local links and limits route/CSP checks to module-served paths. The CLI EOF-confirmation test aborts safely."
+  },
+  "validation": {
+    "failed_test_first": {
+      "command": "python -m pytest tests/test_ranking_deep.py -q",
+      "result": "Initial recovery reproduction: 29 passed, 1 failed; the failure was the valid ../../README.md target."
+    },
+    "repaired_ranking_test": {
+      "command": "python -m pytest tests/test_ranking_deep.py -q",
+      "result": "30 passed in 0.62s"
+    },
+    "focused_h1_tests": {
+      "command": "python -m pytest tests/test_cli.py tests/test_cli_run.py tests/test_config.py -q",
+      "result": "29 passed in 0.40s"
+    },
+    "full_pytest": {
+      "command": "python -m pytest -q",
+      "result": "1045 passed in 24.32s"
+    },
+    "compileall": {
+      "command": "python -m compileall -q electre3 app",
+      "result": "passed"
+    },
+    "strict_line_audit": {
+      "command": "python out/h1_line_audit.py",
+      "result": "passed; cli.py=30, cli_args.py=13, cli_io.py=29, cli_output.py=18, config.py=27, config_validation.py=26 executable lines"
+    },
+    "diff_check": {
+      "command": "git diff --check",
+      "result": "passed; Git emitted existing LF-to-CRLF conversion warnings for edited tracked files"
+    }
+  },
+  "limitations": [
+    "Browser, assistive-technology, zoom, reflow, keyboard-runtime, offline, and load validation remain deferred and non-blocking.",
+    "No remote Git operation or tag change was performed.",
+    "Git CRLF conversion warnings remain environmental warnings; git diff --check found no whitespace errors."
+  ],
+  "commit": {
+    "message": "complete-h1-cli-config-line-policy",
+    "id_recording": "Commit identifier is reported from the final Git verification after this checkpoint is committed."
+  },
+  "next_action": "H1 complete; proceed to authorized D6 documentation work.",
+  "checkpoint": "Final acceptance validation passed; focused H1 changes committed."
+}

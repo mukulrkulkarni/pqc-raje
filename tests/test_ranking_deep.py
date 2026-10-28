@@ -57,7 +57,7 @@ def check_link(href: str, html: str) -> None:
     url = urlsplit(href)
     assert not url.scheme and not url.netloc
     target = (PAGE.parent / url.path).resolve() if url.path else PAGE
-    assert target.is_relative_to(PAGE.parent) and target.is_file()
+    assert target.is_relative_to(ROOT) and target.is_file()
     ids = anchors(target.read_text(encoding='utf-8')) if url.path else anchors(html)
     assert not url.fragment or url.fragment in ids
 
@@ -301,7 +301,7 @@ def test_local_links_and_http_fragments() -> None:
         if tag != 'a' or 'href' not in a:
             continue
         check_link(a['href'], html)
-        if not urlsplit(a['href']).path:
+        if not urlsplit(a['href']).path or not (PAGE.parent / urlsplit(a['href']).path).resolve().is_relative_to(PAGE.parent):
             continue
         url = urljoin('/docs/modules/ranking/tutorial', a['href'])
         response = client.get(urlsplit(url).path)

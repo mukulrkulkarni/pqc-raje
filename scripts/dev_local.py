@@ -24,7 +24,8 @@ from socketserver import BaseServer
 from typing import Callable, Protocol
 
 ROOT = Path(__file__).resolve().parent.parent
-WEBSITE_DIR = ROOT / "website" / "app"
+# Serve the website root so root-absolute links such as /modules/ resolve on port 8000.
+WEBSITE_DIR = ROOT / "website"
 HOST = "127.0.0.1"
 
 

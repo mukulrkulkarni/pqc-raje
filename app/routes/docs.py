@@ -1,5 +1,5 @@
 """Documentation serving routes with path traversal protection."""
-from flask import Blueprint, send_file, abort
+from flask import Blueprint, Response, abort, current_app, send_file
 from pathlib import Path
 import re
 
@@ -25,7 +25,11 @@ def landing():
     gs_path = DOCS_DIR / "GETTING_STARTED.html"
     if not gs_path.exists():
         abort(404)
-    return send_file(gs_path, mimetype="text/html")
+    content = gs_path.read_text(encoding="utf-8")
+    content = content.replace(
+        "__COMPANION_WEBSITE_URL__", current_app.config["COMPANION_WEBSITE_URL"]
+    )
+    return Response(content, mimetype="text/html")
 
 
 

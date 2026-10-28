@@ -12,11 +12,14 @@ from __future__ import annotations
 
 import json
 import re
+import shutil
+import tempfile
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parent.parent
 DOCS = ROOT / "docs"
+EXAMPLES = ROOT / "examples"
 WEBSITE = ROOT / "website"
 
 MODULES = [
@@ -110,6 +113,36 @@ def copy_assets() -> None:
         write_text(dst, read_text(src))
 
 
+def synchronize_generated_tree(src: Path, dst: Path) -> None:
+    """Replace generated output only after staging a complete source tree.
+
+    A staged copy preserves the last output when the source is invalid or missing.
+    Replacing the destination removes files that disappeared from the source.
+    """
+    if not src.is_dir():
+        raise FileNotFoundError(f"Missing committed example directory: {src}")
+    dst.parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory(prefix=f".{dst.name}-", dir=dst.parent) as temp_dir:
+        staged = Path(temp_dir) / dst.name
+        backup = Path(temp_dir) / f"{dst.name}.previous"
+        shutil.copytree(src, staged)
+        if dst.exists():
+            dst.replace(backup)
+        try:
+            staged.replace(dst)
+        except Exception:
+            if backup.exists():
+                backup.replace(dst)
+            raise
+        if backup.exists():
+            shutil.rmtree(backup)
+
+
+def copy_examples() -> None:
+    """Copy committed examples for static-site links without editing their sources."""
+    synchronize_generated_tree(EXAMPLES / "assets_priority", WEBSITE / "examples" / "assets_priority")
+
+
 def build_module(name: str, cfg: dict) -> None:
     docs_base = cfg["docsBaseUrl"]
     app_base = cfg["appBaseUrl"]
@@ -151,6 +184,7 @@ def build_module(name: str, cfg: dict) -> None:
 def main() -> int:
     cfg = load_config()
     copy_assets()
+    copy_examples()
 
     # Ensure index/app/modules index have consistent nav and updated domains.
     index = apply_domains(read_text(WEBSITE / "index.html"), cfg["docsBaseUrl"], cfg["appBaseUrl"])

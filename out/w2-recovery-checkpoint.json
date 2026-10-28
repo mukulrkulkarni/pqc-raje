@@ -1,0 +1,40 @@
+{
+  "work_item": "W2 bounded recovery",
+  "state": "completed",
+  "updated_at": "2026-10-28",
+  "agent": "Innovium prepared Code specialist, candidate v1",
+  "objective": "Repair the Flask Examples link and make generated example synchronization remove stale output safely.",
+  "verified_paths": [
+    "app/__init__.py",
+    "app/routes/docs.py",
+    "app/templates/app_input.html",
+    "docs/GETTING_STARTED.html",
+    "scripts/build_website.py",
+    "tests/test_w2_recovery.py",
+    "tests/test_w2_static_flask_links.py",
+    "docs/decisions/w2-documentation-notes.md"
+  ],
+  "acceptance_results": {
+    "focused_positive_negative_edge": "49 passed in 25.40s",
+    "full_pytest": "1099 passed in 55.41s",
+    "website_build": "passed: python scripts/build_website.py",
+    "compileall": "passed: python -m compileall -q electre3 app scripts tests",
+    "preflight": "passed: all four checks",
+    "diff_check": "passed; LF-to-CRLF warnings only"
+  },
+  "reviews": {
+    "engineering": "approved; documented in docs/decisions/w2-documentation-notes.md",
+    "uiux": "approved for static/documentation scope; browser checks deferred"
+  },
+  "commit": {
+    "id": "7ece93d",
+    "message": "recover-w2-static-flask-examples"
+  },
+  "working_tree": "clean after commit",
+  "limitations": [
+    "Browser checks remain deferred and non-blocking.",
+    "No remote operations or release tag changes.",
+    "Crash recovery between destination move and staged move is outside this bounded recovery."
+  ],
+  "next_action": "None; bounded W2 recovery is complete."
+}

@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"><title>Ranking criteria</title></head>
-<body><main class="container workflow-step"><p class="step-indicator">Step 1 of 4</p><h1>Define ranking criteria</h1><p class="step-introduction">Choose how to enter two to eight criteria for the ELECTRE III ranking.</p>
+<body><main class="container workflow-step"><p><a href="{{ config['COMPANION_WEBSITE_URL'] }}/examples/index.html">View the committed Asset Priority example</a></p><p class="step-indicator">Step 1 of 4</p><h1>Define ranking criteria</h1><p class="step-introduction">Choose how to enter two to eight criteria for the ELECTRE III ranking.</p>
 {% if error %}<p role="alert"><strong>Correct this input:</strong> {{ error }}</p>{% endif %}
 <form method="post" action="{{ url_for('workflow.confirm_inputs') }}">
 <fieldset class="criteria-mode"><legend>Criteria entry mode</legend>

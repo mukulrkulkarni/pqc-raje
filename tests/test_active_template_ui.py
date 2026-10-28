@@ -22,7 +22,10 @@ def test_active_template_links_local_stylesheet_and_declares_viewport(template_p
     content = template_path.read_text(encoding="utf-8")
     assert '<meta name="viewport" content="width=device-width, initial-scale=1">' in content
     assert "url_for('static', filename='style.css')" in content
-    assert "http://" not in content and "https://" not in content
+    # The workflow may link to the companion loopback website; it must not load remote assets.
+    assert "https://" not in content
+    assert 'src="http://' not in content
+    assert re.sub(r'href="http://127\.0\.0\.1:\d+/', 'href="/', content).count('href="http://') == 0
 
 
 @pytest.mark.parametrize("template_path", ACTIVE_TEMPLATES, ids=lambda path: path.name)

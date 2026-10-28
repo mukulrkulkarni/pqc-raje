@@ -1,0 +1,36 @@
+{
+  "work_item": "W2 static-site link repair",
+  "state": "blocked",
+  "created_at": "2026-10-28",
+  "agent": "Innovium Code specialist candidate v1",
+  "cause": "scripts/dev_local.py served website/app as the port-8000 document root while website links use root-absolute paths under website/.",
+  "changed_paths": [
+    "scripts/dev_local.py",
+    "scripts/build_website.py",
+    "scripts/preflight/assets.py",
+    "website/index.html",
+    "website/app/index.html",
+    "website/examples/index.html",
+    "website/examples/assets_priority/",
+    "docs/GETTING_STARTED.html",
+    "app/templates/app_input.html",
+    "tests/test_w2_static_flask_links.py",
+    "tests/test_active_template_ui.py",
+    "docs/decisions/w2-documentation-notes.md"
+  ],
+  "source_ownership": "examples/assets_priority/ remains authoritative; build copies it to website/examples/assets_priority/.",
+  "acceptance_results": {
+    "targeted_tests": "39 passed in 29.80s",
+    "full_pytest": "1091 passed in 48.85s",
+    "website_build": "passed",
+    "compileall": "passed: python -m compileall -q electre3 app scripts",
+    "preflight": "passed: four checks",
+    "diff_check": "passed"
+  },
+  "blocker": "Engineering and UIUX reviews require separate authorized reviewers. This agent cannot self-approve or manage agents.",
+  "limitations": [
+    "Browser checks remain deferred and non-blocking.",
+    "No remote operations or release tag changes."
+  ],
+  "next_action": "Obtain Engineering and UIUX review; then commit approved W2 scope and verify a clean working tree."
+}

@@ -1,0 +1,5 @@
+[
+  {"name": "E", "weight": 0.45, "q": 0.05, "p": 0.15, "v": 0.35, "maximize": true},
+  {"name": "X", "weight": 0.35, "q": 0.05, "p": 0.15, "v": 0.35, "maximize": true},
+  {"name": "O", "weight": 0.20, "q": 0.05, "p": 0.15, "v": 0.30, "maximize": true}
+]

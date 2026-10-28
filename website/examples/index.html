@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; font-src 'self'; style-src 'unsafe-inline';">
+<title>Asset Priority example</title>
+<style>body{max-width:52rem;margin:2rem auto;padding:0 1rem;font:16px/1.6 Arial,sans-serif;color:#253746}a:focus-visible{outline:3px solid #7eddd3;outline-offset:2px}code{font-family:Consolas,monospace}nav{display:flex;gap:1rem;flex-wrap:wrap}</style>
+</head>
+<body>
+<nav aria-label="Primary"><a href="/index.html">Getting Started</a><a href="/app/index.html">App</a><a href="/modules/index.html">Tutorials</a><a href="/reference/index.html">Reference</a><a href="/examples/index.html" aria-current="page">Examples</a></nav>
+<main>
+<h1>Asset Priority example</h1>
+<p>Use the committed example inputs to reproduce the documented ranking.</p>
+<ul>
+<li><a href="/examples/assets_priority/README.md">Instructions</a></li>
+<li><a href="/examples/assets_priority/criteria.json">Criteria JSON</a></li>
+<li><a href="/examples/assets_priority/matrix_with_headers.csv">Headered matrix CSV</a></li>
+<li><a href="/examples/assets_priority/ranking.txt">Expected ranking</a></li>
+</ul>
+<p>Run from the repository root: <code>python -m electre3.cli examples/assets_priority/matrix_with_headers.csv examples/assets_priority/criteria.json -y</code>.</p>
+</main>
+</body>
+</html>

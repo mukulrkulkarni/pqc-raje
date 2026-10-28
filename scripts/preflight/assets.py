@@ -5,7 +5,8 @@ from pathlib import Path
 from scripts.preflight.result import CheckResult
 
 ROOT = Path(__file__).resolve().parents[2]
-PATTERNS = (r'href=["\']https?://(?!localhost)', r'src=["\']https?://(?!localhost)')
+# Navigation to the local companion static site is allowed; remote assets remain blocked.
+PATTERNS = (r'href=["\']https?://(?!(?:localhost|127\.0\.0\.1)(?::\d+)?(?:/|["\']))', r'src=["\']https?://(?!localhost|127\.0\.0\.1)')
 
 
 def check_no_external_assets(verbose: bool = False) -> CheckResult:

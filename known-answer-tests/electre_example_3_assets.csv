@@ -1,0 +1,9 @@
+asset,Quantum-Vulnerability,Migration-Complexity,Obsolete-Crypto,Business-Criticality
+"Global API Gateway (10.40.1.10)",0.95,0.40,0.45,0.85
+"Identity Provider Cluster (10.40.2.20)",0.80,0.65,0.60,1.00
+"Kubernetes Control Plane (10.40.3.30)",0.60,0.75,0.50,1.00
+"Customer Database Cluster (10.40.4.40)",0.70,0.55,0.85,0.95
+"Payment Processing Service (10.40.5.50)",0.75,0.60,0.70,0.95
+"HSM-KMS Service (10.40.6.60)",0.50,0.90,0.75,1.00
+"Inter-Region VPN Hub (10.40.7.70)",0.85,0.70,0.65,0.80
+"Backup Storage Gateway (10.40.8.80)",0.65,0.45,0.90,0.85

@@ -1,0 +1,4 @@
+asset,Quantum-Vulnerability,Migration-Complexity,Obsolete-Crypto,Business-Criticality
+"Edge API Gateway (10.20.1.10)",0.90,0.35,0.50,0.85
+"KMS Cluster (10.20.2.20)",0.55,0.80,0.65,1.00
+"IPSec VPN Concentrator (10.20.3.30)",0.70,0.60,0.75,0.70

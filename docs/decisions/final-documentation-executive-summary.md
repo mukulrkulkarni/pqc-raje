@@ -9,7 +9,7 @@ The release record confirms the full local suite: **1062 passed in 25.28 seconds
 
 The gate confirms ownership boundaries. The CLI quickstart and debugging runbook remain repository reference sources. Tutorial HTML source files generate their matching website tutorial output through the documented build script. Static and Flask documentation routes remain deliberately separate. Repository-hosted reference routes remain planned rather than claimed as current.
 
-D4 fixture evidence, D5 scientific-placement references, and D6 reference/debugging placement remain verified. D8 resolved five historical draft links and classified one unavailable D3 historical/planned target without fabricating a route. Draft records remain drafts.
+D4 fixtures, the D5 placed tutorial, and D6 quickstart/runbook reference content are available in repository paths and re-verified in [documentation artifact recovery notes](documentation-artifact-recovery-notes.md). Repository-hosted reference routes remain planned and unavailable; D6 does not claim a companion-website reference page. D8 resolved five historical draft links and classified one unavailable D3 historical/planned target without fabricating a route. Draft records remain drafts.
 
 Scientific, Engineering, UI/UX, and PI acceptance are recorded in the final technical release notes. UI/UX accepted styling, branding, consistency, and current/planned/deferred labels.
 

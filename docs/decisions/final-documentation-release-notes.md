@@ -37,7 +37,7 @@ Results: compile passed; full suite passed **1062 tests in 25.28s**; focused D4-
 - **UI/UX:** accepted labeling, styling/branding consistency, and current/planned/deferred distinctions. Browser limitations remain deferred and non-blocking.
 - **PI:** accepted this bounded final-gate scope through the approved invocation and recorded the release decision below.
 
-D6 reference/debugging placement remains current. D5 targets retain draft provenance. D4 fixture correction remains verified. D8 remediated five links and explicitly classified one unavailable historical/planned D3 target without inventing a route.
+D4 fixtures, the D5 placed tutorial, and D6 quickstart/runbook reference content are available in their repository paths, as re-verified after release-record recovery; see [documentation artifact recovery notes](documentation-artifact-recovery-notes.md). D5 targets retain draft provenance. D8 remediated five links and explicitly classified one unavailable historical/planned D3 target without inventing a route. Repository-hosted `/docs/...` references remain planned and unavailable; no website reference page is claimed for D6.
 
 ## Limitations
 

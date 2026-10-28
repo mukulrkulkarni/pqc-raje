@@ -1,0 +1,34 @@
+{
+  "task": "documentation artifact recovery and release-record correction",
+  "state": "completed",
+  "date": "2026-10-28",
+  "head_before_changes": "21a587b4adef51900da4513083eca6ed03a903a0",
+  "provenance": {
+    "D4": "2c38c7c",
+    "D5": "aa85c5c",
+    "D6": "a90f274",
+    "D8": "f250129",
+    "final_gate": "21a587b"
+  },
+  "recovery_result": "Historical checkout and regeneration confirmed that required D4, D5, and D6 artifacts already exist in HEAD; no historical content overwrite was needed.",
+  "changed_paths": [
+    "docs/decisions/documentation-artifact-recovery-notes.md",
+    "docs/decisions/d8-documentation-release-audit.md",
+    "docs/decisions/final-documentation-release-notes.md",
+    "docs/decisions/final-documentation-executive-summary.md",
+    "out/documentation-artifact-recovery-checkpoint.json"
+  ],
+  "acceptance_evidence": {
+    "full_pytest": "1062 passed in 26.73s",
+    "focused_pytest": "42 passed in 7.06s",
+    "compile_build_diff": "passed; only CRLF warnings",
+    "d4_reproduction": "deterministic exact and near tie evidence generated",
+    "link_audit": "audited_files=18 local_link_errors=0"
+  },
+  "limitations": [
+    "Browser rendering, keyboard, zoom, reflow, offline, load, screen-reader, and assistive-technology evidence remain deferred and non-blocking.",
+    "Remote Git operations remain user-only.",
+    "v0.1 and v0.2.0 tags remain unchanged."
+  ],
+  "next_action": "Review focused diff, commit approved recovery records, and verify clean tree."
+}

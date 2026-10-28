@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "namespaces": {
+    "static": {
+      "origin": "website/",
+      "canonical": ["/", "/index.html", "/app/", "/modules/", "/modules/<module>/", "/modules/<module>/tutorial/", "/reference/", "/examples/", "/examples/index.html", "/examples/assets_priority/<file>", "/modules/assets/<asset>"],
+      "trailingSlash": "directory routes only"
+    },
+    "flask": {
+      "origin": "app/routes/docs.py",
+      "canonical": ["/", "/app/", "/docs/modules", "/docs/modules/<module>", "/docs/modules/<module>/tutorial", "/docs/modules/<module>/assets/<asset>"],
+      "trailingSlash": "only / and /app/ accept a trailing slash"
+    }
+  },
+  "destinations": {
+    "examples": {"static": "/examples/index.html", "flask": "{companion-origin}/examples/index.html"}
+  },
+  "ownership": {
+    "website/modules/<module>/tutorial/index.html": "scripts/build_website.py from docs/modules/<module>_tutorial_side_by_side.html",
+    "website/examples/assets_priority/": "scripts/build_website.py from examples/assets_priority/",
+    "website/modules/assets/": "scripts/build_website.py from docs/modules/assets/"
+  },
+  "security": {
+    "localLinks": "reject traversal, encoded traversal, backslashes, credentials, and protocol-relative targets",
+    "externalLinks": "classify but do not fetch",
+    "redirects": "only configured absolute companion origin may form Flask Examples URLs"
+  }
+}

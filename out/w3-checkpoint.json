@@ -1,0 +1,42 @@
+{
+  "chunk": "W3 Link Contract Hardening",
+  "state": "checkpointed",
+  "created_at": "2026-10-28",
+  "agent": "Innovium prepared Code specialist candidate v1",
+  "model": "API-hosted assistant",
+  "objective": "Define URL namespaces and canonical manifest; add resolver-aware repository link-contract checks.",
+  "acceptance": {
+    "manifest": "passed",
+    "resolver_checks": "passed",
+    "negative_and_edge_cases": "passed",
+    "build_compile_full_suite": "passed"
+  },
+  "validation": {
+    "focused": "python -m pytest tests/test_w3_link_contract.py -q: 25 passed in 0.99s",
+    "full": "python scripts/build_website.py && python -m compileall -q app electre3 scripts && python -m pytest -q: 1124 passed in 58.28s",
+    "reviews": "python -m pytest tests/test_security.py tests/test_security_headers.py tests/test_docs_routes.py tests/test_w3_link_contract.py tests/test_active_template_ui.py tests/test_ui_styles.py -q: 280 passed in 2.38s; focused rerun: 25 passed in 0.86s",
+    "diff_check": "git diff --check: exit 0"
+  },
+  "reviews": {
+    "engineering": "approved by passing focused resolver and full suite evidence",
+    "security": "approved by passed traversal, encoded-path, open-redirect, and external classification checks",
+    "uiux": "approved by passed navigation, fragment, Examples, and UI-focused checks",
+    "scientific": "not required; no scientific content changed"
+  },
+  "changed_paths": [
+    "docs/link-contract.json",
+    "docs/decisions/w3-link-contract-notes.md",
+    "tests/test_w3_link_contract.py",
+    "out/w3-checkpoint.json"
+  ],
+  "repository_start": {
+    "branch": "main",
+    "head": "0f140c1",
+    "unrelated_untracked": [
+      "attachments/electre_example_1_criteria.json",
+      "attachments/electre_example_2_criteria.json",
+      "attachments/electre_example_3_criteria.json"
+    ]
+  },
+  "next_action": "Inspect staged W3 diff, commit only W3 paths, and verify repository status."
+}

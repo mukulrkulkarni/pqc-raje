@@ -1,0 +1,47 @@
+{
+  "gate": "Final Documentation Release Gate",
+  "state": "checkpointed",
+  "created_at": "2026-10-28",
+  "validated_at": "2026-10-28",
+  "baseline": {
+    "head": "79e3e15",
+    "d4": "2c38c7c",
+    "d5": "aa85c5c",
+    "d6": "a90f274",
+    "d7": "a327e68",
+    "d8_historical_link_remediation": "79e3e15",
+    "release": "v0.1 released with limitations",
+    "v0_1_tag_object": "adbd5ffcffd721c61e419f0e03b4f51cb960efe5"
+  },
+  "scope": [
+    "verify final documentation evidence and reproducibility",
+    "create final release-gate documentation records",
+    "run required local validation",
+    "commit only release-gate records"
+  ],
+  "exclusions": [
+    "application feature changes",
+    "remote Git operations",
+    "altering v0.1 tag",
+    "browser or assistive-technology validation"
+  ],
+  "acceptance_results": {
+    "compileall": "passed",
+    "full_pytest": "1062 passed in 25.28s",
+    "focused_d4_d8_pytest": "42 passed in 7.44s",
+    "local_link_audit": "audited_files=18 local_link_errors=0",
+    "website_build_and_ownership": "passed; no website drift",
+    "diff_and_json": "passed"
+  },
+  "review_acceptance": {
+    "scientific": "accepted",
+    "engineering": "accepted",
+    "ui_ux": "accepted; browser limitations deferred and non-blocking",
+    "pi": "accepted approved final-gate scope"
+  },
+  "limitations": [
+    "browser rendering, keyboard, zoom, reflow, offline, load, screen-reader, and assistive-technology evidence remain deferred and non-blocking",
+    "upstream Git operations remain user-only"
+  ],
+  "fallback": "Preserve this checkpoint and report any blocked validation without changing release scope."
+}

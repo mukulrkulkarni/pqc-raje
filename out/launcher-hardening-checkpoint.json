@@ -21,8 +21,8 @@
     "tests/launcher_test_support.py",
     "docs/decisions/launcher-hardening-notes.md"
   ],
-  "current_status": "implementation and verification complete; focused commit pending",
-  "target_status": "focused commit, then clean approved scope",
+  "current_status": "implementation, verification, reviews, and focused commit complete",
+  "target_status": "completed; unrelated attachment artifacts remain preserved",
   "test_inventory": {
     "positive": ["loopback services start", "required health endpoints return 200", "identity and URLs print", "Ctrl+C closes listeners"],
     "negative": ["occupied port fails before URLs", "invalid ports fail", "matching ports fail"],

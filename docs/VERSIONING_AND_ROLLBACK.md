@@ -1,192 +1,40 @@
-# Versioning and Rollback
+# Versioning and rollback
 
-This document describes the branching policy, commit rules, and rollback procedures for the ELECTRE III project.
+## Local maintenance gate
 
-## 1. Branching Policy
+Before a focused local commit, inspect `git status --short`, run `python scripts/preflight_checks.py`, run the relevant focused tests, run `python -m pytest -q tests/` when scope permits, and run `git diff --check`. The preflight validates Flask **response** CSP headers, local assets, H2 generated-documentation ownership and freshness, and the 50-line policy for H2 support modules. The existing `scripts/build_website.py` exception remains documented.
 
-### 1.1 Branch Types
+Use focused commits. The local PI consolidation workflow controls `main`; this document does not authorize a remote operation.
 
-| Branch | Purpose | Naming |
-|--------|---------|--------|
-| main | Stable release code | main |
-| wip/* | Work in progress features | wip/feature-name |
-| fix/* | Bug fixes | fix/issue-description |
+## Generated and release resources
 
-### 1.2 Rules
+Tutorial sources at `docs/modules/*_tutorial_side_by_side.html` generate `website/modules/<module>/tutorial/index.html`. See `docs/GENERATED_DOCUMENTATION.md`. Rebuild with `python scripts/build_website.py` after source edits. Preflight rejects a missing or source-older target.
 
-1. Do not commit directly to main.
-2. Create a wip/* branch for new features.
-3. Create a fix/* branch for bug fixes.
-4. Delete branches after merge.
+A user release contains runtime code, required app/static files, concise documentation, examples, and approved generated website output. Tests, attachments, snapshots, decision records, checkpoints, and build artifacts remain development/archive resources unless an explicit release manifest includes them. Verify the intended resource list and local links before packaging.
 
-## 2. Commit-After-Gate Rule
+## Local rollback procedure
 
-### 2.1 Gate Checks
+1. Stop when the tree is dirty. Record `git status --short` and `git log --oneline -10`.
+2. Create a local recovery reference before history changes: `git branch recovery/<date>-<topic> HEAD`.
+3. Prefer `git revert <commit>` for shared or published history. Run the maintenance gate after resolving any conflict.
+4. Use `git reset --soft <commit>` or `git reset <commit>` only for unpublished local work after verifying the recovery reference.
+5. `git reset --hard <commit>` discards work. Use it only after a clean-tree check and explicit user confirmation. Do not automate it.
+6. Use `git reflog` to locate lost local references. Restore deliberately and rerun the gate.
 
-Before you commit, run preflight checks:
+## User-only upstream reconciliation
 
-```bash
-python scripts/preflight_checks.py
-```
+Only the user may fetch, pull, push, mutate remote branches or tags, merge/rebase with remote history, or force-push. Agents may inspect local state and prepare evidence only.
 
-Or with tests:
+The user should inspect status and local HEAD/tag, explicitly choose whether to contact upstream, compare histories and tags after an approved fetch, reconcile on a user-controlled branch, run local checks, and publish deliberately. Do not use plain `--force`; unexpected differences, conflicts, failed tests, or a dirty tree require a stop and preservation of both histories.
 
-```bash
-python scripts/preflight_checks.py --run-tests
-```
-
-### 2.2 Required Conditions
-
-A commit is allowed only when:
-
-1. All preflight checks pass (exit code 0).
-2. All tests pass (pytest -q).
-3. No external asset URLs in HTML/CSS.
-4. CSP headers are present in all HTML files.
-5. Core modules are within line limits (≤50 lines).
-
-### 2.3 Commit Message Format
-
-```
-<type>: <short description>
-
-<optional body>
-```
-
-Types:
-- feat: New feature
-- fix: Bug fix
-- docs: Documentation only
-- refactor: Code change that does not fix a bug or add a feature
-- test: Adding or updating tests
-
-## 3. Rollback Procedures
-
-### 3.1 Find Last Good Commit
-
-List recent commits:
-
-```bash
-git log --oneline -10
-```
-
-### 3.2 Rollback to Specific Commit
-
-**Soft rollback** (keeps changes staged):
-
-```bash
-git reset --soft <commit-hash>
-```
-
-**Mixed rollback** (keeps changes unstaged):
-
-```bash
-git reset <commit-hash>
-```
-
-**Hard rollback** (discards all changes):
-
-```bash
-git reset --hard <commit-hash>
-```
-
-**Warning**: If you already pushed the commits, you will need `git push --force`. This can cause problems for collaborators.
-
-### 3.3 Rollback a Single File
-
-```bash
-git checkout <commit-hash> -- path/to/file.py
-```
-
-### 3.4 Create a Revert Commit
-
-If the bad commit is already pushed:
-
-```bash
-git revert <commit-hash>
-```
-
-If conflicts occur, resolve them manually, then:
-
-```bash
-git add .
-git commit
-```
-
-## 4. Run Preflight Checks
-
-### 4.1 Basic Usage
-
-```bash
-python scripts/preflight_checks.py
-```
-
-### 4.2 With Tests
-
-```bash
-python scripts/preflight_checks.py --run-tests
-```
-
-### 4.3 Verbose Output
-
-```bash
-python scripts/preflight_checks.py --verbose
-```
-
-### 4.4 Windows Batch File
-
-```bash
-scripts\run_preflight.bat
-```
-
-### 4.5 Expected Output
-
-```
-============================================================
-ELECTRE III Preflight Checks
-============================================================
-
-[PASS] Core module line limits
-[PASS] No external assets
-[PASS] CSP headers
-[PASS] Design tokens
-
-============================================================
-All checks passed!
-```
-
-## 5. Emergency Procedures
-
-### 5.1 Broken Main Branch
-
-1. Identify the last working commit.
-2. Create a fix branch from that commit.
-3. Fix only the code that caused the failure. Do not add unrelated changes.
-4. Run all preflight checks.
-5. Merge to main.
-
-### 5.2 Lost Work Recovery
-
-Check the reflog:
-
-```bash
-git reflog
-```
-
-Recover from reflog:
-
-```bash
-git checkout <reflog-hash>
-```
-
-## 6. Quick Reference
+## Quick reference
 
 | Action | Command |
-|--------|---------|
-| Run checks | `python scripts/preflight_checks.py` |
-| Run checks + tests | `python scripts/preflight_checks.py --run-tests` |
-| View history | `git log --oneline -10` |
-| Soft reset | `git reset --soft HEAD~1` |
-| Hard reset | `git reset --hard HEAD~1` |
-| Revert commit | `git revert <hash>` |
-| Recover lost | `git reflog` |
+| --- | --- |
+| Run preflight | `python scripts/preflight_checks.py` |
+| Run tests | `python -m pytest -q tests/` |
+| Rebuild generated site | `python scripts/build_website.py` |
+| Inspect local status | `git status --short` |
+| Revert a commit | `git revert <commit>` |
+| Create recovery reference | `git branch recovery/<date>-<topic> HEAD` |
+| Recover local reference | `git reflog` |

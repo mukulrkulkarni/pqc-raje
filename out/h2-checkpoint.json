@@ -1,0 +1,32 @@
+{
+  "chunk": "H2 Architecture Hotfixes",
+  "state": "checkpointed",
+  "base_commit": "a90f274",
+  "scope": [
+    "legacy-route/runbook reconciliation without route removal",
+    "Flask-response CSP preflight validation",
+    "generated documentation ownership and stale-output checks",
+    "rollback and release-resource guidance",
+    "positive, negative, and edge tests plus H2 notes"
+  ],
+  "acceptance": {
+    "focused_tests": "29 passed",
+    "full_tests": "988 passed",
+    "preflight": "passed",
+    "compileall": "passed",
+    "diff_check": "passed",
+    "line_policy": "all changed Python modules are at most 47 total lines"
+  },
+  "reviews": {
+    "engineering": "approved",
+    "security": "approved",
+    "ui_ux": "not required; no rendered layout or navigation change"
+  },
+  "constraints": [
+    "no remote Git operations",
+    "no browser tests",
+    "no v0.1 tag changes",
+    "upstream operations remain user-only"
+  ],
+  "next_action": "Review focused diff, commit approved H2 paths, then verify clean tree."
+}

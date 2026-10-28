@@ -38,5 +38,10 @@
       "attachments/electre_example_3_criteria.json"
     ]
   },
-  "next_action": "Inspect staged W3 diff, commit only W3 paths, and verify repository status."
+  "commit": {
+    "implementation": "5bdd403 Harden_W3_link_contract_checks",
+    "checkpoint": "efb68e6 Finalize_W3_checkpoint"
+  },
+  "working_tree": "W3 paths clean; three pre-existing unrelated attachment files remain untracked.",
+  "next_action": "W3 complete; retain browser checks as deferred and non-blocking."
 }

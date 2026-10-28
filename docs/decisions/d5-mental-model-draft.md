@@ -87,9 +87,9 @@ Current source links:
 - [README](../../README.md)
 - [CLI quickstart](../tutorials/cli_quickstart.md)
 - [Debugging runbook](../runbook/debugging.md)
-- [D4 fixtures](../../examples/d4_phase2/)
-- [Core modules](../../electre3/)
-- [D4 tests](../../tests/d4_checks/)
+- [D4 fixture evidence](../../examples/d4_phase2/scenario-3/criteria_balanced.json)
+- [Raw net-flow implementation](../../electre3/ranking.py)
+- [D4 evidence tests](../../tests/d4_checks/test_evidence.py)
 
 D4 fixtures provide controlled balanced/priority, exact-tie, and near-tie evidence. Before publication, run exact commands that reproduce a positive example, malformed-input rejection, threshold edge, exact tie, and near-tie. Record outputs, hashes, revision, and limitations. Add local target/fragment link regression coverage.
 

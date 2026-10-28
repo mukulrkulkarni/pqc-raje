@@ -31,9 +31,9 @@ Inputs are repository-local. No external service, package installation, remote G
 | Static checks | `python -m json.tool out/d8-checkpoint.json > NUL && git diff --check && git diff --exit-code -- docs website` | Exit 0 before D8 document creation; checkpoint JSON valid and no whitespace/doc/website drift. |
 | Cross-page audit | `python out/d8_link_audit.py` | Exit 1; audited 18 files and found six targets listed below. This is the release-blocking negative result. |
 
-## Cross-page link audit result
+## Initial cross-page link audit result
 
-`out/d8_link_audit.py` examines local Markdown targets and Markdown fragments for `README.md`, D3-D7 decision documents, the quickstart, and the debugging runbook. It intentionally ignores external URLs and anchor-only links. It found:
+`out/d8_link_audit.py` examines local Markdown targets and Markdown fragments for `README.md`, D3-D7 decision documents, the quickstart, and the debugging runbook. It intentionally ignores external URLs and anchor-only links. Its initial run found:
 
 1. `d3-phase1-content-draft.md`: `docs/tutorials/cli_quickstart.md` missing relative to document directory.
 2. `d3-phase1-content-draft.md`: `docs/modules/index.html` missing relative to document directory.
@@ -42,21 +42,33 @@ Inputs are repository-local. No external service, package installation, remote G
 5. `d5-mental-model-draft.md`: `../../electre3/` is a directory, not a local file target.
 6. `d5-mental-model-draft.md`: `../../tests/d4_checks/` is a directory, not a local file target.
 
-Existing `tests/test_local_document_links.py` passes and includes positive, missing-file, missing-fragment, external-link, and anchor-only edge checks. Its scope is remediation records plus D7, so it does not cover the full D3-D7 set audited here.
+Existing `tests/test_local_document_links.py` initially passed and included positive, missing-file, missing-fragment, external-link, and anchor-only edge checks. Its scope initially excluded the full D3-D7 set audited here.
+
+## Historical-link remediation evidence
+
+The remediation preserves the initial negative result above. The current D3 and D5 changes, target classifications, regression expansion, review confirmations, and exact acceptance results are recorded in [D8 historical-link remediation notes](d8-historical-link-remediation-notes.md). The acceptance commands are rerun after these edits; their actual results are appended below.
+
+## Remediation acceptance evidence
+
+| Category | Command | Actual result |
+|---|---|---|
+| Local-link audit | `python out/d8_link_audit.py` | Exit 0; `audited_files=18 local_link_errors=0`. |
+| D4-D7 focused suites | `python -m pytest -q tests/test_local_document_links.py tests/test_d4_fixture_correction.py tests/test_d5_placement.py tests/test_d6_placement.py tests/test_d7_website_integration.py tests/test_website_static.py tests/d5_checks/test_reproducibility.py` | Exit 0; 42 passed in 6.88s. Includes positive, missing-file, missing-fragment, external-link, anchor-only, and historic D3/D5 link cases. |
+| Full suite | `python -m pytest -q` | Exit 0; 1062 passed in 27.08s. |
+| Compile/build/diff/JSON | `python -m compileall -q electre3 app scripts && python scripts/build_website.py && git diff --check && git diff --exit-code -- website && python -m json.tool out/d8-checkpoint.json > NUL` | Exit 0. Build produced no website drift; diff and checkpoint JSON checks passed. |
+| Independent reproducibility | `python out/d8_link_audit.py` in a separate command invocation after the focused suite | Exit 0; `audited_files=18 local_link_errors=0`. |
 
 ## Claim ledger
 
 | Claim | Status | Evidence |
 |---|---|---|
-| D4-D7 focused documentation checks pass | verified | 40 passed command above |
-| Full repository suite passes | verified | 1060 passed command above |
-| CLI contract produces documented example ranking | verified | Positive CLI command |
-| Invalid block size is rejected | verified | Negative CLI command |
-| Converted NumPy data uses positional IDs | verified | Edge converter command |
-| Generated tutorial ownership remains intact | verified | Website build, D7 tests, source/output review |
+| D4-D7 focused documentation checks pass | verified | 42 passed remediation command above |
+| Full repository suite passes | verified | 1062 passed remediation command above |
+| Generated tutorial ownership remains intact | verified | Build, D7 tests, and no website drift |
+| D3-D7 local Markdown targets all resolve | verified | Two zero-error independent local-link audits |
+| D3 unavailable module-index target has a destination | explicitly unavailable | Historical/planned classification; no destination invented |
 | Browser and assistive-technology behavior is verified | unresolved/deferred | Approved non-blocking limitation; no browser evidence executed |
-| D3-D7 local Markdown targets all resolve | rejected | Six failures from D8 link audit |
 
 ## Review and release decision
 
-Scientific, Engineering, and UI/UX reviews are recorded in [D8 release audit](d8-documentation-release-audit.md#review-record). The final documentation release gate is blocked only by the six historic draft-link defects or a formal exclusion decision. Browser limitations remain deferred and non-blocking.
+Scientific, Engineering, and UI/UX confirmations are recorded in [D8 release audit](d8-documentation-release-audit.md#review-record) and [D8 historical-link remediation notes](d8-historical-link-remediation-notes.md#review-confirmation). The historical-link blocker is cleared. D8 is ready for the final documentation release gate. Browser limitations remain deferred and non-blocking.

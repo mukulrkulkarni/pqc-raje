@@ -1,36 +1,53 @@
 {
-  "chunk": "D8 Documentation Release Audit",
-  "state": "checkpointed",
+  "chunk": "D8 unresolved historical-link remediation",
+  "state": "completed",
   "agent": "Innovium prepared Code specialist, candidate v1",
   "model": "unspecified",
-  "created_at": "2026-10-28",
-  "objective": "Audit D3-D7 documentation and record reproducible release evidence without application or remote changes.",
-  "authoritative_inputs": ["docs", "website", "tests", "scripts", "git history"],
-  "outputs": ["docs/decisions/d8-documentation-release-audit.md", "docs/decisions/d8-documentation-evidence.md", "out/d8_link_audit.py"],
+  "updated_at": "2026-10-28",
+  "objective": "Resolve or explicitly classify the six D8 historical D3/D5 local targets without changing application code, remote state, or the v0.1 tag.",
+  "authoritative_inputs": [
+    "docs/decisions/d8-documentation-release-audit.md",
+    "docs/decisions/d8-documentation-evidence.md",
+    "docs/decisions/d3-phase1-content-draft.md",
+    "docs/decisions/d5-mental-model-draft.md",
+    "tests/test_local_document_links.py"
+  ],
+  "outputs": [
+    "docs/decisions/d3-phase1-content-draft.md",
+    "docs/decisions/d5-mental-model-draft.md",
+    "docs/decisions/d8-historical-link-remediation-notes.md",
+    "docs/decisions/d8-documentation-release-audit.md",
+    "docs/decisions/d8-documentation-evidence.md",
+    "tests/test_local_document_links.py"
+  ],
+  "disposition": {
+    "resolved": [
+      "D3 quickstart: ../tutorials/cli_quickstart.md",
+      "D3 debugging: ../runbook/debugging.md",
+      "D5 fixtures: ../../examples/d4_phase2/scenario-3/criteria_balanced.json",
+      "D5 core implementation: ../../electre3/ranking.py",
+      "D5 D4 tests: ../../tests/d4_checks/test_evidence.py"
+    ],
+    "historical_planned_unavailable": [
+      "D3 docs/modules/index.html: absent; classified in draft text without a fabricated link"
+    ]
+  },
   "acceptance": {
-    "full_tests": "1060 passed in 27.13s",
-    "focused_d4_d7_tests": "40 passed in 6.95s",
-    "d4_reproduction": "8 passed in 4.56s",
-    "compile_build_diff": "passed before D8 records",
-    "positive_cli": "B, A, C",
-    "negative_cli": "block-size zero rejected with exit 1",
-    "edge_converter": "NumPy output ranks positional IDs 1, 0, 2",
-    "link_audit": "failed: six historic draft targets unresolved"
+    "link_audit": "audited_files=18 local_link_errors=0",
+    "independent_link_audit": "audited_files=18 local_link_errors=0 in separate invocation",
+    "focused_d4_d7_tests": "42 passed in 6.88s",
+    "full_tests": "1062 passed in 27.08s",
+    "compile_build_diff_json": "passed"
   },
   "reviews": {
-    "scientific": "approved for current contract; no mathematical contradiction",
-    "engineering": "approved audit method; final release blocked by six links",
-    "uiux": "approved static scope; browser limitations deferred and non-blocking"
+    "scientific": "confirmed source substitutions do not change claims",
+    "engineering": "confirmed file targets resolve and unavailable target is classified",
+    "uiux": "confirmed draft/current/planned labels; browser limitations remain deferred"
   },
-  "release_status": "release_blocked",
-  "blockers": [
-    "d3-phase1-content-draft.md has three root-relative local links",
-    "d5-mental-model-draft.md has three directory targets without file resolution"
-  ],
   "deferred": ["browser", "AT", "zoom", "reflow", "keyboard", "offline", "load"],
-  "fallback": "Preserved failed audit evidence and release-blocked decision without changing application code.",
-  "last_action": "Committed D8 records; artifact parsing, whitespace inspection, and clean-tree verification passed.",
-  "commit": "8a7ba93",
-  "working_tree_after": "clean",
+  "fallback": "Preserve the historical/planned D3 target as text rather than creating or inventing a destination.",
+  "last_action": "Focused remediation committed after independent audit, acceptance checks, and diff review.",
+  "commit": "focused remediation commit; final HEAD is verified in the execution report",
+  "working_tree_after": "clean after final commit amendment",
   "checkpoint": "out/d8-checkpoint.json"
 }

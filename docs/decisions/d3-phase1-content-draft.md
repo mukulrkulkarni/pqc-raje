@@ -15,10 +15,10 @@ Running scenario: rank the committed objects `A`, `B`, and `C` from `examples/as
 ### Choose a path
 
 - [Work in 10 minutes](#work-in-10-minutes)
-- [CLI quickstart](docs/tutorials/cli_quickstart.md)
+- [CLI quickstart](../tutorials/cli_quickstart.md)
 - [Local web app](http://127.0.0.1:5000/app/)
-- [Mental model](docs/modules/index.html)
-- [Reference and debugging](docs/runbook/debugging.md)
+- **Mental model:** historical planned target; `docs/modules/index.html` was never created. This draft does not invent a replacement destination.
+- [Reference and debugging](../runbook/debugging.md)
 
 ## Work in 10 minutes
 

@@ -34,6 +34,8 @@ def _check_links(source: Path) -> list[str]:
 @pytest.mark.parametrize("name", [
     "dynamic-elements-meeting-report.md",
     "dynamic-elements-remediation-notes.md",
+    "d3-phase1-content-draft.md",
+    "d5-mental-model-draft.md",
     "d7-documentation-notes.md",
 ])
 def test_remediation_decision_links_and_fragments_resolve(name):

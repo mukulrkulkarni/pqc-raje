@@ -20,13 +20,14 @@ The current CLI/web contract accepts identifier-bearing CSV `(N,C+1)` or numeric
 
 The audited D6 quickstart and runbook describe these rules consistently with the CLI, focused tests, and executed examples. Current/deferred labels distinguish current static and Flask paths from planned hosted references. Browser rendering, keyboard, assistive-technology, zoom, reflow, offline, and load evidence remain deferred and non-blocking by the approved release limitation.
 
-## Findings
+## Findings and historical-link remediation
 
-### Blocking documentation defects
+The six historical D3/D5 targets reported by the initial audit have been remediated without changing the drafts' status or publishing them. See [D8 historical-link remediation notes](d8-historical-link-remediation-notes.md).
 
-1. `docs/decisions/d3-phase1-content-draft.md` has three unresolved local Markdown targets: `docs/tutorials/cli_quickstart.md`, `docs/modules/index.html`, and `docs/runbook/debugging.md`. They resolve from repository root, but not from the decision document directory.
-2. `docs/decisions/d5-mental-model-draft.md` has three unresolved directory targets: `../../examples/d4_phase2/`, `../../electre3/`, and `../../tests/d4_checks/`. The audit checker requires local file targets, so these directory references lack a local-document resolution contract.
-3. D3 and D5 label themselves drafts and are not user-facing release pages. They are nevertheless D3-D7 audit inputs and must be corrected or explicitly excluded from the final release documentation set before the final documentation gate can pass.
+1. D3's quickstart and debugging links now resolve relative to the decision-document directory.
+2. D3's absent `docs/modules/index.html` target is explicitly classified as historical/planned and unavailable. It is no longer represented as a Markdown destination; no replacement page was invented.
+3. D5's three directory targets now resolve to their existing, specific evidence, implementation, and test files.
+4. The local-link audit and its regression test cover both historical draft records. D3 and D5 remain drafts and are not user-facing release pages.
 
 ### Non-blocking observations
 
@@ -36,9 +37,9 @@ The audited D6 quickstart and runbook describe these rules consistently with the
 
 ## Review record
 
-- **Scientific review:** Approved for the current CLI/input/scientific contract. D3/D5 draft findings are documentation-location defects, not a mathematical contradiction. No scientific claim is promoted from a draft record.
-- **Engineering review:** Approved for audit method and evidence. The six unresolved local targets block the final documentation release gate until disposition.
-- **UI/UX review:** Approved for static navigation, ownership labels, current/planned distinction, semantic no-script scope, and route separation. Browser/AT/zoom/reflow/keyboard/offline/load evidence remains deferred and non-blocking.
+- **Scientific review:** Confirmed the D5 links now name existing evidence, implementation, and test files. No mathematical claim changed or was promoted from a draft.
+- **Engineering review:** Confirmed the two D3 file links and three D5 file links resolve locally; the unavailable D3 target is classified rather than fabricated.
+- **UI/UX review:** Confirmed draft labels and current/planned distinction remain clear. Browser/AT/zoom/reflow/keyboard/offline/load evidence remains deferred and non-blocking.
 
 ## Reproduction
 
@@ -46,4 +47,4 @@ Use the commands and results in [D8 documentation evidence](d8-documentation-evi
 
 ## Release decision
 
-**D8 audit execution is complete. Final documentation release status: `release_blocked`.** The required remediation is limited to resolving or formally excluding the six historic draft links, then rerunning the local-link audit and documentation-focused regression checks. Browser limitations remain deferred and non-blocking.
+**D8 historical-link remediation is complete. Final documentation release status: `ready_for_final_documentation_release_gate`.** The six historical targets are resolved or explicitly classified without inventing a destination. Required link, focused, full-suite, build, compile, diff, JSON, and independent reproducibility evidence is recorded in [D8 documentation evidence](d8-documentation-evidence.md). Browser limitations remain deferred and non-blocking.

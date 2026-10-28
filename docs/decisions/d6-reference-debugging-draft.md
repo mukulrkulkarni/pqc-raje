@@ -13,8 +13,10 @@ python -m electre3.cli matrix_file criteria_file [-o OUTPUT] [-b BLOCK_SIZE] [-y
 - `criteria_file`: UTF-8 JSON criteria list.
 - `-b/--block-size`: integer `1..10000`; default `1000`.
 - `-y/--yes`: skip confirmation prompts.
-- `-q/--quiet`: suppress status messages; it does not suppress prompts.
+- `-q/--quiet`: suppress computation/status and save messages; it does not suppress prompts or ranking output when no `--output` is supplied.
 - `-o/--output`: saves zero-based ranking row indices with NumPy serialization, not identifiers or net-flow scores.
+
+The ranking deadline applies to the ranking computation. Parsing, request handling, and response serialization are separate work.
 
 Errors print to stderr and return nonzero. The CLI ranks by descending raw net flow. Printed output uses source identifiers for identifier-bearing CSV and positional identifiers for numeric NumPy input.
 
@@ -41,6 +43,8 @@ Raw flow is not normalized; `NetFlowAccumulator.normalize()` is not used for ran
 ## 4. Web and runtime limits
 
 The supported `/app/*` workflow validates criteria and matrix input, requires preview before compute, and uses server-rendered HTML without JavaScript. Documentation routes and legacy compatibility routes have separate behavior.
+
+Supported routes include `GET /app/`, `POST /app/confirm-inputs`, `POST /app/preview`, `POST /app/compute`, and `GET /app/download/<token>`. Compatibility routes include `GET /preview/<upload_id>`, `POST /preview/<upload_id>/confirm`, `POST /preview/<upload_id>/cancel`, `POST /compute/start`, and `GET /compute/status/<job_id>`.
 
 - `/app` upload limit: 100 MiB; larger requests return HTTP 413.
 - Shared row limit: 100,000.
@@ -107,4 +111,4 @@ Run every command at a pinned revision. Record command, environment, exit code, 
 
 When transferred to HTML, preserve complete math meaning with semantic `<var>`, `<sub>`, `<sup>`, and text operators. The reference must remain readable without JavaScript and must not require KaTeX. Every changed or added Python module must pass the strict 50-executable-line audit; `scripts/build_website.py` remains an existing documented exception.
 
-Browser rendering, keyboard, zoom, offline, screen-reader, and load evidence remain deferred and non-blocking.
+Browser rendering, keyboard/focus, zoom/reflow, offline, accessibility/AT, screen-reader, and load/performance evidence remain deferred and non-blocking.

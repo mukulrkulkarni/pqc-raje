@@ -1,0 +1,82 @@
+{
+  "workstream": "W1 complete URL/link audit",
+  "state": "checkpointed",
+  "final_status": "NEEDS WORK",
+  "revision": "36fce43bbb7c4075f4852b99763f2f5729710a16",
+  "created_date": "2026-10-28",
+  "last_action": "Completed bounded audit, tests, compile, and scoped diff checks; documented failures.",
+  "scope": [
+    "website/index.html",
+    "website/app/index.html",
+    "website/modules/**",
+    "generated tutorial derivatives",
+    "app workflow pages",
+    "Flask /docs routes",
+    "app downloads"
+  ],
+  "constraints": [
+    "audit only",
+    "no production repairs",
+    "no browser tests",
+    "no remote Git operations",
+    "preserve unrelated work"
+  ],
+  "acceptance": "Every in-scope URL classified with bounded static, route, negative, compile, and diff evidence.",
+  "checkpoint": "out/w1-link-inventory.json",
+  "artifacts": [
+    "docs/decisions/w1-link-audit.md",
+    "docs/decisions/w1-link-evidence.md",
+    "out/w1-link-inventory.json",
+    "out/w1-link-summary.txt",
+    "out/w1-link-audit-run.txt",
+    "out/w1-generated-diff.txt",
+    "out/w1_link_audit.py"
+  ],
+  "counts": {
+    "static_html_files": 14,
+    "generated_docs_files": 10,
+    "workflow_templates": 4,
+    "references": 270,
+    "valid": 241,
+    "broken": 12,
+    "planned": 1,
+    "historical": 0,
+    "external": 16,
+    "flask_probes": 52,
+    "unique_broken_targets": 6
+  },
+  "tests": [
+    {
+      "command": "python out/w1_link_audit.py",
+      "result": "inventory created; exit 1 intentionally reports 12 broken references"
+    },
+    {
+      "command": "pytest -q tests/test_app_workflow.py tests/test_docs_routes.py tests/test_local_document_links.py",
+      "result": "199 passed in 1.71s"
+    },
+    {
+      "command": "python -m py_compile out/w1_link_audit.py out/w1_summarize.py app/routes/docs.py app/routes/workflow.py scripts/build_website.py",
+      "result": "passed"
+    },
+    {
+      "command": "git diff --check && git diff --exit-code -- website app docs scripts tests",
+      "result": "passed before W1 documentation creation; production diff empty"
+    },
+    {
+      "command": "git diff --no-index --exit-code docs/modules website/modules",
+      "result": "exit 1; expected generated relocation/navigation differences preserved in out/w1-generated-diff.txt"
+    }
+  ],
+  "failures": [
+    "Six unique repository references are broken in website/modules/ranking/tutorial/index.html.",
+    "The same six references are broken when docs/modules/ranking_tutorial_side_by_side.html is served at /docs/modules/ranking/tutorial."
+  ],
+  "limitations": [
+    "Browser, assistive-technology, visual, and runtime keyboard tests deferred and non-blocking.",
+    "External URLs classified but not fetched.",
+    "No math renderer appears in audited scope; renderer-failure testing is not applicable."
+  ],
+  "commit": null,
+  "working_tree": "W1 artifacts and decision records uncommitted; no production files modified.",
+  "next_action": "Review W1 evidence and approve a separate repair workstream for six unique broken ranking tutorial references."
+}

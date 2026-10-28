@@ -1,0 +1,14 @@
+{
+  "output": "out\\w1-link-inventory.json",
+  "static_files": 14,
+  "generated_files": 10,
+  "template_files": 4,
+  "references": 270,
+  "counts": {
+    "valid": 241,
+    "external": 16,
+    "broken": 12,
+    "planned": 1
+  },
+  "probes": 52
+}

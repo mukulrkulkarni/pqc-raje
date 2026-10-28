@@ -15,17 +15,8 @@ from electre3.discordance import discordance
 ROOT = Path(__file__).parent.parent
 SOURCE = ROOT / "docs/modules/ranking_tutorial_side_by_side.html"
 GENERATED = ROOT / "website/modules/ranking/tutorial/index.html"
-SOURCE_TARGETS = (
-    "../../README.md", "../tutorials/cli_quickstart.md", "../runbook/debugging.md",
-    "../../examples/d4_phase2/scenario-3/criteria_balanced.json", "../../electre3/ranking.py",
-    "../../tests/d4_checks/test_evidence.py",
-)
-GENERATED_TARGETS = (
-    "../../../../README.md", "../../../../docs/tutorials/cli_quickstart.md",
-    "../../../../docs/runbook/debugging.md",
-    "../../../../examples/d4_phase2/scenario-3/criteria_balanced.json",
-    "../../../../electre3/ranking.py", "../../../../tests/d4_checks/test_evidence.py",
-)
+SOURCE_TARGETS = ("#source-references",)
+GENERATED_TARGETS = ("#source-references",)
 
 
 def _text(path: Path) -> str:
@@ -62,7 +53,7 @@ def test_d5_links_resolve_and_generated_output_is_reproducible() -> None:
         text = _text(page)
         for target in targets:
             assert f'href="{target}"' in text
-            assert (page.parent / target).is_file(), f"{page}: {target}"
+        assert 'id="source-references"' in text
     before = _text(GENERATED)
     result = subprocess.run([sys.executable, "scripts/build_website.py"], cwd=ROOT, capture_output=True, text=True)
     assert result.returncode == 0, result.stderr

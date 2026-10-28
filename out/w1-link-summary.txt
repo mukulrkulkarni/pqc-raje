@@ -1,0 +1,70 @@
+BROKEN
+website/modules/ranking/tutorial/index.html | served=/modules/ranking/tutorial/index.html | target=../../../../README.md | missing static target website/README.md
+website/modules/ranking/tutorial/index.html | served=/modules/ranking/tutorial/index.html | target=../../../../docs/tutorials/cli_quickstart.md | missing static target website/docs/tutorials/cli_quickstart.md
+website/modules/ranking/tutorial/index.html | served=/modules/ranking/tutorial/index.html | target=../../../../docs/runbook/debugging.md | missing static target website/docs/runbook/debugging.md
+website/modules/ranking/tutorial/index.html | served=/modules/ranking/tutorial/index.html | target=../../../../examples/d4_phase2/scenario-3/criteria_balanced.json | missing static target website/examples/d4_phase2/scenario-3/criteria_balanced.json
+website/modules/ranking/tutorial/index.html | served=/modules/ranking/tutorial/index.html | target=../../../../electre3/ranking.py | missing static target website/electre3/ranking.py
+website/modules/ranking/tutorial/index.html | served=/modules/ranking/tutorial/index.html | target=../../../../tests/d4_checks/test_evidence.py | missing static target website/tests/d4_checks/test_evidence.py
+docs/modules/ranking_tutorial_side_by_side.html | served=/docs/modules/ranking/tutorial | target=../../README.md | GET /docs/README.md -> 404
+docs/modules/ranking_tutorial_side_by_side.html | served=/docs/modules/ranking/tutorial | target=../tutorials/cli_quickstart.md | GET /docs/modules/tutorials/cli_quickstart.md -> 404
+docs/modules/ranking_tutorial_side_by_side.html | served=/docs/modules/ranking/tutorial | target=../runbook/debugging.md | GET /docs/modules/runbook/debugging.md -> 404
+docs/modules/ranking_tutorial_side_by_side.html | served=/docs/modules/ranking/tutorial | target=../../examples/d4_phase2/scenario-3/criteria_balanced.json | GET /docs/examples/d4_phase2/scenario-3/criteria_balanced.json -> 404
+docs/modules/ranking_tutorial_side_by_side.html | served=/docs/modules/ranking/tutorial | target=../../electre3/ranking.py | GET /docs/electre3/ranking.py -> 404
+docs/modules/ranking_tutorial_side_by_side.html | served=/docs/modules/ranking/tutorial | target=../../tests/d4_checks/test_evidence.py | GET /docs/tests/d4_checks/test_evidence.py -> 404
+
+PLANNED/HISTORICAL
+planned | app/templates/app_results.html | {{ download_url }} | dynamic template URL requires workflow state
+
+PROBES
+{"classification": "valid", "kind": "route-vocabulary", "path": "/", "status": 200}
+{"classification": "valid", "kind": "route-vocabulary", "path": "/docs/modules", "status": 200}
+{"classification": "valid", "kind": "route-vocabulary", "path": "/app/", "status": 200}
+{"classification": "valid", "kind": "route-vocabulary", "path": "/docs/modules/accumulator", "status": 200}
+{"classification": "valid", "kind": "route-vocabulary", "path": "/docs/modules/accumulator/tutorial", "status": 200}
+{"classification": "valid", "kind": "route-vocabulary", "path": "/docs/modules/accumulator/assets/highlight.js", "status": 200}
+{"classification": "valid", "kind": "route-vocabulary", "path": "/docs/modules/accumulator/assets/theme.js", "status": 200}
+{"classification": "valid", "kind": "route-vocabulary", "path": "/docs/modules/block", "status": 200}
+{"classification": "valid", "kind": "route-vocabulary", "path": "/docs/modules/block/tutorial", "status": 200}
+{"classification": "valid", "kind": "route-vocabulary", "path": "/docs/modules/block/assets/highlight.js", "status": 200}
+{"classification": "valid", "kind": "route-vocabulary", "path": "/docs/modules/block/assets/theme.js", "status": 200}
+{"classification": "broken", "kind": "route-vocabulary", "path": "/docs/modules/concordance", "status": 404}
+{"classification": "valid", "kind": "route-vocabulary", "path": "/docs/modules/concordance/tutorial", "status": 200}
+{"classification": "valid", "kind": "route-vocabulary", "path": "/docs/modules/concordance/assets/highlight.js", "status": 200}
+{"classification": "valid", "kind": "route-vocabulary", "path": "/docs/modules/concordance/assets/theme.js", "status": 200}
+{"classification": "valid", "kind": "route-vocabulary", "path": "/docs/modules/config", "status": 200}
+{"classification": "valid", "kind": "route-vocabulary", "path": "/docs/modules/config/tutorial", "status": 200}
+{"classification": "valid", "kind": "route-vocabulary", "path": "/docs/modules/config/assets/highlight.js", "status": 200}
+{"classification": "valid", "kind": "route-vocabulary", "path": "/docs/modules/config/assets/theme.js", "status": 200}
+{"classification": "broken", "kind": "route-vocabulary", "path": "/docs/modules/credibility", "status": 404}
+{"classification": "valid", "kind": "route-vocabulary", "path": "/docs/modules/credibility/tutorial", "status": 200}
+{"classification": "valid", "kind": "route-vocabulary", "path": "/docs/modules/credibility/assets/highlight.js", "status": 200}
+{"classification": "valid", "kind": "route-vocabulary", "path": "/docs/modules/credibility/assets/theme.js", "status": 200}
+{"classification": "broken", "kind": "route-vocabulary", "path": "/docs/modules/data", "status": 404}
+{"classification": "broken", "kind": "route-vocabulary", "path": "/docs/modules/data/tutorial", "status": 404}
+{"classification": "valid", "kind": "route-vocabulary", "path": "/docs/modules/data/assets/highlight.js", "status": 200}
+{"classification": "valid", "kind": "route-vocabulary", "path": "/docs/modules/data/assets/theme.js", "status": 200}
+{"classification": "broken", "kind": "route-vocabulary", "path": "/docs/modules/discordance", "status": 404}
+{"classification": "valid", "kind": "route-vocabulary", "path": "/docs/modules/discordance/tutorial", "status": 200}
+{"classification": "valid", "kind": "route-vocabulary", "path": "/docs/modules/discordance/assets/highlight.js", "status": 200}
+{"classification": "valid", "kind": "route-vocabulary", "path": "/docs/modules/discordance/assets/theme.js", "status": 200}
+{"classification": "valid", "kind": "route-vocabulary", "path": "/docs/modules/ranking", "status": 200}
+{"classification": "valid", "kind": "route-vocabulary", "path": "/docs/modules/ranking/tutorial", "status": 200}
+{"classification": "valid", "kind": "route-vocabulary", "path": "/docs/modules/ranking/assets/highlight.js", "status": 200}
+{"classification": "valid", "kind": "route-vocabulary", "path": "/docs/modules/ranking/assets/theme.js", "status": 200}
+{"classification": "valid", "kind": "route-vocabulary", "path": "/docs/modules/validate", "status": 200}
+{"classification": "valid", "kind": "route-vocabulary", "path": "/docs/modules/validate/tutorial", "status": 200}
+{"classification": "valid", "kind": "route-vocabulary", "path": "/docs/modules/validate/assets/highlight.js", "status": 200}
+{"classification": "valid", "kind": "route-vocabulary", "path": "/docs/modules/validate/assets/theme.js", "status": 200}
+{"kind": "trailing-slash", "location": null, "path": "/docs/modules/", "status": 404}
+{"kind": "trailing-slash", "location": null, "path": "/docs/modules/config/", "status": 404}
+{"kind": "trailing-slash", "location": null, "path": "/docs/modules/config/tutorial/", "status": 404}
+{"kind": "trailing-slash", "location": null, "path": "/app", "status": 200}
+{"kind": "negative", "path": "/docs/modules/missing", "status": 404}
+{"kind": "negative", "path": "/docs/modules/CONFIG", "status": 404}
+{"kind": "negative", "path": "/docs/modules/../config", "status": 404}
+{"kind": "negative", "path": "/docs/modules/config/assets/missing.js", "status": 404}
+{"kind": "negative", "path": "/docs/modules/config/assets/../theme.js", "status": 404}
+{"kind": "negative", "path": "/docs/modules/missing/tutorial", "status": 404}
+{"kind": "negative", "path": "/app/missing", "status": 404}
+{"kind": "negative", "path": "/app/download/missing.csv", "status": 404}
+{"classification": "valid", "kind": "dynamic-download", "path": "/app/download/iGPuuT0v4NhoZ-a_Z8DsWVsOSFXjvJ4LjIN1TWly-7M", "status": 200}
